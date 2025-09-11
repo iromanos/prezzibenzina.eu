@@ -1,0 +1,42 @@
+export default function Footer() {
+    return (
+        <footer className="bg-dark text-white mt-auto py-4">
+            <div className="container">
+                <div className="row align-items-start">
+                    {/* Logo e descrizione */}
+                    <div className="col-md-4 mb-3 text-center text-md-start">
+                        <img src="/assets/logo-transparent.png" alt="Logo PrezziBenzina.eu" style={{ maxWidth: '120px' }} className="mb-2" />
+                        <p className="small mb-0">
+                            PrezziBenzina.eu ti aiuta a trovare i distributori più convenienti nella tua zona. Risparmia ogni giorno.
+                        </p>
+                    </div>
+
+                    {/* Link utili */}
+                    <div className="col-md-4 mb-3 text-center">
+                        <h6 className="fw-bold">Navigazione</h6>
+                        <ul className="list-unstyled">
+                            <li><a href="/ricerca" className="text-white text-decoration-none">Ricerca</a></li>
+                            <li><a href="/risultati" className="text-white text-decoration-none">Mappa</a></li>
+                            <li><a href="/contatti" className="text-white text-decoration-none">Contatti</a></li>
+                        </ul>
+                    </div>
+
+                    {/* Info legali */}
+                    <div className="col-md-4 mb-3 text-center text-md-end">
+                        <h6 className="fw-bold">Informazioni</h6>
+                        <ul className="list-unstyled">
+                            <li><a href="/privacy" className="text-white text-decoration-none">Privacy</a></li>
+                            <li><a href="/cookie" className="text-white text-decoration-none">Cookie</a></li>
+                            <li><a href="/credits" className="text-white text-decoration-none">Credits</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <hr className="border-light" />
+                <div className="text-center small">
+                    © {new Date().getFullYear()} PrezziBenzina.eu — Tutti i diritti riservati
+                </div>
+            </div>
+        </footer>
+    );
+}
