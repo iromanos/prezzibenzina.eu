@@ -44,8 +44,6 @@ export default function MappaDistributori({ distributori }) {
     return (
         <div className={'border rounded overflow-hidden'} style={{ height: '400px', width: '100%' }}>
             <RMap
-                initialZoom={8}
-                initialCenter={center}
                 fitBounds={bounds}
                 fitBoundsOptions={{ padding: 40 }}
                 mapStyle={styleUrlStadia}
