@@ -163,11 +163,15 @@ export default async function RegionePage({params}) {
 
                 <SeoTextRegione data={riepilogo}/>
 
-                <FiltroCarburante regione={regione} carburanti={carburanti} selezionato={carburante} />
 
-                <Mappa distributori={distributori} />
-
-                <ElencoDistributori Regione={Regione} distributori={distributori} />
+                <div className={'row'}>
+                    <div className={'col-md-5'}>
+                        <ElencoDistributori Regione={Regione} distributori={distributori} />
+                    </div>
+                    <div className={'col-md-7'}>
+                        <FiltroCarburante regione={regione} carburanti={carburanti} selezionato={carburante} />
+                <Mappa distributori={distributori} /></div>
+                </div>
 
             </div>
         </>

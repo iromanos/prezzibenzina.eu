@@ -28,7 +28,7 @@ export default function Header() {
                 </ul>
 
                 {/* CTA desktop */}
-                <Link href="/ricerca" className="btn btn-primary d-none d-md-inline-block">
+                <Link href="/ricerca" className="btn btn-outline-primary d-none d-md-inline-block">
                     🔎 Trova distributori
                 </Link>
 

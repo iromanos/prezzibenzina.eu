@@ -1,75 +1,79 @@
 'use client';
 
+import { useMemo } from 'react';
+import Map, { Marker } from 'react-map-gl/maplibre';
+import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { RMap, RMarker } from 'maplibre-react-components';
-import {useMemo} from "react";
 
 export default function MappaDistributori({ distributori }) {
 
-
-    const styleUrlStadia = "https://tiles.stadiamaps.com/styles/outdoors.json";
-    const apiKey = "9441d3ae-fe96-489a-8511-2b1a3a433d29";
-
-    const styleUrl = styleUrlStadia + "?api_key=" + apiKey;
+    const URI_IMAGE = "http://localhost:8080";
 
 
-    const cartoMapStyle = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
+    const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
 
-    const center = distributori.length
-        ? [distributori[0].longitudine, distributori[0].latitudine]
-        : [9.19, 45.46]; // Default: Milano
-
-    // Calcola i bounds per includere tutti i marker
+    // Calcola bounds
     const bounds = useMemo(() => {
         const coords = distributori
             .filter((d) => Number.isFinite(d.longitudine) && Number.isFinite(d.latitudine))
             .map((d) => [d.longitudine, d.latitudine]);
 
         if (coords.length === 0) return null;
-        if (coords.length === 1) return [coords[0], coords[0]];
 
-        const lons = coords.map((c) => c[0]);
-        const lats = coords.map((c) => c[1]);
-        const minLon = Math.min(...lons);
-        const maxLon = Math.max(...lons);
-        const minLat = Math.min(...lats);
-        const maxLat = Math.max(...lats);
-
-        return [
-            [minLon, minLat],
-            [maxLon, maxLat],
-        ];
+        const b = new maplibregl.LngLatBounds();
+        coords.forEach((c) => b.extend(c));
+        return b;
     }, [distributori]);
 
+    // Funzione da eseguire quando la mappa è pronta
+    const handleMapLoad = (event) => {
+        const map = event.target;
+        if (bounds) {
+            map.fitBounds(bounds, {
+                padding: 80,
+                duration: 500,
+            });
+        }
+    };
+
     return (
-        <div className={'border rounded overflow-hidden'} style={{ height: '400px', width: '100%' }}>
-            <RMap
-                fitBounds={bounds}
-                fitBoundsOptions={{ padding: 40 }}
-                mapStyle={styleUrlStadia}
+        <div className="border rounded overflow-hidden" style={{ height: '560px', width: '100%' }}>
+            <Map
+                mapLib={maplibregl}
+                mapStyle={styleUrl}
+                initialViewState={{
+                    longitude: 9.19,
+                    latitude: 45.46,
+                    zoom: 8,
+                }}
+                style={{ width: '100%', height: '100%' }}
+                attributionControl={true}
+                onLoad={handleMapLoad}
             >
                 {distributori.map((d) => {
+                    const color = d.color === -1 ? '#dc3545' : '#198754';
 
-                    let color = 'bg-success';
-                    if (d.color === -1) color = 'bg-danger';
                     return (
-                        <RMarker key={d.id_impianto}
-
-                                 longitude={d.longitudine} latitude={d.latitudine}
+                        <Marker
+                            key={d.id_impianto}
+                            longitude={d.longitudine}
+                            latitude={d.latitudine}
+                            anchor="bottom"
                         >
-                            <div
-                                className={color + ' rounded p-2 py-1 border border-white'}
+                            <div className={'border border-white rounded py-1 px-1'}
                                 style={{
+                                    backgroundColor: color,
                                     color: 'white',
-                                    fontSize: '12px',
+                                    textAlign: 'center',
                                 }}
                             >
-                                {d.bandiera} <br/> {d.prezzo.toFixed(3)} €/L
+                                <img className={'d-block'} alt={d.bandiera} width="32" height="32" src={ URI_IMAGE + d.image} />
+                                {d.prezzo.toFixed(3)}
                             </div>
-                        </RMarker>
+                        </Marker>
                     );
                 })}
-            </RMap>
+            </Map>
         </div>
     );
 }
