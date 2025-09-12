@@ -9,6 +9,17 @@ $headings-font-family: 'Montserrat', sans-serif;
 $body-bg: #f8f9fa;
 $body-color: #212529;
 
+$line-height-base: 1.6;
+
+$container-max-widths: (
+        sm: 540px,
+        md: 720px,
+        lg: 960px,
+        xl: 1024px,
+        xxl: 1024px
+);
+
+
 $h1-font-size: 2.5rem;
 $h2-font-size: 1.75rem;
 $h3-font-size: 1.25rem;

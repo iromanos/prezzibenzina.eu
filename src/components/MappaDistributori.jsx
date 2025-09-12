@@ -2,6 +2,7 @@
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { RMap, RMarker } from 'maplibre-react-components';
+import {useMemo} from "react";
 
 export default function MappaDistributori({ distributori }) {
 
@@ -18,11 +19,35 @@ export default function MappaDistributori({ distributori }) {
         ? [distributori[0].longitudine, distributori[0].latitudine]
         : [9.19, 45.46]; // Default: Milano
 
+    // Calcola i bounds per includere tutti i marker
+    const bounds = useMemo(() => {
+        const coords = distributori
+            .filter((d) => Number.isFinite(d.longitudine) && Number.isFinite(d.latitudine))
+            .map((d) => [d.longitudine, d.latitudine]);
+
+        if (coords.length === 0) return null;
+        if (coords.length === 1) return [coords[0], coords[0]];
+
+        const lons = coords.map((c) => c[0]);
+        const lats = coords.map((c) => c[1]);
+        const minLon = Math.min(...lons);
+        const maxLon = Math.max(...lons);
+        const minLat = Math.min(...lats);
+        const maxLat = Math.max(...lats);
+
+        return [
+            [minLon, minLat],
+            [maxLon, maxLat],
+        ];
+    }, [distributori]);
+
     return (
-        <div className={'rounded overflow-hidden'} style={{ height: '400px', width: '100%' }}>
+        <div className={'border rounded overflow-hidden'} style={{ height: '400px', width: '100%' }}>
             <RMap
                 initialZoom={8}
                 initialCenter={center}
+                fitBounds={bounds}
+                fitBoundsOptions={{ padding: 40 }}
                 mapStyle={styleUrlStadia}
             >
                 {distributori.map((d) => {
