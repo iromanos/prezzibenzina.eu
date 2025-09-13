@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import Map, { Marker } from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -8,12 +8,12 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 export default function MappaDistributori({ distributori }) {
 
     const URI_IMAGE = "http://localhost:8080";
-
-
     const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
 
+    const [bounds, setBounds] = useState(null);
+
     // Calcola bounds
-    const bounds = useMemo(() => {
+    useEffect(() => {
         const coords = distributori
             .filter((d) => Number.isFinite(d.longitudine) && Number.isFinite(d.latitudine))
             .map((d) => [d.longitudine, d.latitudine]);
@@ -22,7 +22,7 @@ export default function MappaDistributori({ distributori }) {
 
         const b = new maplibregl.LngLatBounds();
         coords.forEach((c) => b.extend(c));
-        return b;
+        setBounds(b);
     }, [distributori]);
 
     // Funzione da eseguire quando la mappa è pronta

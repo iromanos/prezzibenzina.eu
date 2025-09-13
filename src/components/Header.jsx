@@ -2,8 +2,7 @@
 
 import Link from 'next/link';
 import {useEffect} from "react";
-
-// import 'bootstrap/dist/js/bootstrap.bundle.min';
+import SearchIcon from '@mui/icons-material/Search';
 
 export default function Header() {
 
@@ -28,8 +27,8 @@ export default function Header() {
                 </ul>
 
                 {/* CTA desktop */}
-                <Link href="/ricerca" className="btn btn-outline-primary d-none d-md-inline-block">
-                    🔎 Trova distributori
+                <Link href="/ricerca" className="btn btn-primary d-none d-md-inline-block">
+                    <SearchIcon /> Trova distributori
                 </Link>
 
                 {/* Hamburger toggle for mobile */}

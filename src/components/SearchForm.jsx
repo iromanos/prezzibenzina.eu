@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import {useRouter} from "next/navigation";
-
+import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import SearchIcon from "@mui/icons-material/Search";
 export default function SearchForm() {
     const [carburante, setCarburante] = useState('');
     const [indirizzo, setIndirizzo] = useState('');
@@ -40,7 +41,6 @@ export default function SearchForm() {
                         { tipo: 'diesel', icon: '🛢️' },
                         { tipo: 'gpl', icon: '🔥' },
                         { tipo: 'metano', icon: '🌬️' },
-                        { tipo: 'elettrico', icon: '⚡' }
                     ].map(({ tipo, icon }) => (
                         <button
                             key={tipo}
@@ -70,9 +70,9 @@ export default function SearchForm() {
 
             <div className="text-center mb-4">
                 <button type="button" className="btn btn-light me-2" onClick={handleGeolocalizza}>
-                    📍 Usa la mia posizione
+                    <FmdGoodIcon /> Usa la mia posizione
                 </button>
-                <button type="submit" className="btn btn-primary">🔎 Cerca</button>
+                <button type="submit" className="btn btn-primary"><SearchIcon /> Cerca</button>
             </div>
         </form>
 

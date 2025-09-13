@@ -1,3 +1,5 @@
+import SearchIcon from "@mui/icons-material/Search";
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 export const metadata = {
     title: 'PrezziBenzina.eu | Risparmia sul Carburante',
     description: 'Trova i distributori più convenienti vicino a te. PrezziBenzina.eu ti guida con mappa interattiva e filtri intelligenti.',
@@ -16,7 +18,7 @@ export default function Home() {
                     <p className="lead mb-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                         Trova i distributori più convenienti nella tua zona. Ogni giorno.
                     </p>
-                    <a href="/ricerca" className="btn btn-light btn-lg shadow-sm">🔍 Inizia la ricerca</a>
+                    <a href="/ricerca" className="btn btn-light btn-lg shadow-sm"><SearchIcon /> Inizia la ricerca</a>
                 </div>
             </div>
 
@@ -88,7 +90,7 @@ export default function Home() {
                     Scopri subito dove fare il pieno al prezzo più basso. Ogni minuto che aspetti, potresti spendere di più.
                 </p>
                 <a href="/ricerca" className="btn btn-danger btn-lg px-5 py-3 shadow-sm">
-                    🚀 Trova il distributore più conveniente ADESSO
+                    <RocketLaunchIcon /> Trova il distributore più conveniente ADESSO
                 </a>
             </div>
 

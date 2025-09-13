@@ -1,5 +1,7 @@
 import SearchForm from '@/components/SearchForm';
 import Header from "@/components/Header";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import SearchIcon from "@mui/icons-material/Search";
 
 export const metadata = {
     title: 'Trova Distributori Carburante | PrezziBenzina.eu',
@@ -29,7 +31,7 @@ export default function Ricerca() {
                 <div className="container">
                     <h1 className="display-5 fw-bold mb-3">Trova il distributore più conveniente</h1>
                     <p className="lead mb-4">Filtra per carburante, inserisci la tua posizione e risparmia subito.</p>
-                    <a href="#form" className="btn btn-light btn-lg px-4 py-2 shadow-sm">🔎 Inizia la ricerca</a>
+                    <a href="#form" className="btn btn-light btn-lg px-4 py-2 shadow-sm"><SearchIcon /> Inizia la ricerca</a>
                 </div>
             </section>
 
@@ -61,7 +63,7 @@ export default function Ricerca() {
                 <div className="container">
                     <h2 className="fw-bold display-6 mb-3">Stai ancora pagando troppo per il carburante?</h2>
                     <p className="lead mb-4">Ogni minuto che aspetti, potresti spendere di più. Trova subito il distributore migliore.</p>
-                    <a href="/risultati" className="btn btn-light btn-lg px-5 py-3 shadow-sm">🚀 Cerca ora</a>
+                    <a href="/risultati" className="btn btn-light btn-lg px-5 py-3 shadow-sm"><RocketLaunchIcon /> Cerca ora</a>
                 </div>
             </section>
 

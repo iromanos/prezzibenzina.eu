@@ -7,7 +7,7 @@ import SeoTextRegione from "@/components/SeoTextRegione";
 const URI = "http://localhost:8080/pb/"
 
 // ✅ Fetch lato server
-async function getDistributoriRegione(regione, carburante) {
+async function getDistributoriRegione(regione, carburante, marchioSelezionato) {
 
     let fuel = '';
     if (carburante === 'benzina') fuel = '1-x';
@@ -15,7 +15,12 @@ async function getDistributoriRegione(regione, carburante) {
     if (carburante === 'metano') fuel = '3-x';
     if (carburante === 'gpl') fuel = '4-x';
 
-    const res = await axios.get(URI + "prezzi/r/" + regione + "/" + fuel);
+    let request = URI + "prezzi/r/" + regione + "/" + fuel;
+    if (marchioSelezionato != null) {
+        request += "?marchio=" + marchioSelezionato;
+    }
+
+    const res = await axios.get(request);
 
     console.log(res.data);
 
@@ -48,6 +53,25 @@ export async function generateMetadata({params}) {
         description: `Consulta i prezzi aggiornati dei carburanti in ${Regione}. Trova i distributori più convenienti e naviga per città e tipo di carburante.`,
         keywords: [`prezzi carburante ${regione}`, `distributori ${regione}`, `benzina ${regione}`, `diesel ${regione}`],
     };
+}
+
+function FiltroMarchio({regione, marchi, selezionato, carburante}) {
+    return (
+        <section className="mb-4">
+            <h2 className="h5 mb-3">Filtra per marchio</h2>
+            <div className="btn-group flex-wrap" role="group">
+                {marchi.map((marchio) => (
+                    <Link
+                        key={marchio}
+                        href={`/prezzi/${regione}/carburante/${carburante}?marchio=${encodeURIComponent(marchio)}`}
+                        className={`btn btn-sm ${selezionato === marchio ? 'btn-primary' : 'btn-outline-primary'}`}
+                    >
+                        {marchio}
+                    </Link>
+                ))}
+            </div>
+        </section>
+    );
 }
 
 function SezioneComuni({regione, comuni}) {
@@ -143,15 +167,19 @@ function SezioneTitolo({Regione, carburante}){
 
 }
 
-export default async function RegionePage({params}) {
+export default async function RegionePage({params, searchParams}) {
     const {regione, carburante} = params;
+    const marchioSelezionato = searchParams?.marchio || null;
+
     const Regione = decodeURIComponent(regione.charAt(0).toUpperCase() + regione.slice(1));
 
-    const distributori = await getDistributoriRegione(regione, carburante);
+    const distributori = await getDistributoriRegione(regione, carburante, marchioSelezionato);
     const riepilogo = await getSeoRegione(regione, carburante);
 
     const comuni = [...new Set(riepilogo.comuni.map((d) => d.nome))];
     const carburanti = ['benzina', 'diesel', 'gpl', 'metano'];
+
+    const marchi = [...new Set(riepilogo.marchi.map((d) => d.marchio))].filter(Boolean);
 
     return (<>
             <Header/>
@@ -170,6 +198,7 @@ export default async function RegionePage({params}) {
                     </div>
                     <div className={'col-md-7'}>
                         <FiltroCarburante regione={regione} carburanti={carburanti} selezionato={carburante} />
+                        <FiltroMarchio regione={regione} carburante={carburante} marchi={marchi} selezionato={marchioSelezionato} />
                 <Mappa distributori={distributori} /></div>
                 </div>
 
