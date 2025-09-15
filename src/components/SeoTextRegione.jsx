@@ -1,3 +1,5 @@
+import {getLink} from "@/functions/api";
+
 export default function SeoTextRegione({ data }) {
     const { regione, carburanti, comuni, marchi, totaleImpianti, dataAggiornamento } = data;
     const regioneCap = regione.charAt(0).toUpperCase() + regione.slice(1);
@@ -82,13 +84,17 @@ export default function SeoTextRegione({ data }) {
             <h2 className="h5 mt-4 mb-3">Comuni con più distributori</h2>
             <p>
                 Le aree con maggiore densità di impianti facilitano il confronto e spesso offrono più alternative in termini di orari e servizi. Scopri i distributori nei comuni più serviti:
-                {comuni.map((c, i) => (
-                    <span key={c.nome}>
+                {comuni.map((c, i) => {
+
+                    const link = getLink(regione, fuelForLinks, null, c.provincia, c.key)
+
+
+                    return <span key={c.nome}>
             {' '}
-                        <a href={`/prezzi/${regione}/carburante/${fuelForLinks}/${c.nome.toLowerCase()}`}>{c.nome}</a> ({c.impianti})
+                        <a href={link.link}>{c.nome}</a> ({c.impianti})
                         {i < comuni.length - 1 ? ',' : '.'}
           </span>
-                ))}
+                })}
             </p>
 
             <h2 className="h5 mt-4 mb-3">Come usare al meglio questa pagina</h2>

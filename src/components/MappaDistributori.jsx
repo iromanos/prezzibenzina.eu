@@ -1,13 +1,13 @@
 'use client';
 
-import {useEffect, useMemo, useState} from 'react';
-import Map, { Marker } from 'react-map-gl/maplibre';
+import {useEffect, useState} from 'react';
+import Map, {Marker} from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 export default function MappaDistributori({ distributori }) {
 
-    const URI_IMAGE = "http://localhost:8080";
+    const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
     const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
 
     const [bounds, setBounds] = useState(null);

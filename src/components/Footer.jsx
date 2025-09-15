@@ -13,7 +13,7 @@ export default function Footer() {
 
                     {/* Link utili */}
                     <div className="col-md-4 mb-3 text-center">
-                        <h6 className="fw-bold">Navigazione</h6>
+                        <span className="fw-bold h6">Navigazione</span>
                         <ul className="list-unstyled">
                             <li><a href="/ricerca" className="text-white text-decoration-none">Ricerca</a></li>
                             <li><a href="/risultati" className="text-white text-decoration-none">Mappa</a></li>
@@ -23,7 +23,7 @@ export default function Footer() {
 
                     {/* Info legali */}
                     <div className="col-md-4 mb-3 text-center text-md-end">
-                        <h6 className="fw-bold">Informazioni</h6>
+                        <span className="fw-bold h6">Informazioni</span>
                         <ul className="list-unstyled">
                             <li><a href="/privacy" className="text-white text-decoration-none">Privacy</a></li>
                             <li><a href="/cookie" className="text-white text-decoration-none">Cookie</a></li>

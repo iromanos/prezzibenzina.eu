@@ -1,15 +1,14 @@
 import Header from "@/components/Header";
 import SezioneTitolo from "@/components/SezioneTitolo";
-import {getDistributoriRegione} from "@/functions/api";
-import {getSeoRegione} from "@/functions/api";
+import {getDistributoriRegione, getSeoRegione} from "@/functions/api";
 import React from "react";
-import SezioneComuni from "@/components/SezioneComuni";
 import ElencoDistributori from "@/components/ElencoDistributori";
-import FiltroCarburante, {LinkCarburanti} from "@/components/FiltroCarburante";
-import FiltroMarchio, {LinkMarchio} from "@/components/FiltroMarchio";
+import {LinkCarburanti} from "@/components/FiltroCarburante";
+import {LinkMarchio} from "@/components/FiltroMarchio";
 import MappaWrapper from "@/components/MappaWrapper";
 import Breadcrumb from "@/components/Breadcrumb";
 import LinkComuni from "@/components/LinkComuni";
+import SeoTextRegione from "@/components/SeoTextRegione";
 
 export default async function DistributoriPage({params}) {
 
@@ -47,9 +46,8 @@ export default async function DistributoriPage({params}) {
 
             <form method={'post'} action={'/api/pb'}>
                 <input type={'hidden'} name={'regione'} value={regione} />
-                {/*<SezioneComuni comuni={comuni} provinciaSelezionata={sigla} selezionato={comune} />*/}
                 <LinkComuni params={await params} comuni={comuni} />
-                {/*<SeoTextRegione data={riepilogo}/>*/}
+                <SeoTextRegione data={riepilogo}/>
 
                 <div className={'row'}>
                     <div className={'col-md-5'}>

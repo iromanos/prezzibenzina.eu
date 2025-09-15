@@ -1,7 +1,6 @@
-import React from "react";
 import axios from "axios";
 
-const URI = "http://localhost:8080/pb/";
+const URI = process.env.NEXT_PUBLIC_API_ENDPOINT + '/pb/';
 // ✅ Fetch lato server
 export async function getDistributoriRegione(regione, carburante, marchio, provincia, comune) {
 
@@ -102,7 +101,6 @@ export function getLink(regione, carburante, marchio, provincia, comune) {
 
 export async function getMetadata({params}) {
     const {regione, carburante, comune, sigla} = await params;
-    const Regione = regione.charAt(0).toUpperCase() + regione.slice(1);
 
     const descrizioneCarburante = carburante ? carburante.toLowerCase() : 'carburante';
 
