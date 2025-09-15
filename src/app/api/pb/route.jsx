@@ -8,6 +8,8 @@ export async function POST(request) {
     const regione = formData.get('regione');
     const carburante = formData.get('carburante');
     const marchio = formData.get('marchio');
+    const provincia = formData.get('provincia');
+    const comune = formData.get('comune');
 
 
     if (!regione || !carburante) {
@@ -18,6 +20,23 @@ export async function POST(request) {
 
     // Costruisci la destinazione
     let target = `/${regione}/${carburante}`;
+
+
+    if (provincia) {
+        target += '/provincia/' + provincia.toLowerCase();
+        if (comune) {
+            target += '/' + comune.toLowerCase();
+            if (marchio) {
+                target += '/marchio/' + marchio.toLowerCase();
+            }
+            return NextResponse.redirect(new URL(target, request.url), 301);
+        }
+        if (marchio) {
+            target += '/marchio/' + marchio.toLowerCase();
+        }
+        return NextResponse.redirect(new URL(target, request.url), 301);
+    }
+
 
     if (marchio) {
         target += '/marchio/' + marchio.toLowerCase();

@@ -1,11 +1,13 @@
+import {capitalize} from "@/functions/api";
+
 export default function SezioneTitolo({ regione, carburante, provincia, comune, marchio }) {
     const descrizioneCarburante = carburante ? carburante.toLowerCase() : 'carburante';
 
     const localizzazione = comune
-        ? `${comune}, ${provincia?.toUpperCase()}`
+        ? `${capitalize(comune)}, ${provincia?.toUpperCase()}`
         : provincia
             ? `provincia di ${provincia.toUpperCase()}`
-            : regione;
+            : capitalize(regione);
 
     const titolo = `Prezzi ${descrizioneCarburante} in ${localizzazione}`;
 

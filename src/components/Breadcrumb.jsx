@@ -1,0 +1,58 @@
+
+import {capitalize} from "@/functions/api";
+
+export default function Breadcrumb({ regione, carburante, provincia, comune, marchio }) {
+    const path = [];
+
+    // Helper per capitalizzare
+
+
+    path.push({ label: 'Home', link: '/' });
+
+    if (regione) {
+        path.push({
+            label: capitalize(regione),
+            link: `/${regione}/${carburante}`,
+        });
+    }
+
+    if (provincia) {
+        path.push({
+            label: provincia.toUpperCase(),
+            link: `/${regione}/${carburante}/provincia/${provincia}`,
+        });
+    }
+
+    if (comune) {
+        path.push({
+            label: capitalize(comune),
+            link: `/${regione}/${carburante}/provincia/${provincia}/${comune}`,
+        });
+    }
+
+    if (marchio) {
+        path.push({
+            label: capitalize(marchio),
+            link: `/${regione}/${carburante}/provincia/${provincia}/${comune}/marchio/${marchio}`,
+        });
+    }
+
+    return (
+        <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+                {path.map((p, index) => {
+                    const isLast = index === path.length - 1;
+                    return (
+                        <li key={p.label} className="breadcrumb-item">
+                            {isLast ? (
+                                <span>{p.label}</span>
+                            ) : (
+                                <a href={p.link}>{p.label}</a>
+                            )}
+                        </li>
+                    );
+                })}
+            </ol>
+        </nav>
+    );
+}

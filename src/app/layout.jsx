@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 export const metadata = {
   title: 'PrezziBenzina.eu',
   description: 'Trova i distributori di carburante più convenienti vicino a te.',
+    metadataBase: new URL('https://www.prezzibenzina.eu'),
 };
 
 export default function RootLayout({ children }) {

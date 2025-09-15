@@ -1,9 +1,17 @@
-'use client';
 
+
+
+
+export default function Risultati() {
+    return <></>
+}
+/*
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+
+
 
 export default function Risultati() {
     const mapContainer = useRef(null);
@@ -72,3 +80,4 @@ export default function Risultati() {
         </div>
     );
 }
+*/

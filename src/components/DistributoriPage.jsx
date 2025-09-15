@@ -5,21 +5,26 @@ import {getSeoRegione} from "@/functions/api";
 import React from "react";
 import SezioneComuni from "@/components/SezioneComuni";
 import ElencoDistributori from "@/components/ElencoDistributori";
-import FiltroCarburante from "@/components/FiltroCarburante";
-import FiltroMarchio from "@/components/FiltroMarchio";
+import FiltroCarburante, {LinkCarburanti} from "@/components/FiltroCarburante";
+import FiltroMarchio, {LinkMarchio} from "@/components/FiltroMarchio";
 import MappaWrapper from "@/components/MappaWrapper";
+import Breadcrumb from "@/components/Breadcrumb";
+import LinkComuni from "@/components/LinkComuni";
 
 export default async function DistributoriPage({params}) {
 
-    const {regione, carburante, marchio} = params;
+    // console.log(params);
 
-    const distributori = await getDistributoriRegione(regione, carburante, marchio);
-    const riepilogo = await getSeoRegione(regione, carburante);
+    const {regione, carburante, marchio, sigla, comune} = await params;
 
-    const comuni = [...new Set(riepilogo.comuni.map((d) => d.nome))];
+    const distributori = await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
+    const riepilogo = await getSeoRegione(regione, carburante, marchio, sigla, comune);
+
+    const comuni = riepilogo.comuni;
+    const marchi = riepilogo.marchi;
+
     const carburanti = ['benzina', 'diesel', 'gpl', 'metano'];
 
-    const marchi = [...new Set(riepilogo.marchi.map((d) => d.marchio))].filter(Boolean);
 
 
     function Mappa({distributori}){
@@ -35,12 +40,15 @@ export default async function DistributoriPage({params}) {
         <Header/>
 
         <div className="container py-5">
-            <SezioneTitolo regione={regione} carburante={carburante} marchio={marchio}/>
+
+            <Breadcrumb regione={regione} carburante={carburante} provincia={sigla} comune={comune} marchio={marchio} />
+
+            <SezioneTitolo regione={regione} carburante={carburante} marchio={marchio} provincia={sigla} comune={comune}/>
 
             <form method={'post'} action={'/api/pb'}>
                 <input type={'hidden'} name={'regione'} value={regione} />
-                <SezioneComuni comuni={comuni} regione={regione} />
-
+                {/*<SezioneComuni comuni={comuni} provinciaSelezionata={sigla} selezionato={comune} />*/}
+                <LinkComuni params={await params} comuni={comuni} />
                 {/*<SeoTextRegione data={riepilogo}/>*/}
 
                 <div className={'row'}>
@@ -48,11 +56,8 @@ export default async function DistributoriPage({params}) {
                         <ElencoDistributori Regione={regione} distributori={distributori} />
                     </div>
                     <div className={'col-md-7'}>
-                        <FiltroCarburante regione={regione} carburanti={carburanti} selezionato={carburante} />
-                        <FiltroMarchio regione={regione} carburante={carburante} marchi={marchi} selezionato={marchio} />
-                        <div className={'mb-4'}>
-                            <button type={'submit'} className={'btn btn-sm btn-primary'} >Filtra</button>
-                        </div>
+                        <LinkCarburanti params={await params} carburanti={carburanti} />
+                        <LinkMarchio params={await params} marchi={marchi} />
                         <Mappa distributori={distributori} /></div>
                 </div>
 
