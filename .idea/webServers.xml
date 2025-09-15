@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="b5b5b56d-735b-4fee-9f10-c7966a3525ca" name="prezzibenzina.eu">
+        <fileTransfer rootFolder="/var/www/vhosts/prezzibenzina.eu/httpdocs" accessType="SFTP" host="wecoach.cloud" port="22" sshConfigId="7e34b614-e044-4ce7-87f1-f497f2cd7902" sshConfig="prezzibenzina.eu">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
