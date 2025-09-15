@@ -9,6 +9,7 @@ import MappaWrapper from "@/components/MappaWrapper";
 import Breadcrumb from "@/components/Breadcrumb";
 import LinkComuni from "@/components/LinkComuni";
 import SeoTextRegione from "@/components/SeoTextRegione";
+import {IntroText} from "@/components/IntroText";
 
 export default async function DistributoriPage({params}) {
 
@@ -42,12 +43,9 @@ export default async function DistributoriPage({params}) {
 
             <Breadcrumb regione={regione} carburante={carburante} provincia={sigla} comune={comune} marchio={marchio} />
 
-            <SezioneTitolo regione={regione} carburante={carburante} marchio={marchio} provincia={sigla} comune={comune}/>
-
-            <form method={'post'} action={'/api/pb'}>
-                <input type={'hidden'} name={'regione'} value={regione} />
-                <LinkComuni params={await params} comuni={comuni} />
-                <SeoTextRegione data={riepilogo}/>
+                <IntroText data={riepilogo}>
+                    <LinkComuni params={await params} comuni={comuni} />
+                </IntroText>
 
                 <div className={'row'}>
                     <div className={'col-md-5'}>
@@ -58,9 +56,6 @@ export default async function DistributoriPage({params}) {
                         <LinkMarchio params={await params} marchi={marchi} />
                         <Mappa distributori={distributori} /></div>
                 </div>
-
-            </form>
-
 
 
         </div>

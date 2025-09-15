@@ -53,6 +53,10 @@ export async function getSeoRegione(regione, carburante, marchio, provincia, com
         request += `comune=${comune}&`;
     }
 
+    if(marchio) {
+        request += `marchio=${marchio}&`;
+    }
+
     const res = await axios.get(request);
 
     // console.log(res.data);
@@ -93,9 +97,6 @@ export function getLink(regione, carburante, marchio, provincia, comune) {
             link: `/${regione}/${carburante}/provincia/${provincia}/${comune}/marchio/${marchio}`,
         });
     }
-
-    console.log(path);
-
     return path[path.length - 1];
 }
 
