@@ -57,10 +57,8 @@ export function IntroText({ data, children }) {
 
             <h2>Mappa carburanti {carburanteLabel} {marchio ? marchio : ''} {localita}</h2>
             <p className={'lead text-muted'}>
-                Stai cercando i <strong>prezzi della {carburanteLabel} {marchio ? marchio + ' ' : ''}{localita}</strong>? La mappa interattiva ti mostra in tempo reale tutti gli impianti di distribuzione carburante attivi, con i prezzi aggiornati e le informazioni dettagliate per ogni stazione.
-                </p>
+                Stai cercando i <strong>prezzi della {carburanteLabel} {marchio ? marchio + ' ' : ''}{localita}</strong>? La mappa interattiva ti mostra in tempo reale tutti gli impianti di distribuzione carburante attivi.</p>
             {children}
-
             <p>
                 Grazie a questo strumento, puoi confrontare facilmente i distributori di {carburante} {marchio ? `del marchio ${marchio}` : ''} {localita}, individuare le offerte più convenienti e pianificare il tuo rifornimento in modo intelligente.
             </p>

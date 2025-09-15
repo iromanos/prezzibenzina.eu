@@ -54,7 +54,8 @@ export default async function DistributoriPage({params}) {
                     <div className={'col-md-7'}>
                         <LinkCarburanti params={await params} carburanti={carburanti} />
                         <LinkMarchio params={await params} marchi={marchi} />
-                        <Mappa distributori={distributori} /></div>
+                        {/*<Mappa distributori={distributori} />*/}
+                    </div>
                 </div>
 
 
