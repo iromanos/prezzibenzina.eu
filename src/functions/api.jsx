@@ -85,7 +85,7 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
         path.push(`/marchio/${marchio}`);
     }
 
-    return path.join();
+    return path.join("");
 
 }
 

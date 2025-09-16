@@ -29,9 +29,13 @@ export default function MappaDistributori({ distributori }) {
     const handleMapLoad = (event) => {
         const map = event.target;
         if (bounds) {
+
+            let maxZoom = 15;
+            if (distributori.length === 1) maxZoom = 10;
             map.fitBounds(bounds, {
                 padding: 80,
                 duration: 500,
+                maxZoom: maxZoom
             });
         }
     };
@@ -48,6 +52,7 @@ export default function MappaDistributori({ distributori }) {
                     longitude: 9.19,
                     latitude: 45.46,
                     zoom: 8,
+
                 }}
                 style={{ width: '100%', height: '100%' }}
                 attributionControl={true}

@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import {getLink} from "@/functions/api";
+import {getRouteLink} from "@/functions/api";
 
 export function LinkCarburanti({params, carburanti}){
     return                 <section className="mb-4">
@@ -8,13 +8,13 @@ export function LinkCarburanti({params, carburanti}){
         <div className="btn-group" role="group">
             {carburanti.map((tipo) => {
 
-                const link = getLink(params.regione, tipo, params.marchio, params.sigla, params.comune);
+                    const link = getRouteLink(params.regione, tipo, params.marchio, params.sigla, params.comune);
 
                 return <Link
 
                     className={`btn btn-sm ${params.carburante === tipo ? 'btn-primary' : 'btn-outline-primary'}`}
 
-                    key={tipo} href={link.link}>{tipo}</Link>
+                    key={tipo} href={link}>{tipo}</Link>
             }
             )}
         </div></section>

@@ -6,7 +6,7 @@ import {LinkCarburanti} from "@/components/FiltroCarburante";
 import {LinkMarchio} from "@/components/FiltroMarchio";
 import Breadcrumb from "@/components/Breadcrumb";
 import LinkComuni from "@/components/LinkComuni";
-import {IntroText} from "@/components/IntroText";
+import {IntroTextVersione2} from "@/components/IntroText";
 import Mappa from "@/components/Mappa";
 import MapIcon from '@mui/icons-material/Map';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
@@ -40,7 +40,7 @@ export default async function DistributoriPage({params}) {
 
             <Breadcrumb regione={regione} carburante={carburante} provincia={sigla} comune={comune} marchio={marchio}/>
 
-            <IntroText data={riepilogo}>
+            <IntroTextVersione2 data={riepilogo} distributori={distributori}>
                 <ul className={'list-unstyled'}>
                     <li>✅ Dati aggiornati: {formatted}</li>
                     <li>✅ Prezzi ufficiali MIMIT</li>
@@ -52,7 +52,7 @@ export default async function DistributoriPage({params}) {
                     <a href={"#mappa"} className={'btn btn-outline-primary'}><MapIcon/> Mappa</a>
                 </div>
                 {comuni.length > 1 ? <LinkComuni params={await params} comuni={comuni}/> : <></>}
-            </IntroText>
+            </IntroTextVersione2>
 
             <div className={'row'}>
                 <div id="distributori" className={'col-md-5'}>
@@ -61,7 +61,7 @@ export default async function DistributoriPage({params}) {
                 <div id={"mappa"} className={'col-md-7'}>
                     <LinkCarburanti params={await params} carburanti={carburanti}/>
                     <LinkMarchio params={await params} marchi={marchi}/>
-                    <Mappa distributori={distributori}/>
+                    {distributori.length !== 0 ? <Mappa distributori={distributori}/> : <></>}
                 </div>
             </div>
 
