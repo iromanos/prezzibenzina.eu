@@ -1,19 +1,17 @@
 import Header from "@/components/Header";
-import SezioneTitolo from "@/components/SezioneTitolo";
 import {getDistributoriRegione, getSeoRegione} from "@/functions/api";
 import React from "react";
 import ElencoDistributori from "@/components/ElencoDistributori";
 import {LinkCarburanti} from "@/components/FiltroCarburante";
 import {LinkMarchio} from "@/components/FiltroMarchio";
-import MappaWrapper from "@/components/MappaWrapper";
 import Breadcrumb from "@/components/Breadcrumb";
 import LinkComuni from "@/components/LinkComuni";
-import SeoTextRegione from "@/components/SeoTextRegione";
 import {IntroText} from "@/components/IntroText";
+import Mappa from "@/components/Mappa";
+import MapIcon from '@mui/icons-material/Map';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 export default async function DistributoriPage({params}) {
-
-    // console.log(params);
 
     const {regione, carburante, marchio, sigla, comune} = await params;
 
@@ -26,14 +24,13 @@ export default async function DistributoriPage({params}) {
     const carburanti = ['benzina', 'diesel', 'gpl', 'metano'];
 
 
+    const date = new Date(riepilogo.dataAggiornamento);
 
-    function Mappa({distributori}){
-        return <section className={"mb-4"}>
-            <h2 className="h5 mb-3">Mappa dei distributori</h2>
-            <MappaWrapper distributori={distributori}/>
-        </section>;
-    }
-
+    const formatted = new Intl.DateTimeFormat('it-IT', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    }).format(date);
 
     return <>
 
@@ -41,26 +38,35 @@ export default async function DistributoriPage({params}) {
 
         <div className="container py-5">
 
-            <Breadcrumb regione={regione} carburante={carburante} provincia={sigla} comune={comune} marchio={marchio} />
+            <Breadcrumb regione={regione} carburante={carburante} provincia={sigla} comune={comune} marchio={marchio}/>
 
-                <IntroText data={riepilogo}>
-                    <LinkComuni params={await params} comuni={comuni} />
-                </IntroText>
-
-                <div className={'row'}>
-                    <div className={'col-md-5'}>
-                        <ElencoDistributori Regione={regione} distributori={distributori} />
-                    </div>
-                    <div className={'col-md-7'}>
-                        <LinkCarburanti params={await params} carburanti={carburanti} />
-                        <LinkMarchio params={await params} marchi={marchi} />
-                        {/*<Mappa distributori={distributori} />*/}
-                    </div>
+            <IntroText data={riepilogo}>
+                <ul className={'list-unstyled'}>
+                    <li>✅ Dati aggiornati: {formatted}</li>
+                    <li>✅ Prezzi ufficiali MIMIT</li>
+                    <li>✅ Rifornimento veloce e sicuro</li>
+                </ul>
+                <div className={'d-flex gap-2 mb-4'}>
+                    <a href={"#distributori"} className={'btn btn-primary'}><FormatListBulletedIcon/> Elenco
+                        distributori</a>
+                    <a href={"#mappa"} className={'btn btn-outline-primary'}><MapIcon/> Mappa</a>
                 </div>
+                {comuni.length > 1 ? <LinkComuni params={await params} comuni={comuni}/> : <></>}
+            </IntroText>
+
+            <div className={'row'}>
+                <div id="distributori" className={'col-md-5'}>
+                    <ElencoDistributori Regione={regione} distributori={distributori}/>
+                </div>
+                <div id={"mappa"} className={'col-md-7'}>
+                    <LinkCarburanti params={await params} carburanti={carburanti}/>
+                    <LinkMarchio params={await params} marchi={marchi}/>
+                    <Mappa distributori={distributori}/>
+                </div>
+            </div>
 
 
         </div>
-
 
 
     </>;

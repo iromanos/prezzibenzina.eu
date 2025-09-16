@@ -12,35 +12,36 @@ export default function Header() {
 
     return (
         <header className="bg-white shadow-sm sticky-top">
-            <nav className="container d-flex align-items-center justify-content-between py-3">
+            <div className={'container'}>
+                <nav className="navbar navbar-expand-lg p-3 justify-content-between align-items-center">
                 {/* Logo + Brand */}
                 <Link href="/" className="d-flex align-items-center text-decoration-none">
-                    <img src="/assets/logo-blu-transparent.png" alt="PrezziBenzina.eu" style={{ height: '40px' }} className="me-2" />
-                    <span className="fw-bold text-dark">PrezziBenzina.eu</span>
+                    <img width={110} height={40} src="/assets/logo-header.webp" alt="PrezziBenzina.eu"
+                         className="me-2"/>
                 </Link>
 
                 {/* Desktop menu */}
-                <ul className="nav d-none d-md-flex">
+                    <ul className="nav d-none d-lg-flex">
                     <li className="nav-item"><Link href="/ricerca" className="nav-link text-dark">Ricerca</Link></li>
                     <li className="nav-item"><Link href="/risultati" className="nav-link text-dark">Mappa</Link></li>
                     <li className="nav-item"><Link href="/contatti" className="nav-link text-dark">Contatti</Link></li>
                 </ul>
 
                 {/* CTA desktop */}
-                <Link href="/ricerca" className="btn btn-primary d-none d-md-inline-block">
+                    <Link href="/ricerca" className="btn btn-primary d-none d-lg-inline-block">
                     <SearchIcon /> Trova distributori
                 </Link>
 
                 {/* Hamburger toggle for mobile */}
                 <button
-                    className="btn d-md-none"
+                    className="navbar-toggler border-0"
                     type="button"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#mobileMenu"
                     aria-controls="mobileMenu"
                     aria-label="Apri menu"
                 >
-                    ☰
+                    <span className="navbar-toggler-icon"></span>
                 </button>
             </nav>
 
@@ -60,9 +61,12 @@ export default function Header() {
                         <li className="nav-item"><Link href="/ricerca" className="nav-link text-dark">Ricerca</Link></li>
                         <li className="nav-item"><Link href="/risultati" className="nav-link text-dark">Mappa</Link></li>
                         <li className="nav-item"><Link href="/contatti" className="nav-link text-dark">Contatti</Link></li>
-                        <li className="nav-item mt-3"><Link href="/ricerca" className="btn btn-primary w-100">🔎 Trova distributori</Link></li>
+                        <li className="nav-item mt-3"><Link href="/ricerca"
+                                                            className="btn btn-primary w-100"><SearchIcon/> Trova
+                            distributori</Link></li>
                     </ul>
                 </div>
+            </div>
             </div>
         </header>
     );

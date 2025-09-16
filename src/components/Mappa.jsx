@@ -1,0 +1,39 @@
+'use client'
+
+import MappaWrapper from "@/components/MappaWrapper";
+import React, {useEffect, useRef, useState} from "react";
+
+
+export default function Mappa({distributori}) {
+
+    const containerRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                    observer.disconnect(); // disattiva dopo il primo trigger
+                }
+            },
+            {
+                root: null,
+                threshold: 0.1,
+            }
+        );
+
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, []);
+
+
+    return <section className={"mb-4"}>
+        <h2 className="h5 mb-3">Mappa dei distributori</h2>
+        <div ref={containerRef}>
+            {isVisible ? <MappaWrapper distributori={distributori}/> : <></>}</div>
+    </section>;
+}

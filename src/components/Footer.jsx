@@ -5,7 +5,12 @@ export default function Footer() {
                 <div className="row align-items-start">
                     {/* Logo e descrizione */}
                     <div className="col-md-4 mb-3 text-center text-md-start">
-                        <img src="/assets/logo-transparent.png" alt="Logo PrezziBenzina.eu" style={{ maxWidth: '120px' }} className="mb-2" />
+                        <img
+
+                            width={120}
+                            height={120}
+
+                            src="/assets/logo-transparent-120.png" alt="Logo PrezziBenzina.eu" className="mb-2"/>
                         <p className="small mb-0">
                             PrezziBenzina.eu ti aiuta a trovare i distributori più convenienti nella tua zona. Risparmia ogni giorno.
                         </p>

@@ -4,12 +4,12 @@ import {useEffect, useState} from 'react';
 import Map, {Marker} from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import {isMobile} from 'react-device-detect';
 
 export default function MappaDistributori({ distributori }) {
 
     const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
     const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
-
     const [bounds, setBounds] = useState(null);
 
     // Calcola bounds
@@ -37,8 +37,11 @@ export default function MappaDistributori({ distributori }) {
     };
 
     return (
-        <div className="border rounded overflow-hidden" style={{ height: '560px', width: '100%' }}>
+        <div
+            className="border rounded overflow-hidden"
+            style={{height: '560px', width: '100%'}}>
             <Map
+
                 mapLib={maplibregl}
                 mapStyle={styleUrl}
                 initialViewState={{
@@ -49,6 +52,13 @@ export default function MappaDistributori({ distributori }) {
                 style={{ width: '100%', height: '100%' }}
                 attributionControl={true}
                 onLoad={handleMapLoad}
+
+                dragPan={!isMobile}             // ❌ disabilita pan con un dito
+                scrollZoom={!isMobile}          // ❌ disabilita zoom con scroll
+                doubleClickZoom={!isMobile}     // ❌ disabilita zoom con doppio tap
+                touchZoomRotate={true}      // ✅ abilita pinch-to-zoom e rotazione con due dita
+                interactive={true}          // ✅ mantiene la mappa attiva
+
             >
                 {distributori.map((d) => {
                     const color = d.color === -1 ? '#dc3545' : '#198754';

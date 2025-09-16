@@ -23,10 +23,10 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     if (marchio) {
         request += "?marchio=" + marchio;
     }
+    console.log(request);
 
     const res = await axios.get(request);
 
-    // console.log(res.data);
 
     return res.data;
 }
@@ -56,12 +56,36 @@ export async function getSeoRegione(regione, carburante, marchio, provincia, com
     if(marchio) {
         request += `marchio=${marchio}&`;
     }
+    console.log(request);
 
     const res = await axios.get(request);
 
     // console.log(res.data);
 
     return res.data;
+
+}
+
+export function getRouteLink(regione, carburante, marchio, provincia, comune) {
+    const path = [];
+
+    if (regione) {
+        path.push(`/${regione}/${carburante}`);
+    }
+
+    if (provincia) {
+        path.push(`/provincia/${provincia}`);
+    }
+
+    if (comune) {
+        path.push(`/${comune}`);
+    }
+
+    if (marchio) {
+        path.push(`/marchio/${marchio}`);
+    }
+
+    return path.join();
 
 }
 
