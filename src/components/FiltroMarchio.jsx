@@ -1,13 +1,13 @@
 import Link from "next/link";
 import React from 'react';
-import {getRouteLink} from "@/functions/api";
+import {getRouteLink, log} from "@/functions/api";
 
 
 export function LinkMarchio({marchi, params}){
 
     marchi.unshift( { marchio:  'Tutti', key: ''});
 
-    console.log(params);
+    log(params);
 
     if(params.marchio === undefined) params.marchio = '';
 
@@ -16,13 +16,14 @@ export function LinkMarchio({marchi, params}){
         <div className="d-flex flex-wrap gap-1" role="group">
                 {marchi.map((marchio) => {
 
-                    const link = getRouteLink(params.regione, params.carburante, marchio.key, params.sigla, params.comune);
+                    const link = getRouteLink(params.regione, params.carburante, marchio.marchio, params.sigla, params.comune);
 
                     return <Link
 
+                        title={link.title}
                         className={`btn btn-sm ${params.marchio === marchio.key ? 'btn-primary' : 'btn-outline-primary'}`}
 
-                        key={marchio.marchio} href={link}>{marchio.marchio}</Link>
+                        key={marchio.marchio} href={link.link}>{marchio.marchio}</Link>
 
 
 
@@ -37,8 +38,8 @@ export default function FiltroMarchio({marchi, selezionato}) {
     if (selezionato === null || selezionato === undefined) selezionato = '';
 
     marchi.unshift( { marchio:  'Tutti', key: ''});
-    console.log(marchi);
-    console.log(selezionato);
+    log(marchi);
+    log(selezionato);
     return (
         <section className="mb-4">
             <h2 className="h5 mb-3">Filtra per marchio</h2>

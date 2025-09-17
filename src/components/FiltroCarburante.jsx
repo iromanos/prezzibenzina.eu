@@ -11,10 +11,10 @@ export function LinkCarburanti({params, carburanti}){
                     const link = getRouteLink(params.regione, tipo, params.marchio, params.sigla, params.comune);
 
                 return <Link
-
+                    title={link.title}
                     className={`btn btn-sm ${params.carburante === tipo ? 'btn-primary' : 'btn-outline-primary'}`}
 
-                    key={tipo} href={link}>{tipo}</Link>
+                    key={tipo} href={link.link}>{tipo}</Link>
             }
             )}
         </div></section>

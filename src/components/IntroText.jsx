@@ -1,4 +1,5 @@
 import React from 'react';
+import {log} from "@/functions/api";
 
 function capitalize(str) {
     return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';
@@ -22,8 +23,8 @@ function formatDate(iso) {
 
 export function IntroTextVersione2({data, distributori, children}) {
 
-    console.log(data);
-    console.log(distributori);
+    log(data);
+    log(distributori);
 
     const {request, carburanti, marchi = [], comuni = [], regione, totaleImpianti, dataAggiornamento} = data;
     const scope = request.comune
@@ -120,7 +121,7 @@ export function IntroTextVersione2({data, distributori, children}) {
 
 export function IntroText({ data, children }) {
 
-    console.log(data);
+    log(data);
 
     const { request, carburanti, marchi = [], comuni = [], regione, totaleImpianti, dataAggiornamento } = data;
 

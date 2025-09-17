@@ -1,12 +1,13 @@
 import React from "react";
 import Link from 'next/link';
-import {getLink} from "@/functions/api";
+import {getRouteLink} from "@/functions/api";
 
-export default function LinkComuni({params, comuni}) {
+export default function LinkComuni({params, comuni, riepilogo}) {
 
 
-    const {regione, carburante, marchio, sigla} = params;
+    const {regione, carburante} = params;
 
+    const marchio = riepilogo.marchio ? riepilogo.marchio.nome : null;
 
     return <>
         <section className="mb-4">
@@ -14,13 +15,12 @@ export default function LinkComuni({params, comuni}) {
             <div className="d-flex flex-wrap gap-2">
                 {comuni.map((comune) => {
                     // console.log(comune);
-                    const link = getLink(regione, carburante, marchio, comune.provincia, comune.key);
+                    const link = getRouteLink(regione, carburante, marchio, comune.provincia.toLowerCase(), comune.key);
                     // console.log(link);
 
-                    return <Link key={comune.key} className={'btn btn-sm btn-outline-secondary'}
-
-
-
+                    return <Link
+                        title={link.title}
+                        key={comune.key} className={'btn btn-sm btn-outline-secondary'}
                                  href={link.link}>
                         {comune.nome}
                     </Link>;

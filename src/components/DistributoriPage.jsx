@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import {getDistributoriRegione, getSeoRegione} from "@/functions/api";
+import {generateMicrodataGraph, getDistributoriRegione, getSeoRegione} from "@/functions/api";
 import React from "react";
 import ElencoDistributori from "@/components/ElencoDistributori";
 import {LinkCarburanti} from "@/components/FiltroCarburante";
@@ -32,8 +32,9 @@ export default async function DistributoriPage({params}) {
         day: 'numeric',
     }).format(date);
 
-    return <>
+    const microdata = generateMicrodataGraph(distributori);
 
+    return <>
         <Header/>
 
         <div className="container py-5">
@@ -53,11 +54,15 @@ export default async function DistributoriPage({params}) {
                     <li>✅ Rifornimento veloce e sicuro</li>
                 </ul>
                 <div className={'d-flex gap-2 mb-4'}>
-                    <a href={"#distributori"} className={'btn btn-primary'}><FormatListBulletedIcon/> Elenco
+                    <a title={"Elenco distributori"} href={"#distributori"}
+                       className={'btn btn-primary'}><FormatListBulletedIcon/> Elenco
                         distributori</a>
-                    <a href={"#mappa"} className={'btn btn-outline-primary'}><MapIcon/> Mappa</a>
+                    <a title={"Mappa"} href={"#mappa"} className={'btn btn-outline-primary'}><MapIcon/> Mappa</a>
                 </div>
-                {comuni.length > 1 ? <LinkComuni params={await params} comuni={comuni}/> : <></>}
+                {comuni.length > 1 ? <LinkComuni
+                    riepilogo={riepilogo}
+                    params={await params}
+                    comuni={comuni}/> : <></>}
             </IntroTextVersione2>
 
             <div className={'row'}>

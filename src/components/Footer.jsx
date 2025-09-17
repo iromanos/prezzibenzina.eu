@@ -20,9 +20,12 @@ export default function Footer() {
                     <div className="col-md-4 mb-3 text-center">
                         <span className="fw-bold h6">Navigazione</span>
                         <ul className="list-unstyled">
-                            <li><a href="/ricerca" className="text-white text-decoration-none">Ricerca</a></li>
-                            <li><a href="/risultati" className="text-white text-decoration-none">Mappa</a></li>
-                            <li><a href="/contatti" className="text-white text-decoration-none">Contatti</a></li>
+                            <li><a title={"Ricerca"} href="/ricerca"
+                                   className="text-white text-decoration-none">Ricerca</a></li>
+                            <li><a title={"Mappa"} href="/risultati"
+                                   className="text-white text-decoration-none">Mappa</a></li>
+                            <li><a title={"Contatti"} href="/contatti"
+                                   className="text-white text-decoration-none">Contatti</a></li>
                         </ul>
                     </div>
 
@@ -30,9 +33,10 @@ export default function Footer() {
                     <div className="col-md-4 mb-3 text-center text-md-end">
                         <span className="fw-bold h6">Informazioni</span>
                         <ul className="list-unstyled">
-                            <li><a href="/privacy" className="text-white text-decoration-none">Privacy</a></li>
-                            <li><a href="/cookie" className="text-white text-decoration-none">Cookie</a></li>
-                            <li><a href="/credits" className="text-white text-decoration-none">Credits</a></li>
+                            <li><a title={"Privacy"} href="/privacy"
+                                   className="text-white text-decoration-none">Privacy</a></li>
+                            <li><a title={"cookie"} href="/cookie"
+                                   className="text-white text-decoration-none">Cookie</a></li>
                         </ul>
                     </div>
                 </div>

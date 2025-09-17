@@ -2,6 +2,7 @@
 
 import MappaWrapper from "@/components/MappaWrapper";
 import React, {useEffect, useRef, useState} from "react";
+import {log} from "@/functions/api";
 
 
 export default function Mappa({distributori}) {
@@ -13,14 +14,14 @@ export default function Mappa({distributori}) {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
-                    console.log("LOAD MAP")
+                    log("LOAD MAP")
                     setIsVisible(true);
                     observer.disconnect(); // disattiva dopo il primo trigger
                 }
             },
             {
                 root: null,
-                rootMargin: '0px 0px 360px 0px',
+                rootMargin: '0px 0px 180px 0px',
                 threshold: 0.1,
             }
         );
