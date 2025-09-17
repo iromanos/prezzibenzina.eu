@@ -38,7 +38,13 @@ export default async function DistributoriPage({params}) {
 
         <div className="container py-5">
 
-            <Breadcrumb regione={regione} carburante={carburante} provincia={sigla} comune={comune} marchio={marchio}/>
+            <Breadcrumb
+                riepilogo={riepilogo}
+                regione={regione}
+                carburante={carburante}
+                provincia={sigla}
+                comune={comune}
+                marchio={marchio}/>
 
             <IntroTextVersione2 data={riepilogo} distributori={distributori}>
                 <ul className={'list-unstyled'}>
@@ -55,10 +61,10 @@ export default async function DistributoriPage({params}) {
             </IntroTextVersione2>
 
             <div className={'row'}>
-                <div id="distributori" className={'col-md-5'}>
+                <div id="distributori" className={'col-md-5 order-1'}>
                     <ElencoDistributori Regione={regione} distributori={distributori}/>
                 </div>
-                <div id={"mappa"} className={'col-md-7'}>
+                <div id={"mappa"} className={'col-md-7 order-0'}>
                     <LinkCarburanti params={await params} carburanti={carburanti}/>
                     <LinkMarchio params={await params} marchi={marchi}/>
                     {distributori.length !== 0 ? <Mappa distributori={distributori}/> : <></>}

@@ -55,7 +55,7 @@ export default function MappaDistributori({ distributori }) {
 
                 }}
                 style={{ width: '100%', height: '100%' }}
-                attributionControl={true}
+                attributionControl={false}
                 onLoad={handleMapLoad}
 
                 dragPan={!isMobile}             // ❌ disabilita pan con un dito

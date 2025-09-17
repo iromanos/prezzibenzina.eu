@@ -13,7 +13,7 @@ export default function Header() {
     return (
         <header className="bg-white shadow-sm sticky-top">
             <div className={'container'}>
-                <nav className="navbar navbar-expand-lg p-3 justify-content-between align-items-center">
+                <nav className="navbar navbar-expand-lg py-3 justify-content-between align-items-center">
                 {/* Logo + Brand */}
                 <Link href="/" className="d-flex align-items-center text-decoration-none">
                     <img width={110} height={40} src="/assets/logo-header.webp" alt="PrezziBenzina.eu"

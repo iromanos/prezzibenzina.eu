@@ -13,12 +13,14 @@ export default function Mappa({distributori}) {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
+                    console.log("LOAD MAP")
                     setIsVisible(true);
                     observer.disconnect(); // disattiva dopo il primo trigger
                 }
             },
             {
                 root: null,
+                rootMargin: '0px 0px 360px 0px',
                 threshold: 0.1,
             }
         );

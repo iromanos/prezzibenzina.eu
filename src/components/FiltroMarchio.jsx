@@ -13,7 +13,7 @@ export function LinkMarchio({marchi, params}){
 
     return <section className="mb-4">
             <h2 className="h5 mb-3">Filtra per marchio</h2>
-            <div className="btn-group flex-wrap" role="group">
+        <div className="d-flex flex-wrap gap-1" role="group">
                 {marchi.map((marchio) => {
 
                     const link = getRouteLink(params.regione, params.carburante, marchio.key, params.sigla, params.comune);

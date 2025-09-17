@@ -1,7 +1,6 @@
-
 import {capitalize} from "@/functions/api";
 
-export default function Breadcrumb({ regione, carburante, provincia, comune, marchio }) {
+export default function Breadcrumb({regione, carburante, provincia, comune, marchio, riepilogo}) {
     const path = [];
 
     // Helper per capitalizzare
@@ -30,10 +29,10 @@ export default function Breadcrumb({ regione, carburante, provincia, comune, mar
         });
     }
 
-    if (marchio) {
+    if (riepilogo.marchio) {
         path.push({
-            label: capitalize(marchio),
-            link: `/${regione}/${carburante}/provincia/${provincia}/${comune}/marchio/${marchio}`,
+            label: capitalize(riepilogo.marchio.nome),
+            link: `/${regione}/${carburante}/provincia/${provincia}/${comune}/marchio/${riepilogo.marchio.id}`,
         });
     }
 

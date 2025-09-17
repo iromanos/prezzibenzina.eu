@@ -11,7 +11,7 @@ export default function ElencoDistributori({distributori}){
                     <li key={d.id_impianto}
                         className="list-group-item d-flex justify-content-between align-items-center">
                         <div>
-                            <strong>{d.bandiera}</strong> — {d.nome_impianto}
+                            <span className={'fw-bold'}>{d.bandiera}</span> - {d.nome_impianto}
                             <div className="text-muted small">
                                 {d.indirizzo}, {d.comune} ({d.provincia})
                             </div>

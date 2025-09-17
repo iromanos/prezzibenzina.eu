@@ -35,7 +35,7 @@ export function IntroTextVersione2({data, distributori, children}) {
     const carburante = request.carburante.toLowerCase();
     const carburanteLabel = capitalize(carburante);
     const stats = carburanti[carburante] || {};
-    const marchio = request.marchio ? request.marchio.toUpperCase() : null;
+    const marchio = data.marchio ? data.marchio.nome : null;
     const dataFormatted = formatDate(dataAggiornamento);
     const localita =
         scope.livello === 'comune'
@@ -49,9 +49,9 @@ export function IntroTextVersione2({data, distributori, children}) {
 
     return (
         <section className="intro-text">
-            <h1>Prezzi {carburanteLabel} {marchio ? ` ${marchio}` : ''} {localita}</h1>
+            <h1>Prezzi {carburante} {marchio ? ` ${marchio}` : ''} {localita}</h1>
             <p className="lead text-muted">
-                Scopri i <strong>prezzi</strong> aggiornati della <strong>{carburanteLabel}</strong> {marchio ?
+                Scopri i <strong>prezzi</strong> aggiornati della <strong>{carburante}</strong> {marchio ?
                 <strong>{marchio}</strong> : ''} {localita} e pianifica il tuo rifornimento in modo intelligente.
             </p>
 
@@ -59,7 +59,7 @@ export function IntroTextVersione2({data, distributori, children}) {
                 <>
                     <p>
                         Al momento non sono
-                        disponibili <strong>distributori</strong> di <strong>{carburanteLabel}</strong> {marchio ?
+                        disponibili <strong>distributori</strong> di <strong>{carburante}</strong> {marchio ?
                         <strong>{marchio}</strong> : ''} {localita}. I dati potrebbero essere in fase di aggiornamento
                         oppure non ci sono impianti attivi che corrispondono ai criteri selezionati. Ti consigliamo di
                         verificare altre zone o carburanti per trovare le opzioni più adatte alle tue esigenze.
@@ -76,11 +76,14 @@ export function IntroTextVersione2({data, distributori, children}) {
 
                 {children}
                 <p>
-                    Se stai cercando i <strong>prezzi</strong> della <strong>{carburanteLabel}</strong> {marchio ?
+                    Se stai cercando i <strong>prezzi</strong> della <strong>{carburante}</strong> {marchio ?
                     <strong>{marchio}</strong> : ''} {localita}, sei nel posto giusto. La nostra mappa interattiva ti
                     permette di visualizzare in tempo reale tutti gli impianti attivi, confrontare i prezzi e scegliere
-                    il distributore più conveniente. Il prezzo medio
-                    della <strong>{carburanteLabel}</strong> {localita} è di <strong>{formatEuro(stats.media)}</strong>,
+                    il distributore più conveniente.
+                </p>
+                <p>
+                    Il prezzo medio
+                    della <strong>{carburante}</strong> {localita} è di <strong>{formatEuro(stats.media)}</strong>,
                     con un minimo di <strong>{formatEuro(stats.min)}</strong> e un massimo
                     di <strong>{formatEuro(stats.max)}</strong>. Grazie alla concorrenza tra marchi
                     come {marchi.slice(0, 3).map((m, i, arr) => (
@@ -88,7 +91,10 @@ export function IntroTextVersione2({data, distributori, children}) {
                         {m.marchio}{i < arr.length - 1 ? ', ' : ''}
                     </strong>
                 ))} e alla presenza capillare del marchio{marchio ? <strong> {marchio}</strong> : ''}, puoi trovare
-                    facilmente l’offerta più vantaggiosa per il tuo rifornimento. I dati sono aggiornati
+                    facilmente l’offerta più vantaggiosa per il tuo rifornimento.
+                </p>
+                <p>
+                    I dati sono aggiornati
                     al <strong>{dataFormatted}</strong>, garantendo trasparenza e affidabilità.
                 </p>
                 <p>
@@ -96,10 +102,16 @@ export function IntroTextVersione2({data, distributori, children}) {
                     attivi <strong>{totaleImpianti || 'numerosi'}</strong> impianti, e molti di essi offrono servizi
                     aggiuntivi come sconti, programmi fedeltà e promozioni stagionali. Se sei fedele al
                     marchio {marchio ? <strong>{marchio}</strong> : ''}, puoi usare la mappa per localizzare gli
-                    impianti, filtrare per <strong>{carburanteLabel}</strong> e ordinare per prezzo. Che tu stia
+                    impianti, filtrare per <strong>{carburante}</strong> e ordinare per prezzo.
+                </p>
+                <p>
+                    Che tu stia
                     pianificando un viaggio o semplicemente voglia ottimizzare il tuo tragitto quotidiano, questo
-                    strumento ti aiuta a fare scelte consapevoli e convenienti. Scopri come risparmiare sul tuo prossimo
-                    pieno di <strong>{carburanteLabel}</strong> {marchio ? <strong>{marchio}</strong> : ''} {localita} e
+                    strumento ti aiuta a fare scelte consapevoli e convenienti.
+                </p>
+                <p>
+                    Scopri come risparmiare sul tuo prossimo
+                    pieno di <strong>{carburante}</strong> {marchio ? <strong>{marchio}</strong> : ''} {localita} e
                     rendi il tuo rifornimento più intelligente.
                 </p></>)}
         </section>
