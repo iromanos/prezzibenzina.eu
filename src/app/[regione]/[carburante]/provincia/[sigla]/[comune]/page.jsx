@@ -1,5 +1,5 @@
 import DistributoriPage from "@/components/DistributoriPage";
-import {getMetadata} from "@/functions/api";
+import {getMetadata} from "@/functions/helpers";
 
 export async function generateMetadata({params}) {
     return getMetadata({params});

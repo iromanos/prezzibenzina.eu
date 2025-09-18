@@ -1,4 +1,4 @@
-import {capitalize} from "@/functions/api";
+import {capitalize} from "@/functions/helpers";
 
 export default function Breadcrumb({regione, carburante, provincia, comune, marchio, riepilogo}) {
     const path = [];

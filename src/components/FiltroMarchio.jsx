@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from 'react';
-import {getRouteLink, log} from "@/functions/api";
+import {getRouteLink, log} from "@/functions/helpers";
 
 
 export function LinkMarchio({marchi, params}){

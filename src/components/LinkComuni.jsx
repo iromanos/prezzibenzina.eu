@@ -1,6 +1,6 @@
 import React from "react";
 import Link from 'next/link';
-import {getRouteLink} from "@/functions/api";
+import {getRouteLink} from "@/functions/helpers";
 
 export default function LinkComuni({params, comuni, riepilogo}) {
 

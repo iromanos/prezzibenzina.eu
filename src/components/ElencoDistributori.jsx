@@ -1,4 +1,5 @@
 import React from "react";
+import ImpiantoCard from "@/components/impianti/ImpiantoCard";
 
 export default function ElencoDistributori({distributori}){
     return                 <section className={'mb-4'}>
@@ -8,16 +9,7 @@ export default function ElencoDistributori({distributori}){
         ) : (
             <ul className="list-group">
                 {distributori.map((d) => (
-                    <li key={d.id_impianto}
-                        className="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <span className={'fw-bold'}>{d.bandiera}</span> - {d.nome_impianto}
-                            <div className="text-muted small">
-                                {d.indirizzo}, {d.comune} ({d.provincia})
-                            </div>
-                        </div>
-                        <span className="badge bg-success">{d.prezzo.toFixed(3)} €/L</span>
-                    </li>
+                    <ImpiantoCard key={d.id_impianto} impianto={d}/>
                 ))}
             </ul>
         )}

@@ -1,4 +1,4 @@
-import {capitalize} from "@/functions/api";
+import {capitalize} from "@/functions/helpers";
 
 export default function SezioneTitolo({ regione, carburante, provincia, comune, marchio }) {
     const descrizioneCarburante = carburante ? carburante.toLowerCase() : 'carburante';

@@ -1,8 +1,6 @@
 import DistributoriPage from "@/components/DistributoriPage";
 import React from "react";
-import {capitalize, getMetadata} from "@/functions/api";
-
-
+import {getMetadata} from "@/functions/helpers";
 
 
 export async function generateMetadata({params}) {

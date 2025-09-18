@@ -2,10 +2,10 @@
 
 import MappaWrapper from "@/components/MappaWrapper";
 import React, {useEffect, useRef, useState} from "react";
-import {log} from "@/functions/api";
+import {log} from "@/functions/helpers";
 
 
-export default function Mappa({distributori}) {
+export default function Mappa({distributori, title = true}) {
 
     const containerRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
@@ -35,7 +35,7 @@ export default function Mappa({distributori}) {
 
 
     return <section className={"mb-4"}>
-        <h2 className="h5 mb-3">Mappa dei distributori</h2>
+        {title ? <h2 className="h5 mb-3">Mappa dei distributori</h2> : null}
         <div ref={containerRef}>
             {isVisible ? <MappaWrapper distributori={distributori}/> : <></>}</div>
     </section>;

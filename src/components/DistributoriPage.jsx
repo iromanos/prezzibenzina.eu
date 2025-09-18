@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
-import {generateMicrodataGraph, getDistributoriRegione, getSeoRegione} from "@/functions/api";
+import {getDistributoriRegione, getSeoRegione} from "@/functions/api";
+import {generateMicrodataGraph} from "@/functions/helpers"
 import React from "react";
 import ElencoDistributori from "@/components/ElencoDistributori";
 import {LinkCarburanti} from "@/components/FiltroCarburante";
@@ -10,6 +11,7 @@ import {IntroTextVersione2} from "@/components/IntroText";
 import Mappa from "@/components/Mappa";
 import MapIcon from '@mui/icons-material/Map';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import ComparaVicini from "@/components/ComparaVicini";
 
 export default async function DistributoriPage({params}) {
 
@@ -68,6 +70,7 @@ export default async function DistributoriPage({params}) {
             <div className={'row'}>
                 <div id="distributori" className={'col-md-5 order-1'}>
                     <ElencoDistributori Regione={regione} distributori={distributori}/>
+                    <ComparaVicini carburante={carburante}/>
                 </div>
                 <div id={"mappa"} className={'col-md-7 order-0'}>
                     <LinkCarburanti params={await params} carburanti={carburanti}/>

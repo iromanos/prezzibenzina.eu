@@ -1,7 +1,5 @@
-import Header from "@/components/Header";
-import SezioneTitolo from "@/components/SezioneTitolo";
 import DistributoriPage from "@/components/DistributoriPage";
-import {getMetadata} from "@/functions/api";
+import {getMetadata} from "@/functions/helpers";
 
 
 export async function generateMetadata({params}, {request}) {

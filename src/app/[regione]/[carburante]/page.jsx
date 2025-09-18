@@ -1,5 +1,5 @@
 import React from "react";
-import {getMetadata} from "@/functions/api";
+import {getMetadata} from "@/functions/helpers";
 import DistributoriPage from "@/components/DistributoriPage";
 
 

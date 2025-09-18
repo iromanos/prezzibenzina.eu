@@ -1,5 +1,5 @@
 import React from 'react';
-import {log} from "@/functions/api";
+import {log} from "@/functions/helpers";
 
 function capitalize(str) {
     return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';

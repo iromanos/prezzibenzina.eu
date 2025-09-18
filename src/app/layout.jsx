@@ -2,7 +2,10 @@ import '../styles/custom.scss';
 import Footer from "@/components/Footer";
 import {Montserrat, Open_Sans} from 'next/font/google';
 import Head from "next/head";
-
+import {CookieConsentProvider} from "@/components/CookieConsentContext";
+import CookieBanner from "@/components/CookieBanner";
+import Analytics from "@/components/Analytics";
+import Adsense from "@/components/Adsense";
 
 const montserrat = Montserrat({
     weight: "600",
@@ -25,11 +28,15 @@ export default function RootLayout({children}) {
         <html lang="it" className={montserrat.className + ' ' + openSans.className}>
         <Head>
             <link rel="apple-touch-icon" href="/assets/logo-180.png" sizes="180x180"/>
-
         </Head>
         <body>
-        {children}
-        <Footer/>
+        <CookieConsentProvider>
+            {children}
+            <Footer/>
+            <CookieBanner/>
+            <Adsense/>
+            <Analytics/>
+        </CookieConsentProvider>
         </body>
         </html>
     );

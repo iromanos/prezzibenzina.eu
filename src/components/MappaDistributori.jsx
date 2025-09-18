@@ -1,16 +1,36 @@
 'use client';
 
-import {useEffect, useState} from 'react';
-import Map, {Marker} from 'react-map-gl/maplibre';
+import {useEffect, useRef, useState} from 'react';
+import Map, {Popup} from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {isMobile} from 'react-device-detect';
+import ImpiantoPopup from "@/components/impianti/ImpiantoPopup";
+import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 
 export default function MappaDistributori({ distributori }) {
 
-    const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
     const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
     const [bounds, setBounds] = useState(null);
+    const [popupInfo, setPopupInfo] = useState(null);
+
+    const mapRef = useRef(null);
+
+
+    useEffect(() => {
+        const handleFocus = e => {
+            console.log(e);
+            const canvas = mapRef.current?.getMap()?.getCanvas();
+            canvas?.scrollIntoView({behavior: 'smooth', block: 'start'});
+
+
+            const {lat, lng, zoom} = e.detail;
+            mapRef.current?.flyTo({center: [lng, lat], zoom, essential: true});
+        };
+
+        window.addEventListener('map:focus', handleFocus);
+        return () => window.removeEventListener('map:focus', handleFocus);
+    }, []);
 
     // Calcola bounds
     useEffect(() => {
@@ -45,7 +65,7 @@ export default function MappaDistributori({ distributori }) {
             className="border rounded overflow-hidden"
             style={{height: '560px', width: '100%'}}>
             <Map
-
+                ref={mapRef}
                 mapLib={maplibregl}
                 mapStyle={styleUrl}
                 initialViewState={{
@@ -63,31 +83,29 @@ export default function MappaDistributori({ distributori }) {
                 doubleClickZoom={!isMobile}     // ❌ disabilita zoom con doppio tap
                 touchZoomRotate={true}      // ✅ abilita pinch-to-zoom e rotazione con due dita
                 interactive={true}          // ✅ mantiene la mappa attiva
-
             >
-                {distributori.map((d) => {
-                    const color = d.color === -1 ? '#dc3545' : '#198754';
 
-                    return (
-                        <Marker
-                            key={d.id_impianto}
-                            longitude={d.longitudine}
-                            latitude={d.latitudine}
-                            anchor="bottom"
-                        >
-                            <div className={'border border-white rounded py-1 px-1'}
-                                style={{
-                                    backgroundColor: color,
-                                    color: 'white',
-                                    textAlign: 'center',
-                                }}
-                            >
-                                <img className={'d-block'} alt={d.bandiera} width="32" height="32" src={ URI_IMAGE + d.image} />
-                                {d.prezzo.toFixed(3)}
-                            </div>
-                        </Marker>
-                    );
-                })}
+                {popupInfo ? <Popup
+
+                    longitude={popupInfo.longitudine}
+                    latitude={popupInfo.latitudine}
+                    anchor="top"
+                    closeOnClick={false}
+                    onClose={() => setPopupInfo(null)}>
+
+                    <ImpiantoPopup impianto={popupInfo}/>
+
+
+                </Popup> : null}
+
+                {distributori.map((d) => <ImpiantoMarker
+
+                    onClick={e => {
+                        e.originalEvent.stopPropagation(); // evita chiusura globale
+                        setPopupInfo(d);
+                    }}
+
+                    key={d.id_impianto} d={d}/>)}
             </Map>
         </div>
     );
