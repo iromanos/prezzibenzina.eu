@@ -71,10 +71,10 @@ export default function ImpiantoScheda({impianto}) {
                                 onClick={() => confrontaVicini()}>
                             Confronta Vicini
                         </button>
-                        <button className="btn btn-outline-secondary btn-sm"
-                                onClick={() => window.dispatchEvent(new CustomEvent('alert:open', {detail: impianto}))}>
-                            Avvisami se scende sotto…
-                        </button>
+                        {/*<button className="btn btn-outline-secondary btn-sm"*/}
+                        {/*        onClick={() => window.dispatchEvent(new CustomEvent('alert:open', {detail: impianto}))}>*/}
+                        {/*    Avvisami se scende sotto…*/}
+                        {/*</button>*/}
                         <a className="btn btn-primary btn-sm"
                            href={`https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`}
                            target="_blank" rel="noopener">

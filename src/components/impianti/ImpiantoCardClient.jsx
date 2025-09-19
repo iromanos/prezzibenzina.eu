@@ -62,12 +62,12 @@ export default function ImpiantoCardClient({impianto, apriMappa = true}) {
             Confronta vicini
         </button>
 
-        <button className="btn btn-link btn-sm p-0"
-            //onClick={() => window.dispatchEvent(new CustomEvent('alert:open', { detail: impianto }))}
+        {/*<button className="btn btn-link btn-sm p-0"*/}
+        {/*    //onClick={() => window.dispatchEvent(new CustomEvent('alert:open', { detail: impianto }))}*/}
 
-        >
-            Avvisami se scende sotto…
-        </button>
+        {/*>*/}
+        {/*    Avvisami se scende sotto…*/}
+        {/*</button>*/}
 
         <a href={schedaUrl} className="btn btn-link btn-sm p-0 text-decoration-underline">
             Scheda impianto

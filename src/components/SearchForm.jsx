@@ -1,9 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import {useState} from 'react';
 import {useRouter} from "next/navigation";
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import SearchIcon from "@mui/icons-material/Search";
+import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import EvStationIcon from '@mui/icons-material/EvStation';
+import PropaneIcon from '@mui/icons-material/Propane';
+import BubbleChartIcon from '@mui/icons-material/BubbleChart';
+import NominatimAutocomplete from "@/components/NominatimAutocomplete";
+
 export default function SearchForm() {
     const [carburante, setCarburante] = useState('');
     const [indirizzo, setIndirizzo] = useState('');
@@ -37,10 +43,10 @@ export default function SearchForm() {
                 <label className="form-label h6">Tipo di Carburante</label>
                 <div className="d-flex flex-wrap gap-2">
                     {[
-                        { tipo: 'benzina', icon: '⛽' },
-                        { tipo: 'diesel', icon: '🛢️' },
-                        { tipo: 'gpl', icon: '🔥' },
-                        { tipo: 'metano', icon: '🌬️' },
+                        {tipo: 'benzina', icon: <LocalGasStationIcon/>},
+                        {tipo: 'diesel', icon: <EvStationIcon/>},
+                        {tipo: 'gpl', icon: <PropaneIcon/>},
+                        {tipo: 'metano', icon: <BubbleChartIcon/>},
                     ].map(({ tipo, icon }) => (
                         <button
                             key={tipo}
@@ -56,16 +62,33 @@ export default function SearchForm() {
             </div>
 
             <div className="mb-3">
-                <label htmlFor="indirizzo" className="form-label h6">Indirizzo</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    name="indirizzo"
-                    id="indirizzo"
-                    placeholder="Via, città, CAP..."
-                    value={indirizzo}
-                    onChange={(e) => setIndirizzo(e.target.value)}
+                {/*<label htmlFor="indirizzo" className="form-label h6">Indirizzo</label>*/}
+
+                <NominatimAutocomplete
+                    onSelect={(place) => {
+                        console.log('Selezionato:', place);
+                        /*
+                        // Esempio: naviga alla mappa centrata
+                        window.dispatchEvent(new CustomEvent('map:focus', {
+                            detail: {
+                                lat: place.lat,
+                                lng: place.lon,
+                                zoom: 14
+                            }
+                        }));*/
+                    }}
                 />
+
+
+                {/*<input*/}
+                {/*    type="text"*/}
+                {/*    className="form-control"*/}
+                {/*    name="indirizzo"*/}
+                {/*    id="indirizzo"*/}
+                {/*    placeholder="Via, città, CAP..."*/}
+                {/*    value={indirizzo}*/}
+                {/*    onChange={(e) => setIndirizzo(e.target.value)}*/}
+                {/*/>*/}
             </div>
 
             <div className="text-center mb-4">
@@ -80,14 +103,13 @@ export default function SearchForm() {
         <h6 className="mb-3">Suggerimenti rapidi:</h6>
         <div className="d-flex flex-wrap gap-2">
             {[
-                { label: 'Benzina a Milano', query: 'benzina', indirizzo: 'Milano' },
-                { label: 'Diesel a Roma', query: 'diesel', indirizzo: 'Roma' },
-                { label: 'GPL a Napoli', query: 'gpl', indirizzo: 'Napoli' },
-                { label: 'Elettrico a Torino', query: 'elettrico', indirizzo: 'Torino' }
+                {label: 'Benzina a Milano', query: '/lombardia/benzina/provincia/mi/milano'},
+                {label: 'Diesel a Roma', query: '/lazio/diesel/provincia/rm/roma'},
+                {label: 'GPL a Napoli', query: '/campania/gpl/provincia/na/napoli', indirizzo: 'Napoli'},
             ].map((s, i) => (
                 <a
                     key={i}
-                    href={`/risultati?carburante=${s.query}&indirizzo=${encodeURIComponent(s.indirizzo)}`}
+                    href={s.query}
                     className="btn btn-outline-secondary btn-sm"
                 >
                     {s.label}

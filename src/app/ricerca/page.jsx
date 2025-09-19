@@ -6,7 +6,6 @@ import SearchIcon from "@mui/icons-material/Search";
 export const metadata = {
     title: 'Trova Distributori Carburante | PrezziBenzina.eu',
     description: 'Cerca impianti di carburante vicino a te. Filtra per tipo di carburante, inserisci un indirizzo o usa la tua posizione per trovare i prezzi migliori.',
-    keywords: ['prezzi benzina', 'distributori carburante', 'diesel', 'gpl', 'metano', 'elettrico', 'mappa impianti'],
     openGraph: {
         title: 'Trova Distributori Carburante | PrezziBenzina.eu',
         description: 'Filtra per tipo di carburante e trova gli impianti più vicini con i prezzi aggiornati.',
@@ -31,7 +30,8 @@ export default function Ricerca() {
                 <div className="container">
                     <h1 className="display-5 fw-bold mb-3">Trova il distributore più conveniente</h1>
                     <p className="lead mb-4">Filtra per carburante, inserisci la tua posizione e risparmia subito.</p>
-                    <a href="#form" className="btn btn-light btn-lg px-4 py-2 shadow-sm"><SearchIcon /> Inizia la ricerca</a>
+                    <a href="#ricerca" className="btn btn-light btn-lg px-4 py-2 shadow-sm"><SearchIcon/> Inizia la
+                        ricerca</a>
                 </div>
             </section>
 
@@ -39,7 +39,7 @@ export default function Ricerca() {
             <div className={"container"}>
 
             {/* FORM */}
-            <div id='form' className="bg-white rounded-4 shadow p-4 border my-4">
+                <div id='ricerca' className="bg-white rounded-4 shadow p-4 border my-4">
                 <SearchForm />
             </div>
 

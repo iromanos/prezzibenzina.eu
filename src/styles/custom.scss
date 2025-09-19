@@ -62,3 +62,11 @@ $theme-colors: (
     box-shadow: 0 0.5rem 1rem rgba(220, 53, 69, 0.5);
   }
 }
+
+
+.MuiAutocomplete-root,
+.MuiFormLabel-root,
+.MuiInputBase-root,
+.MuiTextField-root {
+  font-family: inherit !important;
+}
