@@ -132,11 +132,12 @@ export async function getImpiantiByDistance(lat, lng, distance, carburante, sort
 
     const fuel = Carburanti[carburante];
 
-    let request = URI + `impianti/distanza/?lat=${lat}&lng=${lng}&distance=${distance}&fuel=${fuel}&sort=${sort}&limit=${limit}`;
+    let request = URI + `impianti/distanza?lat=${lat}&lng=${lng}&distance=${distance}&fuel=${fuel}&sort=${sort}&limit=${limit}`;
 
     log(request);
 
     return await fetch(request, {
+        method: 'GET',
         headers: {
             Accept: 'application/json',
         },
