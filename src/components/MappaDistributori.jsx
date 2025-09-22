@@ -9,11 +9,7 @@ import ImpiantoPopup from "@/components/impianti/ImpiantoPopup";
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 
 export default function MappaDistributori({
-                                              distributori, posizione = {
-
-        lat: 45.46,
-        lng: 9.19
-    }
+                                              distributori, posizione
                                           }) {
 
     const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
