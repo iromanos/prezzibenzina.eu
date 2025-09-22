@@ -5,7 +5,7 @@ import {getRouteLink} from "@/functions/helpers";
 export function LinkCarburanti({params, carburanti}){
     return                 <section className="mb-4">
         <h2 className="h5 mb-3">Filtra per tipo di carburante</h2>
-        <div className="btn-group" role="group">
+        <div className="d-flex flex-wrap gap-1" role="group">
             {carburanti.map((tipo) => {
 
                     const link = getRouteLink(params.regione, tipo, params.marchio, params.sigla, params.comune);

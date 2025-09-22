@@ -1,26 +1,20 @@
-import { NextResponse } from 'next/server';
+import {NextResponse} from 'next/server';
+import {log} from "@/functions/helpers";
 
 export async function POST(request) {
 
-    const formData = await request.formData();
+    const formData = await request.json();
 
-    // const { regione, carburante, provincia, comune, marchio } = await request.json();
-    const regione = formData.get('regione');
-    const carburante = formData.get('carburante');
-    const marchio = formData.get('marchio');
-    const provincia = formData.get('provincia');
-    const comune = formData.get('comune');
+    log(formData);
 
+    const {type, name, lat, lon, carburante} = formData;
 
-    if (!regione || !carburante) {
+    if (!carburante) {
         return new NextResponse('Bad Request', { status: 400 });
     }
 
-
-
     // Costruisci la destinazione
     let target = `/${regione}/${carburante}`;
-
 
     if (provincia) {
         target += '/provincia/' + provincia.toLowerCase();

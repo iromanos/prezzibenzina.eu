@@ -2,57 +2,106 @@ import {Autocomplete, TextField} from '@mui/material';
 import {useEffect, useState} from 'react';
 import {log} from "@/functions/helpers";
 
+import LocationCityIcon from '@mui/icons-material/LocationCity';
+import PlaceIcon from '@mui/icons-material/Place';
+import MarkunreadMailboxIcon from '@mui/icons-material/MarkunreadMailbox';
+import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
+import PublicIcon from '@mui/icons-material/Public';
+
+function getIcon(tipo) {
+    switch (tipo) {
+        case 'locality':
+        case 'city':
+        case 'town':
+        case 'village':
+            return <LocationCityIcon fontSize="small"/>;
+        case 'address':
+        case 'road':
+        case 'street':
+            return <PlaceIcon fontSize="small"/>;
+        case 'postcode':
+            return <MarkunreadMailboxIcon fontSize="small"/>;
+        case 'suburb':
+        case 'neighbourhood':
+            return <MapsHomeWorkIcon fontSize="small"/>;
+        default:
+            return <PublicIcon fontSize="small"/>;
+    }
+}
+
 export default function NominatimAutocomplete({onSelect}) {
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState([]);
 
-    const API_KEY_ORS = '5b3ce3597851110001cf6248e3524e394e844dd28a2911efbac4a4ba';
-    const URI_SUGGEST_ORS = 'https://api.openrouteservice.org/geocode/autocomplete?api_key=' + API_KEY_ORS + '&layers=address,locality&boundary.country=IT&text=';
+    // const API_KEY_ORS = '5b3ce3597851110001cf6248e3524e394e844dd28a2911efbac4a4ba';
+    // const URI_SUGGEST_ORS = 'https://api.openrouteservice.org/geocode/autocomplete?api_key=' + API_KEY_ORS + '&layers=address,locality&boundary.country=IT&text=';
+
+    const NOMINATIM_ENDPOINT = 'https://nominatim.openstreetmap.org/search.php?dedupe=1&limit=5&format=jsonv2&countrycodes=it&q=';
 
 
     useEffect(() => {
-        const controller = new AbortController();
-        if (inputValue.length < 2) return;
 
-        const request = URI_SUGGEST_ORS + encodeURIComponent(inputValue);
-        log(request);
-        fetch(request, {
-            signal: controller.signal,
-            headers: {'Accept-Language': 'it'}
-        })
-            .then(res => res.json())
-            .then(data => {
+        const timeout = setTimeout(() => {
 
+            const controller = new AbortController();
+            if (inputValue.length < 2) return;
 
-                const options = data.features.map(f => ({
-                    label: f.properties.label, // es. "Rho, MI, Italy"
-                    name: f.properties.name,
-                    lat: f.geometry.coordinates[1],
-                    lon: f.geometry.coordinates[0],
-                    regione: f.properties.macroregion,
-                    provincia: f.properties.region,
-                    comune: f.properties.localadmin,
-                    tipo: f.properties.layer, // "locality" o "address"
-                }));
+            const request = NOMINATIM_ENDPOINT + encodeURIComponent(inputValue);
+            log(request);
+            fetch(request, {
+                signal: controller.signal,
+                headers: {'Accept-Language': 'it'}
+            })
+                .then(res => res.json())
+                .then(data => {
 
-                setOptions(options);
-            });
+                    log(data);
 
-        return () => controller.abort();
+                    const options = data.map((item, index) => ({
+                        id: index,
+                        name: item.address?.road || item.name || item.display_name,
+                        label: item.display_name,
+                        type: item.addresstype,
+                        lat: item.lat,
+                        lon: item.lon,
+                    }));
+                    setOptions(options);
+                });
+
+            return () => controller.abort();
+        }, 300);
+
+        return () => clearTimeout(timeout);
+
     }, [inputValue]);
+
+    log(options);
+
 
     return (
         <Autocomplete
             freeSolo
             options={options}
-            renderOption={(props, option) => (
-                <li {...props} className="px-2 py-1 border-bottom">
-                    <div className="fw-bold">{option.name}</div>
-                    <div className="text-muted small">{option.label}</div>
-                </li>
-            )}
+            filterOptions={(opts) => opts}
+            renderOption={(props, option) => {
+                const {key, ...rest} = props;
+                return (
+                    <li key={option.id} {...rest} className="px-3 py-2 border-bottom" style={{cursor: 'pointer'}}>
+                        <div className="d-flex align-items-start gap-2">
+                            {getIcon(option.tipo || option.type)}
+                            <div className="d-flex flex-column">
+                                <span className="fw-bold">{option.name}</span>
+                                <span className="text-muted small">{option.label}</span>
+                            </div>
+                        </div>
+                    </li>
+                );
+            }}
             onInputChange={(e, val) => setInputValue(val)}
-            onChange={(e, val) => val && onSelect(val)}
+            onChange={(e, val) => {
+                log(val);
+                return val && onSelect(val);
+            }}
             renderInput={(params) => (
                 <TextField {...params} label="Indirizzo, città o CAP" variant="outlined"/>
             )}

@@ -11,6 +11,10 @@ const Carburanti = {
     'gpl': '4-x',
 };
 
+export function getCarburanti() {
+    return Carburanti;
+}
+
 export async function getImpianto({params}) {
     let request = URI + `impianto/${params.impianto}`;
 
@@ -50,6 +54,8 @@ export async function getSiteMap({tipo, regione, provincia}) {
     return new NextResponse(xml, {
             headers: {
                 'Content-Type': 'application/xml',
+                'Cache-Control': 'no-cache',
+                'Last-Modified': new Date().toUTCString(),
             }
         }
     );
@@ -87,9 +93,15 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
 
     const data = await res.json();
 
-    log(data);
+    // log(data);
 
-    return data;
+    const response = NextResponse.json(data);
+    response.headers.set('Last-Modified', new Date(data.lastUpdate).toUTCString());
+    response.headers.set('Cache-Control', 'no-cache');
+
+    return response;
+
+//    return data;
 }
 
 export async function getSeoRegione(regione, carburante, marchio, provincia, comune) {
@@ -142,6 +154,21 @@ export async function getImpiantiByDistance(lat, lng, distance, carburante, sort
             Accept: 'application/json',
         },
         next: {revalidate: 3600},
+    });
+
+}
+
+export async function getRouteByPosition(payload) {
+
+    const request = URI + 'route';
+
+    return await fetch(request, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+        body: JSON.stringify(payload),
     });
 
 }

@@ -23,7 +23,7 @@ export default function Footer() {
                         <ul className="list-unstyled">
                             <li><a title={"Ricerca"} href="/ricerca"
                                    className="text-white text-decoration-none">Ricerca</a></li>
-                            <li><a title={"Mappa"} href="/risultati"
+                            <li><a title={"Mappa"} href="/mappa"
                                    className="text-white text-decoration-none">Mappa</a></li>
                             <li><a title={"Contatti"} href="/contatti"
                                    className="text-white text-decoration-none">Contatti</a></li>

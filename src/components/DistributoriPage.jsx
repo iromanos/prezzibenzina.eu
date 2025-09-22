@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import {getDistributoriRegione, getSeoRegione} from "@/functions/api";
+import {getCarburanti, getDistributoriRegione, getSeoRegione} from "@/functions/api";
 import {generateMicrodataGraph} from "@/functions/helpers"
 import React from "react";
 import ElencoDistributori from "@/components/ElencoDistributori";
@@ -12,19 +12,31 @@ import Mappa from "@/components/Mappa";
 import MapIcon from '@mui/icons-material/Map';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import ComparaVicini from "@/components/ComparaVicini";
+import {notFound} from "next/navigation";
 
 export default async function DistributoriPage({params}) {
 
     const {regione, carburante, marchio, sigla, comune} = await params;
 
-    const distributori = await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
+    const elencoCarburanti = getCarburanti();
+
+    if (elencoCarburanti[carburante] === undefined) {
+        notFound();
+    }
+
+    const carburanti = Object.keys(elencoCarburanti).map(nome => {
+        return `${nome}`;
+    });
+
+    const response = await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
+
+
+    const distributori = await response.json();
+
     const riepilogo = await getSeoRegione(regione, carburante, marchio, sigla, comune);
 
     const comuni = riepilogo.comuni;
     const marchi = riepilogo.marchi;
-
-    const carburanti = ['benzina', 'diesel', 'gpl', 'metano'];
-
 
     const date = new Date(riepilogo.dataAggiornamento);
 

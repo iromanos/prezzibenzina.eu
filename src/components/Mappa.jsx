@@ -36,7 +36,7 @@ export default function Mappa({distributori, title = true}) {
 
     return <section className={"mb-4"}>
         {title ? <h2 className="h5 mb-3">Mappa dei distributori</h2> : null}
-        <div ref={containerRef}>
+        <div ref={containerRef} className={'border rounded'} style={{'height': '540px'}}>
             {isVisible ? <MappaWrapper distributori={distributori}/> : <></>}</div>
     </section>;
 }

@@ -24,7 +24,7 @@ export default function Header() {
                     <ul className="nav d-none d-lg-flex">
                         <li className="nav-item"><Link title={"Ricerca"} href="/ricerca"
                                                        className="nav-link text-dark">Ricerca</Link></li>
-                        <li className="nav-item"><Link title={"Mappa"} href="/risultati"
+                        <li className="nav-item"><Link title={"Mappa"} href="/mappa"
                                                        className="nav-link text-dark">Mappa</Link></li>
                         <li className="nav-item"><Link title={"Contatti"} href="/contatti"
                                                        className="nav-link text-dark">Contatti</Link></li>
@@ -64,7 +64,7 @@ export default function Header() {
                     <ul className="nav flex-column">
                         <li className="nav-item"><Link title={"Ricerca"} href="/ricerca"
                                                        className="nav-link text-dark">Ricerca</Link></li>
-                        <li className="nav-item"><Link title={"Mappa"} href="/risultati"
+                        <li className="nav-item"><Link title={"Mappa"} href="/mappa"
                                                        className="nav-link text-dark">Mappa</Link></li>
                         <li className="nav-item"><Link title={"Contatti"} href="/contatti"
                                                        className="nav-link text-dark">Contatti</Link></li>

@@ -1,5 +1,4 @@
 import '../styles/custom.scss';
-import Footer from "@/components/Footer";
 import {Montserrat, Open_Sans} from 'next/font/google';
 import Head from "next/head";
 import {CookieConsentProvider} from "@/components/CookieConsentContext";
@@ -32,7 +31,6 @@ export default function RootLayout({children}) {
         <body>
         <CookieConsentProvider>
             {children}
-            <Footer/>
             <CookieBanner/>
             <Adsense/>
             <Analytics/>

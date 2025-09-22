@@ -63,7 +63,7 @@ export default function Ricerca() {
                 <div className="container">
                     <h2 className="fw-bold display-6 mb-3">Stai ancora pagando troppo per il carburante?</h2>
                     <p className="lead mb-4">Ogni minuto che aspetti, potresti spendere di più. Trova subito il distributore migliore.</p>
-                    <a href="/risultati" className="btn btn-light btn-lg px-5 py-3 shadow-sm"><RocketLaunchIcon /> Cerca ora</a>
+                    <a href="/mappa" className="btn btn-light btn-lg px-5 py-3 shadow-sm"><RocketLaunchIcon/> Cerca ora</a>
                 </div>
             </section>
 

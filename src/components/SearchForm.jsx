@@ -9,19 +9,34 @@ import EvStationIcon from '@mui/icons-material/EvStation';
 import PropaneIcon from '@mui/icons-material/Propane';
 import BubbleChartIcon from '@mui/icons-material/BubbleChart';
 import NominatimAutocomplete from "@/components/NominatimAutocomplete";
+import {log} from "@/functions/helpers";
+import useCarburante from "@/hooks/useCarburante";
+import {getRouteByPosition} from "@/functions/api";
 
 export default function SearchForm() {
-    const [carburante, setCarburante] = useState('');
-    const [indirizzo, setIndirizzo] = useState('');
+
+    const [place, setPlace] = useState(null);
+    const {carburante, setCarburante} = useCarburante();
 
     const router = useRouter();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!carburante || !indirizzo) return;
-        var regione = 'lombardia';
-        // const url = `/ricerca/${carburante}/${encodeURIComponent(indirizzo.trim().toLowerCase())}`;
-        router.push(`/prezzi-carburante/${regione}/${encodeURIComponent(indirizzo.trim().toLowerCase())}/${carburante}`);
+
+        try {
+
+            const payload = place;
+            payload['carburante'] = carburante;
+
+            const res = await getRouteByPosition(payload);
+            const data = await res.json();
+
+            log(data);
+            router.push(data.route);
+
+        } catch (err) {
+            console.error('Errore di rete:', err);
+        }
     };
 
     const handleGeolocalizza = () => {
@@ -29,7 +44,7 @@ export default function SearchForm() {
             (pos) => {
                 const lat = pos.coords.latitude;
                 const lon = pos.coords.longitude;
-                window.location.href = `/risultati?lat=${lat}&lon=${lon}`;
+                window.location.href = `/mappa?lat=${lat}&lng=${lon}`;
             },
             () => alert('Posizione non disponibile.')
         );
@@ -62,33 +77,13 @@ export default function SearchForm() {
             </div>
 
             <div className="mb-3">
-                {/*<label htmlFor="indirizzo" className="form-label h6">Indirizzo</label>*/}
-
                 <NominatimAutocomplete
                     onSelect={(place) => {
-                        console.log('Selezionato:', place);
-                        /*
-                        // Esempio: naviga alla mappa centrata
-                        window.dispatchEvent(new CustomEvent('map:focus', {
-                            detail: {
-                                lat: place.lat,
-                                lng: place.lon,
-                                zoom: 14
-                            }
-                        }));*/
+                        log('Selezionato:');
+                        log(place);
+                        setPlace(place);
                     }}
                 />
-
-
-                {/*<input*/}
-                {/*    type="text"*/}
-                {/*    className="form-control"*/}
-                {/*    name="indirizzo"*/}
-                {/*    id="indirizzo"*/}
-                {/*    placeholder="Via, città, CAP..."*/}
-                {/*    value={indirizzo}*/}
-                {/*    onChange={(e) => setIndirizzo(e.target.value)}*/}
-                {/*/>*/}
             </div>
 
             <div className="text-center mb-4">

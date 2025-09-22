@@ -1,4 +1,5 @@
-import {getDistributoriRegione} from "@/functions/api";
+import {getCarburanti, getDistributoriRegione} from "@/functions/api";
+import {notFound} from "next/navigation";
 
 export function getRouteLink(regione, carburante, marchio, provincia, comune) {
     const path = [];
@@ -83,7 +84,16 @@ export function getLink(regione, carburante, marchio, provincia, comune) {
 export async function getMetadata({params}) {
     const {regione, carburante, marchio, sigla, comune} = await params;
 
-    const distributori = await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
+    const carburanti = getCarburanti();
+
+    if (carburanti[carburante] === undefined) {
+        notFound();
+    }
+
+
+    const response = await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
+
+    const distributori = await response.json();
 
     const descrizioneCarburante = carburante ? carburante.toLowerCase() : 'carburante';
 
@@ -150,6 +160,8 @@ export function slugify(text) {
 
 
 export function generateMicrodataGraph(impianti) {
+
+    log(impianti);
     const graph = impianti.map((impianto) => {
         const {
             nome_impianto,

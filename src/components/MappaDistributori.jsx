@@ -8,7 +8,13 @@ import {isMobile} from 'react-device-detect';
 import ImpiantoPopup from "@/components/impianti/ImpiantoPopup";
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 
-export default function MappaDistributori({ distributori }) {
+export default function MappaDistributori({
+                                              distributori, posizione = {
+
+        lat: 45.46,
+        lng: 9.19
+    }
+                                          }) {
 
     const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
     const [bounds, setBounds] = useState(null);
@@ -32,13 +38,13 @@ export default function MappaDistributori({ distributori }) {
         return () => window.removeEventListener('map:focus', handleFocus);
     }, []);
 
-    // Calcola bounds
+
     useEffect(() => {
         const coords = distributori
             .filter((d) => Number.isFinite(d.longitudine) && Number.isFinite(d.latitudine))
             .map((d) => [d.longitudine, d.latitudine]);
 
-        if (coords.length === 0) return null;
+        if (coords.length === 0) return;
 
         const b = new maplibregl.LngLatBounds();
         coords.forEach((c) => b.extend(c));
@@ -61,18 +67,14 @@ export default function MappaDistributori({ distributori }) {
     };
 
     return (
-        <div
-            className="border rounded overflow-hidden"
-            style={{height: '560px', width: '100%'}}>
             <Map
                 ref={mapRef}
                 mapLib={maplibregl}
                 mapStyle={styleUrl}
                 initialViewState={{
-                    longitude: 9.19,
-                    latitude: 45.46,
+                    longitude: posizione.lng,
+                    latitude: posizione.lat,
                     zoom: 8,
-
                 }}
                 style={{ width: '100%', height: '100%' }}
                 attributionControl={false}
@@ -107,6 +109,5 @@ export default function MappaDistributori({ distributori }) {
 
                     key={d.id_impianto} d={d}/>)}
             </Map>
-        </div>
     );
 }
