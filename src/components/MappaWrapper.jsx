@@ -8,5 +8,12 @@ const MappaDistributori = dynamic(() => import('./MappaDistributori'), {
 });
 
 export default function MappaWrapper({ distributori }) {
-    return <MappaDistributori distributori={distributori} />;
+
+    const posizione = {
+        lat: 45.46,
+        lng: 9.19
+    };
+
+
+    return <MappaDistributori distributori={distributori} posizione={posizione}/>;
 }
