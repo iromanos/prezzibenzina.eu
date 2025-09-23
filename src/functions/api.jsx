@@ -158,6 +158,35 @@ export async function getImpiantiByDistance(lat, lng, distance, carburante, sort
 
 }
 
+export async function getImpiantiByBounds(bounds, carburante, sort = 'price', limit = 5) {
+
+    const carburanti = getCarburanti();
+
+    const fuel = carburanti[carburante];
+
+    log(bounds);
+
+    let request = URI + `impianti/mappa`;
+
+    log(request);
+
+    return await fetch(request, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+        body: JSON.stringify({
+            'fuel': fuel,
+            'bounds': bounds,
+            'sort': sort,
+            'limit': limit
+        })
+    });
+
+}
+
+
 export async function getRouteByPosition(payload) {
 
     const request = URI + 'route';

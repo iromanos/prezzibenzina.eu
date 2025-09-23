@@ -1,7 +1,7 @@
 import React from 'react';
 import ImpiantoCardClient from "@/components/impianti/ImpiantoCardClient";
 
-export default function ImpiantoCard({impianto}) {
+export default function ImpiantoCard({impianto, cardClient = true}) {
 
     const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -35,10 +35,10 @@ export default function ImpiantoCard({impianto}) {
                     <strong>{prezzo.toFixed(3)} €/L</strong> – {tipo_impianto}<br/>
                     {indirizzo}, {comune} ({provincia})
                 </p>
-
+                {cardClient &&
                 <div className="d-flex flex-wrap gap-2 mt-2 small">
                     <ImpiantoCardClient impianto={impianto}/>
-                </div>
+                </div>}
             </div>
         </div>
     );
