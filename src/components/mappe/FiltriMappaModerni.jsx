@@ -26,7 +26,8 @@ export default function FiltriMappaModerni({onChange}) {
     return (
         <>
             {/* Pulsanti */}
-            <div className="position-absolute top-0 start-0 p-3 z-3 d-flex gap-2 flex-wrap">
+            <div
+                className="bg-white bg-opacity-50  position-absolute top-0 start-0 end-0 p-3 z-3 d-flex gap-2 flex-wrap rounded-bottom-3">
                 <Button size="sm" variant="light" className={'border border-dark-subtle'}
                         onClick={() => setShow('carburante')}>
                     <strong>{carburante.toUpperCase()}</strong>
