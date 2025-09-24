@@ -19,6 +19,7 @@
     "maplibre-react-components": "^0.2.6",
     "next": "15.5.3",
     "react": "19.1.0",
+    "react-bootstrap": "^2.10.10",
     "react-device-detect": "^2.2.3",
     "react-dom": "19.1.0",
     "react-map-gl": "^8.0.4",

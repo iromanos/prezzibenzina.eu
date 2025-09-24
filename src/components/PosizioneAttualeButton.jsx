@@ -1,7 +1,8 @@
 import {usePosizioneAttuale} from '@/hooks/usePosizioneAttuale';
 import {log} from "@/functions/helpers";
+import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
 
-export default function PosizioneAttualeButton({onPosizione}) {
+export default function PosizioneAttualeButton({onPosizione, footerHeight = 0}) {
     const posizione = usePosizioneAttuale();
 
     const handleClick = () => {
@@ -13,11 +14,17 @@ export default function PosizioneAttualeButton({onPosizione}) {
 
     return (
         <button
-            className="btn btn-sm btn-primary position-absolute top-0 start-0 m-2 z-3"
+            type={'button'}
+            style={{
+                bottom: footerHeight,
+                width: 56,
+                height: 56
+            }}
+            className="btn btn-light shadow-sm z-3 m-3
+                    border border-dark-subtle
+                    d-flex align-items-center justify-content-center
+                    rounded-circle position-absolute"
             onClick={handleClick}
-            disabled={!posizione}
-        >
-            📍 Posizione attuale
-        </button>
+            disabled={!posizione}><LocationSearchingIcon/></button>
     );
 }

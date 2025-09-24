@@ -1,11 +1,15 @@
 'use client'
 
 import MappaRisultati from "@/components/mappe/MappaRisultati";
-import {useState} from "react";
+import {useEffect, useRef, useState} from 'react';
 import ImpiantoCard from "@/components/impianti/ImpiantoCard";
+import {log} from "@/functions/helpers";
 
 export default function MappaClient({posizione, distributoriIniziali}) {
 
+
+    const [footerHeight, setFooterHeight] = useState(0);
+    const footerRef = useRef(null);
 
     const [distributori, setDistributori] = useState(distributoriIniziali);
 
@@ -15,11 +19,24 @@ export default function MappaClient({posizione, distributoriIniziali}) {
         zoom: 13
     });
 
+    useEffect(() => {
+        if (footerRef.current) {
+            const height = footerRef.current.offsetHeight;
+            setFooterHeight(height);
+            log('Footer height:', height);
+        }
+    }, [distributori.length]);
+
+
     return (
         <div className="position-relative vh-100">
+
+
             <div className={"position-absolute top-0 start-0 w-100 h-100"}>
                 <MappaRisultati posizione={viewState}
-                                distributoriIniziali={distributoriIniziali} onFetchDistributori={(data) => {
+                                footerHeight={footerHeight}
+                                distributoriIniziali={distributoriIniziali}
+                                onFetchDistributori={(data) => {
                     setDistributori(data);
                 }}/>
             </div>
@@ -29,9 +46,9 @@ export default function MappaClient({posizione, distributoriIniziali}) {
             </div>
 
             {distributori.length !== 0 ?
-
-                <div className="position-absolute bottom-0 w-100 z-3">
-                    <div className="bg-white shadow rounded-top p-3 " style={{height: '40vh', overflowY: 'auto'}}>
+                <div ref={footerRef} className="position-absolute bottom-0 w-100 z-3">
+                    <div className="bg-white bg-opacity-50 shadow rounded-top-4 p-3 "
+                         style={{height: '40vh', overflowY: 'auto'}}>
                         {distributori.map((d, i) =>
                             <ImpiantoCard key={i} impianto={d} cardClient={false}/>
                         )}

@@ -10,16 +10,36 @@ import {useDebouncedCallback} from '@/hooks/useDebouncedCallback';
 import PosizioneAttualeButton from "@/components/PosizioneAttualeButton";
 import {usePosizioneAttuale} from '@/hooks/usePosizioneAttuale';
 import PosizioneAttualeMarker from "@/components/PosizioneAttualeMarker";
+import FiltriMappaModerni from "@/components/mappe/FiltriMappaModerni";
+import maplibregl from "maplibre-gl";
 
-export default function MappaRisultati({posizione, distributoriIniziali = [], onFetchDistributori}) {
+export default function MappaRisultati({posizione, distributoriIniziali = [], onFetchDistributori, footerHeight = 0}) {
     const [distributori, setDistributori] = useState(distributoriIniziali);
+
+    const [filtri, setFiltri] = useState({carburante: '', marchio: '', limite: 25});
 
     const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
     const lastBoundsRef = useRef(null);
 
     const mapRef = useRef();
 
-    const debouncedBoundsChange = useDebouncedCallback(async (bounds) => {
+    const debouncedBoundsChange = useDebouncedCallback(async () => {
+        const map = mapRef.current;
+
+        const container = map.getContainer();
+        const padding = {top: 0, bottom: footerHeight, left: 0, right: 0}; // come da setPadding
+
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+
+        // Calcola coordinate visive tenendo conto del padding
+        const sw = map.unproject([padding.left, height - padding.bottom]);
+        const ne = map.unproject([width - padding.right, padding.top]);
+
+        const bounds = new maplibregl.LngLatBounds(sw, ne);
+
+
+        //const bounds = map.getBounds();
 
         const boundsKey = JSON.stringify(bounds);
 
@@ -44,19 +64,25 @@ export default function MappaRisultati({posizione, distributoriIniziali = [], on
         map.flyTo({center: [pos.lon, pos.lat], zoom: 14});
     };
 
+    const handleMapLoad = (event) => {
+        const map = mapRef.current;
+    };
+
     return (
-        <><PosizioneAttualeButton onPosizione={handlePosizione}/>
+        <>
+            <FiltriMappaModerni onChange={setFiltri}/>
+
+            <PosizioneAttualeButton onPosizione={handlePosizione} footerHeight={footerHeight}/>
 
             <Map
+                padding={{bottom: footerHeight}}
                 ref={mapRef}
                 initialViewState={posizione}
                 mapStyle={styleUrl}
                 mapLib={import('maplibre-gl')}
                 style={{width: '100%', height: '100%'}}
-                onMoveEnd={(e) => {
-                    log("MOVE END");
-                    debouncedBoundsChange(e.target.getBounds());
-                }}
+                // onLoad={handleMapLoad}
+                onMoveEnd={debouncedBoundsChange}
             >
                 {posizioneAttuale && (
                     <PosizioneAttualeMarker

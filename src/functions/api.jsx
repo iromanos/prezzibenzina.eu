@@ -1,9 +1,15 @@
 import axios from "axios";
 import {NextResponse} from "next/server";
 import {log} from "@/functions/helpers";
+import {deprecatedPropType} from "@mui/material";
+import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
+import PropaneIcon from "@mui/icons-material/Propane";
+import BubbleChartIcon from "@mui/icons-material/BubbleChart";
+import EvStationIcon from "@mui/icons-material/EvStation";
 
 const URI = process.env.NEXT_PUBLIC_API_ENDPOINT + '/pb/';
 
+@deprecatedPropType()
 const Carburanti = {
     'benzina': '1-x',
     'diesel': '2-x',
@@ -13,6 +19,36 @@ const Carburanti = {
 
 export function getCarburanti() {
     return Carburanti;
+}
+
+export function getElencoCarburanti() {
+    const r = [];
+
+    r.push({
+        id: '1-x',
+        tipo: 'benzina',
+        icon: <LocalGasStationIcon/>
+    });
+
+    r.push({
+        id: '2-x',
+        tipo: 'diesel',
+        icon: <EvStationIcon/>
+    });
+
+    r.push({
+        id: '3-x',
+        tipo: 'metano',
+        icon: <BubbleChartIcon/>
+    });
+
+    r.push({
+        id: '4-x',
+        tipo: 'gpl',
+        icon: <PropaneIcon/>
+    });
+
+    return r;
 }
 
 export async function getImpianto({params}) {
