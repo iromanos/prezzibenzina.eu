@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {getImpiantiByDistance} from "@/functions/api";
 import Mappa from "@/components/Mappa";
 import ImpiantoRow from "@/components/impianti/ImpiantoRow";
+import {log} from "@/functions/helpers";
 
 export default function ComparaVicini({carburante}) {
 
@@ -14,7 +15,12 @@ export default function ComparaVicini({carburante}) {
     const [baseId, setBaseId] = useState(null);
     const [vicini, setVicini] = useState([]);
 
+    log("ComparaVicini: " + carburante);
+
     useEffect(() => {
+
+        if (carburante == null) return;
+        if (carburante === "") return;
         const handleCompare = async e => {
             const {lat, lng, radius, id} = e.detail;
             setBaseId(id);

@@ -24,36 +24,54 @@ export default function MappaClient({posizione, distributoriIniziali}) {
             const height = footerRef.current.offsetHeight;
             setFooterHeight(height);
             log('Footer height:', height);
-        }
+        } else setFooterHeight(0);
     }, [distributori.length]);
 
 
+    useEffect(() => {
+        log('MAPPA CLIENT: MOUNTED');
+    }, []);
+
+    log("MAPPA CLIENT: BUILD");
+
     return (
         <div className="position-relative vh-100">
-
-
             <div className={"position-absolute top-0 start-0 w-100 h-100"}>
                 <MappaRisultati posizione={viewState}
                                 footerHeight={footerHeight}
                                 distributoriIniziali={distributoriIniziali}
                                 onFetchDistributori={(data) => {
-                    setDistributori(data);
-                }}/>
+                                    setDistributori(data);
+                                }}/>
             </div>
-            {/* Overlay filtri */}
-            <div className="position-absolute top-0 end-0 p-2 z-3">
-                {/*<button className="btn btn-sm btn-light">Filtri</button>*/}
+            <div ref={footerRef} className="position-absolute bottom-0 w-100 z-3 d-lg-none">
+                <div className="bg-white bg-opacity-50 shadow rounded-top-4 p-3 "
+                     style={{maxHeight: '40vh', overflowY: 'auto'}}>
+                    <h6 className="fw-semibold mb-3">Distributori trovati</h6>
+                    {distributori.length !== 0 ?
+
+                        distributori.map((d, i) =>
+                            <ImpiantoCard key={i} impianto={d} cardClient={false}/>
+                        ) :
+                        <p className={''}>Nessun distributore in zona per i filtri selezionati</p>
+                    }
+                </div>
             </div>
 
-            {distributori.length !== 0 ?
-                <div ref={footerRef} className="position-absolute bottom-0 w-100 z-3">
-                    <div className="bg-white bg-opacity-50 shadow rounded-top-4 p-3 "
-                         style={{height: '40vh', overflowY: 'auto'}}>
-                        {distributori.map((d, i) =>
-                            <ImpiantoCard key={i} impianto={d} cardClient={false}/>
-                        )}
-                    </div>
-                </div> : null}
+            {/* Sidebar desktop */}
+            <div
+                className="d-none d-lg-block position-fixed top-0 end-0 h-100 bg-white bg-opacity-75 shadow border-start p-3"
+                style={{width: '420px', overflowY: 'auto', zIndex: 1030}}>
+                <h6 className="fw-semibold mb-3">Distributori trovati</h6>
+                {distributori.length !== 0 ? (
+                    distributori.map((d, i) => (
+                        <ImpiantoCard key={i} impianto={d}/>
+                    ))
+                ) : (
+                    <p className="">Nessun distributore in zona per i filtri selezionati</p>
+                )}
+            </div>
+
         </div>);
 
 }

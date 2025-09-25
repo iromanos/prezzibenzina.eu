@@ -21,6 +21,17 @@ export function getCarburanti() {
     return Carburanti;
 }
 
+export async function getMarchi() {
+    const response = await fetch(URI + 'marchi', {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+        },
+    });
+
+    return response.json();
+}
+
 export function getElencoCarburanti() {
     const r = [];
 
@@ -176,11 +187,13 @@ export async function getSeoRegione(regione, carburante, marchio, provincia, com
 
 }
 
-export async function getImpiantiByDistance(lat, lng, distance, carburante, sort, limit = 5) {
+export async function getImpiantiByDistance(lat, lng, distance, carburante, sort, limit = 5, brand = null) {
 
     const fuel = Carburanti[carburante];
 
     let request = URI + `impianti/distanza?lat=${lat}&lng=${lng}&distance=${distance}&fuel=${fuel}&sort=${sort}&limit=${limit}`;
+
+    if (brand !== null) request += `&brand=${brand}`;
 
     log(request);
 
@@ -194,7 +207,7 @@ export async function getImpiantiByDistance(lat, lng, distance, carburante, sort
 
 }
 
-export async function getImpiantiByBounds(bounds, carburante, sort = 'price', limit = 5) {
+export async function getImpiantiByBounds(bounds, carburante, sort = 'price', limit = 5, brand = null) {
 
     const carburanti = getCarburanti();
 
@@ -216,12 +229,12 @@ export async function getImpiantiByBounds(bounds, carburante, sort = 'price', li
             'fuel': fuel,
             'bounds': bounds,
             'sort': sort,
-            'limit': limit
+            'limit': limit,
+            'brand': brand
         })
     });
 
 }
-
 
 export async function getRouteByPosition(payload) {
 

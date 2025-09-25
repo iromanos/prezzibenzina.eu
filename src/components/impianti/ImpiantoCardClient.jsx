@@ -39,7 +39,7 @@ export default function ImpiantoCardClient({impianto, apriMappa = true}) {
         }));
     };
 
-    return <>
+    return <div className={'d-flex gap-2 flex-wrap align-items-center'}>
         {apriMappa ?
             <button
 
@@ -73,6 +73,6 @@ export default function ImpiantoCardClient({impianto, apriMappa = true}) {
             Scheda impianto
         </a>
 
-    </>
+    </div>
 
 }
