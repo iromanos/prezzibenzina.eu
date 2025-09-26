@@ -7,6 +7,7 @@ import useCarburante from "@/hooks/useCarburante";
 import {getElencoCarburanti, getMarchi} from "@/functions/api";
 
 import {URI_IMAGE} from "@/constants";
+import useLimit from "@/hooks/useLimit";
 
 export default function FiltriMappaModerni({onChange}) {
     const [show, setShow] = useState(null);
@@ -16,7 +17,7 @@ export default function FiltriMappaModerni({onChange}) {
 
     const {carburante, setCarburante} = useCarburante();
     const [brand, setBrand] = useState(null);
-    const [limite, setLimite] = useState(10);
+    const {limit, setLimit} = useLimit();
 
 
 
@@ -52,7 +53,7 @@ export default function FiltriMappaModerni({onChange}) {
                 </Button>
                 <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
                         onClick={() => setShow('limite')}>
-                    <strong>{limite}</strong>
+                    <strong>{limit}</strong>
                 </Button>
             </div>
 
@@ -112,15 +113,15 @@ export default function FiltriMappaModerni({onChange}) {
                         min={5}
                         max={25}
                         step={5}
-                        value={limite}
-                        onChange={(e) => setLimite(Number(e.target.value))}
+                        value={limit}
+                        onChange={(e) => setLimit(Number(e.target.value))}
                     />
-                    <div className="text-center mt-2 fw-bold">{limite} impianti</div>
+                    <div className="text-center mt-2 fw-bold">{limit} impianti</div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShow(null)}>Annulla</Button>
                     <Button variant="primary" onClick={() => {
-                        onChange({limite: limite});
+                        onChange({limite: limit});
                         setShow(null);
                     }}>Applica</Button>
                 </Modal.Footer>

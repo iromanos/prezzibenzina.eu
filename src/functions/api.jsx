@@ -187,7 +187,7 @@ export async function getSeoRegione(regione, carburante, marchio, provincia, com
 
 }
 
-export async function getImpiantiByDistance(lat, lng, distance, carburante, sort, limit = 5, brand = null) {
+export async function getImpiantiByDistance(lat, lng, distance, carburante, sort, limit = 100, brand = null) {
 
     const fuel = Carburanti[carburante];
 
@@ -218,6 +218,9 @@ export async function getImpiantiByBounds(bounds, carburante, sort = 'price', li
     let request = URI + `impianti/mappa`;
 
     log(request);
+
+//    limit = 100;
+
 
     return await fetch(request, {
         method: 'POST',

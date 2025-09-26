@@ -1,6 +1,7 @@
 import {getImpiantiByDistance} from "@/functions/api";
 import MappaClient from "@/components/mappe/MappaClient";
 import {log} from "@/functions/helpers";
+import {cookies} from "next/headers";
 
 
 export default async function Mappa({searchParams}) {
@@ -15,8 +16,13 @@ export default async function Mappa({searchParams}) {
         lng: lng? lng : 9.19
     };
 
+    const cookieStore = await cookies();
+    let ckCarburante = cookieStore.get('carburante')?.value;
+    let ckLimite = cookieStore.get('limit')?.value;
 
-    const response = await getImpiantiByDistance(posizione.lat, posizione.lng, 10, 'benzina', 'price', 30);
+    if (ckCarburante === undefined) ckCarburante = 'benzina';
+    if (ckLimite === undefined) ckLimite = 50;
+    const response = await getImpiantiByDistance(posizione.lat, posizione.lng, 10, ckCarburante, 'price', ckLimite);
 
     const distributori = await response.json();
 

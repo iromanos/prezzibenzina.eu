@@ -30,6 +30,7 @@ export default function MappaClient({posizione, distributoriIniziali}) {
 
     useEffect(() => {
         log('MAPPA CLIENT: MOUNTED');
+        fetch('api/set-cookie', {method: 'POST'});
     }, []);
 
     log("MAPPA CLIENT: BUILD");
@@ -47,7 +48,7 @@ export default function MappaClient({posizione, distributoriIniziali}) {
             <div ref={footerRef} className="position-absolute bottom-0 w-100 z-3 d-lg-none">
                 <div className="bg-white bg-opacity-50 shadow rounded-top-4 p-3 "
                      style={{maxHeight: '40vh', overflowY: 'auto'}}>
-                    <h6 className="fw-semibold mb-3">Distributori trovati</h6>
+                    <h6 className="fw-semibold mb-3">Distributori trovati ({distributori.length})</h6>
                     {distributori.length !== 0 ?
 
                         distributori.map((d, i) =>
@@ -62,7 +63,7 @@ export default function MappaClient({posizione, distributoriIniziali}) {
             <div
                 className="d-none d-lg-block position-fixed top-0 end-0 h-100 bg-white bg-opacity-75 shadow border-start p-3"
                 style={{width: '420px', overflowY: 'auto', zIndex: 1030}}>
-                <h6 className="fw-semibold mb-3">Distributori trovati</h6>
+                <h6 className="fw-semibold mb-3">Distributori trovati ({distributori.length})</h6>
                 {distributori.length !== 0 ? (
                     distributori.map((d, i) => (
                         <ImpiantoCard key={i} impianto={d}/>
