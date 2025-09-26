@@ -16,9 +16,12 @@ import ComparaVicini from "@/components/ComparaVicini";
 import useCarburante from "@/hooks/useCarburante";
 import useLimit from "@/hooks/useLimit";
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
-import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 
-export default function MappaRisultati({posizione, distributoriIniziali = [], onFetchDistributori, footerHeight = 0}) {
+export default function MappaRisultati({
+                                           posizione, distributoriIniziali = [], onFetchDistributori,
+                                           rightWidth = 0,
+                                           footerHeight = 0
+                                       }) {
 
     const [distributori, setDistributori] = useState(distributoriIniziali);
     const [popupInfo, setPopupInfo] = useState(null);
@@ -151,27 +154,7 @@ export default function MappaRisultati({posizione, distributoriIniziali = [], on
     };
 
     log(mapRef.current?.zoom);
-    /*
-    const clusterMarkers = useClusterMarkers(distributori, filter.carburante, mapRef.current?.getZoom());
 
-    function getMarkerSize(count) {
-        const minSize = 60;
-        const maxSize = 240;
-         // 3px per impianto
-        return Math.min(maxSize, minSize + count * 4);
-    }
-
-
-    function getMarkerColor(prezzo) {
-        if (prezzo === null || isNaN(prezzo)) return '#6c757d'; // grigio per dati mancanti
-
-        const p = parseFloat(prezzo);
-
-        if (p < 1.70) return '#198754';     // verde: ottimo prezzo
-        if (p < 1.85) return '#ffc107';     // giallo: medio
-        return '#dc3545';                   // rosso: caro
-    }
-    */
     log('MappaRisultati: BUILD');
     log('Filtri: ' + filter.carburante);
     return (
@@ -194,26 +177,21 @@ export default function MappaRisultati({posizione, distributoriIniziali = [], on
             {filter.carburante ? <>
                 <ComparaVicini carburante={filter.carburante}/></> : null}
 
-            <FiltriMappaModerni onChange={(state) => {
-
+            <FiltriMappaModerni
+                rightWidth={rightWidth}
+                onSearch={(place) => {
+                    mapRef.current?.flyTo({center: [place.lon, place.lat]});
+                }}
+                onChange={(state) => {
                 const currentFilter = {
                     ...filter, ...state
                 };
-
                 debouncedFilterChange(currentFilter);
             }}/>
 
             <PosizioneAttualeButton onPosizione={handlePosizione} footerHeight={footerHeight}/>
 
-            <div className="position-absolute top-0 start-50 translate-middle-x mt-3 z-3 bg-white"
-                 style={{width: '90%', maxWidth: '400px'}}>
-                <NominatimAutocomplete
-                    onSelect={(place) => {
-                        log('Selezionato:' + place);
-                    }}
-                />
-            </div>
-
+            {/*<RicercaInMappa />*/}
 
             <Map
                 padding={{bottom: footerHeight}}

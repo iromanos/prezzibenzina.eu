@@ -9,7 +9,9 @@ export default function MappaClient({posizione, distributoriIniziali}) {
 
 
     const [footerHeight, setFooterHeight] = useState(0);
+    const [rightWidth, setRightWidth] = useState(0);
     const footerRef = useRef(null);
+    const rightRef = useRef(null);
 
     const [distributori, setDistributori] = useState(distributoriIniziali);
 
@@ -25,7 +27,14 @@ export default function MappaClient({posizione, distributoriIniziali}) {
             setFooterHeight(height);
             log('Footer height:', height);
         } else setFooterHeight(0);
-    }, [distributori.length]);
+
+        if (rightRef.current) {
+            const value = rightRef.current.offsetWidth;
+            setRightWidth(value);
+        } else setRightWidth(0);
+
+
+    }, [distributori]);
 
 
     useEffect(() => {
@@ -39,6 +48,7 @@ export default function MappaClient({posizione, distributoriIniziali}) {
         <div className="position-relative vh-100">
             <div className={"position-absolute top-0 start-0 w-100 h-100"}>
                 <MappaRisultati posizione={viewState}
+                                rightWidth={rightWidth}
                                 footerHeight={footerHeight}
                                 distributoriIniziali={distributoriIniziali}
                                 onFetchDistributori={(data) => {
@@ -61,6 +71,7 @@ export default function MappaClient({posizione, distributoriIniziali}) {
 
             {/* Sidebar desktop */}
             <div
+                ref={rightRef}
                 className="d-none d-lg-block position-fixed top-0 end-0 h-100 bg-white bg-opacity-75 shadow border-start p-3"
                 style={{width: '420px', overflowY: 'auto', zIndex: 1030}}>
                 <h6 className="fw-semibold mb-3">Distributori trovati ({distributori.length})</h6>

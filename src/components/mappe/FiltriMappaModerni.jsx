@@ -8,8 +8,10 @@ import {getElencoCarburanti, getMarchi} from "@/functions/api";
 
 import {URI_IMAGE} from "@/constants";
 import useLimit from "@/hooks/useLimit";
+import {log} from "@/functions/helpers";
+import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 
-export default function FiltriMappaModerni({onChange}) {
+export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0}) {
     const [show, setShow] = useState(null);
 
     const [marchi, setMarchi] = useState([]);
@@ -37,7 +39,23 @@ export default function FiltriMappaModerni({onChange}) {
     return (
         <>
             <div
-                className="bg-transparent position-absolute top-0 start-0 end-0 p-3 z-3 d-flex gap-2 flex-wrap rounded-bottom-3">
+
+                style={{
+                    right: rightWidth
+                }}
+
+                className="bg-transparent position-absolute start-0 top-0 p-3 z-3 rounded-bottom-3">
+                <div className={'mb-3 bg-white col col-lg-6'}>
+                    <NominatimAutocomplete
+                        onSelect={(place) => {
+                            log('Selezionato:' + JSON.stringify(place));
+                            onSearch?.(place);
+                        }}
+                    />
+                </div>
+
+                <div className={"d-flex gap-2 flex-wrap "}>
+
                 {carburante ?
                     <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
                         onClick={() => setShow('carburante')}>
@@ -55,6 +73,7 @@ export default function FiltriMappaModerni({onChange}) {
                         onClick={() => setShow('limite')}>
                     <strong>{limit}</strong>
                 </Button>
+                </div>
             </div>
 
             <Modal show={show === 'carburante'} onHide={() => setShow(null)} centered>
