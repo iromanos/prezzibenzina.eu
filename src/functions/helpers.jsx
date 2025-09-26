@@ -73,10 +73,22 @@ export function getLink(regione, carburante, marchio, provincia, comune) {
     }
 
     if (marchio) {
-        path.push({
-            label: capitalize(marchio),
-            link: `/${regione}/${carburante}/provincia/${provincia}/${comune}/marchio/${marchio}`,
-        });
+        if (comune) {
+            path.push({
+                label: capitalize(marchio),
+                link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune}/marchio/${marchio}`,
+            });
+        } else if (provincia) {
+            path.push({
+                label: provincia.toUpperCase(),
+                link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/marchio/${marchio}`,
+            });
+        } else {
+            path.push({
+                label: '',
+                link: `/${regione}/${carburante}/marchio/${marchio}`,
+            });
+        }
     }
     return path[path.length - 1];
 }
@@ -106,7 +118,7 @@ export async function getMetadata({params}) {
     const titolo = `Prezzi ${descrizioneCarburante} in ${localizzazione} | Distributori attivi`;
     const descrizione = `Consulta i prezzi aggiornati dei ${carburante} in ${localizzazione}. Trova i distributori più convenienti e naviga per città e tipo di carburante.`;
 
-    const canonicalUrl = getLink(regione, carburante, null, sigla, comune);
+    const canonicalUrl = getLink(regione, carburante, marchio, sigla, comune);
     const imageUrl = '/assets/logo.png';
 
     const microdata = generateMicrodataGraph(distributori);
