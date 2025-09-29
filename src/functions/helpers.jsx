@@ -1,6 +1,7 @@
 import {getCarburanti, getDistributoriRegione} from "@/functions/api";
 import {notFound} from "next/navigation";
 
+
 export function getRouteLink(regione, carburante, marchio, provincia, comune) {
     const path = [];
     // const title
@@ -162,14 +163,12 @@ export async function getMetadata({params}) {
 export const capitalize = (str) =>
     str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
 
-
 export function slugify(text) {
     return text
         .toLowerCase()
         .trim()
         .replace(/[\s\W-]+/g, '-') // sostituisce spazi e simboli con -
 }
-
 
 export function generateMicrodataGraph(impianti) {
 
@@ -217,7 +216,6 @@ export function generateMicrodataGraph(impianti) {
         '@graph': graph,
     }
 }
-
 
 export function log(message) {
     if (process.env.NODE_ENV === 'development') {

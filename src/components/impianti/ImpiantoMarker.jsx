@@ -24,15 +24,15 @@ export default function ImpiantoMarker({d, onClick, fadeOut = false}) {
             onClick={onClick}
         >
             <div
-                className={`border border-white rounded py-1 px-1 cluster-marker ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}`}
+                className={`text-center border border-white rounded py-1 px-1 cluster-marker ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}`}
                  style={{
                      backgroundColor: color,
                      color: 'white',
-                     textAlign: 'center',
                  }}
             >
-                <img className={'d-block'} alt={d.bandiera} width="32" height="32" src={URI_IMAGE + d.image}/>
-                {d.prezzo ? d.prezzo.toFixed(3) : null}
+                <img className={'d-block mx-auto my-1'} alt={d.bandiera} width="32" height="32"
+                     src={URI_IMAGE + d.image}/>
+                <small>{d.prezzo ? d.prezzo.toFixed(3) : null}</small>
             </div>
         </Marker>
     );

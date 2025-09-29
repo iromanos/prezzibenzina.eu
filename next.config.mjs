@@ -12,6 +12,11 @@ const nextConfig = {
                 destination: '/:segment*/diesel/:rest*',
                 permanent: true,
             },
+            {
+                source: '/risultati',
+                destination: '/mappa',
+                permanent: true,
+            },
         ];
     },
 };

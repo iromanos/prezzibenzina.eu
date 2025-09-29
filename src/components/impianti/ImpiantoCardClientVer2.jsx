@@ -4,7 +4,7 @@
 import React from "react";
 import {log} from "@/functions/helpers";
 
-export default function ImpiantoCardClient({impianto, apriMappa = true}) {
+export default function ImpiantoCardClientVer2({impianto, apriMappa = true}) {
 
     const {
         nome_impianto,
@@ -60,7 +60,14 @@ export default function ImpiantoCardClient({impianto, apriMappa = true}) {
             Vai con Google Maps
         </a>
 
-        <a href={schedaUrl} className="small">
+        {/*<button className="btn btn-link btn-sm p-0"*/}
+        {/*    //onClick={() => window.dispatchEvent(new CustomEvent('alert:open', { detail: impianto }))}*/}
+
+        {/*>*/}
+        {/*    Avvisami se scende sotto…*/}
+        {/*</button>*/}
+
+        <a href={schedaUrl} className="text-decoration-underline small">
             Scheda impianto
         </a>
 

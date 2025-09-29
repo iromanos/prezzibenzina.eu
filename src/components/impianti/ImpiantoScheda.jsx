@@ -11,9 +11,10 @@ import ShareButton from "@/components/ShareButton";
 import ComparaVicini from "@/components/ComparaVicini";
 import {log} from "@/functions/helpers";
 import ImpiantoDescrizione from "@/components/impianti/ImpiantoDescrizione";
+import {getElencoCarburanti} from "@/functions/api";
 
-export default function ImpiantoScheda({impianto}) {
-    const [showPopup, setShowPopup] = useState(true);
+export default function ImpiantoScheda({impianto, cookie}) {
+    const [showPopup, setShowPopup] = useState(false);
     const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
     const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -36,7 +37,6 @@ export default function ImpiantoScheda({impianto}) {
         indirizzo,
         comune,
         provincia,
-        prezzo,
         latitudine,
         longitudine,
         image,
@@ -44,10 +44,19 @@ export default function ImpiantoScheda({impianto}) {
         prezzi,
     } = impianto;
 
+    const prezzo = () => {
+        const carburanti = getElencoCarburanti();
+        const fuel = carburanti.find(c => c.tipo === cookie.carburante);
+        const prezzo = prezzi.find(p => p.fuel_id === fuel.fuel_id);
+        return prezzo.prezzo;
+    }
+
+    impianto.prezzo = prezzo();
+
     return (
         <div className="container py-4">
             <div className={'row'}>
-                <div className={'col-lg-7'}>
+                <div className={'col-lg-7 mb-4'}>
                     <div className="d-flex align-items-center gap-3 mb-3">
                         <img src={URI_IMAGE + impianto.image} alt={impianto.bandiera} width={96} height={96}/>
                         <div>
@@ -60,21 +69,30 @@ export default function ImpiantoScheda({impianto}) {
                     <p>{indirizzo}, {comune} ({provincia})</p>
                     <div className={'mb-2'}>
                         <h2>Carburanti disponibili</h2>
-                        <ul>
+                        <table className="table table-bordered align-middle">
+                            <thead className="table-light">
+                            <tr>
+                                <th scope="col">Tipo</th>
+                                <th scope="col" className={'text-end'}>Prezzo €/L</th>
+                            </tr>
+                            </thead>
+                            <tbody>
                             {prezzi.map((f, i) => (
-                                <li key={i}>{f.desc_carburante} – {f.prezzo.toFixed(3)} €/L</li>
+                                <tr key={i} className="">
+                                    <td>{f.desc_carburante} {f.is_self ? "(self)" : null}</td>
+                                    <td className="fw-bold text-end">{f.prezzo.toFixed(3)}</td>
+                                </tr>
                             ))}
-                        </ul>
+                            </tbody>
+                        </table>
+
+
                     </div>
                     <div className="d-flex gap-2 flex-wrap">
                         <button id={'confronta'} className="btn btn-outline-primary btn-sm"
                                 onClick={() => confrontaVicini()}>
                             Confronta Vicini
                         </button>
-                        {/*<button className="btn btn-outline-secondary btn-sm"*/}
-                        {/*        onClick={() => window.dispatchEvent(new CustomEvent('alert:open', {detail: impianto}))}>*/}
-                        {/*    Avvisami se scende sotto…*/}
-                        {/*</button>*/}
                         <a className="btn btn-primary btn-sm"
                            href={`https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`}
                            target="_blank" rel="noopener">
@@ -84,7 +102,7 @@ export default function ImpiantoScheda({impianto}) {
 
 
                 </div>
-                <div className={'col-lg-5'}>
+                <div className={'col-lg-5 mb-4'}>
                     <div id={'mappa'} className="mb-3 rounded border">
                         <Map
                             mapLib={maplibregl}
@@ -93,7 +111,7 @@ export default function ImpiantoScheda({impianto}) {
                                 latitude: latitudine,
                                 zoom: 14,
                             }}
-                            style={{width: '100%', height: '420px'}}
+                            style={{width: '100%', height: '240px'}}
                             mapStyle={styleUrl}
                             attributionControl={false}
 

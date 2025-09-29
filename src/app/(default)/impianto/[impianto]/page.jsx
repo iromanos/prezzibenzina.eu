@@ -1,8 +1,8 @@
-// app/impianto/[slug]/page.jsx
 import ImpiantoScheda from '@/components/impianti/ImpiantoScheda';
 import {getImpianto} from "@/functions/api";
 import {log} from "@/functions/helpers";
 import Header from "@/components/Header";
+import {getCookie} from "@/functions/cookies";
 
 export async function generateMetadata({params}) {
     const res = await getImpianto({params});
@@ -17,12 +17,12 @@ export async function generateMetadata({params}) {
 export default async function Page({params}) {
 
     const res = await getImpianto({params});
-
     const impianto = await res.json();
+    const cookie = await getCookie();
 
     log(impianto);
-
+    log(cookie);
 
     return <><Header/>
-        <ImpiantoScheda impianto={impianto}/></>;
+        <ImpiantoScheda impianto={impianto} cookie={cookie}/></>;
 }

@@ -11,11 +11,11 @@ import {usePosizioneAttuale} from '@/hooks/usePosizioneAttuale';
 import PosizioneAttualeMarker from "@/components/PosizioneAttualeMarker";
 import FiltriMappaModerni from "@/components/mappe/FiltriMappaModerni";
 import maplibregl from "maplibre-gl";
-import ImpiantoPopup from "@/components/impianti/ImpiantoPopup";
 import ComparaVicini from "@/components/ComparaVicini";
 import useCarburante from "@/hooks/useCarburante";
 import useLimit from "@/hooks/useLimit";
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
+import ImpiantoPopupMobile from "@/components/impianti/ImpiantoPopupMobile";
 
 export default function MappaRisultati({
                                            posizione, distributoriIniziali = [], onFetchDistributori,
@@ -219,7 +219,7 @@ export default function MappaRisultati({
                     closeOnClick={false}
                     onClose={() => setPopupInfo(null)}>
 
-                    <ImpiantoPopup impianto={popupInfo}/>
+                    <ImpiantoPopupMobile impianto={popupInfo}/>
 
 
                 </Popup> : null}
@@ -228,6 +228,7 @@ export default function MappaRisultati({
                     fadeOut={fadeOutMarker}
                     onClick={e => {
                         e.originalEvent.stopPropagation(); // evita chiusura globale
+                        mapRef.current?.flyTo({center: [d.longitudine, d.latitudine], essential: true});
                         setPopupInfo(d);
                     }}
 

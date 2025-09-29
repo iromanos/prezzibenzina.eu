@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 
-export default function useLimit(defaultValue = 0) {
+export default function useLimit(defaultValue = 25) {
     const [limit, setLimitState] = useState(defaultValue);
 
     useEffect(() => {

@@ -26,7 +26,7 @@ export default function ComparaVicini({carburante}) {
             setBaseId(id);
             setOpen(true);
 
-            const res = await getImpiantiByDistance(lat, lng, radius, carburante, 'price');
+            const res = await getImpiantiByDistance(lat, lng, radius, carburante, 'price', 5);
 
             const data = await res.json();
             setVicini(data);

@@ -13,6 +13,7 @@ import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 
 export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0}) {
     const [show, setShow] = useState(null);
+    const [info, setInfo] = useState(false);
 
     const [marchi, setMarchi] = useState([]);
 
@@ -44,8 +45,22 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0})
                     right: rightWidth
                 }}
 
-                className="bg-transparent position-absolute start-0 top-0 p-3 z-3 rounded-bottom-3">
-                <div className={'mb-3 bg-white col col-lg-6'}>
+                className="bg-transparent position-absolute start-0 top-0 p-3 z-3">
+
+                <div className={'visually-hidden'}>
+                    <h1 className="">Mappa Interattiva dei Prezzi Carburante in Italia</h1>
+                    <p>
+                        Consulta la <strong>mappa interattiva dei distributori di carburante in Italia</strong> per
+                        trovare i <strong>prezzi aggiornati di benzina, diesel, GPL e metano</strong>.
+                        Scopri i punti vendita più convenienti vicino a te e confronta le tariffe per risparmiare
+                        sul rifornimento in ogni regione.
+                    </p>
+                    <p>Hai la possibilità di selezionare la destinazione del tuo viaggio e confrontare i distributori
+                        lungo il percorso.</p>
+                </div>
+
+                <>
+                    <div className={'mb-3 col col-lg-6'}>
                     <NominatimAutocomplete
                         onSelect={(place) => {
                             log('Selezionato:' + JSON.stringify(place));
@@ -73,8 +88,27 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0})
                         onClick={() => setShow('limite')}>
                     <strong>{limit}</strong>
                 </Button>
+                    <Button onClick={() => {
+                        setInfo(true);
+                    }} size={"sm"}>INFO</Button>
                 </div>
+                </>
             </div>
+
+            <Modal show={info} onHide={() => setInfo(false)} centered>
+                <Modal.Header closeButton><Modal.Title>Mappa Interattiva dei Prezzi Carburante in
+                    Italia</Modal.Title></Modal.Header>
+                <Modal.Body>
+                    <p>
+                        Consulta la <strong>mappa interattiva dei distributori di carburante in Italia</strong> per
+                        trovare i <strong>prezzi aggiornati di benzina, diesel, GPL e metano</strong>.
+                        Scopri i punti vendita più convenienti vicino a te e confronta le tariffe per risparmiare
+                        sul rifornimento in ogni regione.
+                    </p>
+                    <p>Hai la possibilità di selezionare la destinazione del tuo viaggio e confrontare i distributori
+                        lungo il percorso.</p>
+                </Modal.Body>
+            </Modal>
 
             <Modal show={show === 'carburante'} onHide={() => setShow(null)} centered>
                 <Modal.Header closeButton><Modal.Title>Seleziona carburante</Modal.Title></Modal.Header>

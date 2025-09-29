@@ -80,6 +80,7 @@ export default function NominatimAutocomplete({onSelect}) {
 
     return (
         <Autocomplete
+            className={'bg-white rounded'}
             freeSolo
             options={options}
             filterOptions={(opts) => opts}
