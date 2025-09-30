@@ -4,9 +4,10 @@ import MappaRisultati from "@/components/mappe/MappaRisultati";
 import {useEffect, useRef, useState} from 'react';
 import ImpiantoCard from "@/components/impianti/ImpiantoCard";
 import {log} from "@/functions/helpers";
+import {useFilters} from "@/hooks/useFilters";
 
-export default function MappaClient({posizione, distributoriIniziali}) {
-
+export default function MappaClient({posizione, distributoriIniziali, initialFilters}) {
+    const {filters} = useFilters(initialFilters);
 
     const [footerHeight, setFooterHeight] = useState(0);
     const [rightWidth, setRightWidth] = useState(0);
@@ -36,19 +37,22 @@ export default function MappaClient({posizione, distributoriIniziali}) {
 
     }, [distributori]);
 
-
     useEffect(() => {
         log('MAPPA CLIENT: MOUNTED');
-        fetch('api/set-cookie', {method: 'POST'});
+        fetch('api/set-cookie', {method: 'POST', body: JSON.stringify(initialFilters)});
     }, []);
 
     log("MAPPA CLIENT: BUILD");
+    log("FILTERS: " + JSON.stringify(filters));
+
 
     return (
         <>
             <div className="position-relative vh-100">
                 <div className={"position-absolute top-0 start-0 w-100 h-100"}>
-                    <MappaRisultati posizione={viewState}
+                    <MappaRisultati
+                        initialFilters={initialFilters}
+                        posizione={viewState}
                                     rightWidth={rightWidth}
                                     footerHeight={footerHeight}
                                     distributoriIniziali={distributoriIniziali}

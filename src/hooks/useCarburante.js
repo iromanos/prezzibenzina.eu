@@ -1,13 +1,14 @@
 import {useEffect, useState} from 'react';
 
-export default function useCarburante(defaultValue = 'benzina') {
-    const [carburante, setCarburanteState] = useState('');
+export default function useCarburante(defaultValue = '') {
+    const [carburante, setCarburanteState] = useState(defaultValue);
 
     useEffect(() => {
+        if (defaultValue !== '') return;
         const match = document.cookie.match(/(?:^|; )carburante=([^;]*)/);
         if (match) {
             setCarburanteState(decodeURIComponent(match[1]));
-        } else setCarburanteState('benzina');
+        } else setCarburanteState(defaultValue);
     }, []);
 
     const setCarburante = (tipo) => {
@@ -17,8 +18,8 @@ export default function useCarburante(defaultValue = 'benzina') {
     };
 
     const clearCarburante = () => {
-        document.cookie = `carburante=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-        setCarburanteState(defaultValue);
+        // document.cookie = `carburante=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+        // setCarburanteState(defaultValue);
     };
 
     return {carburante, setCarburante, clearCarburante};

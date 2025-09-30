@@ -1,5 +1,7 @@
 import SearchIcon from "@mui/icons-material/Search";
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import Footer from "@/components/Footer";
+
 export const metadata = {
     title: 'PrezziBenzina.eu | Risparmia sul Carburante',
     description: 'Trova i distributori più convenienti vicino a te. PrezziBenzina.eu ti guida con mappa interattiva e filtri intelligenti.',
@@ -95,7 +97,7 @@ export default function Home() {
             </div>
 
 
-
+            <Footer/>
         </>
     );
 }

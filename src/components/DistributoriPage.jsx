@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
 import {getCarburanti, getDistributoriRegione, getSeoRegione} from "@/functions/api";
-import {generateMicrodataGraph} from "@/functions/helpers"
 import React from "react";
 import ElencoDistributori from "@/components/ElencoDistributori";
 import {LinkCarburanti} from "@/components/FiltroCarburante";
@@ -46,7 +45,7 @@ export default async function DistributoriPage({params}) {
         day: 'numeric',
     }).format(date);
 
-    const microdata = generateMicrodataGraph(distributori);
+    // const microdata = generateMicrodataGraph(distributori);
 
     return <>
         <Header/>

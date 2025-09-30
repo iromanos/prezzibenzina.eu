@@ -5,15 +5,17 @@ import {getImpiantiByDistance} from "@/functions/api";
 import Mappa from "@/components/Mappa";
 import ImpiantoRow from "@/components/impianti/ImpiantoRow";
 import {log} from "@/functions/helpers";
+import Modal from "react-bootstrap/Modal";
+import {useModalHistory} from "@/hooks/useModalHistory";
 
 export default function ComparaVicini({carburante}) {
-
-    const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
-
 
     const [open, setOpen] = useState(false);
     const [baseId, setBaseId] = useState(null);
     const [vicini, setVicini] = useState([]);
+
+
+    useModalHistory(open, () => setOpen(false));
 
     log("ComparaVicini: " + carburante);
 
@@ -36,36 +38,29 @@ export default function ComparaVicini({carburante}) {
         return () => window.removeEventListener('compare:open', handleCompare);
     }, []);
 
-    if (!open) return null;
-
     return (
-        <div className="modal show d-block bg-dark bg-opacity-50" tabIndex="-1">
-            <div className="modal-dialog modal-lg">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title">Confronta distributori vicini</h5>
-                        <button className="btn-close" onClick={() => setOpen(false)}/>
+
+        <Modal show={open} onHide={() => setOpen(false)} centered>
+            <Modal.Header closeButton><Modal.Title>Confronta distributori vicini</Modal.Title></Modal.Header>
+            <Modal.Body>
+                {vicini.length === 0 ? (
+                    <p>Nessun impianto trovato entro il raggio selezionato.</p>
+                ) : (
+                    <div className={'row'}>
+                        <div className={'col-lg-6'}>
+                            <Mappa distributori={vicini} title={false} height={'25vh'}/>
+                        </div>
+                        <div className={"col-lg-6"}>
+                            <ul className="list-group">
+                                {vicini
+                                    .sort((a, b) => a.prezzo - b.prezzo)
+                                    .map(s => <ImpiantoRow key={s.id_impianto} d={s}/>)}
+                            </ul>
+                        </div>
                     </div>
-                    <div className="modal-body">
-                        {vicini.length === 0 ? (
-                            <p>Nessun impianto trovato entro il raggio selezionato.</p>
-                        ) : (
-                            <div className={'row'}>
-                                <div className={'col-lg-6'}>
-                                    <Mappa distributori={vicini} title={false}/>
-                                </div>
-                                <div className={"col-lg-6"}>
-                                    <ul className="list-group">
-                                        {vicini
-                                            .sort((a, b) => a.prezzo - b.prezzo)
-                                            .map(s => <ImpiantoRow key={s.id_impianto} d={s}/>)}
-                                    </ul>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
+                )}
+
+            </Modal.Body>
+        </Modal>
     );
 }

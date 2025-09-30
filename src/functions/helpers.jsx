@@ -103,7 +103,6 @@ export async function getMetadata({params}) {
         notFound();
     }
 
-
     const response = await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
 
     const distributori = await response.json();

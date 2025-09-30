@@ -10,21 +10,34 @@ import {URI_IMAGE} from "@/constants";
 import useLimit from "@/hooks/useLimit";
 import {log} from "@/functions/helpers";
 import NominatimAutocomplete from "@/components/NominatimAutocomplete";
+import {useModalHistory} from "@/hooks/useModalHistory";
 
-export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0}) {
+export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, initialFilters}) {
     const [show, setShow] = useState(null);
     const [info, setInfo] = useState(false);
+    const [modal, setModal] = useState(false);
 
     const [marchi, setMarchi] = useState([]);
 
 
-    const {carburante, setCarburante} = useCarburante();
+    const {carburante, setCarburante} = useCarburante(initialFilters.carburante);
     const [brand, setBrand] = useState(null);
     const {limit, setLimit} = useLimit();
 
-
-
     const elencoCarburanti = getElencoCarburanti();
+
+    useEffect(() => {
+        if (info || show !== null) {
+            setModal(true);
+        }
+    }, [show, info]);
+
+
+    useModalHistory(modal, () => {
+        setModal(false);
+        setShow(null);
+        setInfo(false);
+    });
 
     useEffect(() => {
         getMarchi()
@@ -60,7 +73,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0})
                 </div>
 
                 <>
-                    <div className={'mb-3 col col-lg-6'}>
+                    <div className={'mb-2 col col-lg-6'}>
                     <NominatimAutocomplete
                         onSelect={(place) => {
                             log('Selezionato:' + JSON.stringify(place));
