@@ -1,0 +1,9 @@
+.listContainer {
+  max-height: 64px;
+  overflow: hidden;
+  transition: max-height .8s ease;
+}
+
+.open {
+  max-height: 40vh;
+}

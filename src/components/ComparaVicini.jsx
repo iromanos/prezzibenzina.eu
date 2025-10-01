@@ -40,7 +40,7 @@ export default function ComparaVicini({carburante}) {
 
     return (
 
-        <Modal show={open} onHide={() => setOpen(false)} centered>
+        <Modal show={open} onHide={() => setOpen(false)} centered scrollable={true} size={"lg"}>
             <Modal.Header closeButton><Modal.Title>Confronta distributori vicini</Modal.Title></Modal.Header>
             <Modal.Body>
                 {vicini.length === 0 ? (
@@ -48,7 +48,7 @@ export default function ComparaVicini({carburante}) {
                 ) : (
                     <div className={'row'}>
                         <div className={'col-lg-6'}>
-                            <Mappa distributori={vicini} title={false} height={'25vh'}/>
+                            <Mappa distributori={vicini} title={false} height={'40vh'}/>
                         </div>
                         <div className={"col-lg-6"}>
                             <ul className="list-group">

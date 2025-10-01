@@ -5,9 +5,14 @@ import {useEffect, useRef, useState} from 'react';
 import ImpiantoCard from "@/components/impianti/ImpiantoCard";
 import {log} from "@/functions/helpers";
 import {useFilters} from "@/hooks/useFilters";
+import Button from "react-bootstrap/Button";
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import {AnimatePresence, motion} from 'framer-motion';
 
 export default function MappaClient({posizione, distributoriIniziali, initialFilters}) {
     const {filters} = useFilters(initialFilters);
+
+    const [showList, setShowList] = useState(false);
 
     const [footerHeight, setFooterHeight] = useState(0);
     const [rightWidth, setRightWidth] = useState(0);
@@ -37,9 +42,27 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
 
     }, [distributori]);
 
+    const handleAnimationComplete = () => {
+        if (footerRef.current) {
+            const height = footerRef.current.offsetHeight;
+            setFooterHeight(height);
+            log('Footer height:', height);
+        } else setFooterHeight(0);
+    };
+
     useEffect(() => {
         log('MAPPA CLIENT: MOUNTED');
         fetch('api/set-cookie', {method: 'POST', body: JSON.stringify(initialFilters)});
+
+    }, []);
+
+    useEffect(() => {
+        const handleFocus = e => {
+            setShowList(false);
+        };
+
+        window.addEventListener('map:focus', handleFocus);
+        return () => window.removeEventListener('map:focus', handleFocus);
     }, []);
 
     log("MAPPA CLIENT: BUILD");
@@ -61,15 +84,37 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
                                     }}/>
                 </div>
                 <div ref={footerRef} className="position-absolute bottom-0 w-100 z-3 d-lg-none">
-                    <div className="bg-white bg-opacity-50 shadow rounded-top-4 p-3 "
-                         style={{maxHeight: '40vh', overflowY: 'auto'}}>
-                        <h6 className="fw-semibold mb-3">Distributori trovati ({distributori.length})</h6>
-                        {distributori.length !== 0 ?
+                    <div className={`bg-white bg-opacity-75 shadow rounded-top-4 p-3`}
+                         style={{overflowY: 'auto'}}>
+                        <div className={'d-flex align-items-center justify-content-between'}>
+                            <h6 className="fw-semibold">Distributori trovati ({distributori.length})</h6>
+                            {distributori.length !== 0 ? <Button
 
-                            distributori.map((d, i) =>
+                                onClick={() => {
+                                    setShowList(!showList);
+                                }}
+
+                                variant={'outline-dark'} size={'sm'}><FormatListBulletedIcon/> Elenco</Button> : null}
+                        </div>
+
+                        {distributori.length !== 0 ?
+                            <AnimatePresence>
+                                {showList && (
+
+                                    <motion.div
+                                        onAnimationComplete={handleAnimationComplete}
+                                        initial={{height: 0, opacity: 0}}
+                                        animate={{height: 'auto', opacity: 1}}
+                                        exit={{height: 0, opacity: 0}}
+                                        transition={{duration: 0.3}}
+                                        style={{maxHeight: '40vh'}}
+                                    >
+                                        <div className={'py-3'}>
+                                            {distributori.map((d, i) =>
                                 <ImpiantoCard key={i} impianto={d} cardClient={true}/>
-                            ) :
-                            <p className={''}>Nessun distributore in zona per i filtri selezionati</p>
+                                            )}</div>
+                                    </motion.div>)}</AnimatePresence> :
+                            <p className={'m-0'}>Nessun distributore in zona per i filtri selezionati</p>
                         }
                     </div>
                 </div>

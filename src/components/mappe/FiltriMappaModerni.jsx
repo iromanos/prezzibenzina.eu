@@ -11,6 +11,7 @@ import useLimit from "@/hooks/useLimit";
 import {log} from "@/functions/helpers";
 import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 import {useModalHistory} from "@/hooks/useModalHistory";
+import {useFilters} from "@/hooks/useFilters";
 
 export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, initialFilters}) {
     const [show, setShow] = useState(null);
@@ -20,9 +21,14 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
     const [marchi, setMarchi] = useState([]);
 
 
+    const {setFilters} = useFilters();
+
     const {carburante, setCarburante} = useCarburante(initialFilters.carburante);
     const [brand, setBrand] = useState(null);
     const {limit, setLimit} = useLimit();
+
+
+    log(initialFilters);
 
     const elencoCarburanti = getElencoCarburanti();
 
@@ -47,6 +53,13 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                     nome: 'Tutti'
                 });
                 setMarchi(data);
+
+                const qry = data.filter(m => m.id === initialFilters.brand);
+
+                if (qry.length !== 0) {
+                    setBrand(qry[0]);
+                }
+
             });
     }, []);
 
@@ -74,37 +87,37 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
 
                 <>
                     <div className={'mb-2 col col-lg-6'}>
-                    <NominatimAutocomplete
-                        onSelect={(place) => {
-                            log('Selezionato:' + JSON.stringify(place));
-                            onSearch?.(place);
-                        }}
-                    />
-                </div>
+                        <NominatimAutocomplete
+                            onSelect={(place) => {
+                                log('Selezionato:' + JSON.stringify(place));
+                                onSearch?.(place);
+                            }}
+                        />
+                    </div>
 
-                <div className={"d-flex gap-2 flex-wrap "}>
+                    <div className={"d-flex gap-2 flex-wrap "}>
 
-                {carburante ?
-                    <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
-                        onClick={() => setShow('carburante')}>
-                    <strong>{carburante.toUpperCase()}</strong>
-                    </Button> : null}
-                <Button size="sm" variant="light"
-                        className={'border border-dark-subtle shadow-sm d-flex align-items-center gap-1'}
-                        onClick={() => setShow('marchio')}>
-                    {brand?.id != null
-                        ? <><img alt={brand?.nome} width={16} height={16} src={URI_IMAGE + brand?.logo}/>
-                            <strong>{brand?.nome}</strong></>
-                        : <span className={'text-muted'}>Marchio</span>}
-                </Button>
-                <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
-                        onClick={() => setShow('limite')}>
-                    <strong>{limit}</strong>
-                </Button>
-                    <Button onClick={() => {
-                        setInfo(true);
-                    }} size={"sm"}>INFO</Button>
-                </div>
+                        {carburante ?
+                            <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
+                                    onClick={() => setShow('carburante')}>
+                                <strong>{carburante.toUpperCase()}</strong>
+                            </Button> : null}
+                        <Button size="sm" variant="light"
+                                className={'border border-dark-subtle shadow-sm d-flex align-items-center gap-1'}
+                                onClick={() => setShow('marchio')}>
+                            {brand?.id != null
+                                ? <><img alt={brand?.nome} width={16} height={16} src={URI_IMAGE + brand?.logo}/>
+                                    <strong>{brand?.nome}</strong></>
+                                : <span className={'text-muted'}>Marchio</span>}
+                        </Button>
+                        <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
+                                onClick={() => setShow('limite')}>
+                            <strong>{limit}</strong>
+                        </Button>
+                        <Button className={'shadow-sm'} onClick={() => {
+                            setInfo(true);
+                        }} size={"sm"}>INFO</Button>
+                    </div>
                 </>
             </div>
 
@@ -135,6 +148,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                                 setCarburante(c.tipo);
                                 setShow(null);
                                 onChange({carburante: c.tipo});
+                                setFilters({carburante: c.tipo});
                             }}
                         >{c.icon} {c.tipo}</Button>
                     ))}
@@ -157,6 +171,10 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                                 setBrand(m);
                                 onChange({brand: m});
                                 setShow(null);
+                                if (m === null) {
+                                    setFilters({marchio: null});
+                                } else setFilters({marchio: m.id});
+
                             }}
                         >
                             {m.logo &&

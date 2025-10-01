@@ -84,7 +84,7 @@ export default function MappaRisultati({
         const map = mapRef.current;
 
         const container = map.getContainer();
-        const padding = {top: headerHeight, bottom: footerHeight, left: 0, right: 0}; // come da setPadding
+        const padding = {top: headerHeight, bottom: 96, left: 0, right: 0}; // come da setPadding
 
         const width = container.clientWidth;
         const height = container.clientHeight;
@@ -180,7 +180,7 @@ export default function MappaRisultati({
                 initialFilters={initialFilters}
                 rightWidth={rightWidth}
                 onSearch={(place) => {
-                    mapRef.current?.flyTo({center: [place.lon, place.lat]});
+                    mapRef.current?.flyTo({zoom: 12, center: [place.lon, place.lat]});
                 }}
                 onChange={(state) => {
                 const currentFilter = {
@@ -191,10 +191,8 @@ export default function MappaRisultati({
 
             <PosizioneAttualeButton onPosizione={handlePosizione} footerHeight={footerHeight}/>
 
-            {/*<RicercaInMappa />*/}
-
             <Map
-                padding={{bottom: footerHeight, top: headerHeight}}
+                padding={{bottom: 96, top: headerHeight}}
                 ref={mapRef}
                 attributionControl={false}
 

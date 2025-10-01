@@ -17,6 +17,12 @@ const Carburanti = {
     'gpl': '4-x',
 };
 
+
+export async function getLocationByIp(ip) {
+    const response = await fetch(`http://ip-api.com/json/${ip}`);
+    return response.json();
+}
+
 export function getCarburanti() {
     return Carburanti;
 }

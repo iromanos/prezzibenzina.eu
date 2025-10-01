@@ -1,7 +1,7 @@
-import {getElencoCarburanti, getImpiantiByDistance, getMarchi} from "@/functions/api";
+import {getElencoCarburanti, getImpiantiByDistance, getLocationByIp, getMarchi} from "@/functions/api";
 import MappaClient from "@/components/mappe/MappaClient";
 import {capitalize, log} from "@/functions/helpers";
-import {cookies} from "next/headers";
+import {cookies, headers} from "next/headers";
 import {notFound} from "next/navigation";
 
 
@@ -47,13 +47,29 @@ export default async function Mappa({searchParams}) {
         initialFilters.brand = brand;
     }
 
-    const lat = parseFloat(queryParams.lat);
-    const lng = parseFloat(queryParams.lng);
+    let lat = parseFloat(queryParams.lat);
+    let lng = parseFloat(queryParams.lng);
+    let posizione = {};
 
-    const posizione = {
-        lat: lat ? lat : 45.46,
-        lng: lng? lng : 9.19
-    };
+    if (!lat || !lng) {
+
+        let ip = '185.180.180.225';
+        try {
+            const h = await headers();
+            const forwarded = h.get('x-forwarded-for');
+            ip = forwarded?.split(',')[0]?.trim() || '8.8.8.8';
+            if (ip === '::1' || !ip) {
+                ip = '185.180.180.225';
+            }
+        } catch (e) {
+        }
+        const json = await getLocationByIp(ip);
+        lat = json.lat;
+        lng = json.lon;
+    }
+
+    posizione.lat = lat;
+    posizione.lng = lng;
 
     const cookieStore = await cookies();
     let ckCarburante = cookieStore.get('carburante')?.value;

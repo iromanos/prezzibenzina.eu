@@ -1,6 +1,8 @@
 import {usePosizioneAttuale} from '@/hooks/usePosizioneAttuale';
 import {log} from "@/functions/helpers";
 import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
+import Link from "react-bootstrap/NavLink"
+import Image from 'next/image';
 
 export default function PosizioneAttualeButton({onPosizione, footerHeight = 0}) {
     const posizione = usePosizioneAttuale();
@@ -13,18 +15,31 @@ export default function PosizioneAttualeButton({onPosizione, footerHeight = 0}) 
     };
 
     return (
+        <div
+
+            style={{
+                bottom: footerHeight,
+
+            }}
+
+            className={'d-flex align-items-end justify-content-between position-absolute m-3 z-3 end-0 start-0'}>
         <button
             type={'button'}
             style={{
-                bottom: footerHeight,
                 width: 56,
                 height: 56
             }}
-            className="btn btn-light shadow-sm z-3 m-3
+            className="btn btn-light shadow-sm
                     border border-dark-subtle
                     d-flex align-items-center justify-content-center
-                    rounded-circle position-absolute"
+                    rounded-circle "
             onClick={handleClick}
             disabled={!posizione}><LocationSearchingIcon/></button>
+
+
+            <Link title={'Home'} href={'/'}><Image className={'rounded'} width={90} height={90}
+                                                   src={'/assets/logo-180.png'} alt={'PrezzoBenzina.eu'}/></Link>
+
+        </div>
     );
 }
