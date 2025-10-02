@@ -8,18 +8,19 @@ import {useFilters} from "@/hooks/useFilters";
 import Button from "react-bootstrap/Button";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import {AnimatePresence, motion} from 'framer-motion';
+import useNavBarPresence from "@/hooks/useNavBarPresence";
 
 export default function MappaClient({posizione, distributoriIniziali, initialFilters}) {
     const {filters} = useFilters(initialFilters);
-
     const [showList, setShowList] = useState(false);
-
     const [footerHeight, setFooterHeight] = useState(0);
     const [rightWidth, setRightWidth] = useState(0);
     const footerRef = useRef(null);
     const rightRef = useRef(null);
 
     const [distributori, setDistributori] = useState(distributoriIniziali);
+    const {navBarHeight} = useNavBarPresence();
+
 
     const [viewState, setViewState] = useState({
         latitude: posizione.lat,
@@ -67,7 +68,7 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
 
     log("MAPPA CLIENT: BUILD");
     log("FILTERS: " + JSON.stringify(filters));
-
+    log("NAVBAR: " + navBarHeight);
 
     return (
         <>
@@ -83,11 +84,15 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
                                         setDistributori(data);
                                     }}/>
                 </div>
-                <div ref={footerRef} className="position-absolute bottom-0 w-100 z-3 d-lg-none">
+                <div ref={footerRef}
+
+                     style={{paddingBottom: navBarHeight}}
+
+                     className="position-absolute bottom-0 w-100 z-3 d-lg-none">
                     <div className={`bg-white bg-opacity-75 shadow rounded-top-4 p-3`}
                          style={{overflowY: 'auto'}}>
                         <div className={'d-flex align-items-center justify-content-between'}>
-                            <h6 className="fw-semibold">Distributori trovati ({distributori.length})</h6>
+                            <h6 className="fw-semibold mb-0">Distributori trovati ({distributori.length})</h6>
                             {distributori.length !== 0 ? <Button
 
                                 onClick={() => {

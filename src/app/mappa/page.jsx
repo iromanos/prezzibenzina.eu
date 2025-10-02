@@ -61,11 +61,11 @@ export default async function Mappa({searchParams}) {
             if (ip === '::1' || !ip) {
                 ip = '185.180.180.225';
             }
+            const json = await getLocationByIp(ip);
+            lat = json.lat;
+            lng = json.lon;
         } catch (e) {
         }
-        const json = await getLocationByIp(ip);
-        lat = json.lat;
-        lng = json.lon;
     }
 
     posizione.lat = lat;
@@ -82,10 +82,18 @@ export default async function Mappa({searchParams}) {
         initialFilters.carburante = ckCarburante;
     }
 
+    if (posizione.lat === undefined) posizione.lat = 0;
+    if (posizione.lng === undefined) posizione.lng = 0;
+
+    log("DISTRIBUTORI: " + JSON.stringify(posizione));
+
+
 
     const response = await getImpiantiByDistance(posizione.lat, posizione.lng, 10, initialFilters.carburante, 'price', ckLimite, initialFilters.brand);
     const distributori = await response.json();
 
+
+    log("DISTRIBUTORI: " + JSON.stringify(distributori));
 
     log("MAPPA: BUILD");
 
