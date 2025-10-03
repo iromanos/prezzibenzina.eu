@@ -4,7 +4,7 @@ import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
 import Link from "react-bootstrap/NavLink"
 import Image from 'next/image';
 
-export default function PosizioneAttualeButton({onPosizione, footerHeight = 0}) {
+export default function PosizioneAttualeButton({onPosizione, footerHeight = 0, rightWidth = 0}) {
     const posizione = usePosizioneAttuale();
 
     const handleClick = () => {
@@ -16,13 +16,12 @@ export default function PosizioneAttualeButton({onPosizione, footerHeight = 0}) 
 
     return (
         <div
-
             style={{
                 bottom: footerHeight,
-
+                right: rightWidth
             }}
 
-            className={'d-flex align-items-end justify-content-between position-absolute m-3 z-3 end-0 start-0'}>
+            className={'d-flex align-items-end justify-content-between position-absolute m-3 z-3 start-0'}>
         <button
             type={'button'}
             style={{

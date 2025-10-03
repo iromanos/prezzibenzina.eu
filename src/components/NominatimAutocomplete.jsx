@@ -29,15 +29,11 @@ function getIcon(tipo) {
     }
 }
 
-export default function NominatimAutocomplete({onSelect}) {
+export default function NominatimAutocomplete({onSelect, initialValue}) {
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState([]);
 
-    // const API_KEY_ORS = '5b3ce3597851110001cf6248e3524e394e844dd28a2911efbac4a4ba';
-    // const URI_SUGGEST_ORS = 'https://api.openrouteservice.org/geocode/autocomplete?api_key=' + API_KEY_ORS + '&layers=address,locality&boundary.country=IT&text=';
-
     const NOMINATIM_ENDPOINT = 'https://nominatim.openstreetmap.org/search.php?dedupe=1&limit=5&format=jsonv2&countrycodes=it&q=';
-
 
     useEffect(() => {
 
@@ -80,6 +76,7 @@ export default function NominatimAutocomplete({onSelect}) {
 
     return (
         <Autocomplete
+            value={initialValue}
             className={'bg-white rounded'}
             freeSolo
             options={options}
@@ -104,7 +101,11 @@ export default function NominatimAutocomplete({onSelect}) {
                 return val && onSelect(val);
             }}
             renderInput={(params) => (
-                <TextField {...params} label="Indirizzo, città o CAP" variant="outlined"/>
+                <TextField
+
+                    value={initialValue}
+
+                    {...params} label="Indirizzo, città o CAP" variant="outlined"/>
             )}
         />
     );

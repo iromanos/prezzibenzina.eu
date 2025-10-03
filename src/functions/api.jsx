@@ -18,6 +18,15 @@ const Carburanti = {
 };
 
 
+export async function getNominatimReverse(position) {
+    const uri = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + position.lat + "&lon=" + position.lon;
+    const response = await fetch(uri);
+    log(uri);
+    log(response);
+
+    return response.json();
+}
+
 export async function getLocationByIp(ip) {
     const response = await fetch(`http://ip-api.com/json/${ip}`);
     return response.json();

@@ -3,13 +3,14 @@
 import React, {useState} from 'react';
 import {defaultConsent, useCookieConsent} from './CookieConsentContext';
 import CookieIcon from '@mui/icons-material/Cookie';
+import {log} from "@/functions/helpers";
 
 export default function CookieBanner() {
     const {consent, updateConsent, initialized} = useCookieConsent();
     const [expanded, setExpanded] = useState(false);
 
-    console.log(initialized);
-    console.log(consent);
+    log(initialized);
+    log(consent);
 
     if (!initialized || consent.preferences || consent.analytics || consent.marketing || consent.technical) return null;
 

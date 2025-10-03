@@ -11,6 +11,9 @@ import {AnimatePresence, motion} from 'framer-motion';
 import useNavBarPresence from "@/hooks/useNavBarPresence";
 
 export default function MappaClient({posizione, distributoriIniziali, initialFilters}) {
+
+    const [animEnd, setAnimEnd] = useState(true);
+
     const {filters} = useFilters(initialFilters);
     const [showList, setShowList] = useState(false);
     const [footerHeight, setFooterHeight] = useState(0);
@@ -49,6 +52,7 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
             setFooterHeight(height);
             log('Footer height:', height);
         } else setFooterHeight(0);
+        setAnimEnd(true);
     };
 
     useEffect(() => {
@@ -72,9 +76,11 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
 
     return (
         <>
-            <div className="position-relative vh-100">
+            <div className="position-relative full-height-dvh">
                 <div className={"position-absolute top-0 start-0 w-100 h-100"}>
+
                     <MappaRisultati
+                        showFilter={showList === false && animEnd}
                         initialFilters={initialFilters}
                         posizione={viewState}
                                     rightWidth={rightWidth}
@@ -85,9 +91,6 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
                                     }}/>
                 </div>
                 <div ref={footerRef}
-
-                     style={{paddingBottom: navBarHeight}}
-
                      className="position-absolute bottom-0 w-100 z-3 d-lg-none">
                     <div className={`bg-white bg-opacity-75 shadow rounded-top-4 p-3`}
                          style={{overflowY: 'auto'}}>
@@ -96,6 +99,7 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
                             {distributori.length !== 0 ? <Button
 
                                 onClick={() => {
+                                    setAnimEnd(false);
                                     setShowList(!showList);
                                 }}
 
@@ -112,7 +116,7 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
                                         animate={{height: 'auto', opacity: 1}}
                                         exit={{height: 0, opacity: 0}}
                                         transition={{duration: 0.3}}
-                                        style={{maxHeight: '40vh'}}
+                                        style={{maxHeight: '80vh'}}
                                     >
                                         <div className={'py-3'}>
                                             {distributori.map((d, i) =>

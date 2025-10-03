@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useRouter} from "next/navigation";
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import SearchIcon from "@mui/icons-material/Search";
@@ -11,14 +11,20 @@ import BubbleChartIcon from '@mui/icons-material/BubbleChart';
 import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 import {log} from "@/functions/helpers";
 import useCarburante from "@/hooks/useCarburante";
-import {getRouteByPosition} from "@/functions/api";
+import {getNominatimReverse, getRouteByPosition} from "@/functions/api";
+import {usePosizioneAttuale} from "@/hooks/usePosizioneAttuale";
+import Button from "react-bootstrap/Button";
 
 export default function SearchForm() {
 
     const [place, setPlace] = useState(null);
+    const [location, setLocation] = useState('');
+
     const {carburante, setCarburante} = useCarburante();
 
     const router = useRouter();
+
+    const posizioneAttuale = usePosizioneAttuale();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -35,20 +41,35 @@ export default function SearchForm() {
             router.push(data.route);
 
         } catch (err) {
-            console.error('Errore di rete:', err);
+            log(err);
+            window.location.href = `/mappa`;
         }
     };
 
     const handleGeolocalizza = () => {
-        navigator.geolocation?.getCurrentPosition(
-            (pos) => {
-                const lat = pos.coords.latitude;
-                const lon = pos.coords.longitude;
-                window.location.href = `/mappa?lat=${lat}&lng=${lon}`;
-            },
-            () => alert('Posizione non disponibile.')
-        );
+        if (posizioneAttuale === null) return;
+        const lat = posizioneAttuale.coords.latitude;
+        const lon = posizioneAttuale.coords.longitude;
+        window.location.href = `/mappa?lat=${lat}&lng=${lon}`;
     };
+
+    useEffect(() => {
+
+        if (posizioneAttuale === null) return;
+        log(posizioneAttuale);
+
+
+        getNominatimReverse(posizioneAttuale)
+            .then((r) => {
+                    log(r);
+                    setLocation(r.display_name);
+                    setPlace(r);
+                }
+            );
+
+    }, [posizioneAttuale]);
+
+    log(carburante);
 
     return (
         <><form onSubmit={handleSubmit}>
@@ -78,6 +99,7 @@ export default function SearchForm() {
 
             <div className="mb-3">
                 <NominatimAutocomplete
+                    initialValue={location}
                     onSelect={(place) => {
                         log('Selezionato:');
                         log(place);
@@ -87,9 +109,16 @@ export default function SearchForm() {
             </div>
 
             <div className="text-center mb-4">
-                <button type="button" className="btn btn-light me-2" onClick={handleGeolocalizza}>
-                    <FmdGoodIcon /> Usa la mia posizione
-                </button>
+
+                <Button
+
+                    disabled={posizioneAttuale === null}
+
+                    onClick={handleGeolocalizza}
+                    variant={"light"}
+                    className={'me-2'}
+                ><FmdGoodIcon/> Usa la mia posizione</Button>
+
                 <button type="submit" className="btn btn-primary"><SearchIcon /> Cerca</button>
             </div>
         </form>

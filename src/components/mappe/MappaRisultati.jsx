@@ -20,7 +20,7 @@ import ImpiantoPopupMobile from "@/components/impianti/ImpiantoPopupMobile";
 export default function MappaRisultati({
                                            posizione, distributoriIniziali = [], onFetchDistributori,
                                            rightWidth = 0,
-                                           footerHeight = 0, initialFilters
+                                           footerHeight = 0, initialFilters, showFilter = true
                                        }) {
     const headerHeight = 256;
 
@@ -175,7 +175,8 @@ export default function MappaRisultati({
 
             {filter.carburante ? <>
                 <ComparaVicini carburante={filter.carburante}/></> : null}
-
+            {showFilter ?
+                <>
             <FiltriMappaModerni
                 initialFilters={initialFilters}
                 rightWidth={rightWidth}
@@ -188,8 +189,11 @@ export default function MappaRisultati({
                 };
                 debouncedFilterChange(currentFilter);
             }}/>
+                    <PosizioneAttualeButton onPosizione={handlePosizione}
 
-            <PosizioneAttualeButton onPosizione={handlePosizione} footerHeight={footerHeight}/>
+                                            rightWidth={rightWidth}
+
+                                            footerHeight={footerHeight}/></> : null}
 
             <Map
                 padding={{bottom: 96, top: headerHeight}}

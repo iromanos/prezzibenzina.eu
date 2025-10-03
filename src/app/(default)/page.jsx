@@ -10,8 +10,8 @@ export const metadata = {
 export default function Home() {
     return (
         <>
-            {/* HERO */}
-            <div className="container-fluid bg-primary bg-gradient text-white min-vh-100 d-flex align-items-center justify-content-center">
+
+        <div className="container-fluid bg-primary bg-gradient text-white min-vh-100 d-flex align-items-center justify-content-center">
                 <div className="text-center px-4">
                     <img src="/assets/logo-transparent.png" alt="Logo PrezziBenzina.eu" className="mb-4" style={{ maxWidth: '320px' }} />
                     <h1 className="display-4 fw-bold" style={{ fontFamily: 'Montserrat, sans-serif' }}>
