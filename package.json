@@ -28,7 +28,8 @@
     "react-map-gl": "^8.0.4",
     "react-responsive": "^10.0.1",
     "sass": "1.33",
-    "sass-loader": "^10.1.1"
+    "sass-loader": "^10.1.1",
+    "supercluster": "^8.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
