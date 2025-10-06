@@ -255,6 +255,34 @@ export async function getImpiantiByBounds(bounds, carburante, sort = 'price', li
 
 }
 
+export async function getImpiantiClusterByBounds(bounds, carburante, sort = 'price', limit = 5, brand = null) {
+
+    const carburanti = getCarburanti();
+
+    const fuel = carburanti[carburante];
+
+    let request = URI + `impianti/cluster`;
+
+    log(request);
+
+    return await fetch(request, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+        body: JSON.stringify({
+            'fuel': fuel,
+            'bounds': bounds,
+            'sort': sort,
+            'limit': limit,
+            'brand': brand
+        })
+    });
+
+}
+
+
 export async function getRouteByPosition(payload) {
 
     const request = URI + 'route';
