@@ -238,9 +238,6 @@ export async function getImpiantiByBounds(bounds, carburante, sort = 'price', li
 
     log(request);
 
-//    limit = 100;
-
-
     return await fetch(request, {
         method: 'POST',
         headers: {
