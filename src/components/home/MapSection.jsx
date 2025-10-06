@@ -5,7 +5,6 @@ import Map, {Marker} from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {isMobile} from "react-device-detect";
 import {getImpiantiClusterByBounds} from "@/functions/api";
-import {log} from "@/functions/helpers";
 import {useCluster} from "@/hooks/useCluster";
 
 const INITIAL_VIEW = {longitude: 8.5, latitude: 46.5, zoom: 6}; // centro CH/IT
@@ -51,24 +50,19 @@ export default function MapSection() {
         setPoints(json);
     };
 
-    log("CLUSTERS: " + clusters.length);
-
     return (
         <Map
             attributionControl={false}
-
             ref={mapRef}
             initialViewState={INITIAL_VIEW}
             style={{width: '100%', height: '100%'}}
             mapStyle={MAP_STYLE}
             onLoad={handleMapLoad}
-
             dragPan={!isMobile}             // ❌ disabilita pan con un dito
             scrollZoom={!isMobile}          // ❌ disabilita zoom con scroll
             doubleClickZoom={!isMobile}     // ❌ disabilita zoom con doppio tap
             touchZoomRotate={true}      // ✅ abilita pinch-to-zoom e rotazione con due dita
             interactive={true}          // ✅ mantiene la mappa attiva
-
             onMoveEnd={(e) => {
                 const b = e.target.getBounds();
                 setBounds([b.getWest(), b.getSouth(), b.getEast(), b.getNorth()]);
@@ -76,9 +70,6 @@ export default function MapSection() {
             }}
         >
             {clusters.map((c, i) => {
-
-                log("CLUSTERS: " + c);
-
                 const [lng, lat] = c.geometry.coordinates;
                 const isCluster = c.properties.cluster;
                 const count = c.properties.point_count;
