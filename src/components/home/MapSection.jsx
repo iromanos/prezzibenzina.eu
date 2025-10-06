@@ -7,6 +7,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 
 import Supercluster from 'supercluster';
 import {isMobile} from "react-device-detect";
+import {getImpiantiByBounds} from "@/functions/api";
 
 const INITIAL_VIEW = {longitude: 8.5, latitude: 46.5, zoom: 6}; // centro CH/IT
 const MAP_STYLE = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
@@ -65,7 +66,7 @@ export default function MapSection() {
         });
         map.setMaxBounds(bounds);
 
-        //const response = await getImpiantiByBounds(map.getBounds(), 'benzina', 'price', null);
+        const response = await getImpiantiByBounds(map.getBounds(), 'benzina', 'price', null);
 
     };
 
