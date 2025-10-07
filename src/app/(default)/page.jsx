@@ -95,9 +95,6 @@ export default function Home() {
                     <RocketLaunchIcon /> Trova il distributore più conveniente ADESSO
                 </a>
             </div>
-
-
-            <Footer/>
         </>
     );
 }
