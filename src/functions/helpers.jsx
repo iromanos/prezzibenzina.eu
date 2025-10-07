@@ -1,4 +1,4 @@
-import {getCarburanti, getDistributoriRegione} from "@/functions/api";
+import {getCarburanti, getDistributoriRegione, getMarchi} from "@/functions/api";
 import {notFound} from "next/navigation";
 
 
@@ -98,9 +98,16 @@ export async function getMetadata({params}) {
     const {regione, carburante, marchio, sigla, comune} = await params;
 
     const carburanti = getCarburanti();
+    const elencoMarchi = await getMarchi();
 
     if (carburanti[carburante] === undefined) {
         notFound();
+    }
+
+    if (marchio !== undefined) {
+        if (elencoMarchi.filter(m => m.id === marchio).length === 0) {
+            notFound();
+        }
     }
 
     const response = await getDistributoriRegione(regione, carburante, marchio, sigla, comune);

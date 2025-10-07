@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import {getCarburanti, getDistributoriRegione, getSeoRegione} from "@/functions/api";
+import {getCarburanti, getDistributoriRegione, getMarchi, getSeoRegione} from "@/functions/api";
 import React from "react";
 import ElencoDistributori from "@/components/ElencoDistributori";
 import {LinkCarburanti} from "@/components/FiltroCarburante";
@@ -12,16 +12,27 @@ import MapIcon from '@mui/icons-material/Map';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import ComparaVicini from "@/components/ComparaVicini";
 import {notFound} from "next/navigation";
+import {log} from "@/functions/helpers";
 
 export default async function DistributoriPage({params}) {
 
     const {regione, carburante, marchio, sigla, comune} = await params;
 
     const elencoCarburanti = getCarburanti();
+    const elencoMarchi = await getMarchi();
 
     if (elencoCarburanti[carburante] === undefined) {
         notFound();
     }
+
+    log(elencoMarchi);
+
+    if (marchio !== undefined) {
+        if (elencoMarchi.filter(m => m.id === marchio).length === 0) {
+            notFound();
+        }
+    }
+
 
     const carburanti = Object.keys(elencoCarburanti).map(nome => {
         return `${nome}`;
@@ -44,8 +55,6 @@ export default async function DistributoriPage({params}) {
         month: 'long',
         day: 'numeric',
     }).format(date);
-
-    // const microdata = generateMicrodataGraph(distributori);
 
     return <>
         <Header/>

@@ -150,14 +150,17 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     }
     log(request);
 
+    console.log(request);
+
     const res = await fetch(request, {
         headers: {
             Accept: 'application/json',
         },
-        next: {revalidate: 3600},
+        //next: {revalidate: 3600},
     });
 
     const data = await res.json();
+    console.log(data);
 
     // log(data);
 

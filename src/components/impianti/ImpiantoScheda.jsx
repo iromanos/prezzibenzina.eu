@@ -46,9 +46,24 @@ export default function ImpiantoScheda({impianto, cookie}) {
 
     const prezzo = () => {
         const carburanti = getElencoCarburanti();
+
+        log(carburanti);
         const fuel = carburanti.find(c => c.tipo === cookie.carburante);
+        log(fuel);
+        log(prezzi);
+
         const prezzo = prezzi.find(p => p.fuel_id === fuel.fuel_id);
-        return prezzo.prezzo;
+        try {
+            if (prezzo === undefined) {
+                if (prezzi.length !== 0) {
+                    return prezzi[0].prezzo;
+                }
+            }
+            return prezzo.prezzo;
+        } catch (e) {
+
+        }
+        return 0;
     }
 
     impianto.prezzo = prezzo();

@@ -27,10 +27,11 @@ export default function ImpiantoDescrizione({impianto}) {
                 impianto <strong>{tipo_impianto}</strong> con bandiera <strong>{bandiera}</strong>, facilmente
                 raggiungibile per chi transita nella zona.
             </p>
+            {impianto.prezzo !== 0 ?
             <p>
                 Il prezzo attuale del carburante è di <strong>{prezzoStr} €/L</strong>, aggiornato in tempo reale.
                 Questo lo rende una scelta interessante per chi cerca convenienza e trasparenza.
-            </p>
+            </p> : null}
             <p>
                 Puoi <a href="#mappa">visualizzare la posizione sulla mappa</a>, <a href={mapsUrl} target="_blank"
                                                                                     rel="noopener">avviare la

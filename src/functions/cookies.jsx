@@ -1,4 +1,5 @@
 import {cookies} from "next/headers";
+import {log} from "@/functions/helpers";
 
 export async function getCookie() {
     const cookieStore = await cookies();
@@ -7,6 +8,8 @@ export async function getCookie() {
 
     if (ckCarburante === undefined) ckCarburante = 'benzina';
     if (ckLimite === undefined) ckLimite = 25;
+
+    log("CARBURANTE: " + ckCarburante);
 
     return {
         'carburante': ckCarburante, 'limite': ckLimite
