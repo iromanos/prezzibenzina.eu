@@ -48,8 +48,8 @@ export default function SearchForm() {
 
     const handleGeolocalizza = () => {
         if (posizioneAttuale === null) return;
-        const lat = posizioneAttuale.coords.latitude;
-        const lon = posizioneAttuale.coords.longitude;
+        const lat = posizioneAttuale.lat;
+        const lon = posizioneAttuale.lon;
         window.location.href = `/mappa?lat=${lat}&lng=${lon}`;
     };
 
