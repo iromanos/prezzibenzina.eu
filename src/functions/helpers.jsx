@@ -1,4 +1,4 @@
-import {getCarburanti, getDistributoriRegione, getMarchi} from "@/functions/api";
+import {getCarburanti, getDistributoriRegione, getMarchi, getSeoRegione} from "@/functions/api";
 import {notFound} from "next/navigation";
 
 
@@ -6,17 +6,17 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
     const path = [];
     // const title
     const scope = comune
-        ? {livello: 'comune', valore: comune}
+        ? {livello: 'comune', valore: comune.description.toLowerCase()}
         : provincia
             ? {livello: 'provincia', valore: provincia}
             : {livello: 'regione', valore: regione || regione};
 
     const localita =
         scope.livello === 'comune'
-            ? `a ${capitalize(scope.valore)}`
+            ? `a ${ucwords(scope.valore)}`
             : scope.livello === 'provincia'
-                ? `in provincia di ${capitalize(scope.valore)}`
-                : `in ${capitalize(scope.valore)}`;
+                ? `in provincia di ${ucwords(scope.valore)}`
+                : `in ${ucwords(scope.valore)}`;
 
     let title = "Prezzi " + carburante;
     if (marchio && marchio !== "Tutti") {
@@ -25,7 +25,7 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
     title += " " + localita;
 
     if (regione) {
-        path.push(`/${regione}/${carburante}`);
+        path.push(`/${regione}/${carburante.toLowerCase()}`);
     }
 
     if (provincia) {
@@ -33,7 +33,7 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
     }
 
     if (comune) {
-        path.push(`/${comune}`);
+        path.push(`/${comune.id}`);
     }
 
     if (marchio && marchio !== "Tutti") {
@@ -54,7 +54,7 @@ export function getLink(regione, carburante, marchio, provincia, comune) {
 
     if (regione) {
         path.push({
-            label: capitalize(regione),
+            label: ucwords(regione),
             link: `/${regione}/${carburante}`,
         });
     }
@@ -68,8 +68,8 @@ export function getLink(regione, carburante, marchio, provincia, comune) {
 
     if (comune) {
         path.push({
-            label: capitalize(comune),
-            link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune}`,
+            label: ucwords(comune),
+            link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}`,
         });
     }
 
@@ -77,7 +77,7 @@ export function getLink(regione, carburante, marchio, provincia, comune) {
         if (comune) {
             path.push({
                 label: capitalize(marchio),
-                link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune}/marchio/${marchio}`,
+                link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}/marchio/${marchio}`,
             });
         } else if (provincia) {
             path.push({
@@ -111,19 +111,20 @@ export async function getMetadata({params}) {
     }
 
     const response = await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
+    const riepilogo = await getSeoRegione(regione, carburante, marchio, sigla, comune);
 
     const distributori = await response.json();
 
     const descrizioneCarburante = carburante ? carburante.toLowerCase() : 'carburante';
 
     const localizzazione = comune
-        ? `${capitalize(comune)}, ${sigla?.toUpperCase()}`
+        ? `a ${ucwords(riepilogo.request.comune.description)}, ${sigla?.toUpperCase()}`
         : sigla
             ? `provincia di ${sigla.toUpperCase()}`
-            : capitalize(regione);
+            : ucwords(regione);
 
-    const titolo = `Prezzi ${descrizioneCarburante} in ${localizzazione} | Distributori attivi`;
-    const descrizione = `Consulta i prezzi aggiornati dei ${carburante} in ${localizzazione}. Trova i distributori più convenienti e naviga per città e tipo di carburante.`;
+    const titolo = `Prezzi ${descrizioneCarburante} ${localizzazione} | Distributori attivi`;
+    const descrizione = `Consulta i prezzi aggiornati dei ${carburante} ${localizzazione}. Trova i distributori più convenienti e naviga per città e tipo di carburante.`;
 
     const canonicalUrl = getLink(regione, carburante, marchio, sigla, comune);
     const imageUrl = '/assets/logo.png';
@@ -168,6 +169,10 @@ export async function getMetadata({params}) {
 
 export const capitalize = (str) =>
     str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+
+export const ucwords = (str) => {
+    return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+}
 
 export function slugify(text) {
     return text

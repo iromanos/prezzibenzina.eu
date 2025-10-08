@@ -1,10 +1,7 @@
-import {capitalize} from "@/functions/helpers";
+import {capitalize, ucwords} from "@/functions/helpers";
 
-export default function Breadcrumb({regione, carburante, provincia, comune, marchio, riepilogo}) {
+export default function Breadcrumb({regione, carburante, provincia, comune, marchio, riepilogo = {}, impianto}) {
     const path = [];
-
-    // Helper per capitalizzare
-
 
     path.push({ label: 'Home', link: '/' });
 
@@ -18,21 +15,28 @@ export default function Breadcrumb({regione, carburante, provincia, comune, marc
     if (provincia) {
         path.push({
             label: provincia.toUpperCase(),
-            link: `/${regione}/${carburante}/provincia/${provincia}`,
+            link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}`,
         });
     }
 
     if (comune) {
         path.push({
-            label: capitalize(comune),
-            link: `/${regione}/${carburante}/provincia/${provincia}/${comune}`,
+            label: ucwords(comune.description),
+            link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}`,
         });
     }
 
     if (riepilogo.marchio) {
         path.push({
             label: capitalize(riepilogo.marchio.nome),
-            link: `/${regione}/${carburante}/provincia/${provincia}/${comune}/marchio/${riepilogo.marchio.id}`,
+            link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}/marchio/${riepilogo.marchio.id}`,
+        });
+    }
+
+    if (impianto) {
+        path.push({
+            label: capitalize(impianto.nome_impianto),
+            link: `/impianto/${impianto.link}`,
         });
     }
 

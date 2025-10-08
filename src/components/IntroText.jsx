@@ -1,5 +1,5 @@
 import React from 'react';
-import {log} from "@/functions/helpers";
+import {log, ucwords} from "@/functions/helpers";
 
 function capitalize(str) {
     return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';
@@ -28,7 +28,7 @@ export function IntroTextVersione2({data, distributori, children}) {
 
     const {request, carburanti, marchi = [], comuni = [], regione, totaleImpianti, dataAggiornamento} = data;
     const scope = request.comune
-        ? {livello: 'comune', valore: request.comune}
+        ? {livello: 'comune', valore: request.comune.description}
         : request.provincia
             ? {livello: 'provincia', valore: request.provincia}
             : {livello: 'regione', valore: request.regione || regione};
@@ -40,10 +40,10 @@ export function IntroTextVersione2({data, distributori, children}) {
     const dataFormatted = formatDate(dataAggiornamento);
     const localita =
         scope.livello === 'comune'
-            ? `a ${capitalize(scope.valore)}`
+            ? `a ${ucwords(scope.valore)}`
             : scope.livello === 'provincia'
-                ? `in provincia di ${capitalize(scope.valore)}`
-                : `in ${capitalize(scope.valore)}`;
+                ? `in provincia di ${scope.valore.toUpperCase()}`
+                : `in ${ucwords(scope.valore)}`;
     const marchioImpianti = marchio ? marchi.find(m => m.marchio.toUpperCase() === marchio)?.impianti : null;
 
     const noResults = distributori.length === 0;
@@ -99,7 +99,7 @@ export function IntroTextVersione2({data, distributori, children}) {
                     al <strong>{dataFormatted}</strong>, garantendo trasparenza e affidabilità.
                 </p>
                 <p>
-                    Nella {scope.livello} di <strong>{capitalize(scope.valore)}</strong> sono
+                    <strong>{ucwords(localita)}</strong> sono
                     attivi <strong>{totaleImpianti || 'numerosi'}</strong> impianti, e molti di essi offrono servizi
                     aggiuntivi come sconti, programmi fedeltà e promozioni stagionali. Se sei fedele al
                     marchio {marchio ? <strong>{marchio}</strong> : ''}, puoi usare la mappa per localizzare gli

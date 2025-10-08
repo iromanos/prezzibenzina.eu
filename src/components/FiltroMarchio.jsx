@@ -16,7 +16,7 @@ export function LinkMarchio({marchi, params}){
         <div className="d-flex flex-wrap gap-1" role="group">
                 {marchi.map((marchio) => {
 
-                    const link = getRouteLink(params.regione, params.carburante, marchio.marchio, params.sigla, params.comune);
+                    const link = getRouteLink(params.regione, params.carburante, marchio.marchio, params.provincia, params.comune);
 
                     return <Link
 

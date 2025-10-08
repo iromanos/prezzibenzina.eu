@@ -25,7 +25,7 @@ export default async function DistributoriPage({params}) {
         notFound();
     }
 
-    log(elencoMarchi);
+    // log(elencoMarchi);
 
     if (marchio !== undefined) {
         if (elencoMarchi.filter(m => m.id === marchio).length === 0) {
@@ -33,13 +33,11 @@ export default async function DistributoriPage({params}) {
         }
     }
 
-
     const carburanti = Object.keys(elencoCarburanti).map(nome => {
         return `${nome}`;
     });
 
     const response = await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
-
 
     const distributori = await response.json();
 
@@ -47,6 +45,8 @@ export default async function DistributoriPage({params}) {
 
     const comuni = riepilogo.comuni;
     const marchi = riepilogo.marchi;
+
+    log(riepilogo.request);
 
     const date = new Date(riepilogo.dataAggiornamento);
 
@@ -66,7 +66,7 @@ export default async function DistributoriPage({params}) {
                 regione={regione}
                 carburante={carburante}
                 provincia={sigla}
-                comune={comune}
+                comune={riepilogo.request.comune}
                 marchio={marchio}/>
 
             <IntroTextVersione2 data={riepilogo} distributori={distributori}>
@@ -83,7 +83,7 @@ export default async function DistributoriPage({params}) {
                 </div>
                 {comuni.length > 1 ? <LinkComuni
                     riepilogo={riepilogo}
-                    params={await params}
+                    //params={await params}
                     comuni={comuni}/> : <></>}
             </IntroTextVersione2>
 
@@ -93,8 +93,8 @@ export default async function DistributoriPage({params}) {
                     <ComparaVicini carburante={carburante}/>
                 </div>
                 <div id={"mappa"} className={'col-md-7 order-0'}>
-                    <LinkCarburanti params={await params} carburanti={carburanti}/>
-                    <LinkMarchio params={await params} marchi={marchi}/>
+                    <LinkCarburanti params={riepilogo.request} carburanti={carburanti}/>
+                    <LinkMarchio params={riepilogo.request} marchi={marchi}/>
                     {distributori.length !== 0 ? <Mappa distributori={distributori}/> : <></>}
                 </div>
             </div>

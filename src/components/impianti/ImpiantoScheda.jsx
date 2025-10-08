@@ -1,5 +1,5 @@
 'use client';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import Map, {Popup} from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -9,9 +9,10 @@ import {isMobile} from "react-device-detect";
 import FavoriteToggle from "@/components/FavoriteToogle";
 import ShareButton from "@/components/ShareButton";
 import ComparaVicini from "@/components/ComparaVicini";
-import {log} from "@/functions/helpers";
+import {log, slugify, ucwords} from "@/functions/helpers";
 import ImpiantoDescrizione from "@/components/impianti/ImpiantoDescrizione";
 import {getElencoCarburanti} from "@/functions/api";
+import Breadcrumb from "@/components/Breadcrumb";
 
 export default function ImpiantoScheda({impianto, cookie}) {
     const [showPopup, setShowPopup] = useState(false);
@@ -35,7 +36,6 @@ export default function ImpiantoScheda({impianto, cookie}) {
         gestore,
         bandiera,
         indirizzo,
-        comune,
         provincia,
         latitudine,
         longitudine,
@@ -68,8 +68,24 @@ export default function ImpiantoScheda({impianto, cookie}) {
 
     impianto.prezzo = prezzo();
 
+    const comune = () => {
+        return {id: slugify(impianto.comune), description: ucwords(impianto.comune)};
+    }
+
+
     return (
         <div className="container py-4">
+
+            <Breadcrumb
+                regione={impianto.regione}
+                carburante={cookie.carburante}
+                provincia={impianto.provincia}
+                comune={comune()}
+                impianto={impianto}
+            />
+
+
+
             <div className={'row'}>
                 <div className={'col-lg-7 mb-4'}>
                     <div className="d-flex align-items-center gap-3 mb-3">
@@ -81,7 +97,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
                     </div>
 
                     <ImpiantoDescrizione impianto={impianto}/>
-                    <p>{indirizzo}, {comune} ({provincia})</p>
+                    <p>{indirizzo}, {ucwords(impianto.comune)} ({provincia})</p>
                     <div className={'mb-2'}>
                         <h2>Carburanti disponibili</h2>
                         <table className="table table-bordered align-middle">

@@ -8,11 +8,11 @@ export function LinkCarburanti({params, carburanti}){
         <div className="d-flex flex-wrap gap-1" role="group">
             {carburanti.map((tipo) => {
 
-                    const link = getRouteLink(params.regione, tipo, params.marchio, params.sigla, params.comune);
+                    const link = getRouteLink(params.regione, tipo, params.marchio, params.provincia, params.comune);
 
                 return <Link
                     title={link.title}
-                    className={`btn btn-sm ${params.carburante === tipo ? 'btn-primary' : 'btn-outline-primary'}`}
+                    className={`btn btn-sm ${params.carburante.toLowerCase() === tipo ? 'btn-primary' : 'btn-outline-primary'}`}
 
                     key={tipo} href={link.link}>{tipo}</Link>
             }

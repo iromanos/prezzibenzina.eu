@@ -1,3 +1,5 @@
+import {ucwords} from "@/functions/helpers";
+
 export default function ImpiantoDescrizione({impianto}) {
     if (!impianto) return null;
 
@@ -15,7 +17,7 @@ export default function ImpiantoDescrizione({impianto}) {
     } = impianto;
 
     const prezzoStr = prezzo?.toFixed(3) ?? '—';
-    const localita = `${comune} (${provincia})`;
+    const localita = `${ucwords(comune)} (${provincia})`;
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`;
 
     return (

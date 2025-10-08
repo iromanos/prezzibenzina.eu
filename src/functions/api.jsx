@@ -90,7 +90,7 @@ export async function getImpianto({params}) {
         headers: {
             Accept: 'application/json',
         },
-        next: {revalidate: 3600},
+        //next: {revalidate: 3600},
     });
 
 }
@@ -148,9 +148,7 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     if (marchio) {
         request += "?marchio=" + marchio;
     }
-    log(request);
-
-    console.log(request);
+    // log(request);
 
     const res = await fetch(request, {
         headers: {
@@ -160,8 +158,6 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     });
 
     const data = await res.json();
-    console.log(data);
-
     // log(data);
 
     const response = NextResponse.json(data);
@@ -199,7 +195,7 @@ export async function getSeoRegione(regione, carburante, marchio, provincia, com
     if(marchio) {
         request += `marchio=${marchio}&`;
     }
-    log(request);
+//    log(request);
 
     const res = await axios.get(request);
 
@@ -217,7 +213,7 @@ export async function getImpiantiByDistance(lat, lng, distance, carburante, sort
 
     if (brand !== null) request += `&brand=${brand}`;
 
-    log(request);
+    // log(request);
 
     return await fetch(request, {
         method: 'GET',
