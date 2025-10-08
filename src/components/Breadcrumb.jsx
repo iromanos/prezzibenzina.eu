@@ -1,44 +1,72 @@
 import {capitalize, ucwords} from "@/functions/helpers";
 
 export default function Breadcrumb({regione, carburante, provincia, comune, marchio, riepilogo = {}, impianto}) {
-    const path = [];
 
-    path.push({ label: 'Home', link: '/' });
+    const getPath = () => {
+        const path = [];
+        path.push({label: 'Home', link: '/'});
 
-    if (regione) {
-        path.push({
-            label: capitalize(regione),
-            link: `/${regione}/${carburante}`,
-        });
+
+        if (regione) {
+            path.push({
+                label: capitalize(regione),
+                link: `/${regione}/${carburante}`,
+            });
+
+            if (riepilogo.marchio && !provincia) {
+                path.push({
+                    label: capitalize(riepilogo.marchio.nome),
+                    link: `/${regione}/${carburante}/marchio/${riepilogo.marchio.id}`,
+                });
+            }
+
+        }
+
+        if (provincia) {
+            path.push({
+                label: provincia.toUpperCase(),
+                link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}`,
+            });
+
+            if (riepilogo.marchio && !comune) {
+                path.push({
+                    label: capitalize(riepilogo.marchio.nome),
+                    link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/marchio/${riepilogo.marchio.id}`,
+                });
+            }
+        }
+        if (comune) {
+            path.push({
+                label: ucwords(comune.description),
+                link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}`,
+            });
+
+            if (riepilogo.marchio) {
+                path.push({
+                    label: capitalize(riepilogo.marchio.nome),
+                    link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}/marchio/${riepilogo.marchio.id}`,
+                });
+            }
+        }
+
+
+        if (impianto) {
+            path.push({
+                label: capitalize(impianto.nome_impianto),
+                link: `/impianto/${impianto.link}`,
+            });
+            return path;
+        }
+
+
+        return path;
+
     }
 
-    if (provincia) {
-        path.push({
-            label: provincia.toUpperCase(),
-            link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}`,
-        });
-    }
 
-    if (comune) {
-        path.push({
-            label: ucwords(comune.description),
-            link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}`,
-        });
-    }
+    const path = getPath();
 
-    if (riepilogo.marchio) {
-        path.push({
-            label: capitalize(riepilogo.marchio.nome),
-            link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}/marchio/${riepilogo.marchio.id}`,
-        });
-    }
 
-    if (impianto) {
-        path.push({
-            label: capitalize(impianto.nome_impianto),
-            link: `/impianto/${impianto.link}`,
-        });
-    }
 
     return (
         <nav aria-label="breadcrumb">

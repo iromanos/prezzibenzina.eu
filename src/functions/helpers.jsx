@@ -33,6 +33,7 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
     }
 
     if (comune) {
+        if (!provincia) path.push(`/provincia/${comune.provincia.toLowerCase()}`);
         path.push(`/${comune.id}`);
     }
 
