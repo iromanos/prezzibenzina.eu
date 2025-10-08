@@ -255,7 +255,7 @@ export async function getImpiantiByBounds(bounds, carburante, sort = 'price', li
 
 }
 
-export async function getImpiantiClusterByBounds(bounds, carburante, sort = 'price', limit = 5, brand = null) {
+export async function getImpiantiClusterByBounds(bounds, carburante, sort = 'price', limit = 5, brand = null, stato = null) {
 
     const carburanti = getCarburanti();
 
@@ -276,7 +276,8 @@ export async function getImpiantiClusterByBounds(bounds, carburante, sort = 'pri
             'bounds': bounds,
             'sort': sort,
             'limit': limit,
-            'brand': brand
+            'brand': brand,
+            'stato': stato
         })
     });
 
