@@ -4,16 +4,18 @@ import {useEffect, useRef, useState} from 'react';
 import Map, {Marker} from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {isMobile} from "react-device-detect";
-import {getImpiantiClusterByBounds} from "@/functions/api";
+import {getElencoStati, getImpiantiClusterByBounds} from "@/functions/api";
 import {useCluster} from "@/hooks/useCluster";
 import PublicIcon from "@mui/icons-material/Public";
+import TuttoSchermoButton from "@/components/TuttoSchermoButton";
+import Button from 'react-bootstrap/Button';
+import Loader from "@/components/home/Loader";
 
 const INITIAL_VIEW = {longitude: 8.5, latitude: 46.5, zoom: 6}; // centro CH/IT
 const MAP_STYLE = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
 
 export function MapSection() {
     const mapRef = useRef();
-    const [supercluster, setSupercluster] = useState(null);
 
     // Bounding box: [west, south], [east, north]
     const initialBounds = [
@@ -21,7 +23,7 @@ export function MapSection() {
         18.9, 47.9   // NE corner
     ];
 
-    const [stato, setStato] = useState(null);
+    const [stato, setStato] = useState(undefined);
 
     const [zoom, setZoom] = useState(6);
     const [bounds, setBounds] = useState(null);
@@ -29,6 +31,9 @@ export function MapSection() {
     const [points, setPoints] = useState([]);
 
     const {clusters, clusterIndex} = useCluster(points, zoom, bounds);
+
+    const [loading, setLoading] = useState(true);
+
 
     const handleMapLoad = async (event) => {
         const map = event.target;
@@ -50,11 +55,12 @@ export function MapSection() {
 
         const response = await getImpiantiClusterByBounds(bounds, 'benzina', 'price', null);
         const json = await response.json();
+        setLoading(false);
         setPoints(json);
     };
 
     useEffect(() => {
-
+        if (points.length === 0) return;
         const lngs = points.map(i => i.geometry.coordinates[0]);
         const lats = points.map(i => i.geometry.coordinates[1]);
 
@@ -75,10 +81,9 @@ export function MapSection() {
         });
     }, [points]);
 
-
     useEffect(() => {
 
-        if (stato == null) return;
+        if (stato === undefined) return;
 
         const fetchData = async (bounds, stato) => {
             const latlngBounds = {
@@ -92,9 +97,11 @@ export function MapSection() {
                 }
             };
 
-            const response = await getImpiantiClusterByBounds(latlngBounds, 'benzina', 'price', null, null, stato);
+            setLoading(true);
+            const response = await getImpiantiClusterByBounds(latlngBounds, 'benzina', 'price', null, null, stato.id);
             const json = await response.json();
             setPoints(json);
+            setLoading(false);
 
         }
 
@@ -102,6 +109,8 @@ export function MapSection() {
 
 
     }, [stato])
+
+    const elencoStati = getElencoStati();
 
     return (
         <div className="container mb-4">
@@ -130,6 +139,18 @@ export function MapSection() {
                     setZoom(e.viewState.zoom);
                 }}
             >
+                {loading && (
+                    <Loader/>
+                )}
+
+
+                <TuttoSchermoButton onClick={() => {
+                    const uri = `lat=${stato.lat}&lng=${stato.lng}&zoom=${stato.zoom}`;
+
+                    window.location.href = `/mappa?${uri}`;
+
+                }}/>
+
                 {clusters.map((c, i) => {
                     const [lng, lat] = c.geometry.coordinates;
                     const isCluster = c.properties.cluster;
@@ -161,27 +182,31 @@ export function MapSection() {
                     );
                 })}
             </Map></div>
+
+
             <div className="d-flex justify-content-center gap-2 mt-3">
+
+                {elencoStati.map((c, i) => {
+                    return <Button
+                        key={i}
+                        variant={` ${stato !== undefined && stato.id === c.id ? 'btn-primary' : 'btn-outline-primary'} `}
+                        onClick={() => {
+                            setPoints([]);
+                            mapRef.current.flyTo({
+                                center: [c.lng, c.lat], zoom: c.zoom,
+                            });
+                            setStato(c)
+                        }}> {c.icon} {c.name}</Button>
+
+                })}
                 <button
 
                     onClick={() => {
-                        setStato('it')
-                    }}
-
-                    className={`btn ${stato === 'it' ? 'btn-primary' : 'btn-outline-primary'} `}>Italia <span
-                    className="fi fi-it"></span></button>
-                <button
-
-                    onClick={() => {
-                        setStato('ch')
-                    }}
-
-
-                    className={`btn ${stato === 'ch' ? 'btn-primary' : 'btn-outline-primary'} `}>Svizzera <span
-                    className="fi fi-ch"></span></button>
-                <button
-
-                    onClick={() => {
+                        setPoints([]);
+                        mapRef.current.fitBounds(initialBounds, {
+                            padding: 20,
+                            duration: 1000
+                        });
                         setStato(null);
                     }}
 

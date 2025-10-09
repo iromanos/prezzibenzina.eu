@@ -16,6 +16,7 @@ import useCarburante from "@/hooks/useCarburante";
 import useLimit from "@/hooks/useLimit";
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import ImpiantoPopupMobile from "@/components/impianti/ImpiantoPopupMobile";
+import Loader from "@/components/home/Loader";
 
 export default function MappaRisultati({
                                            posizione, distributoriIniziali = [], onFetchDistributori,
@@ -46,7 +47,6 @@ export default function MappaRisultati({
         }))
     }, [carburante, limit]);
 
-
     useEffect(() => {
         const handleFocus = e => {
             log(e);
@@ -73,9 +73,11 @@ export default function MappaRisultati({
         if (lastBoundsRef.current === null) {
             bounds = calcolaBounds();
         } else bounds = JSON.parse(lastBoundsRef.current);
+        setLoading(true);
         const response = await getImpiantiByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome);
         const data = await response.json();
         onFetchDistributori?.(data);
+        setLoading(false);
         setDistributori(data);
         setFilter(_filter);
     });
@@ -84,7 +86,7 @@ export default function MappaRisultati({
         const map = mapRef.current;
 
         const container = map.getContainer();
-        const padding = {top: headerHeight, bottom: 96, left: 0, right: 0}; // come da setPadding
+        const padding = {top: headerHeight, bottom: 96, left: 0, right: rightWidth}; // come da setPadding
 
         const width = container.clientWidth;
         const height = container.clientHeight;
@@ -96,6 +98,8 @@ export default function MappaRisultati({
     }
 
     const debouncedBoundsChange = useDebouncedCallback(async () => {
+
+        if (popupInfo) return;
 
         const bounds = calcolaBounds();
 
@@ -128,13 +132,14 @@ export default function MappaRisultati({
 
         if (isFetching.current) return;
         isFetching.current = true;
+        setLoading(true);
 
         const response = await getImpiantiByBounds(bounds, filter.carburante, 'price', filter.limite, filter.brand?.nome);
         const data = await response.json();
         isFetching.current = false;
+        setLoading(false);
 
         setFadeOutMarker(true);
-
         onFetchDistributori?.(data);
         setDistributori(data);
         setFadeOutMarker(false);
@@ -154,24 +159,16 @@ export default function MappaRisultati({
 
     log(mapRef.current?.zoom);
 
+    log("RIGHT WIDTH: " + rightWidth);
+
     log('MappaRisultati: BUILD');
     log('Filtri: ' + filter.carburante);
     return (
         <>
-            {loading ? <div className="modal fade show d-block" tabIndex="-1" role="dialog"
-                            style={{backgroundColor: 'rgba(0, 0, 0, 0.5)', transition: 'opacity 0.5s ease'}}
-                >
-                    <div className="modal-dialog modal-dialog-centered" role="document">
-                        <div className="modal-content text-center">
-                            <div className="modal-body py-4">
-                                <div className="spinner-border text-primary mb-3" role="status"/>
-                                <p className="mb-0 text-muted">Caricamento in corso…</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                : null}
+            {loading && (
+                <Loader rightWidth={rightWidth}/>
+            )}
 
             {filter.carburante ? <>
                 <ComparaVicini carburante={filter.carburante}/></> : null}
@@ -196,15 +193,16 @@ export default function MappaRisultati({
                                             footerHeight={footerHeight}/></> : null}
 
             <Map
-                padding={{bottom: 96, top: headerHeight}}
+                padding={{bottom: 96, top: headerHeight, right: rightWidth}}
                 ref={mapRef}
                 attributionControl={false}
-
+                onLoad={debouncedBoundsChange}
                 initialViewState={posizione}
                 mapStyle={styleUrl}
                 mapLib={import('maplibre-gl')}
                 style={{width: '100%', height: '100%'}}
                 onMoveEnd={debouncedBoundsChange}
+
             >
                 {posizioneAttuale && (
                     <PosizioneAttualeMarker
@@ -214,7 +212,6 @@ export default function MappaRisultati({
                 )}
 
                 {popupInfo ? <Popup
-
                     longitude={popupInfo.longitudine}
                     latitude={popupInfo.latitudine}
                     anchor="top"

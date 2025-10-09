@@ -103,3 +103,7 @@ $theme-colors: (
 
 .cluster {
 }
+
+.maplibregl-popup-content {
+  border-radius: var(--bs-border-radius-lg) !important;
+}

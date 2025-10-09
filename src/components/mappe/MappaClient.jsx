@@ -10,7 +10,7 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import {AnimatePresence, motion} from 'framer-motion';
 import useNavBarPresence from "@/hooks/useNavBarPresence";
 
-export default function MappaClient({posizione, distributoriIniziali, initialFilters}) {
+export default function MappaClient({posizione, distributoriIniziali, initialFilters, zoomIniziale = 13}) {
 
     const [animEnd, setAnimEnd] = useState(true);
 
@@ -28,7 +28,8 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
     const [viewState, setViewState] = useState({
         latitude: posizione.lat,
         longitude: posizione.lng,
-        zoom: 13
+        zoom: zoomIniziale,
+
     });
 
     useEffect(() => {

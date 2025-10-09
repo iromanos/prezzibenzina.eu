@@ -4,6 +4,7 @@ import CTA from "@/components/home/CTA";
 import "flag-icons/css/flag-icons.min.css";
 import Descrizione from "@/components/home/Descrizione";
 import Motivi from "@/components/home/Motivi";
+import MapIcon from '@mui/icons-material/Map';
 
 export const metadata = {
     title: 'PrezziBenzina.eu | Risparmia sul Carburante',
@@ -26,13 +27,19 @@ export default function Home() {
                         Prezzi aggiornati. Mappa interattiva. Distributori in Italia e Svizzera <span
                         className="fi fi-it"></span> <span className="fi fi-ch"></span>
                     </p>
-                    <a href="/ricerca" className="btn btn-light btn-lg px-4 py-2 shadow-sm">
+                    <div className={'d-flex gap-3 justify-content-center align-items-center'}>
+                        <a title={'Inizia la ricerca'} href="/ricerca" className="btn btn-light btn-lg shadow-sm">
                         <SearchIcon/> Inizia la ricerca
                     </a>
+                        <a title={'Vai alla mappa di Italia e Svizzera'} href="#mappa"
+                           className="btn btn-light btn-lg shadow-sm">
+                            <MapIcon/> Vai alla mappa
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <div className={'container'}>
+            <div id='mappa' className={'container'}>
                 <MapSection/>
             </div>
             <div className={'container mb-4'}>

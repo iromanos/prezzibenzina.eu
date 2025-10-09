@@ -23,6 +23,8 @@ export default async function Mappa({searchParams}) {
 
     const queryParams = await searchParams;
 
+    log(queryParams);
+
     const initialFilters = {};
 
     const fuel = queryParams.carburante || "";
@@ -87,16 +89,15 @@ export default async function Mappa({searchParams}) {
 
     log("DISTRIBUTORI: " + JSON.stringify(posizione));
 
-
-
     const response = await getImpiantiByDistance(posizione.lat, posizione.lng, 10, initialFilters.carburante, 'price', ckLimite, initialFilters.brand);
     const distributori = await response.json();
 
-
-    log("DISTRIBUTORI: " + JSON.stringify(distributori));
-
     log("MAPPA: BUILD");
 
-    return <MappaClient posizione={posizione} distributoriIniziali={distributori} initialFilters={initialFilters}/>;
+    const zoom = queryParams.zoom;
+
+    return <MappaClient
+        zoomIniziale={zoom}
+        posizione={posizione} distributoriIniziali={distributori} initialFilters={initialFilters}/>;
 
 }

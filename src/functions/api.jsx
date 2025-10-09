@@ -17,6 +17,29 @@ const Carburanti = {
     'gpl': '4-x',
 };
 
+export function getElencoStati() {
+    const r = [];
+
+    r.push({
+        id: 'it',
+        name: 'Italia',
+        icon: <span className="fi fi-it"/>,
+        lat: 42.5043,
+        lng: 12.5726,
+        zoom: 5
+    });
+
+    r.push({
+        id: 'ch',
+        name: 'Svizzera',
+        icon: <span className="fi fi-ch"/>,
+        lat: 46.9481,
+        lng: 7.4474,
+        zoom: 7
+    });
+
+    return r;
+}
 
 export async function getNominatimReverse(position) {
     const uri = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + position.lat + "&lon=" + position.lon;
