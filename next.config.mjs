@@ -4,7 +4,7 @@ const nextConfig = {
     sassOptions: {
         quietDeps: true, // silenzia warning da dipendenze
     },
-
+    reactStrictMode: false,
     async redirects() {
         return [
             {

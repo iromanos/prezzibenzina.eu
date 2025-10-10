@@ -14,9 +14,10 @@ import maplibregl from "maplibre-gl";
 import ComparaVicini from "@/components/ComparaVicini";
 import useCarburante from "@/hooks/useCarburante";
 import useLimit from "@/hooks/useLimit";
-import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import ImpiantoPopupMobile from "@/components/impianti/ImpiantoPopupMobile";
 import Loader from "@/components/home/Loader";
+import {useCluster} from "@/hooks/useCluster";
+import Cluster from "@/components/home/Cluster";
 
 export default function MappaRisultati({
                                            posizione, distributoriIniziali = [], onFetchDistributori,
@@ -33,9 +34,13 @@ export default function MappaRisultati({
 
     const mapRef = useRef();
 
+    const boundsRef = useRef(null);
+
     const {carburante} = useCarburante();
     const {limit} = useLimit();
     const [filter, setFilter] = useState({carburante: null});
+    const [zoom, setZoom] = useState(posizione.zoom);
+    const [bounds, setBounds] = useState(null);
 
     const isFetching = useRef(false);
 
@@ -64,6 +69,7 @@ export default function MappaRisultati({
         log('MappaRisultati: MOUNTED');
     }, []);
 
+
     const [loading, setLoading] = useState(false);
 
     const debouncedFilterChange = useDebouncedCallback(async (_filter) => {
@@ -73,26 +79,31 @@ export default function MappaRisultati({
         if (lastBoundsRef.current === null) {
             bounds = calcolaBounds();
         } else bounds = JSON.parse(lastBoundsRef.current);
+
+
         await fetchImpianti(bounds, _filter);
     });
 
-
     const fetchImpianti = async (bounds, _filter) => {
+
         setLoading(true);
         const response = await getImpiantiByBounds(bounds, _filter.carburante, 'price', null, _filter.brand?.nome);
         const data = await response.json();
+
         setLoading(false);
-        setFilter(_filter);
-        setFadeOutMarker(true);
         //onFetchDistributori?.(data);
-        //setDistributori(data);
+        setFadeOutMarker(true);
+        setDistributori(data);
         setFadeOutMarker(false);
+//        setFilter(_filter);
         isFetching.current = false;
 
     }
 
     const calcolaBounds = () => {
         const map = mapRef.current;
+        if (map === null) return null;
+        if (map === undefined) return null;
 
         const container = map.getContainer();
         const padding = {top: headerHeight, bottom: 96, left: 0, right: rightWidth}; // come da setPadding
@@ -103,6 +114,11 @@ export default function MappaRisultati({
         const sw = map.unproject([padding.left, height - padding.bottom]);
         const ne = map.unproject([width - padding.right, padding.top]);
 
+
+        boundsRef.current = [sw.lng, sw.lat, ne.lng, ne.lat];
+
+        //setBounds([ sw.lng, sw.lat, ne.lng , ne.lat ]);
+        setZoom(map.getZoom());
         return new maplibregl.LngLatBounds(sw, ne);
     }
 
@@ -144,18 +160,6 @@ export default function MappaRisultati({
 
         await fetchImpianti(bounds, filter);
 
-        /*
-        setLoading(true);
-
-        const response = await getImpiantiByBounds(bounds, filter.carburante, 'price', filter.limite, filter.brand?.nome);
-        const data = await response.json();
-        isFetching.current = false;
-        setLoading(false);
-
-        setFadeOutMarker(true);
-        onFetchDistributori?.(data);
-        setDistributori(data);
-        setFadeOutMarker(false);*/
     }, 600); //
 
     const posizioneAttuale = usePosizioneAttuale();
@@ -170,12 +174,16 @@ export default function MappaRisultati({
         map.flyTo({center: [pos.lon, pos.lat], zoom: 14});
     };
 
+    const {clusters} = useCluster(distributori, zoom, boundsRef.current);
+
     log(mapRef.current?.zoom);
 
     log("RIGHT WIDTH: " + rightWidth);
-
     log('MappaRisultati: BUILD');
     log('Filtri: ' + filter.carburante);
+    log('Clusters: ' + clusters.length);
+
+
     return (
         <>
 
@@ -236,15 +244,25 @@ export default function MappaRisultati({
 
                 </Popup> : null}
 
-                {distributori.map((d) => <ImpiantoMarker
-                    fadeOut={fadeOutMarker}
-                    onClick={e => {
-                        e.originalEvent.stopPropagation(); // evita chiusura globale
-                        mapRef.current?.flyTo({center: [d.longitudine, d.latitudine], essential: true});
-                        setPopupInfo(d);
-                    }}
 
-                    key={d.id_impianto} d={d}/>)}
+                <Cluster
+                    fadeOut={fadeOutMarker}
+                    clusters={clusters}
+                    onClusterClick={(c) => {
+                        // const [lng, lat] = c.geometry.coordinates;
+                        // const expansionZoom = clusterIndex.getClusterExpansionZoom(c.id);
+                        // mapRef.current.getMap().flyTo({center: [lng, lat], zoom: expansionZoom});
+                    }}/>
+
+                {/*{distributori.map((d) => <ImpiantoMarker*/}
+                {/*    fadeOut={fadeOutMarker}*/}
+                {/*    onClick={e => {*/}
+                {/*        e.originalEvent.stopPropagation(); // evita chiusura globale*/}
+                {/*        mapRef.current?.flyTo({center: [d.longitudine, d.latitudine], essential: true});*/}
+                {/*        setPopupInfo(d);*/}
+                {/*    }}*/}
+
+                {/*    key={d.id_impianto} d={d}/>)}*/}
 
             </Map>
         </>
