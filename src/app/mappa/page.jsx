@@ -1,4 +1,4 @@
-import {getElencoCarburanti, getImpiantiByDistance, getLocationByIp, getMarchi} from "@/functions/api";
+import {getElencoCarburanti, getLocationByIp, getMarchi} from "@/functions/api";
 import MappaClient from "@/components/mappe/MappaClient";
 import {capitalize, log} from "@/functions/helpers";
 import {cookies, headers} from "next/headers";
@@ -89,8 +89,8 @@ export default async function Mappa({searchParams}) {
 
     log("DISTRIBUTORI: " + JSON.stringify(posizione));
 
-    const response = await getImpiantiByDistance(posizione.lat, posizione.lng, 10, initialFilters.carburante, 'price', ckLimite, initialFilters.brand);
-    const distributori = await response.json();
+    //const response = await getImpiantiByDistance(posizione.lat, posizione.lng, 10, initialFilters.carburante, 'price', ckLimite, initialFilters.brand);
+    const distributori = []; //await response.json();
 
     log("MAPPA: BUILD");
 

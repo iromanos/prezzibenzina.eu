@@ -249,7 +249,7 @@ export async function getImpiantiByDistance(lat, lng, distance, carburante, sort
 
 }
 
-export async function getImpiantiByBounds(bounds, carburante, sort = 'price', limit = 5, brand = null) {
+export async function getImpiantiByBounds(bounds, carburante, sort = 'price', limit = null, brand = null) {
 
     const carburanti = getCarburanti();
 
@@ -265,7 +265,7 @@ export async function getImpiantiByBounds(bounds, carburante, sort = 'price', li
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            Accept: 'application/json',
+            'Accept': 'application/json',
         },
         body: JSON.stringify({
             'fuel': fuel,

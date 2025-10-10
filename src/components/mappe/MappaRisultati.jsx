@@ -73,14 +73,23 @@ export default function MappaRisultati({
         if (lastBoundsRef.current === null) {
             bounds = calcolaBounds();
         } else bounds = JSON.parse(lastBoundsRef.current);
-        setLoading(true);
-        const response = await getImpiantiByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome);
-        const data = await response.json();
-        onFetchDistributori?.(data);
-        setLoading(false);
-        setDistributori(data);
-        setFilter(_filter);
+        await fetchImpianti(bounds, _filter);
     });
+
+
+    const fetchImpianti = async (bounds, _filter) => {
+        setLoading(true);
+        const response = await getImpiantiByBounds(bounds, _filter.carburante, 'price', null, _filter.brand?.nome);
+        const data = await response.json();
+        setLoading(false);
+        setFilter(_filter);
+        setFadeOutMarker(true);
+        //onFetchDistributori?.(data);
+        //setDistributori(data);
+        setFadeOutMarker(false);
+        isFetching.current = false;
+
+    }
 
     const calcolaBounds = () => {
         const map = mapRef.current;
@@ -124,7 +133,7 @@ export default function MappaRisultati({
 
         lastBoundsRef.current = boundsKey;
 
-        log("FILTRI: " + filter);
+        log("FILTRI: " + JSON.stringify(filter));
 
         if (filter.carburante === '') return;
 
@@ -132,6 +141,10 @@ export default function MappaRisultati({
 
         if (isFetching.current) return;
         isFetching.current = true;
+
+        await fetchImpianti(bounds, filter);
+
+        /*
         setLoading(true);
 
         const response = await getImpiantiByBounds(bounds, filter.carburante, 'price', filter.limite, filter.brand?.nome);
@@ -142,7 +155,7 @@ export default function MappaRisultati({
         setFadeOutMarker(true);
         onFetchDistributori?.(data);
         setDistributori(data);
-        setFadeOutMarker(false);
+        setFadeOutMarker(false);*/
     }, 600); //
 
     const posizioneAttuale = usePosizioneAttuale();
