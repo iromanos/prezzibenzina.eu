@@ -1,7 +1,7 @@
 'use client';
 
 import Map, {Popup} from 'react-map-gl/maplibre';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {log} from "@/functions/helpers";
 import {getImpiantiByBounds} from "@/functions/api";
@@ -18,6 +18,7 @@ import ImpiantoPopupMobile from "@/components/impianti/ImpiantoPopupMobile";
 import Loader from "@/components/home/Loader";
 import {useCluster} from "@/hooks/useCluster";
 import Cluster from "@/components/home/Cluster";
+import Supercluster from "supercluster";
 
 export default function MappaRisultati({
                                            posizione, distributoriIniziali = [], onFetchDistributori,
@@ -174,7 +175,27 @@ export default function MappaRisultati({
         map.flyTo({center: [pos.lon, pos.lat], zoom: 14});
     };
 
-    const {clusters} = useCluster(distributori, zoom, boundsRef.current);
+    // const [clusters, setClusters] = useState([]);
+
+
+    const clusters = useMemo(() => {
+
+        if (distributori.length === 0) return [];
+
+        const radius = 60;
+
+
+        const index = new Supercluster({
+            radius: radius,
+            minPoints: 2,
+            // maxZoom: maxZoom,
+        });
+        index.load(distributori);
+        return index.getClusters(boundsRef.current, zoom);
+
+    }, [distributori]);
+
+    // const {clusters} = useCluster(distributori, zoom, boundsRef.current);
 
     log(mapRef.current?.zoom);
 

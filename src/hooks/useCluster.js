@@ -40,7 +40,7 @@ export function useCluster(points, zoom, bounds) {
         });
         index.load(points);
         return index;
-    }, [points]);
+    }, [points, zoom]);
 
     const clusters = useMemo(() => {
 
