@@ -24,7 +24,7 @@ function MarkerCluster({c, fadeOut}) {
     const isCluster = c.properties.cluster;
     const count = c.properties.point_count;
 
-    const size = Math.min(120, (Math.log2(count) * 16) + 24);
+    const size = Math.min(120, (Math.log2(count) * 24) + 24);
 
     if (!isCluster) {
         log(c.properties);
@@ -50,7 +50,7 @@ function MarkerCluster({c, fadeOut}) {
             className={`d-flex align-items-center justify-content-center bg-success 
                             cluster-marker
                             ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}
-                            text-white bg-opacity-75 rounded-circle border border-2 border-white`}
+                            text-white bg-opacity-50 rounded-circle border border-2 border-white`}
             //title={isCluster ? `${count} impianti` : c.properties.brand}
             onClick={() => {
                 onClusterClick(c);

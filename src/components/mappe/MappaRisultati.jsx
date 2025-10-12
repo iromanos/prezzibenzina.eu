@@ -19,13 +19,16 @@ import Loader from "@/components/home/Loader";
 import {useCluster} from "@/hooks/useCluster";
 import Cluster from "@/components/home/Cluster";
 import Supercluster from "supercluster";
+import Link from "react-bootstrap/NavLink"
+import Image from 'next/image';
+import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 
 export default function MappaRisultati({
                                            posizione, distributoriIniziali = [], onFetchDistributori,
                                            rightWidth = 0,
                                            footerHeight = 0, initialFilters, showFilter = true
                                        }) {
-    const headerHeight = 256;
+    const headerHeight = 0;
 
     const [distributori, setDistributori] = useState(distributoriIniziali);
     const [popupInfo, setPopupInfo] = useState(null);
@@ -178,27 +181,23 @@ export default function MappaRisultati({
     // const [clusters, setClusters] = useState([]);
 
 
+    const firstNDistributori = useMemo(() => {
+        return distributori.slice(0, 10);
+    }, [distributori]);
+
     const clusters = useMemo(() => {
-
-        if (distributori.length === 0) return [];
-
-        const radius = 60;
-
-
+        const clusteredPoints = distributori.slice(10);
+        if (clusteredPoints.length === 0) return [];
+        const radius = 120;
         const index = new Supercluster({
             radius: radius,
             minPoints: 2,
-            // maxZoom: maxZoom,
         });
         index.load(distributori);
         return index.getClusters(boundsRef.current, zoom);
-
     }, [distributori]);
 
-    // const {clusters} = useCluster(distributori, zoom, boundsRef.current);
-
     log(mapRef.current?.zoom);
-
     log("RIGHT WIDTH: " + rightWidth);
     log('MappaRisultati: BUILD');
     log('Filtri: ' + filter.carburante);
@@ -216,23 +215,35 @@ export default function MappaRisultati({
                 <ComparaVicini carburante={filter.carburante}/></> : null}
             {showFilter ?
                 <>
-            <FiltriMappaModerni
-                initialFilters={initialFilters}
-                rightWidth={rightWidth}
-                onSearch={(place) => {
-                    mapRef.current?.flyTo({zoom: 12, center: [place.lon, place.lat]});
+                    <FiltriMappaModerni
+                        initialFilters={initialFilters}
+                        rightWidth={rightWidth}
+                        onSearch={(place) => {
+                            mapRef.current?.flyTo({zoom: 12, center: [place.lon, place.lat]});
+                        }}
+                        onChange={(state) => {
+                            const currentFilter = {
+                                ...filter, ...state
+                            };
+                            debouncedFilterChange(currentFilter);
+                        }}/>
+                    <PosizioneAttualeButton
+                        onPosizione={handlePosizione}
+                        rightWidth={rightWidth}
+                        footerHeight={footerHeight}/></> : null}
+
+
+            <Link
+
+                style={{
+                    bottom: footerHeight,
+                    right: rightWidth
                 }}
-                onChange={(state) => {
-                const currentFilter = {
-                    ...filter, ...state
-                };
-                debouncedFilterChange(currentFilter);
-            }}/>
-                    <PosizioneAttualeButton onPosizione={handlePosizione}
 
-                                            rightWidth={rightWidth}
-
-                                            footerHeight={footerHeight}/></> : null}
+                className={'position-absolute z-3 m-3 shadow-sm'} title={'Home'} href={'/'}>
+                <Image className={'rounded'} width={90} height={90}
+                                                   src={'/assets/logo-180.png'} alt={'PrezzoBenzina.eu'}/>
+            </Link>
 
             <Map
                 padding={{bottom: 96, top: headerHeight, right: rightWidth}}
@@ -264,8 +275,6 @@ export default function MappaRisultati({
 
 
                 </Popup> : null}
-
-
                 <Cluster
                     fadeOut={fadeOutMarker}
                     clusters={clusters}
@@ -274,16 +283,20 @@ export default function MappaRisultati({
                         // const expansionZoom = clusterIndex.getClusterExpansionZoom(c.id);
                         // mapRef.current.getMap().flyTo({center: [lng, lat], zoom: expansionZoom});
                     }}/>
+                <>
+                {firstNDistributori.map((d) => {
 
-                {/*{distributori.map((d) => <ImpiantoMarker*/}
-                {/*    fadeOut={fadeOutMarker}*/}
-                {/*    onClick={e => {*/}
-                {/*        e.originalEvent.stopPropagation(); // evita chiusura globale*/}
-                {/*        mapRef.current?.flyTo({center: [d.longitudine, d.latitudine], essential: true});*/}
-                {/*        setPopupInfo(d);*/}
-                {/*    }}*/}
+                    const impianto = d.properties;
 
-                {/*    key={d.id_impianto} d={d}/>)}*/}
+                    return <ImpiantoMarker
+                        fadeOut={fadeOutMarker}
+                        onClick={e => {
+                            e.originalEvent.stopPropagation(); // evita chiusura globale
+                            mapRef.current?.flyTo({center: [impianto.longitudine, impianto.latitudine], essential: true});
+                            setPopupInfo(impianto);
+                        }}
+                        key={impianto.id_impianto} d={impianto}/>;
+                })}</>
 
             </Map>
         </>
