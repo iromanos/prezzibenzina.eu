@@ -16,7 +16,6 @@ import useCarburante from "@/hooks/useCarburante";
 import useLimit from "@/hooks/useLimit";
 import ImpiantoPopupMobile from "@/components/impianti/ImpiantoPopupMobile";
 import Loader from "@/components/home/Loader";
-import {useCluster} from "@/hooks/useCluster";
 import Cluster from "@/components/home/Cluster";
 import Supercluster from "supercluster";
 import Link from "react-bootstrap/NavLink"
@@ -98,6 +97,7 @@ export default function MappaRisultati({
         //onFetchDistributori?.(data);
         setFadeOutMarker(true);
         setDistributori(data);
+        onFetchDistributori(data.slice(0, _filter.limite));
         setFadeOutMarker(false);
 //        setFilter(_filter);
         isFetching.current = false;
