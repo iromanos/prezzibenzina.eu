@@ -182,16 +182,24 @@ export default function MappaRisultati({
 
 
     const firstNDistributori = useMemo(() => {
-        return distributori.slice(0, 10);
+        return distributori.slice(0, filter.limite);
     }, [distributori]);
 
     const clusters = useMemo(() => {
-        const clusteredPoints = distributori.slice(10);
+        const clusteredPoints = distributori.slice(filter.limite);
         if (clusteredPoints.length === 0) return [];
         const radius = 120;
         const index = new Supercluster({
             radius: radius,
             minPoints: 2,
+            map: props => ({
+                prezzo: props.prezzo ?? 0
+            }),
+            reduce: (a, b) => {
+                a.somma = (a.somma || 0) + a.prezzo;
+                a.totale = (a.totale || 0) + 1;
+                a.media = a.somma / a.totale;
+            }
         });
         index.load(distributori);
         return index.getClusters(boundsRef.current, zoom);

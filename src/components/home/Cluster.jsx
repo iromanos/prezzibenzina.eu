@@ -23,8 +23,9 @@ function MarkerCluster({c, fadeOut}) {
     const [lng, lat] = c.geometry.coordinates;
     const isCluster = c.properties.cluster;
     const count = c.properties.point_count;
+    const media = c.properties.media?.toFixed(3);
 
-    const size = Math.min(120, (Math.log2(count) * 24) + 24);
+    const size = Math.min(120, (Math.log2(count) * 24) + 40);
 
     if (!isCluster) {
         log(c.properties);
@@ -39,24 +40,35 @@ function MarkerCluster({c, fadeOut}) {
     }, []);
 
 
+    function getClusterColor(avgPrice) {
+        if (avgPrice < 1.70) return 'green';
+        if (avgPrice < 1.90) return 'orange';
+        return 'red';
+    }
+
+    const color = getClusterColor(media);
+
     return <Marker longitude={lng} latitude={lat}>
         <div
 
             style={{
                 width: size,
-                height: size,
+                height: size, backgroundColor: color,
             }}
 
-            className={`d-flex align-items-center justify-content-center bg-success 
+            className={`d-flex align-items-center justify-content-center  
                             cluster-marker
                             ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}
-                            text-white bg-opacity-50 rounded-circle border border-2 border-white`}
+                            bg-opacity-75 rounded-circle border border-dark-subtle`}
             //title={isCluster ? `${count} impianti` : c.properties.brand}
             onClick={() => {
-                onClusterClick(c);
+                //onClusterClick(c);
             }}
         >
-            {count}
+            <div>
+                <div className={'text-center small'}>{count}</div>
+                <div><strong><small>€{media}</small></strong></div>
+            </div>
         </div>
     </Marker>;
 
