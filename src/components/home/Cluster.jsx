@@ -41,9 +41,9 @@ function MarkerCluster({c, fadeOut}) {
 
 
     function getClusterColor(avgPrice) {
-        if (avgPrice < 1.70) return 'green';
-        if (avgPrice < 1.90) return 'orange';
-        return 'red';
+        if (avgPrice < 1.70) return 'border-success-subtle';
+        if (avgPrice < 1.90) return 'border-light-subtle';
+        return 'border-danger-subtle';
     }
 
     const color = getClusterColor(media);
@@ -53,13 +53,14 @@ function MarkerCluster({c, fadeOut}) {
 
             style={{
                 width: size,
-                height: size, backgroundColor: color,
+                height: size,
             }}
 
             className={`d-flex align-items-center justify-content-center  
-                            cluster-marker
+                            cluster-marker bg-white 
+                            border border-2 ${color}
                             ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}
-                            bg-opacity-75 rounded-circle border border-dark-subtle`}
+                            bg-opacity-75 rounded-circle`}
             //title={isCluster ? `${count} impianti` : c.properties.brand}
             onClick={() => {
                 //onClusterClick(c);
