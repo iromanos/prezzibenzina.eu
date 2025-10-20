@@ -8,8 +8,11 @@ export default function Breadcrumb({regione, carburante, provincia, comune, marc
 
 
         if (regione) {
+
+            const nomeRegione = regione.replace("-", " ");
+
             path.push({
-                label: capitalize(regione),
+                label: ucwords(nomeRegione),
                 link: `/${regione}/${carburante}`,
             });
 
