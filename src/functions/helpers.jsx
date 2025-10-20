@@ -69,7 +69,7 @@ export function getLink(regione, carburante, marchio, provincia, comune) {
 
     if (comune) {
         path.push({
-            label: ucwords(comune),
+            label: ucwords(comune.description),
             link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}`,
         });
     }
@@ -127,8 +127,10 @@ export async function getMetadata({params}) {
     const titolo = `Prezzi ${descrizioneCarburante} ${localizzazione} | Distributori attivi`;
     const descrizione = `Consulta i prezzi aggiornati dei ${carburante} ${localizzazione}. Trova i distributori più convenienti e naviga per città e tipo di carburante.`;
 
-    const canonicalUrl = getLink(regione, carburante, marchio, sigla, comune);
+    const canonicalUrl = getLink(regione, carburante, marchio, sigla, riepilogo.request.comune);
     const imageUrl = '/assets/logo.png';
+
+    log("CANONICAL URL: " + canonicalUrl.link);
 
     const microdata = generateMicrodataGraph(distributori);
 
