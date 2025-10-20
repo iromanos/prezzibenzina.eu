@@ -4,6 +4,7 @@ import {capitalize, log} from "@/functions/helpers";
 import {cookies, headers} from "next/headers";
 import {notFound} from "next/navigation";
 
+//TODO: link diretto a Svizzera e Italia
 
 export async function generateMetadata({params, searchParams}) {
 
