@@ -1,4 +1,4 @@
-import {getElencoCarburanti, getImpiantiByDistance, getLocationByIp, getMarchi} from "@/functions/api";
+import {getElencoCarburanti, getLocationByIp, getMarchi} from "@/functions/api";
 import MappaClient from "@/components/mappe/MappaClient";
 import {capitalize, log} from "@/functions/helpers";
 import {cookies, headers} from "next/headers";
@@ -22,6 +22,8 @@ export async function generateMetadata({params, searchParams}) {
 export default async function Mappa({searchParams}) {
 
     const queryParams = await searchParams;
+
+    log(queryParams);
 
     const initialFilters = {};
 
@@ -87,16 +89,15 @@ export default async function Mappa({searchParams}) {
 
     log("DISTRIBUTORI: " + JSON.stringify(posizione));
 
-
-
-    const response = await getImpiantiByDistance(posizione.lat, posizione.lng, 10, initialFilters.carburante, 'price', ckLimite, initialFilters.brand);
-    const distributori = await response.json();
-
-
-    log("DISTRIBUTORI: " + JSON.stringify(distributori));
+    //const response = await getImpiantiByDistance(posizione.lat, posizione.lng, 10, initialFilters.carburante, 'price', ckLimite, initialFilters.brand);
+    const distributori = []; //await response.json();
 
     log("MAPPA: BUILD");
 
-    return <MappaClient posizione={posizione} distributoriIniziali={distributori} initialFilters={initialFilters}/>;
+    const zoom = queryParams.zoom;
+
+    return <MappaClient
+        zoomIniziale={zoom}
+        posizione={posizione} distributoriIniziali={distributori} initialFilters={initialFilters}/>;
 
 }

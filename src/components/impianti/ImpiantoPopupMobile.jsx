@@ -21,8 +21,7 @@ export default function ImpiantoPopupMobile({impianto}) {
 
 
     return (
-        <div className="" key={id_impianto}>
-            <div className="">
+        <div key={id_impianto}>
                 <div className="d-flex align-items-center gap-3 mb-2">
                     <img src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
                     <div>
@@ -33,13 +32,12 @@ export default function ImpiantoPopupMobile({impianto}) {
 
                 <p className="mb-1">
                     {prezzo ? <><strong>{prezzo.toFixed(3)} €/L</strong> - </> : null} {tipo_impianto}<br/>
-                    {indirizzo}, {comune} ({provincia})
+                    {indirizzo}{comune ? `, ${comune}` : null} {provincia ? `(${provincia})` : null}
                 </p>
 
                 <div className="d-flex flex-wrap gap-2 mt-2 small">
                     <ImpiantoCardClientVer2 impianto={impianto} apriMappa={false}/>
                 </div>
-            </div>
         </div>
     );
 }

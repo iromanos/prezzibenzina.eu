@@ -17,6 +17,7 @@
     "@mui/material-nextjs": "^7.3.3",
     "axios": "^1.11.0",
     "bootstrap": "^5.3.8",
+    "flag-icons": "^7.5.0",
     "framer-motion": "^12.23.22",
     "maplibre-gl": "^5.7.1",
     "maplibre-react-components": "^0.2.6",
@@ -28,7 +29,8 @@
     "react-map-gl": "^8.0.4",
     "react-responsive": "^10.0.1",
     "sass": "1.33",
-    "sass-loader": "^10.1.1"
+    "sass-loader": "^10.1.1",
+    "supercluster": "^8.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

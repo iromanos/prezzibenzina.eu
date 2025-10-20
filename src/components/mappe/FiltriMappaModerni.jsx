@@ -68,10 +68,13 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
             <div
 
                 style={{
-                    right: rightWidth
+                    // right: rightWidth
                 }}
 
-                className="bg-transparent position-absolute start-0 top-0 p-3 z-3">
+                className="bg-transparent
+                col-lg-4
+                position-absolute
+                start-0 top-0 p-3 z-3">
 
                 <div className={'visually-hidden'}>
                     <h1 className="">Mappa Interattiva dei Prezzi Carburante in Italia</h1>
@@ -86,7 +89,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                 </div>
 
                 <>
-                    <div className={'mb-2 col col-lg-6'}>
+                    <div className={'mb-2 col'}>
                         <NominatimAutocomplete
                             onSelect={(place) => {
                                 log('Selezionato:' + JSON.stringify(place));

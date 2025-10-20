@@ -96,3 +96,14 @@ $theme-colors: (
 .full-height-dvh {
   height: 100dvh;
 }
+
+.emoji {
+  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Open Sans', sans-serif;
+}
+
+.cluster {
+}
+
+.maplibregl-popup-content {
+  border-radius: var(--bs-border-radius-lg) !important;
+}

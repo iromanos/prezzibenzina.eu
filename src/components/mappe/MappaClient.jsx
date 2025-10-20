@@ -10,7 +10,7 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import {AnimatePresence, motion} from 'framer-motion';
 import useNavBarPresence from "@/hooks/useNavBarPresence";
 
-export default function MappaClient({posizione, distributoriIniziali, initialFilters}) {
+export default function MappaClient({posizione, distributoriIniziali, initialFilters, zoomIniziale = 13}) {
 
     const [animEnd, setAnimEnd] = useState(true);
 
@@ -28,7 +28,8 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
     const [viewState, setViewState] = useState({
         latitude: posizione.lat,
         longitude: posizione.lng,
-        zoom: 13
+        zoom: zoomIniziale,
+
     });
 
     useEffect(() => {
@@ -120,7 +121,7 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
                                     >
                                         <div className={'py-3'}>
                                             {distributori.map((d, i) =>
-                                <ImpiantoCard key={i} impianto={d} cardClient={true}/>
+                                                <ImpiantoCard key={i} impianto={d.properties} cardClient={true}/>
                                             )}</div>
                                     </motion.div>)}</AnimatePresence> :
                             <p className={'m-0'}>Nessun distributore in zona per i filtri selezionati</p>
@@ -135,7 +136,7 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
                     <h6 className="fw-semibold mb-3">Distributori trovati ({distributori.length})</h6>
                     {distributori.length !== 0 ? (
                         distributori.map((d, i) => (
-                            <ImpiantoCard key={i} impianto={d}/>
+                            <ImpiantoCard key={i} impianto={d.properties}/>
                         ))
                     ) : (
                         <p className="">Nessun distributore in zona per i filtri selezionati</p>
