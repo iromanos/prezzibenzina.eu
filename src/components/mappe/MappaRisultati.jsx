@@ -39,9 +39,9 @@ export default function MappaRisultati({
 
     const boundsRef = useRef(null);
 
-    const {carburante} = useCarburante();
+    const {carburante} = useCarburante(initialFilters.carburante);
     const {limit} = useLimit();
-    const [filter, setFilter] = useState({carburante: null});
+    const [filter, setFilter] = useState(initialFilters);
     const [zoom, setZoom] = useState(posizione.zoom);
     const [bounds, setBounds] = useState(null);
 
@@ -210,6 +210,7 @@ export default function MappaRisultati({
     log('MappaRisultati: BUILD');
     log('Filtri: ' + filter.carburante);
     log('Clusters: ' + clusters.length);
+    log(`initialFilters: ` + JSON.stringify(initialFilters));
 
 
     return (

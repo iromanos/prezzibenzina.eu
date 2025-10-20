@@ -25,8 +25,6 @@ export default async function DistributoriPage({params}) {
         notFound();
     }
 
-    // log(elencoMarchi);
-
     if (marchio !== undefined) {
         if (elencoMarchi.filter(m => m.id === marchio).length === 0) {
             notFound();

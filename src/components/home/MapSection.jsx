@@ -23,7 +23,7 @@ export function MapSection() {
         18.9, 47.9   // NE corner
     ];
 
-    const [stato, setStato] = useState(undefined);
+    const [stato, setStato] = useState(null);
 
     const [zoom, setZoom] = useState(6);
     const [bounds, setBounds] = useState(null);
@@ -83,7 +83,7 @@ export function MapSection() {
 
     useEffect(() => {
 
-        if (stato === undefined) return;
+        //if (stato === null) return;
 
         const fetchData = async (bounds, stato) => {
             const latlngBounds = {
@@ -97,8 +97,11 @@ export function MapSection() {
                 }
             };
 
+            let statoId = null;
+            if (stato !== null) statoId = stato.id;
+
             setLoading(true);
-            const response = await getImpiantiClusterByBounds(latlngBounds, 'benzina', 'price', null, null, stato.id);
+            const response = await getImpiantiClusterByBounds(latlngBounds, 'benzina', 'price', null, null, statoId);
             const json = await response.json();
             setPoints(json);
             setLoading(false);
@@ -158,6 +161,8 @@ export function MapSection() {
 
                     const size = Math.min(120, 24 + Math.log2(count) * 6);
 
+                    if (isNaN(size)) return null;
+
                     return (
                         <Marker key={i} longitude={lng} latitude={lat}>
                             <div
@@ -189,7 +194,7 @@ export function MapSection() {
                 {elencoStati.map((c, i) => {
                     return <Button
                         key={i}
-                        variant={` ${stato !== undefined && stato.id === c.id ? 'btn-primary' : 'btn-outline-primary'} `}
+                        variant={` ${stato !== null && stato.id === c.id ? 'btn-primary' : 'btn-outline-primary'} `}
                         onClick={() => {
                             setPoints([]);
                             mapRef.current.flyTo({

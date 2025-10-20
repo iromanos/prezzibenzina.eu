@@ -14,6 +14,9 @@ import {useModalHistory} from "@/hooks/useModalHistory";
 import {useFilters} from "@/hooks/useFilters";
 
 export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, initialFilters}) {
+
+    //todo: link diretto allo stato
+
     const [show, setShow] = useState(null);
     const [info, setInfo] = useState(false);
     const [modal, setModal] = useState(false);

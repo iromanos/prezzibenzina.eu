@@ -6,6 +6,7 @@ import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import PropaneIcon from "@mui/icons-material/Propane";
 import BubbleChartIcon from "@mui/icons-material/BubbleChart";
 import EvStationIcon from "@mui/icons-material/EvStation";
+import {notFound} from "next/navigation";
 
 const URI = process.env.NEXT_PUBLIC_API_ENDPOINT + '/pb/';
 
@@ -218,14 +219,16 @@ export async function getSeoRegione(regione, carburante, marchio, provincia, com
     if(marchio) {
         request += `marchio=${marchio}&`;
     }
-//    log(request);
+    log(request);
 
-    const res = await axios.get(request);
-
-    // console.log(res.data);
-
-    return res.data;
-
+    try {
+        const res = await axios.get(request);
+        return res.data;
+    } catch (error) {
+        if (error.response.status === 404) {
+            notFound();
+        }
+    }
 }
 
 export async function getImpiantiByDistance(lat, lng, distance, carburante, sort, limit = 100, brand = null) {

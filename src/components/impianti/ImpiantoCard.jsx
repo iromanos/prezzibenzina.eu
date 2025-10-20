@@ -3,6 +3,9 @@ import ImpiantoCardClient from "@/components/impianti/ImpiantoCardClient";
 
 export default function ImpiantoCard({impianto, cardClient = true}) {
 
+    //todo: scheda impianto svizzero
+    //todo: aggiunta logo bandiera stato
+
     const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 
@@ -32,8 +35,8 @@ export default function ImpiantoCard({impianto, cardClient = true}) {
                 </div>
 
                 <p className="mb-1">
-                    <strong>{prezzo.toFixed(3)} €/L</strong> – {tipo_impianto}<br/>
-                    {indirizzo}, {comune} ({provincia})
+                    <strong>{prezzo.toFixed(3)} €/L</strong>{tipo_impianto != null ? ` - ${tipo_impianto}` : null}<br/>
+                    {indirizzo}{comune != null ? ', ' + comune : null} {provincia != null ? `(${provincia})` : null}
                 </p>
                 {cardClient &&
                 <div className="d-flex flex-wrap gap-2 mt-2 small">
