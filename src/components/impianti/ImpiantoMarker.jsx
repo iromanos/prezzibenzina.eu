@@ -13,7 +13,14 @@ export default function ImpiantoMarker({d, onClick, fadeOut = false}) {
         return () => clearTimeout(timeout);
     }, []);
 
-    const color = d.color === -1 ? '#dc3545' : '#198754';
+    const color = getMarkerColor(d);
+
+
+    function getMarkerColor(d) {
+        if (d.color === 0) return 'bg-success';
+        if (d.color === 1) return 'bg-warning';
+        return 'bg-danger';
+    }
 
     return (
         <Marker
@@ -24,9 +31,8 @@ export default function ImpiantoMarker({d, onClick, fadeOut = false}) {
             onClick={onClick}
         >
             <div
-                className={`text-center border border-white rounded py-1 px-1 cluster-marker ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}`}
+                className={` ${color} text-center border border-white rounded py-1 px-1 cluster-marker ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}`}
                  style={{
-                     backgroundColor: color,
                      color: 'white',
                  }}
             >

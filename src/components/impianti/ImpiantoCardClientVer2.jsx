@@ -66,10 +66,11 @@ export default function ImpiantoCardClientVer2({impianto, apriMappa = true}) {
         {/*>*/}
         {/*    Avvisami se scende sotto…*/}
         {/*</button>*/}
+        {impianto.stato === "IT" &&
 
         <a href={schedaUrl} className="text-decoration-underline small">
             Scheda impianto
-        </a>
+        </a>}
 
     </div>
 

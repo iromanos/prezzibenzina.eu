@@ -59,10 +59,10 @@ export default function ImpiantoCardClient({impianto, apriMappa = true}) {
            aria-label={`Naviga verso ${nome_impianto}`}>
             Vai con Google Maps
         </a>
-
+        {impianto.stato === "IT" &&
         <a href={schedaUrl} className="small">
             Scheda impianto
-        </a>
+        </a>}
 
     </div>
 

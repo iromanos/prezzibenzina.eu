@@ -1,7 +1,7 @@
 'use client';
 
 import Map, {Popup} from 'react-map-gl/maplibre';
-import {useEffect, useMemo, useRef, useState} from 'react';
+import {forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {log} from "@/functions/helpers";
 import {getImpiantiByBounds} from "@/functions/api";
@@ -22,11 +22,20 @@ import Link from "react-bootstrap/NavLink"
 import Image from 'next/image';
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 
-export default function MappaRisultati({
+const MappaRisultati = forwardRef(({
                                            posizione, distributoriIniziali = [], onFetchDistributori,
                                            rightWidth = 0,
-                                           footerHeight = 0, initialFilters, showFilter = true
-                                       }) {
+                                       footerHeight = 0, initialFilters, showFilter = true, showLinkHome = true
+                                   }, ref) => {
+
+    useImperativeHandle(ref, () => ({
+        flyTo: (options) => {
+            const map = mapRef.current;
+            map.flyTo(options);
+        }
+    }));
+
+
     const headerHeight = 0;
 
     const [distributori, setDistributori] = useState(distributoriIniziali);
@@ -35,7 +44,7 @@ export default function MappaRisultati({
     const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
     const lastBoundsRef = useRef(null);
 
-    const mapRef = useRef();
+    const mapRef = useRef(null);
 
     const boundsRef = useRef(null);
 
@@ -89,17 +98,16 @@ export default function MappaRisultati({
 
     const fetchImpianti = async (bounds, _filter) => {
 
-        setLoading(true);
-        const response = await getImpiantiByBounds(bounds, _filter.carburante, 'price', null, _filter.brand?.nome);
+        //setLoading(true);
+        const response = await getImpiantiByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome);
         const data = await response.json();
 
-        setLoading(false);
-        //onFetchDistributori?.(data);
+        // setLoading(false);
         setFadeOutMarker(true);
         setDistributori(data);
-        onFetchDistributori(data.slice(0, _filter.limite));
+        onFetchDistributori?.(data.slice(0, _filter.limite));
         setFadeOutMarker(false);
-//        setFilter(_filter);
+        setFilter(_filter);
         isFetching.current = false;
 
     }
@@ -193,12 +201,15 @@ export default function MappaRisultati({
             radius: radius,
             minPoints: 2,
             map: props => ({
-                prezzo: props.prezzo ?? 0
+                prezzo: props.prezzo ?? 0,
+                color: props.color ?? 0
             }),
             reduce: (a, b) => {
                 a.somma = (a.somma || 0) + a.prezzo;
                 a.totale = (a.totale || 0) + 1;
                 a.media = a.somma / a.totale;
+                a.sommaColore = (a.sommaColore || 0) + a.color;
+                a.mediaColore = a.sommaColore / a.totale;
             }
         });
         index.load(distributori);
@@ -227,6 +238,11 @@ export default function MappaRisultati({
                     <FiltriMappaModerni
                         initialFilters={initialFilters}
                         rightWidth={rightWidth}
+                        onSelectStato={(c) => {
+                            mapRef.current.flyTo({
+                                center: [c.lng, c.lat], zoom: c.zoom,
+                            });
+                        }}
                         onSearch={(place) => {
                             mapRef.current?.flyTo({zoom: 12, center: [place.lon, place.lat]});
                         }}
@@ -242,7 +258,7 @@ export default function MappaRisultati({
                         footerHeight={footerHeight}/></> : null}
 
 
-            <Link
+            {showLinkHome && showFilter && <Link
 
                 style={{
                     bottom: footerHeight,
@@ -251,8 +267,8 @@ export default function MappaRisultati({
 
                 className={'position-absolute z-3 m-3 shadow-sm'} title={'Home'} href={'/'}>
                 <Image className={'rounded'} width={90} height={90}
-                                                   src={'/assets/logo-180.png'} alt={'PrezzoBenzina.eu'}/>
-            </Link>
+                       src={'/assets/logo-180.png'} alt={'PrezzoBenzina.eu'}/>
+            </Link>}
 
             <Map
                 padding={{bottom: 96, top: headerHeight, right: rightWidth}}
@@ -293,22 +309,28 @@ export default function MappaRisultati({
                         // mapRef.current.getMap().flyTo({center: [lng, lat], zoom: expansionZoom});
                     }}/>
                 <>
-                {firstNDistributori.map((d) => {
+                    {firstNDistributori.map((d) => {
 
-                    const impianto = d.properties;
+                        const impianto = d.properties;
 
-                    return <ImpiantoMarker
-                        fadeOut={fadeOutMarker}
-                        onClick={e => {
-                            e.originalEvent.stopPropagation(); // evita chiusura globale
-                            mapRef.current?.flyTo({center: [impianto.longitudine, impianto.latitudine], essential: true});
-                            setPopupInfo(impianto);
-                        }}
-                        key={impianto.id_impianto} d={impianto}/>;
-                })}</>
+                        return <ImpiantoMarker
+                            fadeOut={fadeOutMarker}
+                            onClick={e => {
+                                e.originalEvent.stopPropagation(); // evita chiusura globale
+                                mapRef.current?.flyTo({
+                                    center: [impianto.longitudine, impianto.latitudine],
+                                    essential: true
+                                });
+                                setPopupInfo(impianto);
+                            }}
+                            key={impianto.id_impianto} d={impianto}/>;
+                    })}</>
 
             </Map>
         </>
 
     );
-}
+});
+
+
+export default MappaRisultati;

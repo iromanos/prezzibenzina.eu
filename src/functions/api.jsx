@@ -7,6 +7,7 @@ import PropaneIcon from "@mui/icons-material/Propane";
 import BubbleChartIcon from "@mui/icons-material/BubbleChart";
 import EvStationIcon from "@mui/icons-material/EvStation";
 import {notFound} from "next/navigation";
+import PublicIcon from "@mui/icons-material/Public";
 
 const URI = process.env.NEXT_PUBLIC_API_ENDPOINT + '/pb/';
 
@@ -37,6 +38,15 @@ export function getElencoStati() {
         lat: 46.9481,
         lng: 7.4474,
         zoom: 7
+    });
+
+    r.push({
+        id: '--',
+        name: 'Tutti',
+        icon: <PublicIcon/>,
+        lat: 42.5043,
+        lng: 12.5726,
+        zoom: 4.8
     });
 
     return r;

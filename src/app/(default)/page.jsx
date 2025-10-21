@@ -39,7 +39,9 @@ export default function Home() {
                 </div>
             </div>
 
-            <div id='mappa' className={'container'}>
+            <div id='mappa' className={'container mb-4'}>
+
+
                 <MapSection/>
             </div>
             <div className={'container mb-4'}>

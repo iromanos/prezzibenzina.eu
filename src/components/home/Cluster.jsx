@@ -1,5 +1,4 @@
 import {Marker} from "react-map-gl/maplibre";
-import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import {log} from "@/functions/helpers";
 import {useEffect, useState} from "react";
 
@@ -12,9 +11,11 @@ export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
             <MarkerCluster
                 fadeOut={fadeOut}
                 key={i} c={c}/>
-            : <ImpiantoMarker
-                fadeOut={fadeOut}
-                key={i} d={c.properties}/>
+            : null
+
+        // <ImpiantoMarker
+        //     fadeOut={fadeOut}
+        //     key={i} d={c.properties}/>
     });
 }
 
@@ -24,6 +25,7 @@ function MarkerCluster({c, fadeOut}) {
     const isCluster = c.properties.cluster;
     const count = c.properties.point_count;
     const media = c.properties.media?.toFixed(3);
+    const mediaColore = c.properties.mediaColore?.toFixed(3);
 
     const size = Math.min(120, (Math.log2(count) * 24) + 40);
 
@@ -41,12 +43,12 @@ function MarkerCluster({c, fadeOut}) {
 
 
     function getClusterColor(avgPrice) {
-        if (avgPrice < 1.70) return 'border-success-subtle';
-        if (avgPrice < 1.90) return 'border-light-subtle';
-        return 'border-danger-subtle';
+        if (avgPrice > 0) return 'border-warning-subtle';
+        if (avgPrice > 1) return 'border-danger-subtle';
+        return 'border-success-subtle';
     }
 
-    const color = getClusterColor(media);
+    const color = getClusterColor(mediaColore);
 
     return <Marker longitude={lng} latitude={lat}>
         <div

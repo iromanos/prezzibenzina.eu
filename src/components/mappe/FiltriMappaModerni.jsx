@@ -4,7 +4,8 @@ import {useEffect, useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import useCarburante from "@/hooks/useCarburante";
-import {getElencoCarburanti, getMarchi} from "@/functions/api";
+import {getElencoCarburanti, getElencoStati, getMarchi} from "@/functions/api";
+import "flag-icons/css/flag-icons.min.css";
 
 import {URI_IMAGE} from "@/constants";
 import useLimit from "@/hooks/useLimit";
@@ -13,9 +14,7 @@ import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 import {useModalHistory} from "@/hooks/useModalHistory";
 import {useFilters} from "@/hooks/useFilters";
 
-export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, initialFilters}) {
-
-    //todo: link diretto allo stato
+export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, initialFilters, onSelectStato}) {
 
     const [show, setShow] = useState(null);
     const [info, setInfo] = useState(false);
@@ -66,6 +65,8 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
             });
     }, []);
 
+    const elencoStati = getElencoStati();
+
     return (
         <>
             <div
@@ -75,7 +76,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                 }}
 
                 className="bg-transparent
-                col-lg-4
+                col-12 col-lg-4
                 position-absolute
                 start-0 top-0 p-3 z-3">
 
@@ -101,7 +102,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                         />
                     </div>
 
-                    <div className={"d-flex gap-2 flex-wrap "}>
+                    <div className={"d-flex gap-2 flex-wrap mb-2"}>
 
                         {carburante ?
                             <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
@@ -124,6 +125,21 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                             setInfo(true);
                         }} size={"sm"}>INFO</Button>
                     </div>
+
+                    <div className={"d-flex gap-2 flex-wrap mb-2 "}>
+                        {elencoStati.map((c, i) => {
+                            return <Button
+                                key={i}
+                                size={"sm"}
+                                className={'border border-dark-subtle shadow-sm'}
+                                variant={'light'}
+                                onClick={() => {
+
+                                    onSelectStato?.(c);
+                                }}> {c.icon} {c.name}</Button>
+                        })}
+                    </div>
+
                 </>
             </div>
 

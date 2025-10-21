@@ -12,6 +12,8 @@ import useNavBarPresence from "@/hooks/useNavBarPresence";
 
 export default function MappaClient({posizione, distributoriIniziali, initialFilters, zoomIniziale = 13}) {
 
+    //todo: aggiorna url in base a spostamento della mappa
+
     const [animEnd, setAnimEnd] = useState(true);
 
     const {filters} = useFilters(initialFilters);
