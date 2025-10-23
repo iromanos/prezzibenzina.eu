@@ -97,19 +97,52 @@ const MappaRisultati = forwardRef(({
     });
 
     const fetchImpianti = async (bounds, _filter) => {
-
-        //setLoading(true);
-        const response = await getImpiantiByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome);
-        const data = await response.json();
-
-        // setLoading(false);
-        setFadeOutMarker(true);
-        setDistributori(data);
-        onFetchDistributori?.(data.slice(0, _filter.limite));
-        setFadeOutMarker(false);
-        setFilter(_filter);
+        //setFadeOutMarker(true);
+        setDistributori([]);
+        rowsRef.current = [];
+        await fetchStream(bounds, _filter);
         isFetching.current = false;
+    }
 
+    const fetchStream = async (bounds, _filter) => {
+        setFadeOutMarker(true);
+
+        const response = await getImpiantiByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome);
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let buffer = '';
+        setFadeOutMarker(false);
+        while (true) {
+            const {value, done} = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, {stream: true});
+
+            let lines = buffer.split('\n');
+            buffer = lines.pop(); // conserva l'ultima riga incompleta
+
+            for (const line of lines) {
+                if (line.trim()) {
+                    const json = JSON.parse(line);
+                    handleNewRow(json);
+                }
+            }
+
+        }
+        onFetchDistributori(rowsRef.current.slice(0, filter.limite));
+        setDistributori([...rowsRef.current]);
+    }
+
+    const rowsRef = useRef([]);
+
+    function handleNewRow(row) {
+        rowsRef.current.push(row);
+        if (rowsRef.current.length % 1000 === 0) {
+            log(`rowsRef: ${rowsRef.current.length}`);
+            log(`distributori: ${distributori.length}`);
+            setDistributori([...rowsRef.current]);
+        }
     }
 
     const calcolaBounds = () => {
@@ -193,12 +226,10 @@ const MappaRisultati = forwardRef(({
         return distributori.slice(0, filter.limite);
     }, [distributori]);
 
-    const clusters = useMemo(() => {
-        const clusteredPoints = distributori.slice(filter.limite);
-        if (clusteredPoints.length === 0) return [];
-        const radius = 120;
-        const index = new Supercluster({
-            radius: radius,
+    const superclusterRef = useRef(
+        // const radius = 120;
+        new Supercluster({
+            radius: 120,
             minPoints: 2,
             map: props => ({
                 prezzo: props.prezzo ?? 0,
@@ -211,9 +242,15 @@ const MappaRisultati = forwardRef(({
                 a.sommaColore = (a.sommaColore || 0) + a.color;
                 a.mediaColore = a.sommaColore / a.totale;
             }
-        });
-        index.load(distributori);
-        return index.getClusters(boundsRef.current, zoom);
+        })
+    );
+
+    const clusters = useMemo(() => {
+        const clusteredPoints = distributori.slice(filter.limite);
+        log('clusterPoints: ' + clusteredPoints.length);
+        if (clusteredPoints.length === 0) return [];
+        superclusterRef.current.load(distributori);
+        return superclusterRef.current.getClusters(boundsRef.current, zoom);
     }, [distributori]);
 
     log(mapRef.current?.zoom);
@@ -222,7 +259,8 @@ const MappaRisultati = forwardRef(({
     log('Filtri: ' + filter.carburante);
     log('Clusters: ' + clusters.length);
     log(`initialFilters: ` + JSON.stringify(initialFilters));
-
+    log('Distributori: ' + distributori.length);
+    log('FadeOut: ' + fadeOutMarker);
 
     return (
         <>
@@ -239,6 +277,8 @@ const MappaRisultati = forwardRef(({
                         initialFilters={initialFilters}
                         rightWidth={rightWidth}
                         onSelectStato={(c) => {
+                            setFadeOutMarker(true);
+                            // setDistributori([]);
                             mapRef.current.flyTo({
                                 center: [c.lng, c.lat], zoom: c.zoom,
                             });

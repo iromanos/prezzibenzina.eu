@@ -9,7 +9,7 @@ import EvStationIcon from "@mui/icons-material/EvStation";
 import {notFound} from "next/navigation";
 import PublicIcon from "@mui/icons-material/Public";
 
-const URI = process.env.NEXT_PUBLIC_API_ENDPOINT + '/pb/';
+export const URI = process.env.NEXT_PUBLIC_API_ENDPOINT + '/pb/';
 
 @deprecatedPropType()
 const Carburanti = {
@@ -269,7 +269,7 @@ export async function getImpiantiByBounds(bounds, carburante, sort = 'price', li
 
     log(bounds);
 
-    let request = URI + `impianti/mappa`;
+    let request = URI + `impianti/stream`;
 
     log(request);
 
