@@ -97,6 +97,8 @@ export default async function Mappa({searchParams}) {
     const response = await getImpiantiByDistance(posizione.lat, posizione.lng, 30000, initialFilters.carburante, 'price', ckLimite, initialFilters.brand);
     const distributori = await response.json();
 
+    log(distributori);
+
     log("MAPPA: BUILD");
 
     const zoom = queryParams.zoom;

@@ -31,7 +31,8 @@ const MappaRisultati = forwardRef(({
                                        initialFilters,
                                        showFilter = true,
                                        showLinkHome = true,
-                                       onMoveEnd
+                                       onMoveEnd,
+                                       isReadOnly = false,
                                    }, ref) => {
 
     useImperativeHandle(ref, () => ({
@@ -52,7 +53,7 @@ const MappaRisultati = forwardRef(({
 
     const mapRef = useRef(null);
 
-    const boundsRef = useRef(null);
+    const boundsRef = useRef([]);
 
     const {carburante} = useCarburante(initialFilters.carburante);
     const {limit} = useLimit();
@@ -63,17 +64,6 @@ const MappaRisultati = forwardRef(({
     const isFetching = useRef(false);
 
     const [fadeOutMarker, setFadeOutMarker] = useState(false);
-
-    /*
-    useEffect(() => {
-        log('SALVATAGGIO FILTRI');
-
-        setFilter((prev) => ({
-            ...prev, ...{carburante: carburante}, ...{limite: limit}
-        }))
-    }, [carburante, limit]);
-    */
-
 
     useEffect(() => {
         const handleFocus = e => {
@@ -177,7 +167,7 @@ const MappaRisultati = forwardRef(({
     }
 
     const debouncedBoundsChange = useDebouncedCallback(async () => {
-
+        if (isReadOnly) return;
         if (popupInfo) return;
 
         const bounds = calcolaBounds();

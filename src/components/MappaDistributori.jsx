@@ -37,8 +37,8 @@ export default function MappaDistributori({
 
     useEffect(() => {
         const coords = distributori
-            .filter((d) => Number.isFinite(d.longitudine) && Number.isFinite(d.latitudine))
-            .map((d) => [d.longitudine, d.latitudine]);
+            .filter((d) => Number.isFinite(d.properties.longitudine) && Number.isFinite(d.properties.latitudine))
+            .map((d) => [d.properties.longitudine, d.properties.latitudine]);
 
         if (coords.length === 0) return;
 
@@ -100,10 +100,10 @@ export default function MappaDistributori({
 
                     onClick={e => {
                         e.originalEvent.stopPropagation(); // evita chiusura globale
-                        setPopupInfo(d);
+                        setPopupInfo(d.properties);
                     }}
 
-                    key={d.id_impianto} d={d}/>)}
+                    key={d.properties.id_impianto} d={d.properties}/>)}
             </Map>
     );
 }
