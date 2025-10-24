@@ -10,7 +10,6 @@ export async function POST(request) {
     log("FORMDATA: " + JSON.stringify(formData));
 
     const cookieStore = await cookies();
-
     let ckCarburante = cookieStore.get('carburante')?.value;
 
     log(ckCarburante);

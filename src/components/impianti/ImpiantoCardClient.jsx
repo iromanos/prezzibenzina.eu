@@ -34,7 +34,7 @@ export default function ImpiantoCardClient({impianto, apriMappa = true}) {
                 lat: impianto.latitudine,
                 lng: impianto.longitudine,
                 id: impianto.id_impianto,
-                radius: 2,
+                radius: 2000,
             }
         }));
     };
@@ -59,7 +59,7 @@ export default function ImpiantoCardClient({impianto, apriMappa = true}) {
            aria-label={`Naviga verso ${nome_impianto}`}>
             Vai con Google Maps
         </a>
-        {impianto.stato === "IT" &&
+        {impianto.stato !== "AT" &&
         <a href={schedaUrl} className="small">
             Scheda impianto
         </a>}

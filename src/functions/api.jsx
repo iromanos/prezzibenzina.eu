@@ -252,7 +252,7 @@ export async function getImpiantiByDistance(lat, lng, distance, carburante, sort
     // log(request);
 
     return await fetch(request, {
-        method: 'GET',
+        method: 'POST',
         headers: {
             Accept: 'application/json',
         },

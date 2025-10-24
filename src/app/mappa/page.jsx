@@ -85,12 +85,16 @@ export default async function Mappa({searchParams}) {
         initialFilters.carburante = ckCarburante;
     }
 
+    if (initialFilters.limite === undefined) {
+        initialFilters.limite = ckLimite;
+    }
+
     if (posizione.lat === undefined) posizione.lat = 0;
     if (posizione.lng === undefined) posizione.lng = 0;
 
     log("DISTRIBUTORI: " + JSON.stringify(posizione));
 
-    const response = await getImpiantiByDistance(posizione.lat, posizione.lng, 30, initialFilters.carburante, 'price', ckLimite, initialFilters.brand);
+    const response = await getImpiantiByDistance(posizione.lat, posizione.lng, 30000, initialFilters.carburante, 'price', ckLimite, initialFilters.brand);
     const distributori = await response.json();
 
     log("MAPPA: BUILD");

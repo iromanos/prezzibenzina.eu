@@ -1,5 +1,6 @@
 import React from 'react';
 import ImpiantoCardClientVer2 from "@/components/impianti/ImpiantoCardClientVer2";
+import Bandiera from "@/components/Bandiera";
 
 export default function ImpiantoPopupMobile({impianto}) {
 
@@ -21,17 +22,22 @@ export default function ImpiantoPopupMobile({impianto}) {
 
 
     return (
-        <div key={id_impianto}>
-                <div className="d-flex align-items-center gap-3 mb-2">
-                    <img src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
-                    <div>
+        <div className={''} key={id_impianto}>
+            <div className="d-flex align-items-start gap-3 mb-2">
+                <div className={'text-center'}>
+                    <img className={'d-block'} src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
+                    <Bandiera sigla={impianto.stato}/>
+                </div>
+                <div className={'col'}>
                         <h6 className="mb-0">{nome_impianto}</h6>
                         <small className="text-muted">{gestore}</small>
                     </div>
+
                 </div>
 
                 <p className="mb-1">
-                    {prezzo ? <><strong>{prezzo.toFixed(3)} €/L</strong> - </> : null} {tipo_impianto}<br/>
+                    {prezzo ? <>
+                        <strong>{prezzo.toFixed(3)} €/L</strong></> : null} {tipo_impianto ? <> - {tipo_impianto}</> : null}<br/>
                     {indirizzo}{comune ? `, ${comune}` : null} {provincia ? `(${provincia})` : null}
                 </p>
 

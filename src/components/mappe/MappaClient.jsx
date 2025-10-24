@@ -12,11 +12,9 @@ import useNavBarPresence from "@/hooks/useNavBarPresence";
 
 export default function MappaClient({posizione, distributoriIniziali, initialFilters, zoomIniziale = 13}) {
 
-    //todo: aggiorna url in base a spostamento della mappa
-
     const [animEnd, setAnimEnd] = useState(true);
 
-    const {filters} = useFilters(initialFilters);
+    const {filters, setFilters} = useFilters(initialFilters);
     const [showList, setShowList] = useState(false);
     const [footerHeight, setFooterHeight] = useState(0);
     const [rightWidth, setRightWidth] = useState(0);
@@ -83,15 +81,20 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
                 <div className={"position-absolute top-0 start-0 w-100 h-100"}>
 
                     <MappaRisultati
+                        onMoveEnd={(lat, lng) => {
+                            setFilters({
+                                lat: lat, lng: lng,
+                            })
+                        }}
                         showFilter={showList === false && animEnd}
                         initialFilters={initialFilters}
                         posizione={viewState}
-                                    rightWidth={rightWidth}
-                                    footerHeight={footerHeight}
-                                    distributoriIniziali={distributoriIniziali}
-                                    onFetchDistributori={(data) => {
-                                        setDistributori(data);
-                                    }}/>
+                        rightWidth={rightWidth}
+                        footerHeight={footerHeight}
+                        distributoriIniziali={distributoriIniziali}
+                        onFetchDistributori={(data) => {
+                            setDistributori(data);
+                        }}/>
                 </div>
                 <div ref={footerRef}
                      className="position-absolute bottom-0 w-100 z-3 d-lg-none">

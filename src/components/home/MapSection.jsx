@@ -32,7 +32,7 @@ export function MapSection() {
                         latitude: stato.lat,
                         zoom: stato.zoom,
                     }}
-                    initialFilters={{'carburante': 'benzina'}}
+                    initialFilters={{'carburante': 'benzina', 'limite': 20}}
                 />
                 <TuttoSchermoButton onClick={() => {
                     const uri = `lat=${stato.lat}&lng=${stato.lng}&zoom=${stato.zoom}`;

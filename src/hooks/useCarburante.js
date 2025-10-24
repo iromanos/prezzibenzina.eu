@@ -17,10 +17,5 @@ export default function useCarburante(defaultValue = '') {
         setCarburanteState(tipo);
     };
 
-    const clearCarburante = () => {
-        // document.cookie = `carburante=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-        // setCarburanteState(defaultValue);
-    };
-
-    return {carburante, setCarburante, clearCarburante};
+    return {carburante, setCarburante};
 }

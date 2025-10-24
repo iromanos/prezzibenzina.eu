@@ -69,6 +69,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
     impianto.prezzo = prezzo();
 
     const comune = () => {
+        if (impianto.comune === "") return null;
         return {id: slugify(impianto.comune), description: ucwords(impianto.comune)};
     }
 
@@ -77,6 +78,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
         <div className="container py-4">
 
             <Breadcrumb
+                stato={impianto.stato}
                 regione={impianto.regione}
                 carburante={cookie.carburante}
                 provincia={impianto.provincia}
@@ -97,7 +99,8 @@ export default function ImpiantoScheda({impianto, cookie}) {
                     </div>
 
                     <ImpiantoDescrizione impianto={impianto}/>
-                    <p>{indirizzo}, {ucwords(impianto.comune)} ({provincia})</p>
+                    <h2>Indirizzo</h2>
+                    <p>{indirizzo}{impianto.comune ? `, ${ucwords(impianto.comune)}` : null} {provincia ? `($\{provincia})` : null}</p>
                     <div className={'mb-2'}>
                         <h2>Carburanti disponibili</h2>
                         <table className="table table-bordered align-middle">

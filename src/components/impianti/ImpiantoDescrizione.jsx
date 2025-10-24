@@ -24,8 +24,11 @@ export default function ImpiantoDescrizione({impianto}) {
         <section className="mt-4">
             <h2 className="h5">Descrizione dell'impianto</h2>
             <p>
-                Il distributore <strong>{nome_impianto}</strong>, gestito da <strong>{gestore}</strong>, si trova
-                in <strong>{indirizzo}</strong> a <strong>{localita}</strong>. Si tratta di un
+                Il
+                distributore <strong>{nome_impianto}</strong>{gestore ? ' , gestito da <strong>${gestore}</strong>' : null},
+                si trova
+                in <strong>{indirizzo}</strong>{comune !== '' ? ` a <strong>${localita}</strong>` : null}. Si tratta di
+                un
                 impianto <strong>{tipo_impianto}</strong> con bandiera <strong>{bandiera}</strong>, facilmente
                 raggiungibile per chi transita nella zona.
             </p>

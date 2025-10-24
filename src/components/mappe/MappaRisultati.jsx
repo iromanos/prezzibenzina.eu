@@ -23,9 +23,15 @@ import Image from 'next/image';
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 
 const MappaRisultati = forwardRef(({
-                                           posizione, distributoriIniziali = [], onFetchDistributori,
-                                           rightWidth = 0,
-                                       footerHeight = 0, initialFilters, showFilter = true, showLinkHome = true
+                                       posizione,
+                                       distributoriIniziali = [],
+                                       onFetchDistributori,
+                                       rightWidth = 0,
+                                       footerHeight = 0,
+                                       initialFilters,
+                                       showFilter = true,
+                                       showLinkHome = true,
+                                       onMoveEnd
                                    }, ref) => {
 
     useImperativeHandle(ref, () => ({
@@ -58,11 +64,16 @@ const MappaRisultati = forwardRef(({
 
     const [fadeOutMarker, setFadeOutMarker] = useState(false);
 
+    /*
     useEffect(() => {
+        log('SALVATAGGIO FILTRI');
+
         setFilter((prev) => ({
             ...prev, ...{carburante: carburante}, ...{limite: limit}
         }))
     }, [carburante, limit]);
+    */
+
 
     useEffect(() => {
         const handleFocus = e => {
@@ -92,22 +103,20 @@ const MappaRisultati = forwardRef(({
             bounds = calcolaBounds();
         } else bounds = JSON.parse(lastBoundsRef.current);
 
-
+        setFilter(_filter);
         await fetchImpianti(bounds, _filter);
     });
 
     const fetchImpianti = async (bounds, _filter) => {
-        //setFadeOutMarker(true);
-        setDistributori([]);
         rowsRef.current = [];
         await fetchStream(bounds, _filter);
         isFetching.current = false;
     }
 
     const fetchStream = async (bounds, _filter) => {
-        setFadeOutMarker(true);
 
         const response = await getImpiantiByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome);
+        setFadeOutMarker(true);
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder('utf-8');
@@ -130,7 +139,7 @@ const MappaRisultati = forwardRef(({
             }
 
         }
-        onFetchDistributori(rowsRef.current.slice(0, filter.limite));
+        onFetchDistributori?.(rowsRef.current.slice(0, filter.limite));
         setDistributori([...rowsRef.current]);
     }
 
@@ -175,6 +184,10 @@ const MappaRisultati = forwardRef(({
 
         const boundsKey = JSON.stringify(bounds);
 
+        const center = mapRef.current.getCenter();
+
+        onMoveEnd?.(center.lat, center.lng);
+
         if (boundsKey === lastBoundsRef.current) return;
 
         const hasMovedEnough = () => {
@@ -211,9 +224,8 @@ const MappaRisultati = forwardRef(({
     const handlePosizione = (pos) => {
 
         const map = mapRef.current;
-
+        setFadeOutMarker(true);
         log(map.getCenter());
-
         log(pos);
         log(mapRef);
         map.flyTo({center: [pos.lon, pos.lat], zoom: 14});
@@ -277,8 +289,8 @@ const MappaRisultati = forwardRef(({
                         initialFilters={initialFilters}
                         rightWidth={rightWidth}
                         onSelectStato={(c) => {
+                            lastBoundsRef.current = null;
                             setFadeOutMarker(true);
-                            // setDistributori([]);
                             mapRef.current.flyTo({
                                 center: [c.lng, c.lat], zoom: c.zoom,
                             });
@@ -352,7 +364,7 @@ const MappaRisultati = forwardRef(({
                     {firstNDistributori.map((d) => {
 
                         const impianto = d.properties;
-
+                        if (impianto.latitudine === undefined) return null;
                         return <ImpiantoMarker
                             fadeOut={fadeOutMarker}
                             onClick={e => {

@@ -1,11 +1,26 @@
 import {capitalize, ucwords} from "@/functions/helpers";
+import {getElencoStati} from "@/functions/api";
 
-export default function Breadcrumb({regione, carburante, provincia, comune, marchio, riepilogo = {}, impianto}) {
+export default function Breadcrumb({stato, regione, carburante, provincia, comune, marchio, riepilogo = {}, impianto}) {
 
     const getPath = () => {
         const path = [];
         path.push({label: 'Home', link: '/'});
 
+
+        if (stato) {
+
+            const stati = getElencoStati();
+
+            const recordStato = stati.find(function (item) {
+                return item.id === stato.toLowerCase();
+            });
+
+            path.push({
+                label: ucwords(recordStato.name),
+                link: `/mappa/?lat=${recordStato.lat}&lng=${recordStato.lng}&zoom=${recordStato.zoom}`,
+            });
+        }
 
         if (regione) {
 
