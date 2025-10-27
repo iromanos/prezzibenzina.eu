@@ -1,9 +1,9 @@
 export function getCanonicalUrl(headersList) {
     const host = headersList.get('host');
     const protocol = headersList.get('x-forwarded-proto') || 'http';
-    const pathname = headersList.get('x-invoke-path') || ''; // fallback se disponibile
+    //const pathname = headersList.get('x-invoke-path') || ''; // fallback se disponibile
 
-    return `${protocol}://${host}${pathname}`;
+    return `${protocol}://${host}`;
 }
 
 export function getTwitter(title, description, imageUrl) {

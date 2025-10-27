@@ -14,7 +14,7 @@ export async function generateMetadata({params, searchParams}) {
     const fuel = capitalize(queryParams.carburante || "benzina");
     const brand = capitalize(queryParams.marchio || "");
 
-    const canonicalUrl = getCanonicalUrl(headers());
+    const canonicalUrl = getCanonicalUrl(headers()) + '/mappa';
 
     // Mappa Prezzi Benzina in Italia - Distributori e Carburanti
     return {

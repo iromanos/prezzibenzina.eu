@@ -14,7 +14,9 @@ export async function generateMetadata({params}) {
     const title = `${impianto.nome_impianto} – ${impianto.comune} | PrezziBenzina.eu`;
     const description = `Prezzi aggiornati per ${impianto.nome_impianto} a ${impianto.comune}. Consulta mappa, orari, carburanti e confronta con i vicini.`;
     const headerList = headers();
-    const canonicalUrl = getCanonicalUrl(headerList);
+
+    const canonicalUrl = getCanonicalUrl(headerList) + '/impianto/' + params.impianto;
+
 
     return {
         title: title,
