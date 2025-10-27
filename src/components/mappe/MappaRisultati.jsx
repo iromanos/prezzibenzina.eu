@@ -345,10 +345,10 @@ const MappaRisultati = forwardRef(({
                 <Cluster
                     fadeOut={fadeOutMarker}
                     clusters={clusters}
-                    onClusterClick={(c) => {
-                        // const [lng, lat] = c.geometry.coordinates;
-                        // const expansionZoom = clusterIndex.getClusterExpansionZoom(c.id);
-                        // mapRef.current.getMap().flyTo({center: [lng, lat], zoom: expansionZoom});
+                    onClusterClick={(cluster) => {
+                        const [lng, lat] = cluster.geometry.coordinates;
+                        const expansionZoom = superclusterRef.current.getClusterExpansionZoom(cluster.id);
+                        mapRef.current.getMap().flyTo({center: [lng, lat], zoom: expansionZoom});
                     }}/>
                 <>
                     {firstNDistributori.map((d) => {

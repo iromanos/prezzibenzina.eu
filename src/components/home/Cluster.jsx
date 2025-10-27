@@ -3,29 +3,27 @@ import {log} from "@/functions/helpers";
 import {useEffect, useState} from "react";
 
 export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
-    return clusters.map((c, i) => {
+    return clusters.map((cluster, i) => {
 
-        const isCluster = c.properties.cluster;
+        const isCluster = cluster.properties.cluster;
 
         return isCluster ?
             <MarkerCluster
+                onClick={onClusterClick}
                 fadeOut={fadeOut}
-                key={i} c={c}/>
+                key={i} cluster={cluster}
+            />
             : null
-
-        // <ImpiantoMarker
-        //     fadeOut={fadeOut}
-        //     key={i} d={c.properties}/>
     });
 }
 
-function MarkerCluster({c, fadeOut}) {
+function MarkerCluster({cluster, fadeOut, onClick}) {
 
-    const [lng, lat] = c.geometry.coordinates;
-    const isCluster = c.properties.cluster;
-    const count = c.properties.point_count;
-    const media = c.properties.media?.toFixed(3);
-    const mediaColore = c.properties.mediaColore?.toFixed(3);
+    const [lng, lat] = cluster.geometry.coordinates;
+    const isCluster = cluster.properties.cluster;
+    const count = cluster.properties.point_count;
+    const media = cluster.properties.media?.toFixed(3);
+    const mediaColore = cluster.properties.mediaColore?.toFixed(3);
 
     const size = Math.min(120, (Math.log2(count) * 24) + 40);
 
@@ -63,9 +61,8 @@ function MarkerCluster({c, fadeOut}) {
                             border border-2 ${color}
                             ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}
                             bg-opacity-75 rounded-circle`}
-            //title={isCluster ? `${count} impianti` : c.properties.brand}
             onClick={() => {
-                //onClusterClick(c);
+                onClick?.(cluster);
             }}
         >
             <div>
