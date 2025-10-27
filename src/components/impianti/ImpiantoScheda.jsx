@@ -99,10 +99,10 @@ export default function ImpiantoScheda({impianto, cookie}) {
                     </div>
 
                     <ImpiantoDescrizione impianto={impianto}/>
-                    <h2>Indirizzo</h2>
-                    <p>{indirizzo}{impianto.comune ? `, ${ucwords(impianto.comune)}` : null} {provincia ? `($\{provincia})` : null}</p>
+                    <h2 className={'h5'}>Indirizzo</h2>
+                    <p>{indirizzo}{impianto.comune ? `, ${ucwords(impianto.comune)}` : null} {provincia ? `(${provincia})` : null}</p>
                     <div className={'mb-2'}>
-                        <h2>Carburanti disponibili</h2>
+                        <h2 className={'h5'}>Carburanti disponibili</h2>
                         <table className="table table-bordered align-middle">
                             <thead className="table-light">
                             <tr>

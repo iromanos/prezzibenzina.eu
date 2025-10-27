@@ -16,13 +16,13 @@ export async function generateMetadata() {
     const imageUrl = '/assets/logo-og.png';
     const headerList = headers();
 
-    const canonicalUrl = getCanonicalUrl(imageUrl);
+    const canonicalUrl = getCanonicalUrl(headerList);
 
     return {
         title: title,
         description: description,
         alternates: {
-            canonical: getCanonicalUrl(headerList),
+            canonical: canonicalUrl,
             languages: {
                 'it': canonicalUrl,
                 'x-default': canonicalUrl,
