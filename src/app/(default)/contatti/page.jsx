@@ -4,15 +4,29 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import Header from "@/components/Header";
+import {getCanonicalUrl} from "@/functions/server";
+import {headers} from "next/headers";
 
-export const metadata = {
-    title: 'Contatti | PrezziBenzina.eu ',
-    description:
-        'Hai bisogno di assistenza o vuoi inviarci un feedback? Scopri come contattare il team di PrezziBenzina.eu ' +
-        'per supporto, segnalazioni o collaborazioni.',
-    robots: 'index, follow',
-};
+export async function generateMetadata() {
 
+    const canonicalUrl = getCanonicalUrl(headers());
+
+
+    return {
+        title: 'Contatti e assistenza | PrezziBenzina.eu ',
+        description:
+            'Hai bisogno di assistenza o vuoi inviarci un feedback? Scopri come contattare il team di PrezziBenzina.eu ' +
+            'per supporto, segnalazioni o collaborazioni.',
+        alternates: {
+            canonical: canonicalUrl,
+            languages: {
+                'it': canonicalUrl,
+                'x-default': canonicalUrl,
+            },
+        },
+        robots: 'index, follow',
+    };
+}
 export default async function Page() {
     return (
         <>

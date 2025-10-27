@@ -8,14 +8,30 @@ import AdsClickIcon from '@mui/icons-material/AdsClick';
 import EmailIcon from '@mui/icons-material/Email';
 import Header from "@/components/Header";
 import CookieLink from "@/components/CookieLink";
+import {getCanonicalUrl} from "@/functions/server";
+import {headers} from "next/headers";
 
-export const metadata = {
-    title: 'Informativa sui Cookie | PrezziBenzina.eu',
-    description:
-        'Scopri come PrezziBenzina.eu utilizza i cookie per migliorare l’esperienza utente, analizzare il traffico e personalizzare gli annunci.',
-    robots: 'index, follow',
-};
 
+export async function generateMetadata() {
+
+    const canonicalUrl = getCanonicalUrl(headers());
+
+
+    return {
+        title: 'Informativa sui Cookie | PrezziBenzina.eu',
+        description:
+            'Scopri come PrezziBenzina.eu utilizza i cookie per migliorare l’esperienza utente, analizzare il traffico e personalizzare gli annunci.',
+        alternates: {
+            canonical: canonicalUrl,
+            languages: {
+                'it': canonicalUrl,
+                'x-default': canonicalUrl,
+            },
+
+        },
+        robots: 'index, follow',
+    };
+}
 export default async function Page() {
     return (
         <>

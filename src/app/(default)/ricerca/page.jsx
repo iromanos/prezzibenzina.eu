@@ -2,24 +2,40 @@ import SearchForm from '@/components/SearchForm';
 import Header from "@/components/Header";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SearchIcon from "@mui/icons-material/Search";
+import {getCanonicalUrl} from "@/functions/server";
+import {headers} from "next/headers";
 
-export const metadata = {
-    title: 'Trova Distributori Carburante | PrezziBenzina.eu',
-    description: 'Cerca impianti di carburante vicino a te. Filtra per tipo di carburante, inserisci un indirizzo o usa la tua posizione per trovare i prezzi migliori.',
-    openGraph: {
-        title: 'Trova Distributori Carburante | PrezziBenzina.eu',
-        description: 'Filtra per tipo di carburante e trova gli impianti più vicini con i prezzi aggiornati.',
-        url: 'https://www.prezzibenzina.eu/ricerca',
-        images: ['/assets/logo-og.png']
-    },
-    twitter: {
-        card: 'summary_large_image',
-        title: 'Trova Distributori Carburante | PrezziBenzina.eu',
-        description: 'Filtra per tipo di carburante e trova gli impianti più vicini con i prezzi aggiornati.',
-        images: ['/assets/logo-twitter.png']
-    }
-};
 
+export async function generateMetadata() {
+
+    const canonicalUrl = getCanonicalUrl(headers());
+
+
+    return {
+        title: 'Trova Distributori Carburante | PrezziBenzina.eu',
+        description: 'Cerca impianti di carburante vicino a te. Filtra per tipo di carburante, inserisci un indirizzo o usa la tua posizione per trovare i prezzi migliori.',
+        alternates: {
+            canonical: canonicalUrl,
+            languages: {
+                'it': canonicalUrl,
+                'x-default': canonicalUrl,
+            },
+        },
+        openGraph: {
+            title: 'Trova Distributori Carburante | PrezziBenzina.eu',
+            description: 'Filtra per tipo di carburante e trova gli impianti più vicini con i prezzi aggiornati.',
+            url: canonicalUrl,
+            images: ['/assets/logo-og.png']
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: 'Trova Distributori Carburante | PrezziBenzina.eu',
+            description: 'Filtra per tipo di carburante e trova gli impianti più vicini con i prezzi aggiornati.',
+            images: ['/assets/logo-twitter.png']
+        }
+    };
+
+}
 export default function Ricerca() {
     return (
         <>

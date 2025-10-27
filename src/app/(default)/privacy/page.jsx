@@ -8,13 +8,31 @@ import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import SecurityIcon from '@mui/icons-material/Security';
 import EmailIcon from '@mui/icons-material/Email';
 import Header from "@/components/Header";
+import {headers} from "next/headers";
+import {getCanonicalUrl} from "@/functions/server";
 
-export const metadata = {
-    title: 'Informativa sulla Privacy | PrezziBenzina.eu',
-    description:
-        'Scopri come PrezziBenzina.eu protegge la tua privacy nella visualizzazione dei prezzi carburante in Lombardia. Informazioni su cookie, dati raccolti e finalità.',
-    robots: 'index, follow',
-};
+
+export async function generateMetadata() {
+
+    const canonicalUrl = getCanonicalUrl(headers());
+
+
+    return {
+        title: 'Informativa sulla Privacy | PrezziBenzina.eu',
+        description:
+            'Scopri come PrezziBenzina.eu protegge la tua privacy nella visualizzazione dei prezzi carburante in Lombardia. Informazioni su cookie, dati raccolti e finalità.',
+        alternates: {
+            canonical: canonicalUrl,
+            languages: {
+                'it': canonicalUrl,
+                'x-default': canonicalUrl,
+            },
+
+        },
+        robots: 'index, follow',
+    };
+}
+
 
 export default async function Page() {
     return (

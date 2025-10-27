@@ -5,11 +5,34 @@ import "flag-icons/css/flag-icons.min.css";
 import Descrizione from "@/components/home/Descrizione";
 import Motivi from "@/components/home/Motivi";
 import MapIcon from '@mui/icons-material/Map';
+import {getCanonicalUrl, getOpenGraph, getTwitter} from "@/functions/server";
+import {headers} from "next/headers";
 
-export const metadata = {
-    title: 'PrezziBenzina.eu | Risparmia sul Carburante',
-    description: 'Trova i distributori più convenienti vicino a te. PrezziBenzina.eu ti guida con mappa interattiva e filtri intelligenti.',
-};
+
+export async function generateMetadata() {
+
+    const title = 'PrezziBenzina.eu | Risparmia sul Carburante';
+    const description = 'Trova i distributori più convenienti vicino a te. PrezziBenzina.eu ti guida con mappa interattiva e filtri intelligenti.';
+    const imageUrl = '/assets/logo-og.png';
+    const headerList = headers();
+
+    const canonicalUrl = getCanonicalUrl(imageUrl);
+
+    return {
+        title: title,
+        description: description,
+        alternates: {
+            canonical: getCanonicalUrl(headerList),
+            languages: {
+                'it': canonicalUrl,
+                'x-default': canonicalUrl,
+            },
+        },
+        openGraph: getOpenGraph(headerList, title, description, imageUrl),
+        twitter: getTwitter(title, description, imageUrl),
+    };
+}
+
 
 export default function Home() {
     return (

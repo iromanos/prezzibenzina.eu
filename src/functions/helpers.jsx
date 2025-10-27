@@ -121,11 +121,13 @@ export async function getMetadata({params}) {
     const localizzazione = comune
         ? `a ${ucwords(riepilogo.request.comune.description)}, ${sigla?.toUpperCase()}`
         : sigla
-            ? `provincia di ${sigla.toUpperCase()}`
-            : ucwords(regione);
+            ? `in provincia di ${sigla.toUpperCase()}`
+            : `in ${ucwords(regione)}`;
 
-    const titolo = `Prezzi ${descrizioneCarburante} ${localizzazione} | Distributori attivi`;
-    const descrizione = `Consulta i prezzi aggiornati dei ${carburante} ${localizzazione}. Trova i distributori più convenienti e naviga per città e tipo di carburante.`;
+    const descrizioneMarchio = marchio ? ` ${marchio.toUpperCase()}` : null;
+
+    const titolo = `Prezzi ${descrizioneCarburante} ${localizzazione}${descrizioneMarchio} | Distributori attivi`;
+    const descrizione = `Consulta i prezzi aggiornati di ${carburante} ${localizzazione}${descrizioneMarchio}. Trova i distributori più convenienti e naviga per città e tipo di carburante.`;
 
     const canonicalUrl = getLink(regione, carburante, marchio, sigla, riepilogo.request.comune);
     const imageUrl = '/assets/logo.png';
@@ -142,10 +144,14 @@ export async function getMetadata({params}) {
         description: descrizione,
         alternates: {
             canonical: canonicalUrl.link,
+            languages: {
+                'it': canonicalUrl.link,
+                'x-default': canonicalUrl.link,
+            },
         },
         openGraph: {
-            titolo,
-            descrizione,
+            title: titolo,
+            description: descrizione,
             url: canonicalUrl.link,
             siteName: 'PrezziBenzina.eu',
 
@@ -162,8 +168,8 @@ export async function getMetadata({params}) {
         },
         twitter: {
             card: 'summary_large_image',
-            titolo,
-            descrizione,
+            title: titolo,
+            description: descrizione,
             images: [imageUrl],
         },
     };

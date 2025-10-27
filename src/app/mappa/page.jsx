@@ -3,6 +3,7 @@ import MappaClient from "@/components/mappe/MappaClient";
 import {capitalize, log} from "@/functions/helpers";
 import {cookies, headers} from "next/headers";
 import {notFound} from "next/navigation";
+import {getCanonicalUrl} from "@/functions/server";
 
 //TODO: link diretto a Svizzera e Italia
 
@@ -10,13 +11,22 @@ export async function generateMetadata({params, searchParams}) {
 
     const queryParams = await searchParams;
 
-
     const fuel = capitalize(queryParams.carburante || "benzina");
     const brand = capitalize(queryParams.marchio || "");
+
+    const canonicalUrl = getCanonicalUrl(headers());
+
     // Mappa Prezzi Benzina in Italia - Distributori e Carburanti
     return {
-        title: `Mappa Prezzi ${fuel}${brand ? ` - ${brand}` : ""} in Italia - Distributori e Carburanti | PrezziBenzina`,
-        description: `Consulta la mappa interattiva dei distributori di ${fuel}${brand ? ` marchio ${brand} ` : ""} in Italia. Prezzi aggiornati per risparmiare sul rifornimento.`,
+        title: `Mappa Prezzi ${fuel}${brand ? ` - ${brand}` : ""} - Distributori e Carburanti | PrezziBenzina`,
+        description: `Consulta la mappa interattiva dei distributori di ${fuel}${brand ? ` marchio ${brand} ` : ""} in Italia ed Europa. Prezzi aggiornati per risparmiare sul rifornimento.`,
+        alternates: {
+            canonical: canonicalUrl,
+            languages: {
+                'it': canonicalUrl,
+                'x-default': canonicalUrl,
+            },
+        },
     };
 }
 
