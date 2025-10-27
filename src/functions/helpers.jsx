@@ -124,7 +124,7 @@ export async function getMetadata({params}) {
             ? `in provincia di ${sigla.toUpperCase()}`
             : `in ${ucwords(regione)}`;
 
-    const descrizioneMarchio = marchio ? ` ${marchio.toUpperCase()}` : null;
+    const descrizioneMarchio = marchio ? ` ${marchio.toUpperCase()}` : '';
 
     const titolo = `Prezzi ${descrizioneCarburante} ${localizzazione}${descrizioneMarchio} | Distributori attivi`;
     const descrizione = `Consulta i prezzi aggiornati di ${carburante} ${localizzazione}${descrizioneMarchio}. Trova i distributori più convenienti e naviga per città e tipo di carburante.`;

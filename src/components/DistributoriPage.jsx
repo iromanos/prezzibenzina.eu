@@ -12,7 +12,6 @@ import MapIcon from '@mui/icons-material/Map';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import ComparaVicini from "@/components/ComparaVicini";
 import {notFound} from "next/navigation";
-import {log} from "@/functions/helpers";
 
 export default async function DistributoriPage({params}) {
 
@@ -43,8 +42,6 @@ export default async function DistributoriPage({params}) {
 
     const comuni = riepilogo.comuni;
     const marchi = riepilogo.marchi;
-
-    log(riepilogo.request);
 
     const date = new Date(riepilogo.dataAggiornamento);
 
