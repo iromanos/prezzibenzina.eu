@@ -5,9 +5,17 @@ import Header from "@/components/Header";
 import {getCookie} from "@/functions/cookies";
 import {getCanonicalUrl, getOpenGraph, getTwitter} from "@/functions/server";
 import {headers} from "next/headers";
+import {notFound} from "next/navigation";
 
 export async function generateMetadata({params}) {
     const res = await getImpianto({params});
+
+    log(res);
+
+    if (res.status !== 200) {
+        notFound();
+    }
+
     const impianto = await res.json();
     const imageUrl = '/assets/logo-og.png';
 
@@ -37,6 +45,13 @@ export async function generateMetadata({params}) {
 export default async function Page({params}) {
 
     const res = await getImpianto({params});
+
+    log(res);
+
+    if (res.status !== 200) {
+        notFound();
+    }
+
     const impianto = await res.json();
     const cookie = await getCookie();
 
