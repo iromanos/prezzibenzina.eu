@@ -22,6 +22,8 @@ import Link from "react-bootstrap/NavLink"
 import Image from 'next/image';
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 
+import {bboxPolygon, booleanContains, difference} from '@turf/turf';
+
 const MappaRisultati = forwardRef(({
                                        posizione,
                                        distributoriIniziali = [],
@@ -42,6 +44,12 @@ const MappaRisultati = forwardRef(({
         }
     }));
 
+    const ultimoRiquadroRef = useRef(null);
+    const mapRef = useRef(null);
+    const boundsRef = useRef([]);
+    const isFetching = useRef(false);
+    const listImpiantiRef = useRef([]);
+
 
     const headerHeight = 0;
 
@@ -49,11 +57,6 @@ const MappaRisultati = forwardRef(({
     const [popupInfo, setPopupInfo] = useState(null);
 
     const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
-    const lastBoundsRef = useRef(null);
-
-    const mapRef = useRef(null);
-
-    const boundsRef = useRef([]);
 
     const {carburante} = useCarburante(initialFilters.carburante);
     const {limit} = useLimit();
@@ -61,13 +64,12 @@ const MappaRisultati = forwardRef(({
     const [zoom, setZoom] = useState(posizione.zoom);
     const [bounds, setBounds] = useState(null);
 
-    const isFetching = useRef(false);
 
     const [fadeOutMarker, setFadeOutMarker] = useState(false);
 
     useEffect(() => {
         const handleFocus = e => {
-            log(e);
+            // log(e);
             const canvas = mapRef.current?.getMap()?.getCanvas();
             canvas?.scrollIntoView({behavior: 'smooth', block: 'start'});
             const {lat, lng, zoom} = e.detail;
@@ -89,9 +91,9 @@ const MappaRisultati = forwardRef(({
 
         let bounds = null;
 
-        if (lastBoundsRef.current === null) {
+        if (ultimoRiquadraRef.current === null) {
             bounds = calcolaBounds();
-        } else bounds = JSON.parse(lastBoundsRef.current);
+        } else bounds = JSON.parse(ultimoRiquadraRef.current);
 
         setFilter(_filter);
         await fetchImpianti(bounds, _filter);
@@ -133,7 +135,14 @@ const MappaRisultati = forwardRef(({
 
         }
         onFetchDistributori?.(rowsRef.current.slice(0, filter.limite));
-        setDistributori([...rowsRef.current]);
+        listImpiantiRef.current = [...listImpiantiRef.current, ...rowsRef.current];
+
+        if (rowsRef.current.length > 0) {
+            setDistributori([...listImpiantiRef.current]);
+        }
+
+        log("ROWS REF:" + rowsRef.current.length);
+        log("IMPIANTI REF:" + listImpiantiRef.current.length);
     }
 
     const rowsRef = useRef([]);
@@ -143,7 +152,7 @@ const MappaRisultati = forwardRef(({
         if (rowsRef.current.length % 1000 === 0) {
             log(`rowsRef: ${rowsRef.current.length}`);
             log(`distributori: ${distributori.length}`);
-            setDistributori([...rowsRef.current]);
+            //setDistributori([...rowsRef.current]);
         }
     }
 
@@ -164,54 +173,64 @@ const MappaRisultati = forwardRef(({
 
         boundsRef.current = [sw.lng, sw.lat, ne.lng, ne.lat];
 
-        //setBounds([ sw.lng, sw.lat, ne.lng , ne.lat ]);
-        setZoom(map.getZoom());
         return new maplibregl.LngLatBounds(sw, ne);
+    }
+
+    /**
+     * Calcola la differenza tra una geometria (Polygon o MultiPolygon) e una bbox
+     * @param geometry - GeoJSON di partenza
+     * @param {Array<number>} bbox - [minLng, minLat, maxLng, maxLat]
+     * @returns GeoJSON della differenza, o null se non c'è differenza
+     */
+    function differenceBBoxFromGeometry(geometry, bbox) {
+        if (!geometry || !bbox) throw new Error('Geometria o bbox mancante');
+
+        const bboxFeature = bboxPolygon(bbox);
+
+        try {
+            console.log('geometry:', JSON.stringify(geometry));
+            console.log('bboxFeature:', JSON.stringify(bboxFeature));
+            const result = difference(geometry, bboxFeature);
+            return result || null; // può essere null se la bbox copre tutto
+        } catch (e) {
+            console.warn('Errore in turf.difference:', e.message);
+            return null;
+        }
     }
 
     const debouncedBoundsChange = useDebouncedCallback(async () => {
         if (isReadOnly) return;
         if (popupInfo) return;
 
-        const bounds = calcolaBounds();
-
-        const boundsKey = JSON.stringify(bounds);
+        const riquadroAttuale = calcolaBounds();
 
         const center = mapRef.current.getCenter();
-
         onMoveEnd?.(center.lat, center.lng);
 
-        if (boundsKey === lastBoundsRef.current) return;
+//
+        const ultimoRiquadro = ultimoRiquadroRef.current;
 
-        const hasMovedEnough = () => {
-            if (!lastBoundsRef.current) return true;
+        const hasMovedEnough = ultimoRiquadro != null ? !isContained(riquadroAttuale, ultimoRiquadro) : true;
+        setBounds(toEnvelopeArray(riquadroAttuale));
+        setZoom(mapRef.current.getZoom());
 
-            const lastBounds = JSON.parse(lastBoundsRef.current);
-
-            const deltaLat = Math.abs(bounds._ne.lat - lastBounds._ne.lat);
-            const deltaLng = Math.abs(bounds._ne.lng - lastBounds._ne.lng);
-
-            log("DELTALAG :" + deltaLat);
-
-            return deltaLat > 0.01 || deltaLng > 0.01; // soglia minima
-        };
-
-        if (!hasMovedEnough()) return;
-
-        const bounds_prev = JSON.parse(lastBoundsRef.current);
-
-        lastBoundsRef.current = boundsKey;
-
-        log("FILTRI: " + JSON.stringify(filter));
+        log("HAS MOVED ENOUGH: " + hasMovedEnough);
+        if (!hasMovedEnough) return;
 
         if (filter.carburante === '') return;
-
-        log(isFetching.current);
-
         if (isFetching.current) return;
         isFetching.current = true;
 
-        await fetchImpianti(bounds, filter, bounds_prev);
+        // const area = ultimoRiquadro != null ? differenceBBoxFromGeometry(ultimoRiquadro, toEnvelopeArray(riquadroAttuale)): '';
+
+        // log('area da caricare: ' + JSON.stringify(area));
+
+        await fetchImpianti(riquadroAttuale, filter, ultimoRiquadro);
+
+        bboxUnion(ultimoRiquadro, riquadroAttuale);
+
+        // ultimoRiquadroRef.current = JSON.stringify(riquadroTotale);
+
 
     }, 150); //
 
@@ -220,9 +239,9 @@ const MappaRisultati = forwardRef(({
 
         const map = mapRef.current;
         setFadeOutMarker(true);
-        log(map.getCenter());
-        log(pos);
-        log(mapRef);
+        // log(map.getCenter());
+        // log(pos);
+        // log(mapRef);
         map.flyTo({center: [pos.lon, pos.lat], zoom: 14});
     };
 
@@ -234,12 +253,16 @@ const MappaRisultati = forwardRef(({
         // const radius = 120;
         new Supercluster({
             radius: 120,
-            minPoints: 2,
+            minPoints: 4,
             map: props => ({
                 prezzo: props.prezzo ?? 0,
                 color: props.color ?? 0
             }),
             reduce: (a, b) => {
+
+                a.min = Math.min(a.min || Infinity, b.prezzo);
+                a.max = Math.max(a.max || -Infinity, b.prezzo);
+
                 a.somma = (a.somma || 0) + a.prezzo;
                 a.totale = (a.totale || 0) + 1;
                 a.media = a.somma / a.totale;
@@ -250,22 +273,57 @@ const MappaRisultati = forwardRef(({
     );
 
     const clusters = useMemo(() => {
+        if (boundsRef.current === null) return [];
         const clusteredPoints = distributori.slice(filter.limite);
         log('clusterPoints: ' + clusteredPoints.length);
         if (clusteredPoints.length === 0) return [];
         superclusterRef.current.load(distributori);
-        return superclusterRef.current.getClusters(boundsRef.current, zoom);
-    }, [distributori]);
+        const record = superclusterRef.current.getClusters(boundsRef.current, zoom);
+        log('clusters: ' + record.length);
+        return record;
 
-    log(mapRef.current?.zoom);
-    log("RIGHT WIDTH: " + rightWidth);
+    }, [distributori, zoom, bounds]);
+
+
+    function toEnvelopeArray(bbox) {
+        return [
+            bbox._sw.lng,
+            bbox._sw.lat,
+            bbox._ne.lng,
+            bbox._ne.lat,
+        ];
+    }
+
+
+    // calcola l'unione di due bounding box
+    function bboxUnion(geometry, bboxB) {
+        if (geometry === null) {
+            geometry = {
+                type: 'Feature',
+                geometry: {
+                    type: 'MultiPolygon',
+                    coordinates: [],
+                },
+                properties: {},
+            };
+        }
+        const polyA = bboxPolygon(toEnvelopeArray(bboxB));
+        if (polyA !== null) {
+            geometry.geometry.coordinates.push(polyA.geometry.coordinates);
+        }
+        ultimoRiquadroRef.current = geometry;
+    }
+
+    function isContained(bbox, geometry) {
+        try {
+            const bboxPoly = bboxPolygon(toEnvelopeArray(bbox));
+            return booleanContains(geometry, bboxPoly);
+        } catch (e) {
+        }
+        return false;
+    }
+
     log('MappaRisultati: BUILD');
-    log('Filtri: ' + filter.carburante);
-    log('Clusters: ' + clusters.length);
-    log(`initialFilters: ` + JSON.stringify(initialFilters));
-    log('Distributori: ' + distributori.length);
-    log('FadeOut: ' + fadeOutMarker);
-
     return (
         <>
 
@@ -281,7 +339,6 @@ const MappaRisultati = forwardRef(({
                         initialFilters={initialFilters}
                         rightWidth={rightWidth}
                         onSelectStato={(c) => {
-                            lastBoundsRef.current = null;
                             setFadeOutMarker(true);
                             mapRef.current.flyTo({
                                 center: [c.lng, c.lat], zoom: c.zoom,

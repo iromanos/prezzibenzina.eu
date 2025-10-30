@@ -9,7 +9,6 @@ import "flag-icons/css/flag-icons.min.css";
 
 import {URI_IMAGE} from "@/constants";
 import useLimit from "@/hooks/useLimit";
-import {log} from "@/functions/helpers";
 import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 import {useModalHistory} from "@/hooks/useModalHistory";
 import {useFilters} from "@/hooks/useFilters";
@@ -30,7 +29,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
     const {limit, setLimit} = useLimit();
 
 
-    log(initialFilters);
+    // log(initialFilters);
 
     const elencoCarburanti = getElencoCarburanti();
 
@@ -96,7 +95,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                     <div className={'mb-2 col'}>
                         <NominatimAutocomplete
                             onSelect={(place) => {
-                                log('Selezionato:' + JSON.stringify(place));
+                                // log('Selezionato:' + JSON.stringify(place));
                                 onSearch?.(place);
                             }}
                         />

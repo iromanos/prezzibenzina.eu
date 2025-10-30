@@ -6,7 +6,8 @@ import {notFound} from "next/navigation";
 import {getCanonicalUrl} from "@/functions/server";
 
 //TODO: link diretto a Svizzera e Italia
-
+//TODO: controllo filtri
+//TODO: controllo lato server caricamento 1000 distributori
 export async function generateMetadata({params, searchParams}) {
 
     const queryParams = await searchParams;

@@ -3,9 +3,40 @@ import {log} from "@/functions/helpers";
 import {useEffect, useState} from "react";
 
 export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
+
+
+    let globalMin = Infinity;
+    let globalMax = -Infinity;
+
+    clusters.forEach(c => {
+        if (c.properties.cluster) {
+            globalMin = Math.min(globalMin, c.properties.min);
+            globalMax = Math.max(globalMax, c.properties.max);
+        }
+    });
+
+    const warningLimit = globalMin + (globalMax - globalMin) / 15;
+    const errorLimit = globalMin + (globalMax - globalMin) / 10;
+
+    log(globalMin);
+    log(globalMax);
+    log(warningLimit);
+    log(errorLimit);
+
     return clusters.map((cluster, i) => {
 
         const isCluster = cluster.properties.cluster;
+
+        const media = cluster.properties.media;
+
+
+        if (media > warningLimit) {
+            cluster.properties.mediaColore = 1; // alto
+        }
+
+        if (media > errorLimit) {
+            cluster.properties.mediaColore = 2; // alto
+        }
 
         return isCluster ?
             <MarkerCluster
@@ -58,9 +89,9 @@ function MarkerCluster({cluster, fadeOut, onClick}) {
 
             className={`d-flex align-items-center justify-content-center  
                             cluster-marker bg-white 
-                            border border-2 ${color}
+                            border border-4 ${color}
                             ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}
-                            bg-opacity-75 rounded-circle`}
+                            bg-opacity-75 rounded rounded-4`}
             onClick={() => {
                 onClick?.(cluster);
             }}

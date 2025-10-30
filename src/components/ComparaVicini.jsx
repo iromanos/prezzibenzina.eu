@@ -3,7 +3,6 @@
 import React, {useEffect, useState} from 'react';
 import {getImpiantiByDistance} from "@/functions/api";
 import ImpiantoRow from "@/components/impianti/ImpiantoRow";
-import {log} from "@/functions/helpers";
 import Modal from "react-bootstrap/Modal";
 import {useModalHistory} from "@/hooks/useModalHistory";
 import MappaRisultati from "@/components/mappe/MappaRisultati";
@@ -20,7 +19,7 @@ export default function ComparaVicini({carburante}) {
 
     useModalHistory(open, () => setOpen(false));
 
-    log("ComparaVicini: " + carburante);
+    // log("ComparaVicini: " + carburante);
 
     useEffect(() => {
 

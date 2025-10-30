@@ -3,7 +3,6 @@
 import MappaRisultati from "@/components/mappe/MappaRisultati";
 import {useEffect, useRef, useState} from 'react';
 import ImpiantoCard from "@/components/impianti/ImpiantoCard";
-import {log} from "@/functions/helpers";
 import {useFilters} from "@/hooks/useFilters";
 import Button from "react-bootstrap/Button";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
@@ -36,7 +35,7 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
         if (footerRef.current) {
             const height = footerRef.current.offsetHeight;
             setFooterHeight(height);
-            log('Footer height:', height);
+            // log('Footer height:', height);
         } else setFooterHeight(0);
 
         if (rightRef.current) {
@@ -51,13 +50,13 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
         if (footerRef.current) {
             const height = footerRef.current.offsetHeight;
             setFooterHeight(height);
-            log('Footer height:', height);
+            // log('Footer height:', height);
         } else setFooterHeight(0);
         setAnimEnd(true);
     };
 
     useEffect(() => {
-        log('MAPPA CLIENT: MOUNTED');
+        // log('MAPPA CLIENT: MOUNTED');
         fetch('api/set-cookie', {method: 'POST', body: JSON.stringify(initialFilters)});
 
     }, []);
@@ -70,11 +69,11 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
         window.addEventListener('map:focus', handleFocus);
         return () => window.removeEventListener('map:focus', handleFocus);
     }, []);
-
+    /*
     log("MAPPA CLIENT: BUILD");
     log("FILTERS: " + JSON.stringify(filters));
     log("NAVBAR: " + navBarHeight);
-
+        */
     return (
         <>
             <div className="position-relative full-height-dvh">

@@ -30,7 +30,7 @@ export function useFilters(defaults = {}) {
                 }
             });
 
-            router.replace(`${pathname}?${params.toString()}`);
+            //router.replace(`${pathname}?${params.toString()}`);
         },
         [router, pathname, searchParams]
     );
