@@ -66,7 +66,7 @@ export async function getMetadataMilano({params}) {
 
     const descrizioneMarchio = marchio ? ` ${marchio.toUpperCase()}` : '';
 
-    const titolo = `${ucwords(descrizioneCarburante)} ${localizzazione}${descrizioneMarchio}: scopri i distributori più economici oggi [${dateFormatted}]`;
+    const titolo = `${ucwords(descrizioneCarburante)} ${localizzazione}${descrizioneMarchio}: scopri i distributori più economici oggi`;
 
     const stats = riepilogo.carburanti[carburante] || {};
 

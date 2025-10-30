@@ -95,7 +95,7 @@ const MappaRisultati = forwardRef(({
 
         setFilter(_filter);
         await fetchImpianti(bounds, _filter);
-    });
+    }, 150);
 
     const fetchImpianti = async (bounds, _filter) => {
         rowsRef.current = [];
@@ -208,7 +208,7 @@ const MappaRisultati = forwardRef(({
 
         await fetchImpianti(bounds, filter);
 
-    }, 600); //
+    }, 150); //
 
     const posizioneAttuale = usePosizioneAttuale();
     const handlePosizione = (pos) => {

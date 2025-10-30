@@ -4,10 +4,7 @@ import Bandiera from "@/components/Bandiera";
 
 export default function ImpiantoCard({impianto, cardClient = true}) {
 
-    //todo: scheda impianto svizzero
-
     const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
-
 
     const {
         id_impianto,
