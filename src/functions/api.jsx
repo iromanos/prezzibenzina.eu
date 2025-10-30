@@ -261,7 +261,7 @@ export async function getImpiantiByDistance(lat, lng, distance, carburante, sort
 
 }
 
-export async function getImpiantiByBounds(bounds, carburante, sort = 'price', limit = null, brand = null) {
+export async function getImpiantiByBounds(bounds, carburante, sort = 'price', limit = null, brand = null, bounds_prev = null) {
 
     const carburanti = getCarburanti();
 
@@ -284,7 +284,8 @@ export async function getImpiantiByBounds(bounds, carburante, sort = 'price', li
             'bounds': bounds,
             'sort': sort,
             'limit': limit,
-            'brand': brand
+            'brand': brand,
+            'bounds_prev': bounds_prev
         })
     });
 

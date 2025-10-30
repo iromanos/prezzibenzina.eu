@@ -97,15 +97,18 @@ const MappaRisultati = forwardRef(({
         await fetchImpianti(bounds, _filter);
     }, 150);
 
-    const fetchImpianti = async (bounds, _filter) => {
-        rowsRef.current = [];
-        await fetchStream(bounds, _filter);
+    const fetchImpianti = async (bounds, _filter, bounds_prev = null) => {
+        try {
+            rowsRef.current = [];
+            await fetchStream(bounds, _filter, bounds_prev);
+        } catch (e) {
+        }
         isFetching.current = false;
     }
 
-    const fetchStream = async (bounds, _filter) => {
+    const fetchStream = async (bounds, _filter, bounds_prev = null) => {
 
-        const response = await getImpiantiByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome);
+        const response = await getImpiantiByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome, bounds_prev);
         setFadeOutMarker(true);
 
         const reader = response.body.getReader();
@@ -195,6 +198,8 @@ const MappaRisultati = forwardRef(({
 
         if (!hasMovedEnough()) return;
 
+        const bounds_prev = JSON.parse(lastBoundsRef.current);
+
         lastBoundsRef.current = boundsKey;
 
         log("FILTRI: " + JSON.stringify(filter));
@@ -206,7 +211,7 @@ const MappaRisultati = forwardRef(({
         if (isFetching.current) return;
         isFetching.current = true;
 
-        await fetchImpianti(bounds, filter);
+        await fetchImpianti(bounds, filter, bounds_prev);
 
     }, 150); //
 
@@ -220,9 +225,6 @@ const MappaRisultati = forwardRef(({
         log(mapRef);
         map.flyTo({center: [pos.lon, pos.lat], zoom: 14});
     };
-
-    // const [clusters, setClusters] = useState([]);
-
 
     const firstNDistributori = useMemo(() => {
         return distributori.slice(0, filter.limite);
