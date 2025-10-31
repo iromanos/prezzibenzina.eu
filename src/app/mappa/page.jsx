@@ -7,7 +7,6 @@ import {getCanonicalUrl} from "@/functions/server";
 
 //TODO: link diretto a Svizzera e Italia
 //TODO: controllo filtri
-//TODO: caricare i distributori più economici nella zona
 export async function generateMetadata({params, searchParams}) {
 
     const queryParams = await searchParams;

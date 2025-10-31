@@ -111,40 +111,45 @@ const MappaRisultati = forwardRef(({
     }
 
     const fetchStream = async (bounds, _filter, bounds_prev = null) => {
+        try {
+            const response = await getClustersByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome, bounds_prev);
+            //setFadeOutMarker(true);
 
-        const response = await getClustersByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome, bounds_prev);
-        //setFadeOutMarker(true);
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buffer = '';
+            //setFadeOutMarker(false);
+            while (true) {
+                const {value, done} = await reader.read();
+                if (done) break;
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder('utf-8');
-        let buffer = '';
-        //setFadeOutMarker(false);
-        while (true) {
-            const {value, done} = await reader.read();
-            if (done) break;
+                buffer += decoder.decode(value, {stream: true});
 
-            buffer += decoder.decode(value, {stream: true});
+                let lines = buffer.split('\n');
+                buffer = lines.pop(); // conserva l'ultima riga incompleta
 
-            let lines = buffer.split('\n');
-            buffer = lines.pop(); // conserva l'ultima riga incompleta
-
-            for (const line of lines) {
-                if (line.trim()) {
-                    const json = JSON.parse(line);
-                    handleNewRow(json);
+                for (const line of lines) {
+                    if (line.trim()) {
+                        const json = JSON.parse(line);
+                        handleNewRow(json);
+                    }
                 }
+
+            }
+            // onFetchDistributori?.(rowsRef.current.slice(0, filter.limite));
+            listImpiantiRef.current = [...listImpiantiRef.current, ...rowsRef.current];
+
+            if (rowsRef.current.length > 0) {
+                setClusteredPoints([...listImpiantiRef.current]);
             }
 
-        }
-        // onFetchDistributori?.(rowsRef.current.slice(0, filter.limite));
-        listImpiantiRef.current = [...listImpiantiRef.current, ...rowsRef.current];
+            log("ROWS REF:" + rowsRef.current.length);
+            log("IMPIANTI REF:" + listImpiantiRef.current.length);
+            return;
+        } catch (e) {
 
-        if (rowsRef.current.length > 0) {
-            setClusteredPoints([...listImpiantiRef.current]);
         }
-
-        log("ROWS REF:" + rowsRef.current.length);
-        log("IMPIANTI REF:" + listImpiantiRef.current.length);
+        setClusteredPoints([]);
     }
 
     const rowsRef = useRef([]);
@@ -195,22 +200,27 @@ const MappaRisultati = forwardRef(({
 
         // log("HAS MOVED ENOUGH: " + hasMovedEnough);
 //        setFadeOutMarker(true);
+        try {
+            const response = await getImpiantiByDistance(
+                {
+                    bounds: riquadroAttuale,
+                    carburante: filter.carburante,
+                    sort: 'price',
+                    limit: filter.limite,
+                    brand: filter.brand?.nome
+                });
 
-        const response = await getImpiantiByDistance(
-            {
-                bounds: riquadroAttuale,
-                carburante: filter.carburante,
-                sort: 'price',
-                limit: filter.limite,
-                brand: filter.brand?.nome
-            });
 
-
-        const record = await response.json();
-
-        setDistributori(record);
-        onFetchDistributori?.(record);
-
+            const record = await response.json();
+            if (response.status !== 200) {
+                throw new Error();
+            }
+            setDistributori(record);
+            onFetchDistributori?.(record);
+        } catch (e) {
+            setDistributori([]);
+            onFetchDistributori?.([]);
+        }
         if (!hasMovedEnough) {
             //setFadeOutMarker(false);
             return;
