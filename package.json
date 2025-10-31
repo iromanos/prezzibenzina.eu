@@ -27,7 +27,7 @@
     "react-bootstrap": "^2.10.10",
     "react-device-detect": "^2.2.3",
     "react-dom": "19.1.0",
-    "react-map-gl": "^8.0.4",
+    "react-map-gl": "^8.1.0",
     "react-responsive": "^10.0.1",
     "sass": "1.33",
     "sass-loader": "^10.1.1",

@@ -1,6 +1,12 @@
 import {Marker} from "react-map-gl/maplibre";
 import {log} from "@/functions/helpers";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
+
+
+import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import FormatLineSpacingIcon from '@mui/icons-material/FormatLineSpacing';
+import DownloadIcon from '@mui/icons-material/Download';
 
 export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
 
@@ -8,33 +14,37 @@ export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
     let globalMax = -Infinity;
 
     clusters.forEach(c => {
-        if (c.properties.cluster) {
-            globalMin = Math.min(globalMin, c.properties.min);
-            globalMax = Math.max(globalMax, c.properties.max);
+        if (c) {
+            globalMin = Math.min(globalMin, c.min);
+            globalMax = Math.max(globalMax, c.max);
         }
     });
 
-    const warningLimit = globalMin + (globalMax - globalMin) / 15;
-    const errorLimit = globalMin + (globalMax - globalMin) / 10;
-    /*
-    log(globalMin);
-    log(globalMax);
+    const warningLimit = globalMin + (globalMax - globalMin) / 4;
+    const errorLimit = globalMin + (globalMax - globalMin) / 1.5;
+
+    log(`min: ${globalMin}`);
+    log(`max: ${globalMax}`);
     log(warningLimit);
     log(errorLimit);
-    */
+
+
+    log(clusters[0]);
+
     return clusters.map((cluster, i) => {
 
-        const isCluster = cluster.properties.cluster;
 
-        const media = cluster.properties.media;
+        const isCluster = true; //cluster.properties.cluster;
+
+        const media = cluster.media;
 
 
         if (media > warningLimit) {
-            cluster.properties.mediaColore = 1; // alto
+            cluster.mediaColore = 1; // alto
         }
 
         if (media > errorLimit) {
-            cluster.properties.mediaColore = 2; // alto
+            cluster.mediaColore = 2; // alto
         }
 
         return isCluster ?
@@ -49,14 +59,14 @@ export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
 
 function MarkerCluster({cluster, fadeOut = false, onClick}) {
 
-    const [lng, lat] = cluster.geometry.coordinates;
-    const isCluster = cluster.properties.cluster;
-    const count = cluster.properties.point_count;
-    const media = cluster.properties.media?.toFixed(3);
-    const mediaColore = cluster.properties.mediaColore?.toFixed(3);
+    const [lng, lat] = cluster.position;
+    const isCluster = true; //cluster.properties.cluster;
+    const count = cluster.count;
+    const media = cluster.media?.toFixed(3);
+    const mediaColore = cluster.mediaColore?.toFixed(3);
 
-    const min = cluster.properties.min?.toFixed(3);
-    const max = cluster.properties.max?.toFixed(3);
+    const min = cluster.min?.toFixed(3);
+    const max = cluster.max?.toFixed(3);
 
     const size = Math.min(120, (Math.log2(count) * 24) + 40);
 
@@ -75,33 +85,44 @@ function MarkerCluster({cluster, fadeOut = false, onClick}) {
     }, [fadeOut]);
 
     function getClusterColor(avgPrice) {
-        if (avgPrice > 0) return 'border-warning-subtle';
-        if (avgPrice > 1) return 'border-danger-subtle';
-        return 'border-success-subtle';
+        if (avgPrice > 0) return 'bg-warning-subtle';
+        if (avgPrice > 1) return 'bg-danger-subtle';
+        return 'bg-success-subtle';
     }
 
     const color = getClusterColor(mediaColore);
+    const textColor = useMemo(() => {
+        return 'text-black';
+    }, [mediaColore]);
+
+    const borderColor = useMemo(() => {
+        if (mediaColore > 0) return 'border-warning';
+        return 'border-success';
+    }, [mediaColore]);
 
     return <Marker longitude={lng} latitude={lat}>
         <div
 
             style={{
-                width: size,
-                height: size,
+                // width: size,
+                // height: size,
             }}
 
-            className={`d-flex align-items-center justify-content-center  
+            className={`  
                             cluster-marker bg-white 
-                            border border-4 ${color}
+                            border border-4 ${borderColor}
                             ${animate ? 'animate-in' : 'exit'}
                             bg-opacity-75 rounded rounded-4`}
             onClick={() => {
                 onClick?.(cluster);
             }}
         >
-            <div>
-                <div className={'text-center small'}>{count}</div>
-                <div><strong><small>€{media}</small></strong>{min} - {max}</div>
+            <div className={`p-2 ${textColor} ${color} rounded-4`}>
+                <div className={''}><LocalGasStationIcon/> {count}</div>
+                <hr className={'my-1'}/>
+                <div><small><FormatLineSpacingIcon/> €{media}</small><br/>
+                    <small><DownloadIcon/> €{min}</small>
+                    <br/><small><FileUploadIcon/> ${max}</small></div>
             </div>
         </div>
     </Marker>;

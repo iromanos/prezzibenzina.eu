@@ -21,7 +21,7 @@ import Supercluster from "supercluster";
 import Link from "react-bootstrap/NavLink"
 import Image from 'next/image';
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
-
+import * as turf from '@turf/turf';
 import {bboxPolygon, booleanContains} from '@turf/turf';
 
 const MappaRisultati = forwardRef(({
@@ -152,8 +152,8 @@ const MappaRisultati = forwardRef(({
     function handleNewRow(row) {
         rowsRef.current.push(row);
         if (rowsRef.current.length % 1000 === 0) {
-            log(`rowsRef: ${rowsRef.current.length}`);
-            log(`distributori: ${distributori.length}`);
+            // log(`rowsRef: ${rowsRef.current.length}`);
+            // log(`distributori: ${distributori.length}`);
             //setDistributori([...rowsRef.current]);
         }
     }
@@ -193,7 +193,7 @@ const MappaRisultati = forwardRef(({
         setBounds(toEnvelopeArray(riquadroAttuale));
         setZoom(mapRef.current.getZoom());
 
-        log("HAS MOVED ENOUGH: " + hasMovedEnough);
+        // log("HAS MOVED ENOUGH: " + hasMovedEnough);
 //        setFadeOutMarker(true);
 
         const response = await getImpiantiByDistance(
@@ -236,20 +236,22 @@ const MappaRisultati = forwardRef(({
         new Supercluster({
             radius: 120,
             minPoints: 2,
-            map: props => ({
+            // log: true,
+            map: (props) => ({
                 prezzo: props.prezzo ?? 0,
-                color: props.color ?? 0
+                id_impianto: props.id_impianto,
             }),
             reduce: (a, b) => {
 
-                a.min = Math.min(a.min ?? Infinity, b.prezzo);
-                a.max = Math.max(a.max ?? -Infinity, b.prezzo);
+                // a.min = Math.min(a.min ?? Infinity, b.prezzo);
+                // a.max = Math.max(a.max ?? -Infinity, b.prezzo);
 
-                a.somma = (a.somma || 0) + a.prezzo;
-                a.totale = (a.totale || 0) + 1;
-                a.media = a.somma / a.totale;
-                a.sommaColore = (a.sommaColore || 0) + a.color;
-                a.mediaColore = a.sommaColore / a.totale;
+                // a.somma = (a.somma ?? 0) + b.prezzo;
+                a.totale = (a.totale ?? 0) + 1;
+                // a.media = a.somma / a.totale;
+
+                a.list ? a.list.push(b.prezzo) : a.list = [b.prezzo];
+
                 /*
                 log(`min: ${a.min}`);
                 log(`max: ${a.max}`);
@@ -260,18 +262,83 @@ const MappaRisultati = forwardRef(({
         })
     );
 
-    const clusters = useMemo(() => {
+    const points = useMemo(() => {
+        return clusteredPoints.map(f => ({
+            lng: parseFloat(f.geometry.coordinates[0]),
+            lat: parseFloat(f.geometry.coordinates[1]),
+            prezzo: f.properties.prezzo,
+            id: f.properties.id_impianto,
+        }));
+    }, [clusteredPoints]);
+
+    // 🔍 Filtra i punti nel bbox visibile
+    const visiblePoints = useMemo(() => {
         if (boundsRef.current === null) return [];
-        log('clusterPoints: ' + clusteredPoints.length);
-        if (clusteredPoints.length === 0) return [];
-        superclusterRef.current.load(clusteredPoints);
-        const record = superclusterRef.current.getClusters(boundsRef.current, zoom);
-        log('clusters: ' + record.length);
+        const bbox = boundsRef.current;
+        const [west, south, east, north] = bbox;
+        return points.filter(p =>
+            p.lng >= west && p.lng <= east && p.lat >= south && p.lat <= north
+        );
+    }, [points, bounds]);
+
+    const radiusMeters = useMemo(() => {
+        if (mapRef.current === null) return 0;
+        const center = mapRef.current.getCenter();
+        const pixelRadius = 80; // es. 40px
+        const earthCircumference = 40075016.686; // in meters
+        const metersPerPixel = earthCircumference * Math.cos(center.lng * Math.PI / 180) / Math.pow(2, zoom + 8);
+        return pixelRadius * metersPerPixel;
+    }, [zoom, bounds]);
+
+    // 🧠 Clusterizza solo i punti visibili
+    const KDclusters = useMemo(() => {
+        const clustered = [];
+        const visited = new Set();
+        log(`radius:  ${radiusMeters}`)
+        if (radiusMeters === null) return [];
+        visiblePoints.forEach((p, i) => {
+            if (visited.has(i)) return;
+
+            const cluster = [p];
+            visited.add(i);
+
+            for (let j = i + 1; j < visiblePoints.length; j++) {
+                if (visited.has(j)) continue;
+
+                const dist = turf.distance(
+                    turf.point([p.lng, p.lat]),
+                    turf.point([visiblePoints[j].lng, visiblePoints[j].lat]),
+                    {units: 'meters'}
+                );
+                if (dist <= radiusMeters) {
+                    cluster.push(visiblePoints[j]);
+                    visited.add(j);
+                }
+            }
+
+            // ✅ FILTRO: solo se il cluster ha almeno N elementi
+            const MIN_CLUSTER_SIZE = 3;
+            if (cluster.length < MIN_CLUSTER_SIZE) return;
+
+            const center = turf.center(turf.featureCollection(cluster.map(p =>
+                turf.point([p.lng, p.lat])
+            ))).geometry.coordinates;
+
+            const prezzi = cluster.map(p => p.prezzo);
+            clustered.push({
+                position: center,
+                count: cluster.length,
+                media: prezzi.reduce((a, b) => a + b, 0) / prezzi.length,
+                min: Math.min(...prezzi),
+                max: Math.max(...prezzi)
+            });
+        });
+
+        log("clusterred:" + JSON.stringify(clustered[0]));
         setFadeOutMarker(false);
-        return record;
 
-    }, [clusteredPoints, zoom, bounds]);
-
+        return clustered;
+    }, [visiblePoints, radiusMeters]);
 
     function toEnvelopeArray(bbox) {
         return [
@@ -399,10 +466,10 @@ const MappaRisultati = forwardRef(({
                 </Popup> : null}
                 <Cluster
                     fadeOut={fadeOutMarker}
-                    clusters={clusters}
+                    clusters={KDclusters}
                     onClusterClick={(cluster) => {
-                        const [lng, lat] = cluster.geometry.coordinates;
-                        const expansionZoom = superclusterRef.current.getClusterExpansionZoom(cluster.id);
+                        const [lng, lat] = cluster.position;
+                        const expansionZoom = mapRef.current.getZoom() + 2;
                         mapRef.current.getMap().flyTo({center: [lng, lat], zoom: expansionZoom});
                     }}/>
                 <>
