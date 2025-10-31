@@ -4,7 +4,7 @@ import Map, {Popup} from 'react-map-gl/maplibre';
 import {forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {log} from "@/functions/helpers";
-import {getImpiantiByBounds} from "@/functions/api";
+import {getClustersByBounds, getImpiantiByDistance} from "@/functions/api";
 import {useDebouncedCallback} from '@/hooks/useDebouncedCallback';
 import PosizioneAttualeButton from "@/components/PosizioneAttualeButton";
 import {usePosizioneAttuale} from '@/hooks/usePosizioneAttuale';
@@ -22,7 +22,7 @@ import Link from "react-bootstrap/NavLink"
 import Image from 'next/image';
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 
-import {bboxPolygon, booleanContains, difference} from '@turf/turf';
+import {bboxPolygon, booleanContains} from '@turf/turf';
 
 const MappaRisultati = forwardRef(({
                                        posizione,
@@ -54,6 +54,8 @@ const MappaRisultati = forwardRef(({
     const headerHeight = 0;
 
     const [distributori, setDistributori] = useState(distributoriIniziali);
+    const [clusteredPoints, setClusteredPoints] = useState([]);
+
     const [popupInfo, setPopupInfo] = useState(null);
 
     const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
@@ -95,8 +97,8 @@ const MappaRisultati = forwardRef(({
             bounds = calcolaBounds();
         } else bounds = JSON.parse(ultimoRiquadraRef.current);
 
-        setFilter(_filter);
-        await fetchImpianti(bounds, _filter);
+        // setFilter(_filter);
+//        await fetchImpianti(bounds, _filter);
     }, 150);
 
     const fetchImpianti = async (bounds, _filter, bounds_prev = null) => {
@@ -110,13 +112,13 @@ const MappaRisultati = forwardRef(({
 
     const fetchStream = async (bounds, _filter, bounds_prev = null) => {
 
-        const response = await getImpiantiByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome, bounds_prev);
-        setFadeOutMarker(true);
+        const response = await getClustersByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome, bounds_prev);
+        //setFadeOutMarker(true);
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder('utf-8');
         let buffer = '';
-        setFadeOutMarker(false);
+        //setFadeOutMarker(false);
         while (true) {
             const {value, done} = await reader.read();
             if (done) break;
@@ -134,11 +136,11 @@ const MappaRisultati = forwardRef(({
             }
 
         }
-        onFetchDistributori?.(rowsRef.current.slice(0, filter.limite));
+        // onFetchDistributori?.(rowsRef.current.slice(0, filter.limite));
         listImpiantiRef.current = [...listImpiantiRef.current, ...rowsRef.current];
 
         if (rowsRef.current.length > 0) {
-            setDistributori([...listImpiantiRef.current]);
+            setClusteredPoints([...listImpiantiRef.current]);
         }
 
         log("ROWS REF:" + rowsRef.current.length);
@@ -176,28 +178,6 @@ const MappaRisultati = forwardRef(({
         return new maplibregl.LngLatBounds(sw, ne);
     }
 
-    /**
-     * Calcola la differenza tra una geometria (Polygon o MultiPolygon) e una bbox
-     * @param geometry - GeoJSON di partenza
-     * @param {Array<number>} bbox - [minLng, minLat, maxLng, maxLat]
-     * @returns GeoJSON della differenza, o null se non c'è differenza
-     */
-    function differenceBBoxFromGeometry(geometry, bbox) {
-        if (!geometry || !bbox) throw new Error('Geometria o bbox mancante');
-
-        const bboxFeature = bboxPolygon(bbox);
-
-        try {
-            console.log('geometry:', JSON.stringify(geometry));
-            console.log('bboxFeature:', JSON.stringify(bboxFeature));
-            const result = difference(geometry, bboxFeature);
-            return result || null; // può essere null se la bbox copre tutto
-        } catch (e) {
-            console.warn('Errore in turf.difference:', e.message);
-            return null;
-        }
-    }
-
     const debouncedBoundsChange = useDebouncedCallback(async () => {
         if (isReadOnly) return;
         if (popupInfo) return;
@@ -207,7 +187,6 @@ const MappaRisultati = forwardRef(({
         const center = mapRef.current.getCenter();
         onMoveEnd?.(center.lat, center.lng);
 
-//
         const ultimoRiquadro = ultimoRiquadroRef.current;
 
         const hasMovedEnough = ultimoRiquadro != null ? !isContained(riquadroAttuale, ultimoRiquadro) : true;
@@ -215,74 +194,83 @@ const MappaRisultati = forwardRef(({
         setZoom(mapRef.current.getZoom());
 
         log("HAS MOVED ENOUGH: " + hasMovedEnough);
-        if (!hasMovedEnough) return;
+//        setFadeOutMarker(true);
+
+        const response = await getImpiantiByDistance(
+            {
+                bounds: riquadroAttuale,
+                carburante: filter.carburante,
+                sort: 'price',
+                limit: filter.limite,
+                brand: filter.brand?.nome
+            });
+
+
+        const record = await response.json();
+
+        setDistributori(record);
+        onFetchDistributori?.(record);
+
+        if (!hasMovedEnough) {
+            //setFadeOutMarker(false);
+            return;
+        }
 
         if (filter.carburante === '') return;
         if (isFetching.current) return;
         isFetching.current = true;
 
-        // const area = ultimoRiquadro != null ? differenceBBoxFromGeometry(ultimoRiquadro, toEnvelopeArray(riquadroAttuale)): '';
-
-        // log('area da caricare: ' + JSON.stringify(area));
-
         await fetchImpianti(riquadroAttuale, filter, ultimoRiquadro);
-
         bboxUnion(ultimoRiquadro, riquadroAttuale);
-
-        // ultimoRiquadroRef.current = JSON.stringify(riquadroTotale);
-
 
     }, 150); //
 
     const posizioneAttuale = usePosizioneAttuale();
     const handlePosizione = (pos) => {
-
         const map = mapRef.current;
-        setFadeOutMarker(true);
-        // log(map.getCenter());
-        // log(pos);
-        // log(mapRef);
+        //setFadeOutMarker(true);
         map.flyTo({center: [pos.lon, pos.lat], zoom: 14});
     };
 
-    const firstNDistributori = useMemo(() => {
-        return distributori.slice(0, filter.limite);
-    }, [distributori]);
-
     const superclusterRef = useRef(
-        // const radius = 120;
         new Supercluster({
             radius: 120,
-            minPoints: 4,
+            minPoints: 2,
             map: props => ({
                 prezzo: props.prezzo ?? 0,
                 color: props.color ?? 0
             }),
             reduce: (a, b) => {
 
-                a.min = Math.min(a.min || Infinity, b.prezzo);
-                a.max = Math.max(a.max || -Infinity, b.prezzo);
+                a.min = Math.min(a.min ?? Infinity, b.prezzo);
+                a.max = Math.max(a.max ?? -Infinity, b.prezzo);
 
                 a.somma = (a.somma || 0) + a.prezzo;
                 a.totale = (a.totale || 0) + 1;
                 a.media = a.somma / a.totale;
                 a.sommaColore = (a.sommaColore || 0) + a.color;
                 a.mediaColore = a.sommaColore / a.totale;
+                /*
+                log(`min: ${a.min}`);
+                log(`max: ${a.max}`);
+                log(`media: ${a.media}`);
+                log(`prezzo: ${b.prezzo}`);
+                log(`totale: ${a.totale}`); */
             }
         })
     );
 
     const clusters = useMemo(() => {
         if (boundsRef.current === null) return [];
-        const clusteredPoints = distributori.slice(filter.limite);
         log('clusterPoints: ' + clusteredPoints.length);
         if (clusteredPoints.length === 0) return [];
-        superclusterRef.current.load(distributori);
+        superclusterRef.current.load(clusteredPoints);
         const record = superclusterRef.current.getClusters(boundsRef.current, zoom);
         log('clusters: ' + record.length);
+        setFadeOutMarker(false);
         return record;
 
-    }, [distributori, zoom, bounds]);
+    }, [clusteredPoints, zoom, bounds]);
 
 
     function toEnvelopeArray(bbox) {
@@ -323,7 +311,7 @@ const MappaRisultati = forwardRef(({
         return false;
     }
 
-    log('MappaRisultati: BUILD');
+    // log('MappaRisultati: BUILD');
     return (
         <>
 
@@ -339,7 +327,7 @@ const MappaRisultati = forwardRef(({
                         initialFilters={initialFilters}
                         rightWidth={rightWidth}
                         onSelectStato={(c) => {
-                            setFadeOutMarker(true);
+                            //setFadeOutMarker(true);
                             mapRef.current.flyTo({
                                 center: [c.lng, c.lat], zoom: c.zoom,
                             });
@@ -380,7 +368,16 @@ const MappaRisultati = forwardRef(({
                 mapStyle={styleUrl}
                 mapLib={import('maplibre-gl')}
                 style={{width: '100%', height: '100%'}}
-                onMoveEnd={debouncedBoundsChange}
+
+                onMoveStart={() => {
+                    log('move start');
+                    setFadeOutMarker(true);
+                }}
+
+                onMoveEnd={() => {
+                    debouncedBoundsChange();
+                    log('move end');
+                }}
 
             >
                 {posizioneAttuale && (
@@ -399,7 +396,6 @@ const MappaRisultati = forwardRef(({
 
                     <ImpiantoPopupMobile impianto={popupInfo}/>
 
-
                 </Popup> : null}
                 <Cluster
                     fadeOut={fadeOutMarker}
@@ -410,7 +406,7 @@ const MappaRisultati = forwardRef(({
                         mapRef.current.getMap().flyTo({center: [lng, lat], zoom: expansionZoom});
                     }}/>
                 <>
-                    {firstNDistributori.map((d) => {
+                    {distributori.map((d) => {
 
                         const impianto = d.properties;
                         if (impianto.latitudine === undefined) return null;

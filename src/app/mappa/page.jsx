@@ -7,7 +7,7 @@ import {getCanonicalUrl} from "@/functions/server";
 
 //TODO: link diretto a Svizzera e Italia
 //TODO: controllo filtri
-//TODO: controllo lato server caricamento 1000 distributori
+//TODO: caricare i distributori più economici nella zona
 export async function generateMetadata({params, searchParams}) {
 
     const queryParams = await searchParams;
@@ -105,7 +105,16 @@ export default async function Mappa({searchParams}) {
 
     log("DISTRIBUTORI: " + JSON.stringify(posizione));
 
-    const response = await getImpiantiByDistance(posizione.lat, posizione.lng, 30000, initialFilters.carburante, 'price', ckLimite, initialFilters.brand);
+    const response = await getImpiantiByDistance(
+        {
+            lat: posizione.lat,
+            lng: posizione.lng,
+            distance: 30000,
+            carburante: initialFilters.carburante,
+            sort: 'price',
+            limit: 10,
+            brand: initialFilters.brand
+        });
     const distributori = await response.json();
 
     log(distributori);

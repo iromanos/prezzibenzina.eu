@@ -74,19 +74,21 @@ $theme-colors: (
 .fade-in,
 .cluster-marker {
   opacity: 0;
-  transform: scale(0.5);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.5s ease;
+  //transform: scale(0.5);
+  //transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .fade-in.animate-in,
 .cluster-marker.animate-in {
   opacity: 1;
-  transform: scale(1);
+  //transform: scale(1);
 }
 
 .cluster-marker.exit {
   opacity: 0;
-  transform: scale(0.5);
+  //transform: scale(0.5);
+  //transition: opacity 1s ease, transform 1s ease;
 }
 
 .maplibregl-map {

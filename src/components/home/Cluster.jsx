@@ -4,7 +4,6 @@ import {useEffect, useState} from "react";
 
 export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
 
-
     let globalMin = Infinity;
     let globalMax = -Infinity;
 
@@ -17,12 +16,12 @@ export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
 
     const warningLimit = globalMin + (globalMax - globalMin) / 15;
     const errorLimit = globalMin + (globalMax - globalMin) / 10;
-
+    /*
     log(globalMin);
     log(globalMax);
     log(warningLimit);
     log(errorLimit);
-
+    */
     return clusters.map((cluster, i) => {
 
         const isCluster = cluster.properties.cluster;
@@ -48,7 +47,7 @@ export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
     });
 }
 
-function MarkerCluster({cluster, fadeOut, onClick}) {
+function MarkerCluster({cluster, fadeOut = false, onClick}) {
 
     const [lng, lat] = cluster.geometry.coordinates;
     const isCluster = cluster.properties.cluster;
@@ -56,20 +55,24 @@ function MarkerCluster({cluster, fadeOut, onClick}) {
     const media = cluster.properties.media?.toFixed(3);
     const mediaColore = cluster.properties.mediaColore?.toFixed(3);
 
+    const min = cluster.properties.min?.toFixed(3);
+    const max = cluster.properties.max?.toFixed(3);
+
     const size = Math.min(120, (Math.log2(count) * 24) + 40);
 
     if (!isCluster) {
         log(c.properties);
     }
 
-    const [animate, setAnimate] = useState(false);
+    //const [exit, setExit] = useState(fadeOut);
+
+    const [animate, setAnimate] = useState(fadeOut);
+
 
     useEffect(() => {
-        if (fadeOut) return;
-        const timeout = setTimeout(() => setAnimate(true), 10); // piccolo delay
-        return () => clearTimeout(timeout);
-    }, []);
-
+        if (animate === false && fadeOut === true) return;
+        requestAnimationFrame(() => setAnimate(!fadeOut));
+    }, [fadeOut]);
 
     function getClusterColor(avgPrice) {
         if (avgPrice > 0) return 'border-warning-subtle';
@@ -90,7 +93,7 @@ function MarkerCluster({cluster, fadeOut, onClick}) {
             className={`d-flex align-items-center justify-content-center  
                             cluster-marker bg-white 
                             border border-4 ${color}
-                            ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}
+                            ${animate ? 'animate-in' : 'exit'}
                             bg-opacity-75 rounded rounded-4`}
             onClick={() => {
                 onClick?.(cluster);
@@ -98,7 +101,7 @@ function MarkerCluster({cluster, fadeOut, onClick}) {
         >
             <div>
                 <div className={'text-center small'}>{count}</div>
-                <div><strong><small>€{media}</small></strong></div>
+                <div><strong><small>€{media}</small></strong>{min} - {max}</div>
             </div>
         </div>
     </Marker>;

@@ -241,22 +241,45 @@ export async function getSeoRegione(regione, carburante, marchio, provincia, com
     }
 }
 
-export async function getImpiantiByDistance(lat, lng, distance, carburante, sort, limit = 100, brand = null) {
+export async function getImpiantiByDistance({
+                                                lat,
+                                                lng,
+                                                distance,
+                                                carburante,
+                                                sort,
+                                                limit = 100,
+                                                brand = null,
+                                                bounds = null
+                                            }) {
 
     const fuel = Carburanti[carburante];
 
-    let request = URI + `impianti/distanza?lat=${lat}&lng=${lng}&distance=${distance}&fuel=${fuel}&sort=${sort}&limit=${limit}`;
+    let request = URI + "impianti/distanza"; //?lat=${lat}&lng=${lng}&distance=${distance}&fuel=${fuel}&sort=${sort}&limit=${limit}`;
 
-    if (brand !== null) request += `&brand=${brand}`;
+//    if (brand !== null) request += `&brand=${brand}`;
 
-    // log(request);
+
+    const body = {
+        'lat': lat,
+        'lng': lng,
+        'distance': distance,
+        'fuel': fuel,
+        'bounds': bounds,
+        'sort': sort,
+        'limit': limit,
+        'brand': brand,
+    };
+
+    log(request);
+    log(body);
 
     return await fetch(request, {
         method: 'POST',
         headers: {
-            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
         },
-        next: {revalidate: 3600},
+        body: JSON.stringify(body)
     });
 
 }
@@ -291,13 +314,16 @@ export async function getImpiantiByBounds(bounds, carburante, sort = 'price', li
 
 }
 
-export async function getImpiantiClusterByBounds(bounds, carburante, sort = 'price', limit = 5, brand = null, stato = null) {
+
+export async function getClustersByBounds(bounds, carburante, sort = 'price', limit = null, brand = null, bounds_prev = null) {
 
     const carburanti = getCarburanti();
 
     const fuel = carburanti[carburante];
 
-    let request = URI + `impianti/cluster`;
+    log(bounds);
+
+    let request = URI + `impianti/stream`;
 
     log(request);
 
@@ -305,7 +331,7 @@ export async function getImpiantiClusterByBounds(bounds, carburante, sort = 'pri
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            Accept: 'application/json',
+            'Accept': 'application/json',
         },
         body: JSON.stringify({
             'fuel': fuel,
@@ -313,12 +339,11 @@ export async function getImpiantiClusterByBounds(bounds, carburante, sort = 'pri
             'sort': sort,
             'limit': limit,
             'brand': brand,
-            'stato': stato
+            'bounds_prev': bounds_prev
         })
     });
 
 }
-
 
 export async function getRouteByPosition(payload) {
 
