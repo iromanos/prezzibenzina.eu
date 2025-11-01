@@ -4,9 +4,6 @@ import {useEffect, useMemo, useState} from "react";
 
 
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import FormatLineSpacingIcon from '@mui/icons-material/FormatLineSpacing';
-import DownloadIcon from '@mui/icons-material/Download';
 
 export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
 
@@ -118,11 +115,9 @@ function MarkerCluster({cluster, fadeOut = false, onClick}) {
             }}
         >
             <div className={`p-2 ${textColor} ${color} rounded-4`}>
-                <div className={''}><LocalGasStationIcon/> {count}</div>
+                <div className={''}><small><LocalGasStationIcon fontSize={'small'}/> {count}</small></div>
                 <hr className={'my-1'}/>
-                <div><small><FormatLineSpacingIcon/> €{media}</small><br/>
-                    <small><DownloadIcon/> €{min}</small>
-                    <br/><small><FileUploadIcon/> ${max}</small></div>
+                <div><small>medio: €{media}</small> - <small>min: €{min}</small></div>
             </div>
         </div>
     </Marker>;

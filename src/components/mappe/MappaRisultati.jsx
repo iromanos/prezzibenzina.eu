@@ -17,7 +17,6 @@ import useLimit from "@/hooks/useLimit";
 import ImpiantoPopupMobile from "@/components/impianti/ImpiantoPopupMobile";
 import Loader from "@/components/home/Loader";
 import Cluster from "@/components/home/Cluster";
-import Supercluster from "supercluster";
 import Link from "react-bootstrap/NavLink"
 import Image from 'next/image';
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
@@ -65,8 +64,6 @@ const MappaRisultati = forwardRef(({
     const [filter, setFilter] = useState(initialFilters);
     const [zoom, setZoom] = useState(posizione.zoom);
     const [bounds, setBounds] = useState(null);
-
-
     const [fadeOutMarker, setFadeOutMarker] = useState(false);
 
     useEffect(() => {
@@ -89,18 +86,6 @@ const MappaRisultati = forwardRef(({
 
     const [loading, setLoading] = useState(false);
 
-    const debouncedFilterChange = useDebouncedCallback(async (_filter) => {
-
-        let bounds = null;
-
-        if (ultimoRiquadraRef.current === null) {
-            bounds = calcolaBounds();
-        } else bounds = JSON.parse(ultimoRiquadraRef.current);
-
-        // setFilter(_filter);
-//        await fetchImpianti(bounds, _filter);
-    }, 150);
-
     const fetchImpianti = async (bounds, _filter, bounds_prev = null) => {
         try {
             rowsRef.current = [];
@@ -112,6 +97,7 @@ const MappaRisultati = forwardRef(({
 
     const fetchStream = async (bounds, _filter, bounds_prev = null) => {
         try {
+
             const response = await getClustersByBounds(bounds, _filter.carburante, 'price', _filter.limite, _filter.brand?.nome, bounds_prev);
             //setFadeOutMarker(true);
 
@@ -139,6 +125,7 @@ const MappaRisultati = forwardRef(({
             // onFetchDistributori?.(rowsRef.current.slice(0, filter.limite));
             listImpiantiRef.current = [...listImpiantiRef.current, ...rowsRef.current];
 
+
             if (rowsRef.current.length > 0) {
                 setClusteredPoints([...listImpiantiRef.current]);
             }
@@ -162,6 +149,7 @@ const MappaRisultati = forwardRef(({
             //setDistributori([...rowsRef.current]);
         }
     }
+
 
     const calcolaBounds = () => {
         const map = mapRef.current;
@@ -222,7 +210,6 @@ const MappaRisultati = forwardRef(({
             onFetchDistributori?.([]);
         }
         if (!hasMovedEnough) {
-            //setFadeOutMarker(false);
             return;
         }
 
@@ -238,41 +225,12 @@ const MappaRisultati = forwardRef(({
     const posizioneAttuale = usePosizioneAttuale();
     const handlePosizione = (pos) => {
         const map = mapRef.current;
-        //setFadeOutMarker(true);
         map.flyTo({center: [pos.lon, pos.lat], zoom: 14});
     };
 
-    const superclusterRef = useRef(
-        new Supercluster({
-            radius: 120,
-            minPoints: 2,
-            // log: true,
-            map: (props) => ({
-                prezzo: props.prezzo ?? 0,
-                id_impianto: props.id_impianto,
-            }),
-            reduce: (a, b) => {
-
-                // a.min = Math.min(a.min ?? Infinity, b.prezzo);
-                // a.max = Math.max(a.max ?? -Infinity, b.prezzo);
-
-                // a.somma = (a.somma ?? 0) + b.prezzo;
-                a.totale = (a.totale ?? 0) + 1;
-                // a.media = a.somma / a.totale;
-
-                a.list ? a.list.push(b.prezzo) : a.list = [b.prezzo];
-
-                /*
-                log(`min: ${a.min}`);
-                log(`max: ${a.max}`);
-                log(`media: ${a.media}`);
-                log(`prezzo: ${b.prezzo}`);
-                log(`totale: ${a.totale}`); */
-            }
-        })
-    );
-
     const points = useMemo(() => {
+        setFadeOutMarker(true);
+
         return clusteredPoints.map(f => ({
             lng: parseFloat(f.geometry.coordinates[0]),
             lat: parseFloat(f.geometry.coordinates[1]),
@@ -388,6 +346,13 @@ const MappaRisultati = forwardRef(({
         return false;
     }
 
+    useMemo(() => {
+        ultimoRiquadroRef.current = null;
+        listImpiantiRef.current = [];
+        debouncedBoundsChange();
+    }, [filter]);
+
+
     // log('MappaRisultati: BUILD');
     return (
         <>
@@ -416,7 +381,8 @@ const MappaRisultati = forwardRef(({
                             const currentFilter = {
                                 ...filter, ...state
                             };
-                            debouncedFilterChange(currentFilter);
+                            setFilter(currentFilter);
+                            // debouncedBoundsChange();
                         }}/>
                     <PosizioneAttualeButton
                         onPosizione={handlePosizione}
@@ -448,7 +414,7 @@ const MappaRisultati = forwardRef(({
 
                 onMoveStart={() => {
                     log('move start');
-                    setFadeOutMarker(true);
+                    // setFadeOutMarker(true);
                 }}
 
                 onMoveEnd={() => {
