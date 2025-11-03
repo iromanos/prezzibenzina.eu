@@ -270,8 +270,8 @@ export async function getImpiantiByDistance({
         'brand': brand,
     };
 
-    log(request);
-    log(body);
+    // log(request);
+    // log(body);
 
     return await fetch(request, {
         method: 'POST',

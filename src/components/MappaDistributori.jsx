@@ -7,9 +7,10 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import {isMobile} from 'react-device-detect';
 import ImpiantoPopup from "@/components/impianti/ImpiantoPopup";
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
+import TuttoSchermoButton from "@/components/TuttoSchermoButton";
 
 export default function MappaDistributori({
-                                              distributori, posizione
+                                              distributori, posizione, onMapLoad
                                           }) {
 
     const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
@@ -49,7 +50,8 @@ export default function MappaDistributori({
 
     // Funzione da eseguire quando la mappa è pronta
     const handleMapLoad = (event) => {
-        const map = event.target;
+        const map = mapRef.current;
+        if (map === null) return;
         if (bounds) {
 
             let maxZoom = 15;
@@ -63,47 +65,59 @@ export default function MappaDistributori({
     };
 
     return (
-            <Map
-                ref={mapRef}
-                mapLib={maplibregl}
-                mapStyle={styleUrl}
-                initialViewState={{
-                    longitude: posizione.lng,
-                    latitude: posizione.lat,
-                    zoom: 8,
+        <><Map
+            ref={mapRef}
+            mapLib={maplibregl}
+            mapStyle={styleUrl}
+            initialViewState={{
+                longitude: posizione.lng,
+                latitude: posizione.lat,
+                zoom: 8,
+            }}
+            style={{width: '100%', height: '100%'}}
+            attributionControl={false}
+            onLoad={handleMapLoad}
+            onMoveEnd={() => {
+                const map = mapRef.current;
+                if (map === null) return;
+                onMapLoad?.(map.getCenter(), map.getZoom());
+            }}
+            dragPan={!isMobile}             // ❌ disabilita pan con un dito
+            scrollZoom={!isMobile}          // ❌ disabilita zoom con scroll
+            doubleClickZoom={!isMobile}     // ❌ disabilita zoom con doppio tap
+            touchZoomRotate={true}      // ✅ abilita pinch-to-zoom e rotazione con due dita
+            interactive={true}          // ✅ mantiene la mappa attiva
+        >
+
+            {popupInfo ? <Popup
+
+                longitude={popupInfo.longitudine}
+                latitude={popupInfo.latitudine}
+                anchor="top"
+                closeOnClick={false}
+                onClose={() => setPopupInfo(null)}>
+
+                <ImpiantoPopup impianto={popupInfo}/>
+
+
+            </Popup> : null}
+
+            {distributori.map((d) => <ImpiantoMarker
+
+                onClick={e => {
+                    e.originalEvent.stopPropagation(); // evita chiusura globale
+                    setPopupInfo(d);
                 }}
-                style={{ width: '100%', height: '100%' }}
-                attributionControl={false}
-                onLoad={handleMapLoad}
 
-                dragPan={!isMobile}             // ❌ disabilita pan con un dito
-                scrollZoom={!isMobile}          // ❌ disabilita zoom con scroll
-                doubleClickZoom={!isMobile}     // ❌ disabilita zoom con doppio tap
-                touchZoomRotate={true}      // ✅ abilita pinch-to-zoom e rotazione con due dita
-                interactive={true}          // ✅ mantiene la mappa attiva
-            >
+                key={d.id_impianto} d={d}/>)}
+        </Map>
 
-                {popupInfo ? <Popup
-
-                    longitude={popupInfo.longitudine}
-                    latitude={popupInfo.latitudine}
-                    anchor="top"
-                    closeOnClick={false}
-                    onClose={() => setPopupInfo(null)}>
-
-                    <ImpiantoPopup impianto={popupInfo}/>
-
-
-                </Popup> : null}
-
-                {distributori.map((d) => <ImpiantoMarker
-
-                    onClick={e => {
-                        e.originalEvent.stopPropagation(); // evita chiusura globale
-                        setPopupInfo(d);
-                    }}
-
-                    key={d.id_impianto} d={d}/>)}
-            </Map>
+            <TuttoSchermoButton onClick={() => {
+                if (!mapRef.current) return;
+                const center = mapRef.current.getCenter();
+                const zoom = mapRef.current.getZoom();
+                const uri = `lat=${center.lat}&lng=${center.lng}&zoom=${zoom}`;
+                window.location.href = `/mappa?${uri}`;
+            }}/></>
     );
 }

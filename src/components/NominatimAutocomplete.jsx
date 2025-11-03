@@ -33,10 +33,9 @@ export default function NominatimAutocomplete({onSelect, initialValue}) {
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState([]);
 
-    const NOMINATIM_ENDPOINT = 'https://nominatim.openstreetmap.org/search.php?dedupe=1&limit=5&format=jsonv2&countrycodes=it&q=';
+    const NOMINATIM_ENDPOINT = 'https://nominatim.openstreetmap.org/search.php?dedupe=1&limit=5&format=jsonv2&countrycodes=it,ch&q=';
 
     useEffect(() => {
-
         const timeout = setTimeout(() => {
 
             const controller = new AbortController();
@@ -60,19 +59,15 @@ export default function NominatimAutocomplete({onSelect, initialValue}) {
                         type: item.addresstype,
                         lat: item.lat,
                         lon: item.lon,
+                        boundingbox: item.boundingbox
                     }));
                     setOptions(options);
                 });
 
             return () => controller.abort();
         }, 300);
-
         return () => clearTimeout(timeout);
-
     }, [inputValue]);
-
-    log(options);
-
 
     return (
         <Autocomplete
@@ -97,14 +92,11 @@ export default function NominatimAutocomplete({onSelect, initialValue}) {
             }}
             onInputChange={(e, val) => setInputValue(val)}
             onChange={(e, val) => {
-                log(val);
                 return val && onSelect(val);
             }}
             renderInput={(params) => (
                 <TextField
-
                     value={initialValue}
-
                     {...params} label="Indirizzo, città o CAP" variant="outlined"/>
             )}
         />

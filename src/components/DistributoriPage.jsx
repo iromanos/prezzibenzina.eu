@@ -78,7 +78,6 @@ export default async function DistributoriPage({params}) {
                 </div>
                 {comuni.length > 1 ? <LinkComuni
                     riepilogo={riepilogo}
-                    //params={await params}
                     comuni={comuni}/> : <></>}
             </IntroTextVersione2>
 

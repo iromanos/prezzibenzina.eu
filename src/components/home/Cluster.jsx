@@ -1,9 +1,5 @@
 import {Marker} from "react-map-gl/maplibre";
-import {log} from "@/functions/helpers";
 import {useEffect, useMemo, useState} from "react";
-
-
-import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 
 export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
 
@@ -17,23 +13,23 @@ export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
         }
     });
 
-    const warningLimit = globalMin + (globalMax - globalMin) / 4;
+    const warningLimit = globalMin + (globalMax - globalMin) / 10;
     const errorLimit = globalMin + (globalMax - globalMin) / 1.5;
 
-    log(`min: ${globalMin}`);
-    log(`max: ${globalMax}`);
-    log(warningLimit);
-    log(errorLimit);
+    // log(`min: ${globalMin}`);
+    // log(`max: ${globalMax}`);
+    // log(warningLimit);
+    // log(errorLimit);
 
 
-    log(clusters[0]);
+    // log(clusters[0]);
 
     return clusters.map((cluster, i) => {
 
 
         const isCluster = true; //cluster.properties.cluster;
 
-        const media = cluster.media;
+        const media = cluster.min;
 
 
         if (media > warningLimit) {
@@ -68,7 +64,7 @@ function MarkerCluster({cluster, fadeOut = false, onClick}) {
     const size = Math.min(120, (Math.log2(count) * 24) + 40);
 
     if (!isCluster) {
-        log(c.properties);
+        // log(c.properties);
     }
 
     //const [exit, setExit] = useState(fadeOut);
@@ -99,26 +95,17 @@ function MarkerCluster({cluster, fadeOut = false, onClick}) {
 
     return <Marker longitude={lng} latitude={lat}>
         <div
-
-            style={{
-                // width: size,
-                // height: size,
-            }}
-
             className={`  
-                            cluster-marker bg-white 
-                            border border-4 ${borderColor}
+                            d-flex small
+                            cluster-marker bg-white p-1 rounded
+                            border ${borderColor} ${textColor} ${color}
                             ${animate ? 'animate-in' : 'exit'}
-                            bg-opacity-75 rounded rounded-4`}
+                            bg-opacity-75`}
             onClick={() => {
                 onClick?.(cluster);
             }}
         >
-            <div className={`p-2 ${textColor} ${color} rounded-4`}>
-                <div className={''}><small><LocalGasStationIcon fontSize={'small'}/> {count}</small></div>
-                <hr className={'my-1'}/>
-                <div><small>medio: €{media}</small> - <small>min: €{min}</small></div>
-            </div>
+            <span className={'bg-primary text-white rounded d-inline px-1 me-1'}>{count}</span> €{min}
         </div>
     </Marker>;
 

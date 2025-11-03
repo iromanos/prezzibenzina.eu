@@ -1,20 +1,23 @@
 import {getElencoCarburanti, getImpiantiByDistance, getLocationByIp, getMarchi} from "@/functions/api";
 import MappaClient from "@/components/mappe/MappaClient";
-import {capitalize, log} from "@/functions/helpers";
+import {capitalize} from "@/functions/helpers";
 import {cookies, headers} from "next/headers";
 import {notFound} from "next/navigation";
 import {getCanonicalUrl} from "@/functions/server";
 
 //TODO: link diretto a Svizzera e Italia
-//TODO: controllo filtri
+//TODO: quando cambia la posizione aggiorna il titolo della pagina
+//TODO: quando cambia la posizione aggiorna il campo di ricerca con l'indirizzo
+//TODO: quando cambia il filtro aggionna url della pagina
 export async function generateMetadata({params, searchParams}) {
 
     const queryParams = await searchParams;
 
     const fuel = capitalize(queryParams.carburante || "benzina");
     const brand = capitalize(queryParams.marchio || "");
+    const headersList = await headers();
 
-    const canonicalUrl = getCanonicalUrl(headers()) + '/mappa';
+    const canonicalUrl = getCanonicalUrl(headersList) + '/mappa';
 
     // Mappa Prezzi Benzina in Italia - Distributori e Carburanti
     return {
@@ -34,14 +37,14 @@ export default async function Mappa({searchParams}) {
 
     const queryParams = await searchParams;
 
-    log(queryParams);
+    // log(queryParams);
 
     const initialFilters = {};
 
     const fuel = queryParams.carburante || "";
 
     const elencoCarburanti = getElencoCarburanti();
-    log(elencoCarburanti);
+    // log(elencoCarburanti);
     if (fuel !== "") {
         if (elencoCarburanti.filter(c => c.tipo === fuel.toLowerCase()).length === 0) {
             notFound();
@@ -53,7 +56,7 @@ export default async function Mappa({searchParams}) {
     const brand = queryParams.marchio || "";
     if (brand !== "") {
         const marchi = await getMarchi();
-        log(marchi);
+        // log(marchi);
         if (marchi.filter(c => c.id === brand.toLowerCase()).length === 0) {
             notFound();
         }
@@ -102,7 +105,7 @@ export default async function Mappa({searchParams}) {
     if (posizione.lat === undefined) posizione.lat = 0;
     if (posizione.lng === undefined) posizione.lng = 0;
 
-    log("DISTRIBUTORI: " + JSON.stringify(posizione));
+    // log("DISTRIBUTORI: " + JSON.stringify(posizione));
 
     const response = await getImpiantiByDistance(
         {
@@ -116,9 +119,9 @@ export default async function Mappa({searchParams}) {
         });
     const distributori = await response.json();
 
-    log(distributori);
+    // log(distributori);
 
-    log("MAPPA: BUILD");
+    // log("MAPPA: BUILD");
 
     const zoom = queryParams.zoom;
 

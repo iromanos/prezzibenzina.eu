@@ -3,7 +3,6 @@
 import Map, {Popup} from 'react-map-gl/maplibre';
 import {forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import {log} from "@/functions/helpers";
 import {getClustersByBounds, getImpiantiByDistance} from "@/functions/api";
 import {useDebouncedCallback} from '@/hooks/useDebouncedCallback';
 import PosizioneAttualeButton from "@/components/PosizioneAttualeButton";
@@ -80,7 +79,7 @@ const MappaRisultati = forwardRef(({
     }, []);
 
     useEffect(() => {
-        log('MappaRisultati: MOUNTED');
+        // log('MappaRisultati: MOUNTED');
     }, []);
 
 
@@ -130,8 +129,8 @@ const MappaRisultati = forwardRef(({
                 setClusteredPoints([...listImpiantiRef.current]);
             }
 
-            log("ROWS REF:" + rowsRef.current.length);
-            log("IMPIANTI REF:" + listImpiantiRef.current.length);
+            // log("ROWS REF:" + rowsRef.current.length);
+            // log("IMPIANTI REF:" + listImpiantiRef.current.length);
             return;
         } catch (e) {
 
@@ -174,11 +173,12 @@ const MappaRisultati = forwardRef(({
     const debouncedBoundsChange = useDebouncedCallback(async () => {
         if (isReadOnly) return;
         if (popupInfo) return;
-
+        if (mapRef.current === null) return;
         const riquadroAttuale = calcolaBounds();
 
         const center = mapRef.current.getCenter();
-        onMoveEnd?.(center.lat, center.lng);
+        const zoom = mapRef.current.getZoom();
+        onMoveEnd?.(center.lat, center.lng, zoom);
 
         const ultimoRiquadro = ultimoRiquadroRef.current;
 
@@ -224,6 +224,7 @@ const MappaRisultati = forwardRef(({
 
     const posizioneAttuale = usePosizioneAttuale();
     const handlePosizione = (pos) => {
+        setFadeOutMarker(true);
         const map = mapRef.current;
         map.flyTo({center: [pos.lon, pos.lat], zoom: 14});
     };
@@ -231,13 +232,20 @@ const MappaRisultati = forwardRef(({
     const points = useMemo(() => {
         setFadeOutMarker(true);
 
-        return clusteredPoints.map(f => ({
+        var record = clusteredPoints.map(f => ({
             lng: parseFloat(f.geometry.coordinates[0]),
             lat: parseFloat(f.geometry.coordinates[1]),
             prezzo: f.properties.prezzo,
             id: f.properties.id_impianto,
         }));
-    }, [clusteredPoints]);
+
+        return record.filter(value => {
+            return (distributori.filter(d => {
+                return d.id_impianto === value.id;
+            }).length === 0);
+        })
+
+    }, [clusteredPoints, distributori]);
 
     // 🔍 Filtra i punti nel bbox visibile
     const visiblePoints = useMemo(() => {
@@ -252,7 +260,7 @@ const MappaRisultati = forwardRef(({
     const radiusMeters = useMemo(() => {
         if (mapRef.current === null) return 0;
         const center = mapRef.current.getCenter();
-        const pixelRadius = 80; // es. 40px
+        const pixelRadius = 40; // es. 40px
         const earthCircumference = 40075016.686; // in meters
         const metersPerPixel = earthCircumference * Math.cos(center.lng * Math.PI / 180) / Math.pow(2, zoom + 8);
         return pixelRadius * metersPerPixel;
@@ -262,7 +270,7 @@ const MappaRisultati = forwardRef(({
     const KDclusters = useMemo(() => {
         const clustered = [];
         const visited = new Set();
-        log(`radius:  ${radiusMeters}`)
+        // log(`radius:  ${radiusMeters}`)
         if (radiusMeters === null) return [];
         visiblePoints.forEach((p, i) => {
             if (visited.has(i)) return;
@@ -302,7 +310,7 @@ const MappaRisultati = forwardRef(({
             });
         });
 
-        log("clusterred:" + JSON.stringify(clustered[0]));
+        // log("clusterred:" + JSON.stringify(clustered[0]));
         setFadeOutMarker(false);
 
         return clustered;
@@ -369,20 +377,28 @@ const MappaRisultati = forwardRef(({
                         initialFilters={initialFilters}
                         rightWidth={rightWidth}
                         onSelectStato={(c) => {
-                            //setFadeOutMarker(true);
+                            setFadeOutMarker(true);
                             mapRef.current.flyTo({
                                 center: [c.lng, c.lat], zoom: c.zoom,
                             });
                         }}
                         onSearch={(place) => {
-                            mapRef.current?.flyTo({zoom: 12, center: [place.lon, place.lat]});
+                            setFadeOutMarker(true);
+
+                            const bbox = [
+                                place.boundingbox[2],
+                                place.boundingbox[0],
+                                place.boundingbox[3],
+                                place.boundingbox[1],
+                            ];
+
+                            mapRef.current?.fitBounds(bbox);
                         }}
                         onChange={(state) => {
                             const currentFilter = {
                                 ...filter, ...state
                             };
                             setFilter(currentFilter);
-                            // debouncedBoundsChange();
                         }}/>
                     <PosizioneAttualeButton
                         onPosizione={handlePosizione}
@@ -412,14 +428,8 @@ const MappaRisultati = forwardRef(({
                 mapLib={import('maplibre-gl')}
                 style={{width: '100%', height: '100%'}}
 
-                onMoveStart={() => {
-                    log('move start');
-                    // setFadeOutMarker(true);
-                }}
-
                 onMoveEnd={() => {
                     debouncedBoundsChange();
-                    log('move end');
                 }}
 
             >

@@ -80,9 +80,9 @@ export default function MappaClient({posizione, distributoriIniziali, initialFil
                 <div className={"position-absolute top-0 start-0 w-100 h-100"}>
 
                     <MappaRisultati
-                        onMoveEnd={(lat, lng) => {
+                        onMoveEnd={(lat, lng, zoom) => {
                             setFilters({
-                                lat: lat, lng: lng,
+                                lat: lat, lng: lng, zoom: zoom
                             })
                         }}
                         showFilter={showList === false && animEnd}
