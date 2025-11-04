@@ -14,7 +14,7 @@ export async function generateMetadata() {
     const title = 'PrezziBenzina.eu | Risparmia sul Carburante';
     const description = 'Trova i distributori più convenienti vicino a te. PrezziBenzina.eu ti guida con mappa interattiva e filtri intelligenti.';
     const imageUrl = '/assets/logo-og.png';
-    const headerList = headers();
+    const headerList = await headers();
 
     const canonicalUrl = getCanonicalUrl(headerList);
 

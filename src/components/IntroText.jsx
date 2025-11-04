@@ -1,25 +1,11 @@
 import React from 'react';
-import {log, ucwords} from "@/functions/helpers";
+import {formatDate, formatEuro, log, ucwords} from "@/functions/helpers";
 
 function capitalize(str) {
     return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';
 }
 
-function formatEuro(val) {
-    if (!val) return 'n.d.';
-    const num = parseFloat(val.replace(',', '.'));
-    return isNaN(num) ? 'n.d.' : num.toFixed(3).replace('.', ',') + ' €/litro';
-}
 
-function formatDate(iso) {
-    if (!iso) return 'data non disponibile';
-    const d = new Date(iso);
-    return d.toLocaleDateString('it-IT', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
-    });
-}
 
 export function IntroTextVersione2({data, distributori, children}) {
 

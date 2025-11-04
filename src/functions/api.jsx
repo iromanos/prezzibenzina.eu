@@ -203,6 +203,37 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
 //    return data;
 }
 
+
+export async function getSeoRegioneEstera(stato, regione, carburante) {
+    let fuel = null;
+    if (carburante === 'benzina') fuel = '1-x';
+    if (carburante === 'diesel') fuel = '2-x';
+    if (carburante === 'metano') fuel = '3-x';
+    if (carburante === 'gpl') fuel = '4-x';
+
+    const request = URI + `seo/estero`;
+
+    const body = {
+        'fuel': fuel,
+        // 'bounds': bounds,
+        // 'sort': sort,
+        // 'limit': limit,
+        // 'brand': brand,
+        'stato': stato
+    };
+
+    return await fetch(request, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(body)
+    });
+
+
+}
+
 export async function getSeoRegione(regione, carburante, marchio, provincia, comune) {
 
     let fuel = null;
@@ -249,15 +280,13 @@ export async function getImpiantiByDistance({
                                                 sort,
                                                 limit = 100,
                                                 brand = null,
-                                                bounds = null
+                                                bounds = null,
+                                                stato = null
                                             }) {
 
     const fuel = Carburanti[carburante];
 
-    let request = URI + "impianti/distanza"; //?lat=${lat}&lng=${lng}&distance=${distance}&fuel=${fuel}&sort=${sort}&limit=${limit}`;
-
-//    if (brand !== null) request += `&brand=${brand}`;
-
+    let request = URI + "impianti/distanza";
 
     const body = {
         'lat': lat,
@@ -268,10 +297,10 @@ export async function getImpiantiByDistance({
         'sort': sort,
         'limit': limit,
         'brand': brand,
+        'stato': stato
     };
 
-    // log(request);
-    // log(body);
+    log(body);
 
     return await fetch(request, {
         method: 'POST',

@@ -183,6 +183,21 @@ export const ucwords = (str) => {
     return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
 }
 
+export function formatEuro(val) {
+    if (!val) return 'n.d.';
+    const num = parseFloat(val.replace(',', '.'));
+    return isNaN(num) ? 'n.d.' : num.toFixed(3).replace('.', ',') + ' €/litro';
+}
+
+export function formatDate(iso) {
+    if (!iso) return 'data non disponibile';
+    const d = new Date(iso);
+    return d.toLocaleDateString('it-IT', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+    });
+}
 export function slugify(text) {
     return text
         .toLowerCase()

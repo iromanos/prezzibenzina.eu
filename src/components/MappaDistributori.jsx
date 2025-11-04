@@ -8,6 +8,7 @@ import {isMobile} from 'react-device-detect';
 import ImpiantoPopup from "@/components/impianti/ImpiantoPopup";
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import TuttoSchermoButton from "@/components/TuttoSchermoButton";
+import {log} from "@/functions/helpers";
 
 export default function MappaDistributori({
                                               distributori, posizione, onMapLoad
@@ -19,13 +20,26 @@ export default function MappaDistributori({
 
     const mapRef = useRef(null);
 
+    const coords = distributori
+        .filter((d) => Number.isFinite(d.longitudine) && Number.isFinite(d.latitudine))
+        .map((d) => [d.longitudine, d.latitudine]);
+
+    const b = new maplibregl.LngLatBounds();
+    coords.forEach((c) => b.extend(c));
+
+    log("bboX: " + JSON.stringify(coords));
+    log("bboX: " + JSON.stringify(distributori));
+
+    const initState = {
+        bounds: b
+    }
+
 
     useEffect(() => {
         const handleFocus = e => {
             console.log(e);
             const canvas = mapRef.current?.getMap()?.getCanvas();
             canvas?.scrollIntoView({behavior: 'smooth', block: 'start'});
-
 
             const {lat, lng, zoom} = e.detail;
             mapRef.current?.flyTo({center: [lng, lat], zoom, essential: true});
@@ -35,48 +49,28 @@ export default function MappaDistributori({
         return () => window.removeEventListener('map:focus', handleFocus);
     }, []);
 
-
+    /*
     useEffect(() => {
-        const coords = distributori
-            .filter((d) => Number.isFinite(d.longitudine) && Number.isFinite(d.latitudine))
-            .map((d) => [d.longitudine, d.latitudine]);
-
-        if (coords.length === 0) return;
-
-        const b = new maplibregl.LngLatBounds();
-        coords.forEach((c) => b.extend(c));
-        setBounds(b);
-    }, [distributori]);
-
-    // Funzione da eseguire quando la mappa è pronta
-    const handleMapLoad = (event) => {
         const map = mapRef.current;
+        log(map);
+        log(bounds);
         if (map === null) return;
-        if (bounds) {
-
-            let maxZoom = 15;
-            if (distributori.length === 1) maxZoom = 10;
-            map.fitBounds(bounds, {
-                padding: 80,
-                duration: 500,
-                maxZoom: maxZoom
-            });
-        }
-    };
-
+        map.fitBounds(bounds, {
+            padding: 80,
+            duration: 500,
+            // maxZoom: maxZoom
+        });
+    }, [bounds]);
+    */
     return (
         <><Map
             ref={mapRef}
             mapLib={maplibregl}
             mapStyle={styleUrl}
-            initialViewState={{
-                longitude: posizione.lng,
-                latitude: posizione.lat,
-                zoom: 8,
-            }}
+            initialViewState={initState}
             style={{width: '100%', height: '100%'}}
             attributionControl={false}
-            onLoad={handleMapLoad}
+            // onLoad={handleMapLoad}
             onMoveEnd={() => {
                 const map = mapRef.current;
                 if (map === null) return;
