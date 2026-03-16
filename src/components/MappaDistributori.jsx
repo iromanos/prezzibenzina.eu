@@ -9,12 +9,13 @@ import ImpiantoPopup from "@/components/impianti/ImpiantoPopup";
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import TuttoSchermoButton from "@/components/TuttoSchermoButton";
 import {log} from "@/functions/helpers";
+import {getVectorTileLayer} from "@/functions/vector-tiles";
 
 export default function MappaDistributori({
                                               distributori, posizione, onMapLoad
                                           }) {
 
-    const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
+    const styleUrl = getVectorTileLayer();// 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
     const [bounds, setBounds] = useState(null);
     const [popupInfo, setPopupInfo] = useState(null);
 

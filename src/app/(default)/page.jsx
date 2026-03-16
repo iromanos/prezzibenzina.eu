@@ -72,7 +72,6 @@ export default function Home() {
             </div>
             <Motivi/>
 
-            {/* COME FUNZIONA */}
             <div className="container py-5">
                 <h2 className="text-center mb-5 fw-bold" style={{fontFamily: 'Montserrat, sans-serif'}}>Come
                     funziona</h2>

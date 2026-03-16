@@ -13,10 +13,11 @@ import {log, slugify, ucwords} from "@/functions/helpers";
 import ImpiantoDescrizione from "@/components/impianti/ImpiantoDescrizione";
 import {getElencoCarburanti} from "@/functions/api";
 import Breadcrumb from "@/components/Breadcrumb";
+import {getVectorTileLayer} from "@/functions/vector-tiles";
 
 export default function ImpiantoScheda({impianto, cookie}) {
     const [showPopup, setShowPopup] = useState(false);
-    const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
+    const styleUrl = getVectorTileLayer();//  'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
     const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
     const confrontaVicini = () => {

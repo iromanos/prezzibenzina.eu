@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="b5b5b56d-735b-4fee-9f10-c7966a3525ca" name="prezzibenzina.eu">
-        <fileTransfer rootFolder="/var/www/vhosts/prezzibenzina.eu/httpdocs" accessType="SFTP" host="prezzibenzina.eu" port="22" sshConfigId="01b5e821-b2a8-4fff-b593-7381c64b1289" sshConfig="prezzibenzina.eu@prezzibenzina.eu:22 password">
+        <fileTransfer rootFolder="/home/prezzibenzina/htdocs/www.prezzibenzina.eu" accessType="SFTP" host="prezzibenzina.eu" port="22" sshConfigId="01b5e821-b2a8-4fff-b593-7381c64b1289" sshConfig="prezzibenzina@prezzibenzina.eu:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

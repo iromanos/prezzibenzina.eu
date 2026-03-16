@@ -21,6 +21,7 @@ import Image from 'next/image';
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import * as turf from '@turf/turf';
 import {bboxPolygon, booleanContains} from '@turf/turf';
+import {getVectorTileLayer} from "@/functions/vector-tiles";
 
 const MappaRisultati = forwardRef(({
                                        posizione,
@@ -56,7 +57,7 @@ const MappaRisultati = forwardRef(({
 
     const [popupInfo, setPopupInfo] = useState(null);
 
-    const styleUrl = 'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
+    const styleUrl = getVectorTileLayer();//  'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
 
     const {carburante} = useCarburante(initialFilters.carburante);
     const {limit} = useLimit();
