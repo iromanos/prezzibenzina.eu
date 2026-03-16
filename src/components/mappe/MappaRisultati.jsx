@@ -34,6 +34,7 @@ const MappaRisultati = forwardRef(({
                                        showLinkHome = true,
                                        onMoveEnd,
                                        isReadOnly = false,
+                                       isWeFuel = false
                                    }, ref) => {
 
     useImperativeHandle(ref, () => ({
@@ -407,7 +408,7 @@ const MappaRisultati = forwardRef(({
                         footerHeight={footerHeight}/></> : null}
 
 
-            {showLinkHome && showFilter && <Link
+            {showLinkHome && showFilter && !isWeFuel && <Link
 
                 style={{
                     bottom: footerHeight,

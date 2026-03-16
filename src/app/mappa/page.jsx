@@ -125,8 +125,16 @@ export default async function Mappa({searchParams}) {
 
     const zoom = queryParams.zoom;
 
+    const headersList = await headers();
+
+    const referer = "wefuel"; //headersList.get('X-WEFUEL-REFERER');
+
+
     return <MappaClient
+        client={referer}
         zoomIniziale={zoom}
-        posizione={posizione} distributoriIniziali={distributori} initialFilters={initialFilters}/>;
+        posizione={posizione}
+        distributoriIniziali={distributori}
+        initialFilters={initialFilters}/>;
 
 }

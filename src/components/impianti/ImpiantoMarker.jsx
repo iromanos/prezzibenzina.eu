@@ -16,7 +16,7 @@ export default function ImpiantoMarker({d, onClick, fadeOut = false}) {
     const color = getMarkerColor(d);
     function getMarkerColor(d) {
         if (d.color === 0) return 'bg-success';
-        if (d.color === 1) return 'bg-warning';
+        if (d.color === -1) return 'bg-warning';
         return 'bg-danger';
     }
 

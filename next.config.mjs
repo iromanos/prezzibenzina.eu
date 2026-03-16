@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-
+    assetPrefix: '/mappa-static',
     sassOptions: {
         quietDeps: true, // silenzia warning da dipendenze
     },

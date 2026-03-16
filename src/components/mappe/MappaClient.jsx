@@ -9,7 +9,13 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import {AnimatePresence, motion} from 'framer-motion';
 import useNavBarPresence from "@/hooks/useNavBarPresence";
 
-export default function MappaClient({posizione, distributoriIniziali, initialFilters, zoomIniziale = 13}) {
+export default function MappaClient({
+                                        posizione,
+                                        distributoriIniziali,
+                                        initialFilters,
+                                        zoomIniziale = 13,
+                                        client = "pb"
+                                    }) {
 
     const [animEnd, setAnimEnd] = useState(true);
 
