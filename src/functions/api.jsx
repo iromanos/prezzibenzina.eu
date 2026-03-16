@@ -307,6 +307,7 @@ export async function getImpiantiByDistance({
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'X-Internal-Secret': '0CD6ED9B-9DAC-4E30-962E-EB16F03F6207'
         },
         body: JSON.stringify(body)
     });
