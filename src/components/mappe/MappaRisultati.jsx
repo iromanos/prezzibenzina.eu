@@ -16,8 +16,6 @@ import useLimit from "@/hooks/useLimit";
 import ImpiantoPopupMobile from "@/components/impianti/ImpiantoPopupMobile";
 import Loader from "@/components/home/Loader";
 import Cluster from "@/components/home/Cluster";
-import Link from "react-bootstrap/NavLink"
-import Image from 'next/image';
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import * as turf from '@turf/turf';
 import {bboxPolygon, booleanContains} from '@turf/turf';
@@ -51,7 +49,7 @@ const MappaRisultati = forwardRef(({
     const listImpiantiRef = useRef([]);
 
 
-    const headerHeight = 0;
+    const headerHeight = 240;
 
     const [distributori, setDistributori] = useState(distributoriIniziali);
     const [clusteredPoints, setClusteredPoints] = useState([]);
@@ -408,17 +406,19 @@ const MappaRisultati = forwardRef(({
                         footerHeight={footerHeight}/></> : null}
 
 
-            {showLinkHome && showFilter && !isWeFuel && <Link
-
-                style={{
-                    bottom: footerHeight,
-                    right: rightWidth
-                }}
-
-                className={'position-absolute z-3 m-3 shadow-sm'} title={'Home'} href={'/'}>
-                <Image className={'rounded'} width={90} height={90}
-                       src={'/assets/logo-180.png'} alt={'PrezzoBenzina.eu'}/>
-            </Link>}
+            {/*{showLinkHome &&*/}
+            {/*    showFilter &&*/}
+            {/*    !isWeFuel &&*/}
+            {/*    <Link*/}
+            {/*        style={{*/}
+            {/*            bottom: footerHeight,*/}
+            {/*            right: rightWidth*/}
+            {/*        }}*/}
+            {/*        className={'position-absolute z-3 m-3 shadow-sm'} title={'Home'} href={'/'}>*/}
+            {/*        <Image className={'rounded'} width={90} height={90}*/}
+            {/*               src={'/assets/logo-180.png'} alt={'PrezzoBenzina.eu'}/>*/}
+            {/*    </Link>*/}
+            {/*}*/}
 
             <Map
                 padding={{bottom: 96, top: headerHeight, right: rightWidth}}

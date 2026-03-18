@@ -69,12 +69,8 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
     return (
         <>
             <div
-
-                style={{
-                    // right: rightWidth
-                }}
-
-                className="bg-transparent
+                className="bg-light
+                border-bottom
                 col-12 col-lg-4
                 position-absolute
                 start-0 top-0 p-3 z-3">

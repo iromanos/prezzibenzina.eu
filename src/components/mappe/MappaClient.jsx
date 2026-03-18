@@ -2,11 +2,7 @@
 
 import MappaRisultati from "@/components/mappe/MappaRisultati";
 import {useEffect, useRef, useState} from 'react';
-import ImpiantoCard from "@/components/impianti/ImpiantoCard";
 import {useFilters} from "@/hooks/useFilters";
-import Button from "react-bootstrap/Button";
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import {AnimatePresence, motion} from 'framer-motion';
 import useNavBarPresence from "@/hooks/useNavBarPresence";
 
 export default function MappaClient({
@@ -101,6 +97,7 @@ export default function MappaClient({
                             setDistributori(data);
                         }}/>
                 </div>
+                {/*
                 <div ref={footerRef}
                      className="position-absolute bottom-0 w-100 z-3 d-lg-none">
                     <div className={`bg-white bg-opacity-75 shadow rounded-top-4 p-3`}
@@ -152,7 +149,7 @@ export default function MappaClient({
                         <p className="">Nessun distributore in zona per i filtri selezionati</p>
                     )}
                 </div>
-
+*/}
             </div>
         </>);
 
