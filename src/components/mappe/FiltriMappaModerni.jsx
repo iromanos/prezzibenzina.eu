@@ -69,7 +69,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
     return (
         <>
             <div
-                className="bg-light
+                className="bg-white
                 border-bottom
                 col-12 col-lg-4
                 position-absolute

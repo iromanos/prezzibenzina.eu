@@ -149,7 +149,6 @@ const MappaRisultati = forwardRef(({
         }
     }
 
-
     const calcolaBounds = () => {
         const map = mapRef.current;
         if (map === null) return null;
@@ -324,7 +323,6 @@ const MappaRisultati = forwardRef(({
             bbox._ne.lat,
         ];
     }
-
 
     // calcola l'unione di due bounding box
     function bboxUnion(geometry, bboxB) {
