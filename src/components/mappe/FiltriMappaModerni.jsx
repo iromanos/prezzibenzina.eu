@@ -12,6 +12,8 @@ import useLimit from "@/hooks/useLimit";
 import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 import {useModalHistory} from "@/hooks/useModalHistory";
 import {useFilters} from "@/hooks/useFilters";
+import TuneIcon from '@mui/icons-material/Tune';
+import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 
 export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, initialFilters, onSelectStato}) {
 
@@ -69,8 +71,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
     return (
         <>
             <div
-                className="bg-white
-                border-bottom
+                className="bg-transparent d-none
                 col-12 col-lg-4
                 position-absolute
                 start-0 top-0 p-3 z-3">
@@ -97,7 +98,19 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                         />
                     </div>
 
-                    <div className={"d-flex gap-2 flex-wrap mb-2"}>
+                    <div className={'d-flex gap-2'}>
+                        {carburante ?
+                            <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
+                                    onClick={() => setShow('carburante')}><LocalGasStationIcon className={'me-1'}/>
+                                <strong>{carburante.toUpperCase()}</strong>
+                            </Button> : null}
+
+                        <Button size={'sm'} variant={'light'} className={'border border-dark-subtle shadow-sm'}>
+                            <TuneIcon className={'me-1'}/>
+                            <strong>FILTRI</strong></Button>
+                    </div>
+
+                    <div className={"d-flex gap-2 flex-wrap mb-2 d-none"}>
 
                         {carburante ?
                             <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
@@ -121,7 +134,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                         }} size={"sm"}>INFO</Button>
                     </div>
 
-                    <div className={"d-flex gap-2 flex-wrap mb-2 "}>
+                    <div className={"d-flex gap-2 flex-wrap mb-2 d-none"}>
                         {elencoStati.map((c, i) => {
                             return <Button
                                 key={i}
@@ -129,7 +142,6 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                                 className={'border border-dark-subtle shadow-sm'}
                                 variant={'light'}
                                 onClick={() => {
-
                                     onSelectStato?.(c);
                                 }}> {c.icon} {c.name}</Button>
                         })}

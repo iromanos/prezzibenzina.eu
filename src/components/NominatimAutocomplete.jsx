@@ -73,8 +73,7 @@ export default function NominatimAutocomplete({onSelect, initialValue}) {
         <Autocomplete
             value={initialValue}
             size='small'
-            variant='filled'
-            className={'bg-light border-rounded border-0'}
+            className={'bg-white shadow-sm'}
             freeSolo
             options={options}
             filterOptions={(opts) => opts}

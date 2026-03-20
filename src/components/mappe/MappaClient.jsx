@@ -4,6 +4,11 @@ import MappaRisultati from "@/components/mappe/MappaRisultati";
 import {useEffect, useRef, useState} from 'react';
 import {useFilters} from "@/hooks/useFilters";
 import useNavBarPresence from "@/hooks/useNavBarPresence";
+import Button from "react-bootstrap/Button";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import {AnimatePresence, motion} from 'framer-motion';
+import ImpiantoCard from "@/components/impianti/ImpiantoCard";
+import BottomSheet from "@/components/BottomSheet";
 
 export default function MappaClient({
                                         posizione,
@@ -97,10 +102,12 @@ export default function MappaClient({
                             setDistributori(data);
                         }}/>
                 </div>
-                {/*
+
+                <BottomSheet/>
+
                 <div ref={footerRef}
                      className="position-absolute bottom-0 w-100 z-3 d-lg-none">
-                    <div className={`bg-white bg-opacity-75 shadow rounded-top-4 p-3`}
+                    <div className={`bg-white shadow rounded-top-4 p-3`}
                          style={{overflowY: 'auto'}}>
                         <div className={'d-flex align-items-center justify-content-between'}>
                             <h6 className="fw-semibold mb-0">Distributori trovati ({distributori.length})</h6>
@@ -117,14 +124,13 @@ export default function MappaClient({
                         {distributori.length !== 0 ?
                             <AnimatePresence>
                                 {showList && (
-
                                     <motion.div
                                         onAnimationComplete={handleAnimationComplete}
                                         initial={{height: 0, opacity: 0}}
                                         animate={{height: 'auto', opacity: 1}}
                                         exit={{height: 0, opacity: 0}}
                                         transition={{duration: 0.3}}
-                                        style={{maxHeight: '80vh'}}
+                                        style={{maxHeight: '40vh'}}
                                     >
                                         <div className={'py-3'}>
                                             {distributori.map((d, i) =>
@@ -138,7 +144,7 @@ export default function MappaClient({
 
                 <div
                     ref={rightRef}
-                    className="d-none d-lg-block position-fixed top-0 end-0 h-100 bg-white bg-opacity-75 shadow border-start p-3"
+                    className="d-none d-lg-block position-fixed top-0 end-0 h-100 bg-white shadow border-start p-3"
                     style={{width: '420px', overflowY: 'auto', zIndex: 1030}}>
                     <h6 className="fw-semibold mb-3">Distributori trovati ({distributori.length})</h6>
                     {distributori.length !== 0 ? (
@@ -149,7 +155,7 @@ export default function MappaClient({
                         <p className="">Nessun distributore in zona per i filtri selezionati</p>
                     )}
                 </div>
-*/}
+
             </div>
         </>);
 

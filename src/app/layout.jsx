@@ -1,5 +1,5 @@
 import '../styles/custom.scss';
-import {Montserrat, Open_Sans} from 'next/font/google';
+import {Montserrat, Quicksand} from 'next/font/google';
 import Head from "next/head";
 import {CookieConsentProvider} from "@/components/CookieConsentContext";
 import CookieBanner from "@/components/CookieBanner";
@@ -13,7 +13,7 @@ const montserrat = Montserrat({
     display: 'swap',
 })
 
-const openSans = Open_Sans({
+const openSans = Quicksand({
     weight: "400",
     display: 'swap',
 })
