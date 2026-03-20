@@ -12,7 +12,6 @@ import useLimit from "@/hooks/useLimit";
 import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 import {useModalHistory} from "@/hooks/useModalHistory";
 import {useFilters} from "@/hooks/useFilters";
-import TuneIcon from '@mui/icons-material/Tune';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 
 export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, initialFilters, onSelectStato}) {
@@ -71,7 +70,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
     return (
         <>
             <div
-                className="bg-transparent d-none
+                className="bg-transparent
                 col-12 col-lg-4
                 position-absolute
                 start-0 top-0 p-3 z-3">
@@ -104,47 +103,28 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                                     onClick={() => setShow('carburante')}><LocalGasStationIcon className={'me-1'}/>
                                 <strong>{carburante.toUpperCase()}</strong>
                             </Button> : null}
-
-                        <Button size={'sm'} variant={'light'} className={'border border-dark-subtle shadow-sm'}>
-                            <TuneIcon className={'me-1'}/>
-                            <strong>FILTRI</strong></Button>
-                    </div>
-
-                    <div className={"d-flex gap-2 flex-wrap mb-2 d-none"}>
-
-                        {carburante ?
-                            <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
-                                    onClick={() => setShow('carburante')}>
-                                <strong>{carburante.toUpperCase()}</strong>
-                            </Button> : null}
-                        <Button size="sm" variant="light"
-                                className={'border border-dark-subtle shadow-sm d-flex align-items-center gap-1'}
-                                onClick={() => setShow('marchio')}>
-                            {brand?.id != null
-                                ? <><img alt={brand?.nome} width={16} height={16} src={URI_IMAGE + brand?.logo}/>
-                                    <strong>{brand?.nome}</strong></>
-                                : <span className={'text-muted'}>Marchio</span>}
-                        </Button>
                         <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
                                 onClick={() => setShow('limite')}>
                             <strong>{limit}</strong>
                         </Button>
-                        <Button className={'shadow-sm'} onClick={() => {
-                            setInfo(true);
-                        }} size={"sm"}>INFO</Button>
-                    </div>
 
-                    <div className={"d-flex gap-2 flex-wrap mb-2 d-none"}>
-                        {elencoStati.map((c, i) => {
-                            return <Button
-                                key={i}
-                                size={"sm"}
-                                className={'border border-dark-subtle shadow-sm'}
-                                variant={'light'}
-                                onClick={() => {
-                                    onSelectStato?.(c);
-                                }}> {c.icon} {c.name}</Button>
-                        })}
+                        {/*<Button size={'sm'} variant={'light'} className={'border border-dark-subtle shadow-sm d-none'}>*/}
+                        {/*    <TuneIcon className={'me-1'}/>*/}
+                        {/*    <strong>FILTRI</strong></Button>*/}
+
+                        <div className={"d-flex gap-2 flex-wrap"}>
+                            {elencoStati.map((c, i) => {
+                                return <Button
+                                    key={i}
+                                    size={"sm"}
+                                    className={'border border-dark-subtle shadow-sm'}
+                                    variant={'light'}
+                                    onClick={() => {
+                                        onSelectStato?.(c);
+                                    }}> {c.icon}</Button>
+                            })}
+                        </div>
+
                     </div>
 
                 </>

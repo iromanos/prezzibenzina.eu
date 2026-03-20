@@ -32,7 +32,8 @@ const MappaRisultati = forwardRef(({
                                        showLinkHome = true,
                                        onMoveEnd,
                                        isReadOnly = false,
-                                       isWeFuel = false
+                                       isWeFuel = false,
+                                       showPositionButton = true,
                                    }, ref) => {
 
     useImperativeHandle(ref, () => ({
@@ -49,7 +50,7 @@ const MappaRisultati = forwardRef(({
     const listImpiantiRef = useRef([]);
 
 
-    const headerHeight = 240;
+    const headerHeight = 190;
 
     const [distributori, setDistributori] = useState(distributoriIniziali);
     const [clusteredPoints, setClusteredPoints] = useState([]);
@@ -155,7 +156,7 @@ const MappaRisultati = forwardRef(({
         if (map === undefined) return null;
 
         const container = map.getContainer();
-        const padding = {top: headerHeight, bottom: 96, left: 0, right: rightWidth}; // come da setPadding
+        const padding = {top: headerHeight, bottom: footerHeight, left: 0, right: rightWidth}; // come da setPadding
 
         const width = container.clientWidth;
         const height = container.clientHeight;
@@ -370,7 +371,7 @@ const MappaRisultati = forwardRef(({
             {filter.carburante ? <>
                 <ComparaVicini carburante={filter.carburante}/></> : null}
             {showFilter ?
-                <>
+
                     <FiltriMappaModerni
                         initialFilters={initialFilters}
                         rightWidth={rightWidth}
@@ -398,10 +399,12 @@ const MappaRisultati = forwardRef(({
                             };
                             setFilter(currentFilter);
                         }}/>
-                    <PosizioneAttualeButton
+                : null}
+
+            <PosizioneAttualeButton
                         onPosizione={handlePosizione}
                         rightWidth={rightWidth}
-                        footerHeight={footerHeight}/></> : null}
+                        footerHeight={footerHeight}/>
 
 
             {/*{showLinkHome &&*/}
@@ -419,7 +422,7 @@ const MappaRisultati = forwardRef(({
             {/*}*/}
 
             <Map
-                padding={{bottom: 96, top: headerHeight, right: rightWidth}}
+                padding={{bottom: footerHeight, top: headerHeight, right: rightWidth}}
                 ref={mapRef}
                 attributionControl={false}
                 onLoad={debouncedBoundsChange}

@@ -4,10 +4,6 @@ import MappaRisultati from "@/components/mappe/MappaRisultati";
 import {useEffect, useRef, useState} from 'react';
 import {useFilters} from "@/hooks/useFilters";
 import useNavBarPresence from "@/hooks/useNavBarPresence";
-import Button from "react-bootstrap/Button";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import {AnimatePresence, motion} from 'framer-motion';
-import ImpiantoCard from "@/components/impianti/ImpiantoCard";
 import BottomSheet from "@/components/BottomSheet";
 
 export default function MappaClient({
@@ -21,7 +17,7 @@ export default function MappaClient({
     const [animEnd, setAnimEnd] = useState(true);
 
     const {filters, setFilters} = useFilters(initialFilters);
-    const [showList, setShowList] = useState(false);
+    const [showList, setShowList] = useState(true);
     const [footerHeight, setFooterHeight] = useState(0);
     const [rightWidth, setRightWidth] = useState(0);
     const footerRef = useRef(null);
@@ -30,6 +26,8 @@ export default function MappaClient({
     const [distributori, setDistributori] = useState(distributoriIniziali);
     const {navBarHeight} = useNavBarPresence();
 
+    const [step, setStep] = useState(0);
+    const [showButton, setShowButton] = useState(true);
 
     const [viewState, setViewState] = useState({
         latitude: posizione.lat,
@@ -37,11 +35,10 @@ export default function MappaClient({
         zoom: zoomIniziale,
 
     });
-
+    /*
     useEffect(() => {
         if (footerRef.current) {
-            const height = footerRef.current.offsetHeight;
-            setFooterHeight(height);
+            setFooterHeight(footerRef.current.offsetHeight);
             // log('Footer height:', height);
         } else setFooterHeight(0);
 
@@ -51,16 +48,7 @@ export default function MappaClient({
         } else setRightWidth(0);
 
 
-    }, [distributori]);
-
-    const handleAnimationComplete = () => {
-        if (footerRef.current) {
-            const height = footerRef.current.offsetHeight;
-            setFooterHeight(height);
-            // log('Footer height:', height);
-        } else setFooterHeight(0);
-        setAnimEnd(true);
-    };
+    }, []);*/
 
     useEffect(() => {
         // log('MAPPA CLIENT: MOUNTED');
@@ -87,12 +75,13 @@ export default function MappaClient({
                 <div className={"position-absolute top-0 start-0 w-100 h-100"}>
 
                     <MappaRisultati
+                        showPositionButton={showButton}
                         onMoveEnd={(lat, lng, zoom) => {
                             setFilters({
                                 lat: lat, lng: lng, zoom: zoom
                             })
                         }}
-                        showFilter={showList === false && animEnd}
+                        showFilter={showList}
                         initialFilters={initialFilters}
                         posizione={viewState}
                         rightWidth={rightWidth}
@@ -102,60 +91,17 @@ export default function MappaClient({
                             setDistributori(data);
                         }}/>
                 </div>
-
-                <BottomSheet/>
-
-                <div ref={footerRef}
-                     className="position-absolute bottom-0 w-100 z-3 d-lg-none">
-                    <div className={`bg-white shadow rounded-top-4 p-3`}
-                         style={{overflowY: 'auto'}}>
-                        <div className={'d-flex align-items-center justify-content-between'}>
-                            <h6 className="fw-semibold mb-0">Distributori trovati ({distributori.length})</h6>
-                            {distributori.length !== 0 ? <Button
-
-                                onClick={() => {
-                                    setAnimEnd(false);
-                                    setShowList(!showList);
-                                }}
-
-                                variant={'outline-dark'} size={'sm'}><FormatListBulletedIcon/> Elenco</Button> : null}
-                        </div>
-
-                        {distributori.length !== 0 ?
-                            <AnimatePresence>
-                                {showList && (
-                                    <motion.div
-                                        onAnimationComplete={handleAnimationComplete}
-                                        initial={{height: 0, opacity: 0}}
-                                        animate={{height: 'auto', opacity: 1}}
-                                        exit={{height: 0, opacity: 0}}
-                                        transition={{duration: 0.3}}
-                                        style={{maxHeight: '40vh'}}
-                                    >
-                                        <div className={'py-3'}>
-                                            {distributori.map((d, i) =>
-                                                <ImpiantoCard key={i} impianto={d.properties} cardClient={true}/>
-                                            )}</div>
-                                    </motion.div>)}</AnimatePresence> :
-                            <p className={'m-0'}>Nessun distributore in zona per i filtri selezionati</p>
-                        }
-                    </div>
-                </div>
-
-                <div
-                    ref={rightRef}
-                    className="d-none d-lg-block position-fixed top-0 end-0 h-100 bg-white shadow border-start p-3"
-                    style={{width: '420px', overflowY: 'auto', zIndex: 1030}}>
-                    <h6 className="fw-semibold mb-3">Distributori trovati ({distributori.length})</h6>
-                    {distributori.length !== 0 ? (
-                        distributori.map((d, i) => (
-                            <ImpiantoCard key={i} impianto={d.properties}/>
-                        ))
-                    ) : (
-                        <p className="">Nessun distributore in zona per i filtri selezionati</p>
-                    )}
-                </div>
-
+                <BottomSheet
+                    onWidthChange={(w) => setRightWidth(w)}
+                    onHeightChange={(height) => {
+                        setFooterHeight(height);
+                        setShowButton(step === 0)
+                    }}
+                    onChangeStep={(step) => {
+                        setStep(step);
+                        setShowList(step !== 2)
+                    }}
+                    distributori={distributori}/>
             </div>
         </>);
 
