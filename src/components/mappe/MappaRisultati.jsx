@@ -27,6 +27,7 @@ const MappaRisultati = forwardRef(({
                                        onFetchDistributori,
                                        rightWidth = 0,
                                        footerHeight = 0,
+                                       sheetHeight = 0,
                                        initialFilters,
                                        showFilter = true,
                                        showLinkHome = true,
@@ -34,6 +35,7 @@ const MappaRisultati = forwardRef(({
                                        isReadOnly = false,
                                        isWeFuel = false,
                                        showPositionButton = true,
+                                       onMapClick
                                    }, ref) => {
 
     useImperativeHandle(ref, () => ({
@@ -66,9 +68,21 @@ const MappaRisultati = forwardRef(({
     const [bounds, setBounds] = useState(null);
     const [fadeOutMarker, setFadeOutMarker] = useState(false);
 
+    const [loadMarker, setLoadMarker] = useState(true);
+
+    const handleMapClick = (event) => {
+        const isFeatureClicked = event.features && event.features.length > 0;
+
+        if (!isFeatureClicked) {
+            if (window.innerWidth < 768) {
+                onMapClick();
+            }
+        }
+    };
+
     useEffect(() => {
         const handleFocus = e => {
-            // log(e);
+            setLoadMarker(false);
             const canvas = mapRef.current?.getMap()?.getCanvas();
             canvas?.scrollIntoView({behavior: 'smooth', block: 'start'});
             const {lat, lng, zoom} = e.detail;
@@ -173,6 +187,8 @@ const MappaRisultati = forwardRef(({
     const debouncedBoundsChange = useDebouncedCallback(async () => {
         if (isReadOnly) return;
         if (popupInfo) return;
+        if (loadMarker === false) return;
+
         if (mapRef.current === null) return;
         const riquadroAttuale = calcolaBounds();
 
@@ -360,6 +376,9 @@ const MappaRisultati = forwardRef(({
     }, [filter]);
 
 
+    console.log(footerHeight);
+    console.log(sheetHeight);
+
     // log('MappaRisultati: BUILD');
     return (
         <>
@@ -422,7 +441,11 @@ const MappaRisultati = forwardRef(({
             {/*}*/}
 
             <Map
-                padding={{bottom: footerHeight, top: headerHeight, right: rightWidth}}
+
+                onClick={handleMapClick}
+
+
+                padding={{bottom: footerHeight + sheetHeight, top: headerHeight, right: rightWidth}}
                 ref={mapRef}
                 attributionControl={false}
                 onLoad={debouncedBoundsChange}

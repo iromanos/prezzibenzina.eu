@@ -1,14 +1,27 @@
 import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 import {motion} from 'framer-motion';
 import ImpiantoCard from "@/components/impianti/ImpiantoCard";
+import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 
-const BottomSheet = forwardRef(({onChangeStep, onWidthChange, onHeightChange, distributori = []}, ref) => {
+const BottomSheet = forwardRef(({
+                                    onChangeStep,
+                                    onWidthChange,
+                                    onHeightChange,
+                                    onSheetHeightChange,
+                                    distributori = []
+                                }, ref) => {
     const [step, setStep] = useState(0);
     const [vh, setVh] = useState(0);
     const [isMobile, setIsMobile] = useState(null);
 
-    const HEADER_HEIGHT = 80;
+    const HEADER_HEIGHT = 58;
     const SIDEBAR_WIDTH = 400;
+
+    useEffect(() => {
+        if (isMobile) {
+            onHeightChange(HEADER_HEIGHT);
+        } else onHeightChange(0)
+    }, [isMobile]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -23,7 +36,9 @@ const BottomSheet = forwardRef(({onChangeStep, onWidthChange, onHeightChange, di
                 if (onWidthChange) onWidthChange(SIDEBAR_WIDTH);
             } else {
                 // Su mobile la larghezza "laterale" occupata è 0
-                if (onWidthChange) onWidthChange(0);
+                if (onWidthChange) {
+                    onWidthChange(0);
+                }
             }
         };
 
@@ -37,7 +52,7 @@ const BottomSheet = forwardRef(({onChangeStep, onWidthChange, onHeightChange, di
         mobile: {
             "0": {y: 0, x: 0},
             "1": {y: -(vh * 0.4)},
-            "2": {y: -(vh * 0.85)}
+            "2": {y: -(vh * 0.75)}
         },
         desktop: {
             "0": {x: 0, y: 0},
@@ -64,9 +79,10 @@ const BottomSheet = forwardRef(({onChangeStep, onWidthChange, onHeightChange, di
 
     if (isMobile === null) return null;
 
+
     return (
         <div
-            // CRITICO: Su mobile width 100%, su desktop width SIDEBAR
+
             className={`z-3 pointer-events-none ${isMobile ? 'fixed-bottom w-100' : 'position-fixed end-0 top-0 h-100'}`}
             style={{
                 height: isMobile ? 0 : '100vh',
@@ -92,17 +108,16 @@ const BottomSheet = forwardRef(({onChangeStep, onWidthChange, onHeightChange, di
                     if (onHeightChange && isMobile) {
                         // Calcoliamo l'altezza basandoci sulla variante corrente
                         const currentY = variants.mobile[step].y;
-                        onHeightChange(HEADER_HEIGHT + Math.abs(currentY));
+                        onSheetHeightChange(HEADER_HEIGHT + Math.abs(currentY));
                     }
                 }}
                 className={`bg-white shadow-lg pointer-events-auto d-flex flex-column border ${
                     isMobile ? 'rounded-top-4 w-100' : 'h-100 border-start'
                 }`}
                 style={{
-                    height: isMobile ? '90vh' : '100vh',
+                    height: isMobile ? '100vh' : '100vh',
                     width: isMobile ? '100%' : `${SIDEBAR_WIDTH}px`,
                     position: 'absolute',
-                    // Su mobile ancorato a -80px dal fondo, su desktop a 0
                     top: isMobile ? `-${HEADER_HEIGHT}px` : 0,
                     right: 0,
                 }}
@@ -110,17 +125,17 @@ const BottomSheet = forwardRef(({onChangeStep, onWidthChange, onHeightChange, di
                 {/* HEADER - Area Cliccabile */}
                 <div
                     onClick={nextStep}
-                    className={`p-3 border-bottom flex-shrink-0 ${isMobile ? 'cursor-pointer' : ''}`}
+                    className={`p-2 border-bottom flex-shrink-0 ${isMobile ? 'cursor-pointer' : ''}`}
                     style={{height: `${isMobile ? HEADER_HEIGHT : HEADER_HEIGHT - 16}px`, touchAction: 'none'}}
                 >
                     {isMobile && (
-                        <div className="mx-auto bg-dark bg-opacity-25 rounded-pill mb-3"
+                        <div className="mx-auto bg-dark bg-opacity-25 rounded-pill mb-2"
                              style={{width: '40px', height: '5px'}}/>
                     )}
-                    <div className="d-flex justify-content-between align-items-center px-2">
-                        <h5 className="m-0 fw-bold text-dark">
+                    <div className="px-2">
+                        <h6 className="m-0 fw-bold text-dark text-uppercase">
                             Distributori ({distributori.length})
-                        </h5>
+                        </h6>
                     </div>
                 </div>
 
@@ -129,16 +144,17 @@ const BottomSheet = forwardRef(({onChangeStep, onWidthChange, onHeightChange, di
                     className="overflow-y-auto flex-grow-1"
                     style={{
                         WebkitOverflowScrolling: 'touch',
-                        // Importante: riabilitiamo i pointer events solo se non siamo in "peek" su mobile
                         pointerEvents: (isMobile && step === 0) ? 'none' : 'auto',
                     }}
                 >
                     <div className="p-3">
-                        {distributori.map((d, i) => (
-                            <ImpiantoCard key={i} impianto={d.properties} cardClient={true}/>
-                        ))}
-                        {/* Padding extra per lo scroll mobile */}
-                        {isMobile && <div style={{height: '120px'}}/>}
+                        {distributori.map((d, i) => {
+                            if (isMobile) {
+                                return <ImpiantoCardMobile key={i} impianto={d.properties} cardClient={true}/>
+                            } else return <ImpiantoCard key={i} impianto={d.properties} cardClient={true}/>
+                        })}
+                        {isMobile && step !== 2 && <div style={{height: '320px'}}/>}
+                        {isMobile && step === 2 && <div style={{height: '80px'}}/>}
                     </div>
                 </div>
             </motion.div>

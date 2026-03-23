@@ -1,4 +1,4 @@
-import {getElencoCarburanti, getImpiantiByDistance, getLocationByIp, getMarchi} from "@/functions/api";
+import {getElencoCarburanti, getImpiantiByDistance, getMarchi} from "@/functions/api";
 import MappaClient from "@/components/mappe/MappaClient";
 import {capitalize} from "@/functions/helpers";
 import {cookies, headers} from "next/headers";
@@ -17,11 +17,19 @@ export async function generateMetadata({params, searchParams}) {
     const brand = capitalize(queryParams.marchio || "");
     const headersList = await headers();
 
+    const referer = headersList.get('X-WEFUEL-REFERER');
+
+    let title = 'PrezziBenzina';
+
+    if (referer === "wefuel") {
+        title = 'WeFuel';
+    }
+
     const canonicalUrl = getCanonicalUrl(headersList) + '/mappa';
 
     // Mappa Prezzi Benzina in Italia - Distributori e Carburanti
     return {
-        title: `Mappa Prezzi ${fuel}${brand ? ` - ${brand}` : ""} - Distributori e Carburanti | PrezziBenzina`,
+        title: `Mappa Prezzi ${fuel}${brand ? ` - ${brand}` : ""} - Distributori e Carburanti | ` + title,
         description: `Consulta la mappa interattiva dei distributori di ${fuel}${brand ? ` marchio ${brand} ` : ""} in Italia ed Europa. Prezzi aggiornati per risparmiare sul rifornimento.`,
         alternates: {
             canonical: canonicalUrl,
@@ -69,6 +77,10 @@ export default async function Mappa({searchParams}) {
 
     if (!lat || !lng) {
 
+        lat = 42.5043;
+        lng = 12.5726;
+        /*
+        //TODO va in timeout
         let ip = '185.180.180.225';
         try {
             const h = await headers();
@@ -81,7 +93,7 @@ export default async function Mappa({searchParams}) {
             lat = json.lat;
             lng = json.lon;
         } catch (e) {
-        }
+        }*/
     }
 
     posizione.lat = lat;
@@ -105,30 +117,39 @@ export default async function Mappa({searchParams}) {
     if (posizione.lat === undefined) posizione.lat = 0;
     if (posizione.lng === undefined) posizione.lng = 0;
 
-    // log("DISTRIBUTORI: " + JSON.stringify(posizione));
+    console.log("POSIZIONE: " + JSON.stringify(posizione));
 
-    const response = await getImpiantiByDistance(
-        {
-            lat: posizione.lat,
-            lng: posizione.lng,
-            distance: 30000,
-            carburante: initialFilters.carburante,
-            sort: 'price',
-            limit: 10,
-            brand: initialFilters.brand
-        });
-    const distributori = await response.json();
+    let distributori = [];
 
+    if (posizione.lat !== null && posizione.lng !== null) {
+
+        const response = await getImpiantiByDistance(
+            {
+                lat: posizione.lat,
+                lng: posizione.lng,
+                distance: 30000,
+                carburante: initialFilters.carburante,
+                sort: 'price',
+                limit: 10,
+                brand: initialFilters.brand
+            });
+        distributori = await response.json();
+        console.log("DISTRIBUTORI: " + distributori.length);
+    }
     // log(distributori);
 
     // log("MAPPA: BUILD");
 
-    const zoom = queryParams.zoom;
+    let zoom = queryParams.zoom;
+
+    if (!zoom) zoom = 5;
 
     const headersList = await headers();
 
-    const referer = "wefuel"; //headersList.get('X-WEFUEL-REFERER');
+    const referer = headersList.get('X-WEFUEL-REFERER');
 
+    console.log("REFERER: " + referer);
+    console.log("QUERY PARAMS: " + JSON.stringify(queryParams));
 
     return <MappaClient
         client={referer}

@@ -2,6 +2,7 @@ import React from 'react';
 import ImpiantoCardClient from "@/components/impianti/ImpiantoCardClient";
 import Bandiera from "@/components/Bandiera";
 
+
 export default function ImpiantoCard({impianto, cardClient = true}) {
 
     const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
