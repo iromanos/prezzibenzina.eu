@@ -23,6 +23,8 @@ export default function ImpiantoCardClientVer2({impianto, apriMappa = true}) {
                 lng: impianto.longitudine,
                 zoom: 16,
                 id: impianto.id_impianto,
+                impianto: impianto
+
             }
         }));
     };

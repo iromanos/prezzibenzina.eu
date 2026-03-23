@@ -3,8 +3,11 @@
 
 import React from "react";
 import {log} from "@/functions/helpers";
+import Button from "react-bootstrap/Button";
+import MapIcon from '@mui/icons-material/Map';
+import DirectionsIcon from '@mui/icons-material/Directions';
 
-export default function ImpiantoCardClient({impianto, apriMappa = true}) {
+export default function ImpiantoCardClient({impianto, apriMappa = true, vicini = true, isMobile = false}) {
 
     const {
         nome_impianto,
@@ -21,8 +24,9 @@ export default function ImpiantoCardClient({impianto, apriMappa = true}) {
             detail: {
                 lat: impianto.latitudine,
                 lng: impianto.longitudine,
-                zoom: 16,
+                zoom: 14,
                 id: impianto.id_impianto,
+                impianto: impianto
             }
         }));
     };
@@ -40,28 +44,32 @@ export default function ImpiantoCardClient({impianto, apriMappa = true}) {
     };
 
     return <div className={'d-flex gap-2 flex-wrap align-items-center'}>
-        {apriMappa ?
+        {apriMappa && isMobile && <Button
+            onClick={apriSuMappa}
+            className="btn btn-primary btn-sm">
+            <MapIcon/>
+        </Button>}
+        {apriMappa && isMobile === false ?
             <button
-
                 onClick={apriSuMappa}
-
                 className="btn btn-primary btn-sm"
                 aria-label={`Apri ${impianto.nome_impianto} sulla mappa`}>
                 Apri sulla mappa
             </button> : null}
+        {vicini &&
         <button className="btn btn-outline-primary btn-sm"
                 onClick={confrontaVicini}>
             Confronta vicini
-        </button>
+        </button>}
 
         <a href={mapsUrl} target="_blank" rel="noopener"
-           className="small"
+           className="btn btn-outline-primary btn-sm"
            aria-label={`Naviga verso ${nome_impianto}`}>
-            Vai con Google Maps
+            <DirectionsIcon/> Naviga
         </a>
         {impianto.stato !== "AT" &&
-        <a href={schedaUrl} className="small">
-            Scheda impianto
+            <a href={schedaUrl} className="btn btn-link btn-sm">
+                Scheda
         </a>}
 
     </div>

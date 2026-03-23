@@ -18,7 +18,8 @@ export default function MappaClient({
 
     const {filters, setFilters} = useFilters(initialFilters);
     const [showList, setShowList] = useState(true);
-    const [footerHeight, setFooterHeight] = useState(0);
+    const [sheetHeight, setSheetHeight] = useState(0);
+    const [footerHeight, setFooterHeight] = useState(58);
     const [rightWidth, setRightWidth] = useState(0);
     const footerRef = useRef(null);
     const rightRef = useRef(null);
@@ -35,20 +36,6 @@ export default function MappaClient({
         zoom: zoomIniziale,
 
     });
-    /*
-    useEffect(() => {
-        if (footerRef.current) {
-            setFooterHeight(footerRef.current.offsetHeight);
-            // log('Footer height:', height);
-        } else setFooterHeight(0);
-
-        if (rightRef.current) {
-            const value = rightRef.current.offsetWidth;
-            setRightWidth(value);
-        } else setRightWidth(0);
-
-
-    }, []);*/
 
     useEffect(() => {
         // log('MAPPA CLIENT: MOUNTED');
@@ -75,6 +62,11 @@ export default function MappaClient({
                 <div className={"position-absolute top-0 start-0 w-100 h-100"}>
 
                     <MappaRisultati
+                        onMapClick={() => {
+                            setStep(0);
+                            setShowList(true);
+                            footerRef.current.setStep(0);
+                        }}
                         showPositionButton={showButton}
                         onMoveEnd={(lat, lng, zoom) => {
                             setFilters({
@@ -86,20 +78,31 @@ export default function MappaClient({
                         posizione={viewState}
                         rightWidth={rightWidth}
                         footerHeight={footerHeight}
+                        sheetHeight={sheetHeight}
                         distributoriIniziali={distributoriIniziali}
                         onFetchDistributori={(data) => {
                             setDistributori(data);
                         }}/>
                 </div>
                 <BottomSheet
-                    onWidthChange={(w) => setRightWidth(w)}
+
+                    ref={footerRef}
+
+                    onWidthChange={(w) => {
+                        console.log("FOOTER WIDTH: " + w);
+                        setRightWidth(w);
+                    }}
                     onHeightChange={(height) => {
+                        console.log("FOOTER HEIGHT: " + height);
                         setFooterHeight(height);
-                        setShowButton(step === 0)
                     }}
                     onChangeStep={(step) => {
                         setStep(step);
                         setShowList(step !== 2)
+                    }}
+                    onSheetHeightChange={(h) => {
+                        console.log("SHEET HEIGHT: " + h);
+                        setSheetHeight(h);
                     }}
                     distributori={distributori}/>
             </div>

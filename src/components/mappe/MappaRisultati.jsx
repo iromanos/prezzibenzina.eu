@@ -27,6 +27,7 @@ const MappaRisultati = forwardRef(({
                                        onFetchDistributori,
                                        rightWidth = 0,
                                        footerHeight = 0,
+                                       sheetHeight = 0,
                                        initialFilters,
                                        showFilter = true,
                                        showLinkHome = true,
@@ -34,6 +35,7 @@ const MappaRisultati = forwardRef(({
                                        isReadOnly = false,
                                        isWeFuel = false,
                                        showPositionButton = true,
+                                       onMapClick
                                    }, ref) => {
 
     useImperativeHandle(ref, () => ({
@@ -66,18 +68,51 @@ const MappaRisultati = forwardRef(({
     const [bounds, setBounds] = useState(null);
     const [fadeOutMarker, setFadeOutMarker] = useState(false);
 
+    const [loadMarker, setLoadMarker] = useState(true);
+
+    const handleMapClick = (event) => {
+        setPopupInfo(null);
+        const isFeatureClicked = event.features && event.features.length > 0;
+
+        if (!isFeatureClicked) {
+            if (window.innerWidth < 768) {
+                onMapClick();
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (popupInfo != null) {
+            onMapClick();
+        }
+    }, [popupInfo]);
+
     useEffect(() => {
         const handleFocus = e => {
-            // log(e);
+
+            const isMobile = window.innerWidth < 768;
+
+            setLoadMarker(false);
             const canvas = mapRef.current?.getMap()?.getCanvas();
             canvas?.scrollIntoView({behavior: 'smooth', block: 'start'});
             const {lat, lng, zoom} = e.detail;
-            mapRef.current?.flyTo({center: [lng, lat], zoom, essential: true});
+
+            mapRef.current?.flyTo({
+                padding: {
+                    right: !isMobile ? rightWidth : 0,
+                    bottom: isMobile ? sheetHeight : 0,
+                },
+                center: [lng, lat], zoom,
+                essential: true,
+            });
+            if (!isMobile) {
+                setPopupInfo(e.detail.impianto);
+            }
         };
 
         window.addEventListener('map:focus', handleFocus);
         return () => window.removeEventListener('map:focus', handleFocus);
-    }, []);
+    }, [rightWidth, sheetHeight]);
 
     useEffect(() => {
         // log('MappaRisultati: MOUNTED');
@@ -173,6 +208,8 @@ const MappaRisultati = forwardRef(({
     const debouncedBoundsChange = useDebouncedCallback(async () => {
         if (isReadOnly) return;
         if (popupInfo) return;
+        if (loadMarker === false) return;
+
         if (mapRef.current === null) return;
         const riquadroAttuale = calcolaBounds();
 
@@ -360,6 +397,9 @@ const MappaRisultati = forwardRef(({
     }, [filter]);
 
 
+    console.log(footerHeight);
+    console.log(sheetHeight);
+
     // log('MappaRisultati: BUILD');
     return (
         <>
@@ -422,7 +462,7 @@ const MappaRisultati = forwardRef(({
             {/*}*/}
 
             <Map
-                padding={{bottom: footerHeight, top: headerHeight, right: rightWidth}}
+                onClick={handleMapClick}
                 ref={mapRef}
                 attributionControl={false}
                 onLoad={debouncedBoundsChange}
@@ -433,6 +473,7 @@ const MappaRisultati = forwardRef(({
 
                 onMoveEnd={() => {
                     debouncedBoundsChange();
+                    setLoadMarker(true);
                 }}
 
             >
