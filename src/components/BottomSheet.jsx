@@ -1,8 +1,8 @@
 import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 import {motion} from 'framer-motion';
-import ImpiantoCard from "@/components/impianti/ImpiantoCard";
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 import HomeIcon from '@mui/icons-material/Home';
+import InFeed4656802013 from "@/components/ads/InFeed-4656802013";
 
 const BottomSheet = forwardRef(({
                                     onChangeStep,
@@ -117,7 +117,8 @@ const BottomSheet = forwardRef(({
                 }`}
                 style={{
                     height: isMobile ? '100vh' : '100vh',
-                    width: isMobile ? '100%' : `${SIDEBAR_WIDTH}px`,
+                    width: '100%',
+                    // width: isMobile ? '100%' : `${SIDEBAR_WIDTH}px`,
                     position: 'absolute',
                     top: isMobile ? `-${HEADER_HEIGHT}px` : 0,
                     right: 0,
@@ -141,7 +142,6 @@ const BottomSheet = forwardRef(({
                     </div>
                 </div>
 
-                {/* LISTA */}
                 <div
                     className="overflow-y-auto flex-grow-1"
                     style={{
@@ -151,9 +151,13 @@ const BottomSheet = forwardRef(({
                 >
                     <div className="p-3">
                         {distributori.map((d, i) => {
-                            if (isMobile) {
-                                return <ImpiantoCardMobile key={i} impianto={d.properties} cardClient={true}/>
-                            } else return <ImpiantoCard key={i} impianto={d.properties} cardClient={true}/>
+                            const isAdStep = (i + 1) % 2 === 0;
+
+                            return <div key={i}>
+                                <ImpiantoCardMobile key={i} impianto={d.properties} cardClient={true}/>
+                                {isAdStep ? <InFeed4656802013/> : null}
+                            </div>
+
                         })}
                         {isMobile && step !== 2 && <div style={{height: '320px'}}/>}
                         {isMobile && step === 2 && <div style={{height: '80px'}}/>}

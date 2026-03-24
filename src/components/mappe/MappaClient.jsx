@@ -39,8 +39,7 @@ export default function MappaClient({
 
     useEffect(() => {
         // log('MAPPA CLIENT: MOUNTED');
-        fetch('api/set-cookie', {method: 'POST', body: JSON.stringify(initialFilters)});
-
+        // fetch('api/set-cookie', {method: 'POST', body: JSON.stringify(initialFilters)});
     }, []);
 
     useEffect(() => {

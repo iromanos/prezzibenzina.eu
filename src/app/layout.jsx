@@ -6,6 +6,7 @@ import CookieBanner from "@/components/CookieBanner";
 import Analytics from "@/components/Analytics";
 import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
 import {headers} from "next/headers";
+import Script from "next/script";
 
 
 const montserrat = Montserrat({
@@ -42,6 +43,7 @@ export default async function RootLayout({children}) {
         <html lang="it" className={montserrat.className + ' ' + openSans.className}>
         <Head>
 
+
             <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96"/>
             <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
             <link rel="shortcut icon" href="/favicon.ico"/>
@@ -49,12 +51,17 @@ export default async function RootLayout({children}) {
             <link rel="manifest" href="/site.webmanifest"/>
 
         </Head>
+
+        <Script
+            strategy="afterInteractive"
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7775238513283854"
+            crossOrigin="anonymous"></Script>
+
         <body>
         <AppRouterCacheProvider>
             <CookieConsentProvider>
                 {children}
                 <CookieBanner/>
-                {/*<Adsense/>*/}
                 <Analytics trackId={trackId}/>
             </CookieConsentProvider>
         </AppRouterCacheProvider>

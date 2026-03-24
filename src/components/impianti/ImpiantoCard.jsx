@@ -27,7 +27,7 @@ export default function ImpiantoCard({impianto, cardClient = true}) {
                 <div className="d-flex align-items-start gap-3 mb-2">
                     <img src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
                     <div className={'col'}>
-                        <h5 className="mb-0">{nome_impianto}</h5>
+                        <h5 className="mb-0 text-uppercase">{nome_impianto}</h5>
                         <small className="text-muted">{gestore}</small>
                     </div>
                     <div className={'col-1'}>

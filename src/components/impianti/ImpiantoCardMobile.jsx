@@ -30,7 +30,7 @@ export default function ImpiantoCardMobile({impianto, cardClient = true}) {
                         <h6 className="mb-0 text-uppercase">{nome_impianto}</h6>
                         <small className="text-muted">{gestore}</small>
                     </div>
-                    <span className={'bg-success text-white rounded fs-1 px-2'}>{prezzo.toFixed(3)}<span style={{
+                    <span className={'bg-success text-white rounded fs-2 px-2'}>{prezzo.toFixed(3)}<span style={{
                         fontSize: '0.8rem',
                     }}> €/l</span></span>
                 </div>
