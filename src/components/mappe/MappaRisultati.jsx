@@ -16,8 +16,6 @@ import useLimit from "@/hooks/useLimit";
 import ImpiantoPopupMobile from "@/components/impianti/ImpiantoPopupMobile";
 import Loader from "@/components/home/Loader";
 import Cluster from "@/components/home/Cluster";
-import Link from "react-bootstrap/NavLink"
-import Image from 'next/image';
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import * as turf from '@turf/turf';
 import {bboxPolygon, booleanContains} from '@turf/turf';
@@ -29,12 +27,15 @@ const MappaRisultati = forwardRef(({
                                        onFetchDistributori,
                                        rightWidth = 0,
                                        footerHeight = 0,
+                                       sheetHeight = 0,
                                        initialFilters,
                                        showFilter = true,
                                        showLinkHome = true,
                                        onMoveEnd,
                                        isReadOnly = false,
-                                       isWeFuel = false
+                                       isWeFuel = false,
+                                       showPositionButton = true,
+                                       onMapClick
                                    }, ref) => {
 
     useImperativeHandle(ref, () => ({
@@ -51,7 +52,7 @@ const MappaRisultati = forwardRef(({
     const listImpiantiRef = useRef([]);
 
 
-    const headerHeight = 0;
+    const headerHeight = 190;
 
     const [distributori, setDistributori] = useState(distributoriIniziali);
     const [clusteredPoints, setClusteredPoints] = useState([]);
@@ -67,18 +68,51 @@ const MappaRisultati = forwardRef(({
     const [bounds, setBounds] = useState(null);
     const [fadeOutMarker, setFadeOutMarker] = useState(false);
 
+    const [loadMarker, setLoadMarker] = useState(true);
+
+    const handleMapClick = (event) => {
+        setPopupInfo(null);
+        const isFeatureClicked = event.features && event.features.length > 0;
+
+        if (!isFeatureClicked) {
+            if (window.innerWidth < 768) {
+                onMapClick();
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (popupInfo != null) {
+            onMapClick();
+        }
+    }, [popupInfo]);
+
     useEffect(() => {
         const handleFocus = e => {
-            // log(e);
+
+            const isMobile = window.innerWidth < 768;
+
+            setLoadMarker(false);
             const canvas = mapRef.current?.getMap()?.getCanvas();
             canvas?.scrollIntoView({behavior: 'smooth', block: 'start'});
             const {lat, lng, zoom} = e.detail;
-            mapRef.current?.flyTo({center: [lng, lat], zoom, essential: true});
+
+            mapRef.current?.flyTo({
+                padding: {
+                    right: !isMobile ? rightWidth : 0,
+                    bottom: isMobile ? sheetHeight : 0,
+                },
+                center: [lng, lat], zoom,
+                essential: true,
+            });
+            if (!isMobile) {
+                setPopupInfo(e.detail.impianto);
+            }
         };
 
         window.addEventListener('map:focus', handleFocus);
         return () => window.removeEventListener('map:focus', handleFocus);
-    }, []);
+    }, [rightWidth, sheetHeight]);
 
     useEffect(() => {
         // log('MappaRisultati: MOUNTED');
@@ -151,14 +185,13 @@ const MappaRisultati = forwardRef(({
         }
     }
 
-
     const calcolaBounds = () => {
         const map = mapRef.current;
         if (map === null) return null;
         if (map === undefined) return null;
 
         const container = map.getContainer();
-        const padding = {top: headerHeight, bottom: 96, left: 0, right: rightWidth}; // come da setPadding
+        const padding = {top: headerHeight, bottom: footerHeight, left: 0, right: rightWidth}; // come da setPadding
 
         const width = container.clientWidth;
         const height = container.clientHeight;
@@ -175,6 +208,8 @@ const MappaRisultati = forwardRef(({
     const debouncedBoundsChange = useDebouncedCallback(async () => {
         if (isReadOnly) return;
         if (popupInfo) return;
+        if (loadMarker === false) return;
+
         if (mapRef.current === null) return;
         const riquadroAttuale = calcolaBounds();
 
@@ -327,7 +362,6 @@ const MappaRisultati = forwardRef(({
         ];
     }
 
-
     // calcola l'unione di due bounding box
     function bboxUnion(geometry, bboxB) {
         if (geometry === null) {
@@ -363,6 +397,9 @@ const MappaRisultati = forwardRef(({
     }, [filter]);
 
 
+    console.log(footerHeight);
+    console.log(sheetHeight);
+
     // log('MappaRisultati: BUILD');
     return (
         <>
@@ -374,7 +411,7 @@ const MappaRisultati = forwardRef(({
             {filter.carburante ? <>
                 <ComparaVicini carburante={filter.carburante}/></> : null}
             {showFilter ?
-                <>
+
                     <FiltriMappaModerni
                         initialFilters={initialFilters}
                         rightWidth={rightWidth}
@@ -402,26 +439,30 @@ const MappaRisultati = forwardRef(({
                             };
                             setFilter(currentFilter);
                         }}/>
-                    <PosizioneAttualeButton
+                : null}
+
+            <PosizioneAttualeButton
                         onPosizione={handlePosizione}
                         rightWidth={rightWidth}
-                        footerHeight={footerHeight}/></> : null}
+                        footerHeight={footerHeight}/>
 
 
-            {showLinkHome && showFilter && !isWeFuel && <Link
-
-                style={{
-                    bottom: footerHeight,
-                    right: rightWidth
-                }}
-
-                className={'position-absolute z-3 m-3 shadow-sm'} title={'Home'} href={'/'}>
-                <Image className={'rounded'} width={90} height={90}
-                       src={'/assets/logo-180.png'} alt={'PrezzoBenzina.eu'}/>
-            </Link>}
+            {/*{showLinkHome &&*/}
+            {/*    showFilter &&*/}
+            {/*    !isWeFuel &&*/}
+            {/*    <Link*/}
+            {/*        style={{*/}
+            {/*            bottom: footerHeight,*/}
+            {/*            right: rightWidth*/}
+            {/*        }}*/}
+            {/*        className={'position-absolute z-3 m-3 shadow-sm'} title={'Home'} href={'/'}>*/}
+            {/*        <Image className={'rounded'} width={90} height={90}*/}
+            {/*               src={'/assets/logo-180.png'} alt={'PrezzoBenzina.eu'}/>*/}
+            {/*    </Link>*/}
+            {/*}*/}
 
             <Map
-                padding={{bottom: 96, top: headerHeight, right: rightWidth}}
+                onClick={handleMapClick}
                 ref={mapRef}
                 attributionControl={false}
                 onLoad={debouncedBoundsChange}
@@ -432,6 +473,7 @@ const MappaRisultati = forwardRef(({
 
                 onMoveEnd={() => {
                     debouncedBoundsChange();
+                    setLoadMarker(true);
                 }}
 
             >

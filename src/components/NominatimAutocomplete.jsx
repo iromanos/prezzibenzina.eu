@@ -72,7 +72,8 @@ export default function NominatimAutocomplete({onSelect, initialValue}) {
     return (
         <Autocomplete
             value={initialValue}
-            className={'bg-white rounded'}
+            size='small'
+            className={'bg-white shadow-sm'}
             freeSolo
             options={options}
             filterOptions={(opts) => opts}
@@ -97,7 +98,7 @@ export default function NominatimAutocomplete({onSelect, initialValue}) {
             renderInput={(params) => (
                 <TextField
                     value={initialValue}
-                    {...params} label="Indirizzo, città o CAP" variant="outlined"/>
+                    {...params} label="Indirizzo, città o CAP"/>
             )}
         />
     );

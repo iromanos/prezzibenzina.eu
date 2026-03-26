@@ -1,19 +1,20 @@
 import '../styles/custom.scss';
-import {Montserrat, Open_Sans} from 'next/font/google';
+import {Montserrat, Quicksand} from 'next/font/google';
 import Head from "next/head";
 import {CookieConsentProvider} from "@/components/CookieConsentContext";
 import CookieBanner from "@/components/CookieBanner";
 import Analytics from "@/components/Analytics";
-import Adsense from "@/components/Adsense";
 import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
+import {headers} from "next/headers";
+import Script from "next/script";
 
 
 const montserrat = Montserrat({
-    weight: "600",
+    weight: "800",
     display: 'swap',
 })
 
-const openSans = Open_Sans({
+const openSans = Quicksand({
     weight: "400",
     display: 'swap',
 })
@@ -24,10 +25,24 @@ export const metadata = {
     metadataBase: new URL('https://www.prezzibenzina.eu'),
 };
 
-export default function RootLayout({children}) {
+export default async function RootLayout({children}) {
+
+    const headersList = await headers();
+
+    const referer = headersList.get('X-WEFUEL-REFERER');
+
+    let trackId = "G-Q603H5VH66";
+
+    if (referer === "wefuel") {
+        trackId = "G-VNEDGKF1LT";
+    }
+
+    console.log("REFERER: " + referer);
+
     return (
         <html lang="it" className={montserrat.className + ' ' + openSans.className}>
         <Head>
+
 
             <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96"/>
             <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
@@ -36,14 +51,19 @@ export default function RootLayout({children}) {
             <link rel="manifest" href="/site.webmanifest"/>
 
         </Head>
+
+        <Script
+            strategy="afterInteractive"
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7775238513283854"
+            crossOrigin="anonymous"></Script>
+
         <body>
         <AppRouterCacheProvider>
-        <CookieConsentProvider>
-            {children}
-            <CookieBanner/>
-            <Adsense/>
-            <Analytics/>
-        </CookieConsentProvider>
+            <CookieConsentProvider>
+                {children}
+                <CookieBanner/>
+                <Analytics trackId={trackId}/>
+            </CookieConsentProvider>
         </AppRouterCacheProvider>
         </body>
         </html>

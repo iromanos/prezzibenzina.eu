@@ -12,6 +12,8 @@ import useLimit from "@/hooks/useLimit";
 import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 import {useModalHistory} from "@/hooks/useModalHistory";
 import {useFilters} from "@/hooks/useFilters";
+import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import Display6977770298 from "@/components/ads/Display-6977770298";
 
 export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, initialFilters, onSelectStato}) {
 
@@ -69,74 +71,56 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
     return (
         <>
             <div
-
-                style={{
-                    // right: rightWidth
-                }}
-
                 className="bg-transparent
-                col-12 col-lg-4
+                d-flex
+                gap-3
+                col-12 col-lg-9
                 position-absolute
                 start-0 top-0 p-3 z-3">
 
-                <div className={'visually-hidden'}>
-                    <h1 className="">Mappa Interattiva dei Prezzi Carburante in Italia</h1>
-                    <p>
-                        Consulta la <strong>mappa interattiva dei distributori di carburante in Italia</strong> per
-                        trovare i <strong>prezzi aggiornati di benzina, diesel, GPL e metano</strong>.
-                        Scopri i punti vendita più convenienti vicino a te e confronta le tariffe per risparmiare
-                        sul rifornimento in ogni regione.
-                    </p>
-                    <p>Hai la possibilità di selezionare la destinazione del tuo viaggio e confrontare i distributori
-                        lungo il percorso.</p>
-                </div>
-
                 <>
-                    <div className={'mb-2 col'}>
-                        <NominatimAutocomplete
-                            onSelect={(place) => {
-                                // log('Selezionato:' + JSON.stringify(place));
-                                onSearch?.(place);
-                            }}
-                        />
-                    </div>
+                    <div className={'col-lg-6'}>
+                        <div className={'mb-2 col'}>
+                            <NominatimAutocomplete
+                                onSelect={(place) => {
+                                    onSearch?.(place);
+                                }}
+                            />
+                        </div>
 
-                    <div className={"d-flex gap-2 flex-wrap mb-2"}>
-
-                        {carburante ?
+                        <div className={'d-flex gap-2'}>
+                            {carburante ?
+                                <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
+                                        onClick={() => setShow('carburante')}><LocalGasStationIcon className={'me-1'}/>
+                                    <strong>{carburante.toUpperCase()}</strong>
+                                </Button> : null}
                             <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
-                                    onClick={() => setShow('carburante')}>
-                                <strong>{carburante.toUpperCase()}</strong>
-                            </Button> : null}
-                        <Button size="sm" variant="light"
-                                className={'border border-dark-subtle shadow-sm d-flex align-items-center gap-1'}
-                                onClick={() => setShow('marchio')}>
-                            {brand?.id != null
-                                ? <><img alt={brand?.nome} width={16} height={16} src={URI_IMAGE + brand?.logo}/>
-                                    <strong>{brand?.nome}</strong></>
-                                : <span className={'text-muted'}>Marchio</span>}
-                        </Button>
-                        <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
-                                onClick={() => setShow('limite')}>
-                            <strong>{limit}</strong>
-                        </Button>
-                        <Button className={'shadow-sm'} onClick={() => {
-                            setInfo(true);
-                        }} size={"sm"}>INFO</Button>
+                                    onClick={() => setShow('limite')}>
+                                <strong>{limit}</strong>
+                            </Button>
+
+                            {/*<Button size={'sm'} variant={'light'} className={'border border-dark-subtle shadow-sm d-none'}>*/}
+                            {/*    <TuneIcon className={'me-1'}/>*/}
+                            {/*    <strong>FILTRI</strong></Button>*/}
+
+                            <div className={"d-flex gap-2 flex-wrap"}>
+                                {elencoStati.map((c, i) => {
+                                    return <Button
+                                        key={i}
+                                        size={"sm"}
+                                        className={'border border-dark-subtle shadow-sm'}
+                                        variant={'light'}
+                                        onClick={() => {
+                                            onSelectStato?.(c);
+                                        }}> {c.icon}</Button>
+                                })}
+                            </div>
+
+                        </div>
                     </div>
 
-                    <div className={"d-flex gap-2 flex-wrap mb-2 "}>
-                        {elencoStati.map((c, i) => {
-                            return <Button
-                                key={i}
-                                size={"sm"}
-                                className={'border border-dark-subtle shadow-sm'}
-                                variant={'light'}
-                                onClick={() => {
-
-                                    onSelectStato?.(c);
-                                }}> {c.icon} {c.name}</Button>
-                        })}
+                    <div className={'d-none d-xl-block col-5'}>
+                        <Display6977770298/>
                     </div>
 
                 </>

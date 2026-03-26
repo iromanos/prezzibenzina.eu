@@ -1,6 +1,6 @@
 import React from 'react';
-import ImpiantoCardClientVer2 from "@/components/impianti/ImpiantoCardClientVer2";
 import Bandiera from "@/components/Bandiera";
+import ImpiantoCardClient from "@/components/impianti/ImpiantoCardClient";
 
 export default function ImpiantoPopupMobile({impianto}) {
 
@@ -29,20 +29,18 @@ export default function ImpiantoPopupMobile({impianto}) {
                     <Bandiera sigla={impianto.stato}/>
                 </div>
                 <div className={'col'}>
-                        <h6 className="mb-0">{nome_impianto}</h6>
-                        <small className="text-muted">{gestore}</small>
-                    </div>
-
-                </div>
-
-                <p className="mb-1">
+                    <h6 className="mb-0 text-uppercase">{nome_impianto}</h6>
+                    <small className="text-muted d-block">{gestore}</small>
                     {prezzo ? <>
-                        <strong>{prezzo.toFixed(3)} €/L</strong></> : null} {tipo_impianto ? <> - {tipo_impianto}</> : null}<br/>
-                    {indirizzo}{comune ? `, ${comune}` : null} {provincia ? `(${provincia})` : null}
-                </p>
-
+                        <span className={'bg-success text-white rounded fs-3 px-2'}>{prezzo.toFixed(3)} <span style={{
+                            fontSize: '0.8rem',
+                        }}>€/L</span></span></> : null}
+                    </div>
+                </div>
+            <span className={'text-muted small'}>
+                    {indirizzo}{comune ? `, ${comune}` : null} {provincia ? `(${provincia})` : null}</span>
                 <div className="d-flex flex-wrap gap-2 mt-2 small">
-                    <ImpiantoCardClientVer2 impianto={impianto} apriMappa={false}/>
+                    <ImpiantoCardClient apriMappa={false} impianto={impianto} vicini={false} isMobile={true}/>
                 </div>
         </div>
     );

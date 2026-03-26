@@ -2,12 +2,9 @@
 
 import MappaRisultati from "@/components/mappe/MappaRisultati";
 import {useEffect, useRef, useState} from 'react';
-import ImpiantoCard from "@/components/impianti/ImpiantoCard";
 import {useFilters} from "@/hooks/useFilters";
-import Button from "react-bootstrap/Button";
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import {AnimatePresence, motion} from 'framer-motion';
 import useNavBarPresence from "@/hooks/useNavBarPresence";
+import BottomSheet from "@/components/BottomSheet";
 
 export default function MappaClient({
                                         posizione,
@@ -20,8 +17,9 @@ export default function MappaClient({
     const [animEnd, setAnimEnd] = useState(true);
 
     const {filters, setFilters} = useFilters(initialFilters);
-    const [showList, setShowList] = useState(false);
-    const [footerHeight, setFooterHeight] = useState(0);
+    const [showList, setShowList] = useState(true);
+    const [sheetHeight, setSheetHeight] = useState(0);
+    const [footerHeight, setFooterHeight] = useState(58);
     const [rightWidth, setRightWidth] = useState(0);
     const footerRef = useRef(null);
     const rightRef = useRef(null);
@@ -29,6 +27,8 @@ export default function MappaClient({
     const [distributori, setDistributori] = useState(distributoriIniziali);
     const {navBarHeight} = useNavBarPresence();
 
+    const [step, setStep] = useState(0);
+    const [showButton, setShowButton] = useState(true);
 
     const [viewState, setViewState] = useState({
         latitude: posizione.lat,
@@ -38,33 +38,8 @@ export default function MappaClient({
     });
 
     useEffect(() => {
-        if (footerRef.current) {
-            const height = footerRef.current.offsetHeight;
-            setFooterHeight(height);
-            // log('Footer height:', height);
-        } else setFooterHeight(0);
-
-        if (rightRef.current) {
-            const value = rightRef.current.offsetWidth;
-            setRightWidth(value);
-        } else setRightWidth(0);
-
-
-    }, [distributori]);
-
-    const handleAnimationComplete = () => {
-        if (footerRef.current) {
-            const height = footerRef.current.offsetHeight;
-            setFooterHeight(height);
-            // log('Footer height:', height);
-        } else setFooterHeight(0);
-        setAnimEnd(true);
-    };
-
-    useEffect(() => {
         // log('MAPPA CLIENT: MOUNTED');
-        fetch('api/set-cookie', {method: 'POST', body: JSON.stringify(initialFilters)});
-
+        // fetch('api/set-cookie', {method: 'POST', body: JSON.stringify(initialFilters)});
     }, []);
 
     useEffect(() => {
@@ -86,73 +61,49 @@ export default function MappaClient({
                 <div className={"position-absolute top-0 start-0 w-100 h-100"}>
 
                     <MappaRisultati
+                        onMapClick={() => {
+                            setStep(0);
+                            setShowList(true);
+                            footerRef.current.setStep(0);
+                        }}
+                        showPositionButton={showButton}
                         onMoveEnd={(lat, lng, zoom) => {
                             setFilters({
                                 lat: lat, lng: lng, zoom: zoom
                             })
                         }}
-                        showFilter={showList === false && animEnd}
+                        showFilter={showList}
                         initialFilters={initialFilters}
                         posizione={viewState}
                         rightWidth={rightWidth}
                         footerHeight={footerHeight}
+                        sheetHeight={sheetHeight}
                         distributoriIniziali={distributoriIniziali}
                         onFetchDistributori={(data) => {
                             setDistributori(data);
                         }}/>
                 </div>
-                <div ref={footerRef}
-                     className="position-absolute bottom-0 w-100 z-3 d-lg-none">
-                    <div className={`bg-white bg-opacity-75 shadow rounded-top-4 p-3`}
-                         style={{overflowY: 'auto'}}>
-                        <div className={'d-flex align-items-center justify-content-between'}>
-                            <h6 className="fw-semibold mb-0">Distributori trovati ({distributori.length})</h6>
-                            {distributori.length !== 0 ? <Button
+                <BottomSheet
 
-                                onClick={() => {
-                                    setAnimEnd(false);
-                                    setShowList(!showList);
-                                }}
+                    ref={footerRef}
 
-                                variant={'outline-dark'} size={'sm'}><FormatListBulletedIcon/> Elenco</Button> : null}
-                        </div>
-
-                        {distributori.length !== 0 ?
-                            <AnimatePresence>
-                                {showList && (
-
-                                    <motion.div
-                                        onAnimationComplete={handleAnimationComplete}
-                                        initial={{height: 0, opacity: 0}}
-                                        animate={{height: 'auto', opacity: 1}}
-                                        exit={{height: 0, opacity: 0}}
-                                        transition={{duration: 0.3}}
-                                        style={{maxHeight: '80vh'}}
-                                    >
-                                        <div className={'py-3'}>
-                                            {distributori.map((d, i) =>
-                                                <ImpiantoCard key={i} impianto={d.properties} cardClient={true}/>
-                                            )}</div>
-                                    </motion.div>)}</AnimatePresence> :
-                            <p className={'m-0'}>Nessun distributore in zona per i filtri selezionati</p>
-                        }
-                    </div>
-                </div>
-
-                <div
-                    ref={rightRef}
-                    className="d-none d-lg-block position-fixed top-0 end-0 h-100 bg-white bg-opacity-75 shadow border-start p-3"
-                    style={{width: '420px', overflowY: 'auto', zIndex: 1030}}>
-                    <h6 className="fw-semibold mb-3">Distributori trovati ({distributori.length})</h6>
-                    {distributori.length !== 0 ? (
-                        distributori.map((d, i) => (
-                            <ImpiantoCard key={i} impianto={d.properties}/>
-                        ))
-                    ) : (
-                        <p className="">Nessun distributore in zona per i filtri selezionati</p>
-                    )}
-                </div>
-
+                    onWidthChange={(w) => {
+                        console.log("FOOTER WIDTH: " + w);
+                        setRightWidth(w);
+                    }}
+                    onHeightChange={(height) => {
+                        console.log("FOOTER HEIGHT: " + height);
+                        setFooterHeight(height);
+                    }}
+                    onChangeStep={(step) => {
+                        setStep(step);
+                        setShowList(step !== 2)
+                    }}
+                    onSheetHeightChange={(h) => {
+                        console.log("SHEET HEIGHT: " + h);
+                        setSheetHeight(h);
+                    }}
+                    distributori={distributori}/>
             </div>
         </>);
 
