@@ -192,7 +192,7 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     });
 
     const data = await res.json();
-    // log(data);
+    log(data);
 
     const response = NextResponse.json(data);
     response.headers.set('Last-Modified', new Date(data.lastUpdate).toUTCString());
