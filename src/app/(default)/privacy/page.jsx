@@ -14,7 +14,7 @@ import {getCanonicalUrl} from "@/functions/server";
 
 export async function generateMetadata() {
 
-    const canonicalUrl = getCanonicalUrl(headers()) + '/privacy';
+    const canonicalUrl = getCanonicalUrl(await headers()) + '/privacy';
 
 
     return {

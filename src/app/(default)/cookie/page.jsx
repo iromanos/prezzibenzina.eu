@@ -14,7 +14,7 @@ import {headers} from "next/headers";
 
 export async function generateMetadata() {
 
-    const canonicalUrl = getCanonicalUrl(headers()) + '/cookie';
+    const canonicalUrl = getCanonicalUrl(await headers()) + '/cookie';
 
 
     return {

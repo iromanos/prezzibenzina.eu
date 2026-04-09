@@ -7,6 +7,7 @@ import Motivi from "@/components/home/Motivi";
 import MapIcon from '@mui/icons-material/Map';
 import {getCanonicalUrl, getOpenGraph, getTwitter} from "@/functions/server";
 import {headers} from "next/headers";
+import {PlaceHolders} from "../../components/ezoic/Ezoic";
 
 
 export async function generateMetadata() {
@@ -61,7 +62,11 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-
+            <div className={"container"}>
+                <div className={'container'}>
+                    <PlaceHolders ID={102}/>
+                </div>
+            </div>
             <div id='mappa' className={'container mb-4'}>
 
 

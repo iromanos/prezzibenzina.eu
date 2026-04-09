@@ -8,7 +8,7 @@ import {headers} from "next/headers";
 
 export async function generateMetadata() {
 
-    const canonicalUrl = getCanonicalUrl(headers()) + '/ricerca';
+    const canonicalUrl = getCanonicalUrl(await headers()) + '/ricerca';
 
 
     return {

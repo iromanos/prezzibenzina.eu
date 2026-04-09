@@ -2,7 +2,6 @@ import '../styles/custom.scss';
 import {Montserrat, Quicksand} from 'next/font/google';
 import Head from "next/head";
 import {CookieConsentProvider} from "@/components/CookieConsentContext";
-import CookieBanner from "@/components/CookieBanner";
 import Analytics from "@/components/Analytics";
 import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
 import {headers} from "next/headers";
@@ -31,9 +30,11 @@ export default async function RootLayout({children}) {
 
     const referer = headersList.get('X-WEFUEL-REFERER');
 
+    const isFuel = (referer === "wefuel");
+
     let trackId = "G-Q603H5VH66";
 
-    if (referer === "wefuel") {
+    if (isFuel) {
         trackId = "G-VNEDGKF1LT";
     }
 
@@ -51,17 +52,49 @@ export default async function RootLayout({children}) {
             <link rel="manifest" href="/site.webmanifest"/>
 
         </Head>
-
+        {/* Script della CMP di Ezoic */}
         <Script
+            src="https://cmp.gatekeeperconsent.com/min.js"
+            strategy="beforeInteractive"
+            data-cfasync="false"
+        />
+        <Script
+            src="https://the.gatekeeperconsent.com/cmp.min.js"
+            strategy="beforeInteractive"
+            data-cfasync="false"
+        />
+
+        {/* 1. Motore Ezoic principale */}
+        <Script
+            src="//www.ezojs.com/ezoic/sa.min.js"
+            strategy="afterInteractive"
+            async
+        />
+
+        {/* 2. Setup del comando ezstandalone (Inline Script) */}
+        <Script id="ezoic-standalone-setup" strategy="afterInteractive">
+            {`
+                    window.ezstandalone = window.ezstandalone || {};
+                    ezstandalone.cmd = ezstandalone.cmd || [];
+                `}
+        </Script>
+
+        {/* 3. Ezoic Analytics */}
+        <Script
+            src="//ezoicanalytics.com/analytics.js"
+            strategy="afterInteractive"
+        />
+
+        {isFuel && <Script
             strategy="afterInteractive"
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7775238513283854"
-            crossOrigin="anonymous"></Script>
+            crossOrigin="anonymous"></Script>}
 
         <body>
         <AppRouterCacheProvider>
             <CookieConsentProvider>
                 {children}
-                <CookieBanner/>
+                {/*<CookieBanner/>*/}
                 <Analytics trackId={trackId}/>
             </CookieConsentProvider>
         </AppRouterCacheProvider>

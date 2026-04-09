@@ -9,7 +9,9 @@ import {headers} from "next/headers";
 
 export async function generateMetadata() {
 
-    const canonicalUrl = getCanonicalUrl(headers()) + '/contatti';
+    const headerList = await headers();
+
+    const canonicalUrl = getCanonicalUrl(headerList) + '/contatti';
 
 
     return {
