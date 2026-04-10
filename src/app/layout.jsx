@@ -6,6 +6,7 @@ import Analytics from "@/components/Analytics";
 import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
 import {headers} from "next/headers";
 import Script from "next/script";
+import CookieBanner from "@/components/CookieBanner";
 
 
 const montserrat = Montserrat({
@@ -52,38 +53,8 @@ export default async function RootLayout({children}) {
             <link rel="manifest" href="/site.webmanifest"/>
 
         </Head>
-        {/* Script della CMP di Ezoic */}
-        <Script
-            src="https://cmp.gatekeeperconsent.com/min.js"
-            strategy="beforeInteractive"
-            data-cfasync="false"
-        />
-        <Script
-            src="https://the.gatekeeperconsent.com/cmp.min.js"
-            strategy="beforeInteractive"
-            data-cfasync="false"
-        />
 
-        {/* 1. Motore Ezoic principale */}
-        <Script
-            src="//www.ezojs.com/ezoic/sa.min.js"
-            strategy="afterInteractive"
-            async
-        />
-
-        {/* 2. Setup del comando ezstandalone (Inline Script) */}
-        <Script id="ezoic-standalone-setup" strategy="afterInteractive">
-            {`
-                    window.ezstandalone = window.ezstandalone || {};
-                    ezstandalone.cmd = ezstandalone.cmd || [];
-                `}
-        </Script>
-
-        {/* 3. Ezoic Analytics */}
-        <Script
-            src="//ezoicanalytics.com/analytics.js"
-            strategy="afterInteractive"
-        />
+        {/*{isFuel === false && <Cmp />}*/}
 
         {isFuel && <Script
             strategy="afterInteractive"
@@ -94,7 +65,7 @@ export default async function RootLayout({children}) {
         <AppRouterCacheProvider>
             <CookieConsentProvider>
                 {children}
-                {/*<CookieBanner/>*/}
+                {isFuel === false && <CookieBanner/>}
                 <Analytics trackId={trackId}/>
             </CookieConsentProvider>
         </AppRouterCacheProvider>
