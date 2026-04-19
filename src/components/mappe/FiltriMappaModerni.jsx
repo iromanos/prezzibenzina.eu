@@ -13,7 +13,6 @@ import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 import {useModalHistory} from "@/hooks/useModalHistory";
 import {useFilters} from "@/hooks/useFilters";
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
-import Display6977770298 from "@/components/ads/Display-6977770298";
 
 export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, initialFilters, onSelectStato}) {
 
@@ -119,9 +118,9 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                         </div>
                     </div>
 
-                    <div className={'d-none d-xl-block col-5'}>
-                        <Display6977770298/>
-                    </div>
+                    {/*<div className={'d-none d-xl-block col-5'}>*/}
+                    {/*    <Display6977770298/>*/}
+                    {/*</div>*/}
 
                 </>
             </div>

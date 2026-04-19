@@ -2,7 +2,6 @@ import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react
 import {motion} from 'framer-motion';
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 import HomeIcon from '@mui/icons-material/Home';
-import InFeed4656802013 from "@/components/ads/InFeed-4656802013";
 
 const BottomSheet = forwardRef(({
                                     onChangeStep,
@@ -155,7 +154,7 @@ const BottomSheet = forwardRef(({
 
                             return <div key={i}>
                                 <ImpiantoCardMobile key={i} impianto={d.properties} cardClient={true}/>
-                                {isAdStep ? <InFeed4656802013/> : null}
+                                {/*{isAdStep ? <InFeed4656802013/> : null}*/}
                             </div>
 
                         })}
