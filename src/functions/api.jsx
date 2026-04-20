@@ -115,8 +115,8 @@ export function getElencoCarburanti() {
     return r;
 }
 
-export async function getImpianto({params}) {
-    let request = URI + `impianto/${params.impianto}`;
+export async function getImpianto({query}) {
+    let request = URI + `impianto/${query.impianto}`;
 
     log(request);
 

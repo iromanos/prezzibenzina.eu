@@ -82,7 +82,7 @@ const MappaRisultati = forwardRef(({
     };
 
     useEffect(() => {
-        if (popupInfo != null) {
+        if (popupInfo != null && onMapClick != null) {
             onMapClick();
         }
     }, [popupInfo]);

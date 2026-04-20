@@ -8,7 +8,10 @@ import {headers} from "next/headers";
 import {notFound} from "next/navigation";
 
 export async function generateMetadata({params}) {
-    const res = await getImpianto({params});
+
+    const query = await params;
+
+    const res = await getImpianto({query});
 
     log(res);
 
@@ -23,7 +26,7 @@ export async function generateMetadata({params}) {
     const description = `Prezzi aggiornati per ${impianto.nome_impianto} a ${impianto.comune}. Consulta mappa, orari, carburanti e confronta con i vicini.`;
     const headerList = headers();
 
-    const canonicalUrl = getCanonicalUrl(headerList) + '/impianto/' + params.impianto;
+    const canonicalUrl = getCanonicalUrl(await headerList) + '/impianto/' + params.impianto;
 
 
     return {
@@ -36,7 +39,7 @@ export async function generateMetadata({params}) {
                 'x-default': canonicalUrl,
             },
         },
-        openGraph: getOpenGraph(headerList, title, description, imageUrl),
+        openGraph: getOpenGraph(await headerList, title, description, imageUrl),
         twitter: getTwitter(title, description, imageUrl),
 
     };
@@ -44,7 +47,9 @@ export async function generateMetadata({params}) {
 
 export default async function Page({params}) {
 
-    const res = await getImpianto({params});
+    const query = await params;
+
+    const res = await getImpianto({query});
 
     log(res);
 
