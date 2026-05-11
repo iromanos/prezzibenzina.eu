@@ -1,5 +1,6 @@
 import {getCarburanti, getDistributoriRegione, getMarchi, getSeoRegione} from "@/functions/api";
 import {notFound} from "next/navigation";
+import slugify from 'slugify';
 
 
 export function getRouteLink(regione, carburante, marchio, provincia, comune) {
@@ -198,12 +199,14 @@ export function formatDate(iso) {
         year: 'numeric'
     });
 }
+
+/*
 export function slugify(text) {
     return text
         .toLowerCase()
         .trim()
         .replace(/[\s\W-]+/g, '-') // sostituisce spazi e simboli con -
-}
+}*/
 
 export function generateMicrodataGraph(impianti) {
 

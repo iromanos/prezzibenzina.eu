@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {useRouter} from "next/navigation";
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import SearchIcon from "@mui/icons-material/Search";
@@ -34,6 +34,8 @@ export default function SearchForm() {
             const payload = place;
             payload['carburante'] = carburante;
 
+            console.log(payload);
+
             const res = await getRouteByPosition(payload);
             const data = await res.json();
 
@@ -48,17 +50,6 @@ export default function SearchForm() {
 
     const handleGeolocalizza = () => {
         if (posizioneAttuale === null) return;
-        const lat = posizioneAttuale.lat;
-        const lon = posizioneAttuale.lon;
-        window.location.href = `/mappa?lat=${lat}&lng=${lon}`;
-    };
-
-    useEffect(() => {
-
-        if (posizioneAttuale === null) return;
-        log(posizioneAttuale);
-
-
         getNominatimReverse(posizioneAttuale)
             .then((r) => {
                     log(r);
@@ -67,7 +58,10 @@ export default function SearchForm() {
                 }
             );
 
-    }, [posizioneAttuale]);
+        // const lat = posizioneAttuale.lat;
+        // const lon = posizioneAttuale.lon;
+        // window.location.href = `/mappa?lat=${lat}&lng=${lon}`;
+    };
 
     log(carburante);
 

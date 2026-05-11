@@ -9,11 +9,13 @@ import {isMobile} from "react-device-detect";
 import FavoriteToggle from "@/components/FavoriteToogle";
 import ShareButton from "@/components/ShareButton";
 import ComparaVicini from "@/components/ComparaVicini";
-import {log, slugify, ucwords} from "@/functions/helpers";
+import {log, ucwords} from "@/functions/helpers";
 import ImpiantoDescrizione from "@/components/impianti/ImpiantoDescrizione";
 import {getElencoCarburanti} from "@/functions/api";
 import Breadcrumb from "@/components/Breadcrumb";
 import {getVectorTileLayer} from "@/functions/vector-tiles";
+import slugify from 'slugify';
+
 
 export default function ImpiantoScheda({impianto, cookie}) {
     const [showPopup, setShowPopup] = useState(false);
@@ -71,7 +73,14 @@ export default function ImpiantoScheda({impianto, cookie}) {
 
     const comune = () => {
         if (impianto.comune === "") return null;
-        return {id: slugify(impianto.comune), description: ucwords(impianto.comune)};
+        return {
+            id: slugify(impianto.comune, {
+                replacement: '-',  // sostituisce gli spazi con '-'
+                lower: true,       // converte in minuscolo
+                strict: true,      // rimuove caratteri speciali tranne il replacement
+                locale: 'it'
+            }), description: ucwords(impianto.comune)
+        };
     }
 
 

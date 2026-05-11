@@ -54,7 +54,7 @@ export default async function DistributoriPage({params}) {
     return <>
         <Header/>
 
-        <div className="container py-5">
+        <div className="container py-4">
 
             <Breadcrumb
                 riepilogo={riepilogo}
