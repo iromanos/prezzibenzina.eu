@@ -4,6 +4,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SearchIcon from "@mui/icons-material/Search";
 import {getCanonicalUrl} from "@/functions/server";
 import {headers} from "next/headers";
+import Display5745053645 from "../../../components/ads/Display-5745053645";
 
 
 export async function generateMetadata() {
@@ -60,7 +61,7 @@ export default function Ricerca() {
             </div>
 
 
-            <section className="mt-5">
+                <section className="my-5">
                 <h2 className="h4">Trova distributori di carburante vicino a te</h2>
                 <p>
                     Con <strong>PrezziBenzina.eu</strong> puoi cercare in modo semplice e veloce i distributori di carburante più convenienti nella tua zona. Grazie alla nostra piattaforma aggiornata quotidianamente, hai accesso a informazioni affidabili su prezzi di <em>benzina, diesel, GPL, metano ed elettrico</em>.
@@ -73,7 +74,9 @@ export default function Ricerca() {
                 </p>
             </section>
             </div>
-
+            <div className={'container'}>
+                <Display5745053645/>
+            </div>
             {/* CTA AGGRESSIVA */}
             <section className="bg-danger text-white py-5 text-center">
                 <div className="container">
