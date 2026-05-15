@@ -9,7 +9,7 @@ import {getCanonicalUrl, getOpenGraph, getTwitter} from "@/functions/server";
 import {headers} from "next/headers";
 import Display6977770298 from "../../components/ads/Display-6977770298";
 
-
+//TODO: CMP CookiesYes
 export async function generateMetadata() {
 
     const title = 'PrezziBenzina.eu | Risparmia sul Carburante';
