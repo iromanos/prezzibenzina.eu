@@ -1,5 +1,5 @@
 export default function Descrizione() {
-    return <section className="bg-light">
+    return <section className="bg-danger">
         <div className="container">
             <h2 className="mb-3 fw-bold">PrezziBenzina.eu: il tuo alleato per risparmiare</h2>
             <p>

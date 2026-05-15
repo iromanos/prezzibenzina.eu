@@ -3,10 +3,7 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 export default function TuttoSchermoButton({onClick}) {
 
 
-    return <div
-
-        className={'d-flex align-items-end justify-content-between position-absolute m-3 z-3 end-0 bottom-0'}>
-        <button
+    return <button
             onClick={onClick}
             title={'Visualizza a tutto schermo'}
             type={'button'}
@@ -19,6 +16,4 @@ export default function TuttoSchermoButton({onClick}) {
                     d-flex align-items-center justify-content-center
                     rounded-circle "
         ><FullscreenIcon/></button>
-
-    </div>
 }

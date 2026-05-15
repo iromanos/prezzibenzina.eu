@@ -7,6 +7,7 @@ import Motivi from "@/components/home/Motivi";
 import MapIcon from '@mui/icons-material/Map';
 import {getCanonicalUrl, getOpenGraph, getTwitter} from "@/functions/server";
 import {headers} from "next/headers";
+import Display6977770298 from "../../components/ads/Display-6977770298";
 
 
 export async function generateMetadata() {
@@ -39,18 +40,19 @@ export default function Home() {
         <>
             {/* HERO */}
             <div
-                className="container-fluid bg-primary bg-gradient text-white min-vh-100 d-flex align-items-center justify-content-center mb-4">
+                className="container-fluid bg-primary bg-gradient text-white min-vh-50 d-flex align-items-center justify-content-center mb-4 py-4">
                 <div className="text-center px-4">
-                    <img src="/assets/logo-transparent.png" alt="Logo PrezziBenzina.eu" className="mb-4"
+                    <img src="/assets/logo-transparent.png" alt="Logo PrezziBenzina.eu"
+                         className={'col-8'}
                          style={{maxWidth: '320px'}}/>
-                    <h1 className="display-3 fw-bold" style={{fontFamily: 'Montserrat, sans-serif'}}>
+                    <h1 className="display-3 fw-bold">
                         Risparmia ogni giorno sul carburante.
                     </h1>
-                    <p className="lead mb-4" style={{fontFamily: 'Open Sans, sans-serif'}}>
+                    <p className="lead mb-4">
                         Prezzi aggiornati. Mappa interattiva. Distributori in Italia e Svizzera <span
                         className="fi fi-it"></span> <span className="fi fi-ch"></span>
                     </p>
-                    <div className={'d-flex gap-3 justify-content-center align-items-center'}>
+                    <div className={'d-flex gap-3 justify-content-center align-items-center flex-wrap'}>
                         <a title={'Inizia la ricerca'} href="/ricerca" className="btn btn-light btn-lg shadow-sm">
                         <SearchIcon/> Inizia la ricerca
                     </a>
@@ -69,15 +71,15 @@ export default function Home() {
 
 
             <div id='mappa' className={'container mb-4'}>
-
-
                 <MapSection/>
+            </div>
+            <div className={'container mb-4'}>
+                <Display6977770298/>
             </div>
             <div className={'container mb-4'}>
                 <Descrizione/>
             </div>
             <Motivi/>
-
             <div className="container py-5">
                 <h2 className="text-center mb-5 fw-bold" style={{fontFamily: 'Montserrat, sans-serif'}}>Come
                     funziona</h2>

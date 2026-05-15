@@ -38,11 +38,6 @@ export default function MappaClient({
     });
 
     useEffect(() => {
-        // log('MAPPA CLIENT: MOUNTED');
-        // fetch('api/set-cookie', {method: 'POST', body: JSON.stringify(initialFilters)});
-    }, []);
-
-    useEffect(() => {
         const handleFocus = e => {
             setShowList(false);
         };
@@ -50,11 +45,7 @@ export default function MappaClient({
         window.addEventListener('map:focus', handleFocus);
         return () => window.removeEventListener('map:focus', handleFocus);
     }, []);
-    /*
-    log("MAPPA CLIENT: BUILD");
-    log("FILTERS: " + JSON.stringify(filters));
-    log("NAVBAR: " + navBarHeight);
-        */
+
     return (
         <>
             <div className="position-relative full-height-dvh">
@@ -68,9 +59,10 @@ export default function MappaClient({
                         }}
                         showPositionButton={showButton}
                         onMoveEnd={(lat, lng, zoom) => {
+                            /*
                             setFilters({
                                 lat: lat, lng: lng, zoom: zoom
-                            })
+                            })*/
                         }}
                         showFilter={showList}
                         initialFilters={initialFilters}
@@ -88,11 +80,11 @@ export default function MappaClient({
                     ref={footerRef}
 
                     onWidthChange={(w) => {
-                        console.log("FOOTER WIDTH: " + w);
+                        // console.log("FOOTER WIDTH: " + w);
                         setRightWidth(w);
                     }}
                     onHeightChange={(height) => {
-                        console.log("FOOTER HEIGHT: " + height);
+                        // console.log("FOOTER HEIGHT: " + height);
                         setFooterHeight(height);
                     }}
                     onChangeStep={(step) => {
@@ -100,7 +92,7 @@ export default function MappaClient({
                         setShowList(step !== 2)
                     }}
                     onSheetHeightChange={(h) => {
-                        console.log("SHEET HEIGHT: " + h);
+                        // console.log("SHEET HEIGHT: " + h);
                         setSheetHeight(h);
                     }}
                     distributori={distributori}/>

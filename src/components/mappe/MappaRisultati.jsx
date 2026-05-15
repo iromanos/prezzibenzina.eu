@@ -20,6 +20,7 @@ import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import * as turf from '@turf/turf';
 import {bboxPolygon, booleanContains} from '@turf/turf';
 import {getVectorTileLayer} from "@/functions/vector-tiles";
+import TuttoSchermoButton from "@/components/TuttoSchermoButton";
 
 const MappaRisultati = forwardRef(({
                                        posizione,
@@ -35,6 +36,7 @@ const MappaRisultati = forwardRef(({
                                        isReadOnly = false,
                                        isWeFuel = false,
                                        showPositionButton = true,
+                                       showFullScreen = false,
                                        onMapClick
                                    }, ref) => {
 
@@ -238,7 +240,7 @@ const MappaRisultati = forwardRef(({
 
             const record = await response.json();
             if (response.status !== 200) {
-                throw new Error();
+                return;
             }
             setDistributori(record);
             onFetchDistributori?.(record);
@@ -263,7 +265,7 @@ const MappaRisultati = forwardRef(({
     const handlePosizione = (pos) => {
         setFadeOutMarker(true);
         const map = mapRef.current;
-        map.flyTo({center: [pos.lon, pos.lat], zoom: 14});
+        map.flyTo({center: [pos.lon, pos.lat], zoom: 13});
     };
 
     const points = useMemo(() => {
@@ -396,9 +398,19 @@ const MappaRisultati = forwardRef(({
         debouncedBoundsChange();
     }, [filter]);
 
+    useEffect(() => {
+        if (posizioneAttuale === null) return;
+        console.log(posizioneAttuale);
+        console.log(initialFilters.position);
+        if (initialFilters.position.lat !== -1) return;
 
-    console.log(footerHeight);
-    console.log(sheetHeight);
+        console.log("IMPOSTO POSIZIONE INIZIALE DA GEO");
+
+        handlePosizione(posizioneAttuale);
+
+        // log('MAPPA CLIENT: MOUNTED');
+        // fetch('api/set-cookie', {method: 'POST', body: JSON.stringify(initialFilters)});
+    }, [posizioneAttuale]);
 
     // log('MappaRisultati: BUILD');
     return (
@@ -423,14 +435,12 @@ const MappaRisultati = forwardRef(({
                         }}
                         onSearch={(place) => {
                             setFadeOutMarker(true);
-
                             const bbox = [
                                 place.boundingbox[2],
                                 place.boundingbox[0],
                                 place.boundingbox[3],
                                 place.boundingbox[1],
                             ];
-
                             mapRef.current?.fitBounds(bbox);
                         }}
                         onChange={(state) => {
@@ -441,25 +451,22 @@ const MappaRisultati = forwardRef(({
                         }}/>
                 : null}
 
-            <PosizioneAttualeButton
+            <div className={'position-absolute z-3 p-3 d-flex flex-column gap-2'} style={{
+                right: rightWidth,
+                bottom: footerHeight,
+            }}>
+                {showFullScreen &&
+                    <TuttoSchermoButton onClick={() => {
+                        const center = mapRef.current.getCenter();
+                        const zoom = mapRef.current.getZoom();
+                        const uri = `lat=${center.lat}&lng=${center.lng}&zoom=${zoom}`;
+                        window.location.href = `/mappa?${uri}`;
+                    }}/>}
+                {showPositionButton &&
+                    <PosizioneAttualeButton
                         onPosizione={handlePosizione}
-                        rightWidth={rightWidth}
-                        footerHeight={footerHeight}/>
-
-
-            {/*{showLinkHome &&*/}
-            {/*    showFilter &&*/}
-            {/*    !isWeFuel &&*/}
-            {/*    <Link*/}
-            {/*        style={{*/}
-            {/*            bottom: footerHeight,*/}
-            {/*            right: rightWidth*/}
-            {/*        }}*/}
-            {/*        className={'position-absolute z-3 m-3 shadow-sm'} title={'Home'} href={'/'}>*/}
-            {/*        <Image className={'rounded'} width={90} height={90}*/}
-            {/*               src={'/assets/logo-180.png'} alt={'PrezzoBenzina.eu'}/>*/}
-            {/*    </Link>*/}
-            {/*}*/}
+                    />}
+            </div>
 
             <Map
                 onClick={handleMapClick}
@@ -470,7 +477,7 @@ const MappaRisultati = forwardRef(({
                 mapStyle={styleUrl}
                 mapLib={import('maplibre-gl')}
                 style={{width: '100%', height: '100%'}}
-
+                cooperativeGestures={true}
                 onMoveEnd={() => {
                     debouncedBoundsChange();
                     setLoadMarker(true);

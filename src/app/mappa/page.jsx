@@ -45,7 +45,7 @@ export default async function Mappa({searchParams}) {
 
     const queryParams = await searchParams;
 
-    // log(queryParams);
+    console.log(queryParams);
 
     const initialFilters = {};
 
@@ -76,24 +76,17 @@ export default async function Mappa({searchParams}) {
     let posizione = {};
 
     if (!lat || !lng) {
-
         lat = 42.5043;
         lng = 12.5726;
-        /*
-        //TODO va in timeout
-        let ip = '185.180.180.225';
-        try {
-            const h = await headers();
-            const forwarded = h.get('x-forwarded-for');
-            ip = forwarded?.split(',')[0]?.trim() || '8.8.8.8';
-            if (ip === '::1' || !ip) {
-                ip = '185.180.180.225';
-            }
-            const json = await getLocationByIp(ip);
-            lat = json.lat;
-            lng = json.lon;
-        } catch (e) {
-        }*/
+        initialFilters.position = {
+            lat: -1,
+            lng: -1
+        }
+    } else {
+        initialFilters.position = {
+            lat: lat,
+            lng: lng
+        };
     }
 
     posizione.lat = lat;
@@ -117,7 +110,7 @@ export default async function Mappa({searchParams}) {
     if (posizione.lat === undefined) posizione.lat = 0;
     if (posizione.lng === undefined) posizione.lng = 0;
 
-    console.log("POSIZIONE: " + JSON.stringify(posizione));
+    console.log("POSIZIONE: ", posizione);
 
     let distributori = [];
 
@@ -136,9 +129,6 @@ export default async function Mappa({searchParams}) {
         distributori = await response.json();
         console.log("DISTRIBUTORI: " + distributori.length);
     }
-    // log(distributori);
-
-    // log("MAPPA: BUILD");
 
     let zoom = queryParams.zoom;
 
@@ -148,8 +138,8 @@ export default async function Mappa({searchParams}) {
 
     const referer = headersList.get('X-WEFUEL-REFERER');
 
-    console.log("REFERER: " + referer);
-    console.log("QUERY PARAMS: " + JSON.stringify(queryParams));
+    console.log("REFERER", referer);
+    console.log("QUERY PARAMS: ", queryParams);
 
     return <MappaClient
         client={referer}

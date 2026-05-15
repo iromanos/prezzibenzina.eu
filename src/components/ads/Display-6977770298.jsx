@@ -1,10 +1,13 @@
+'use client'
+
 import {useEffect} from "react";
 
 
 export default function Display6977770298() {
 
 
-    if (process.env.NODE_ENV === 'development') return <div className={'p-4'}>Display6977770298</div>;
+    if (process.env.NODE_ENV === 'development') return <div
+        className={'bg-success-subtle p-4 rounded'}>Display6977770298</div>;
 
     useEffect(() => {
         try {
