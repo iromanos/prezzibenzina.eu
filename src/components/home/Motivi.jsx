@@ -1,6 +1,6 @@
 export default function Motivi() {
 
-    return <div className="container">
+    return <div className="container mb-4">
         <h2 className="text-center mb-4 fw-bold" style={{fontFamily: 'Montserrat, sans-serif'}}>Perché
             usarlo</h2>
         <div className="row justify-content-center">

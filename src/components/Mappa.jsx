@@ -52,6 +52,8 @@ export default function Mappa({distributori, title = true, height = '75vh'}) {
                 }}
                 distributori={distributori}/>
             </> : <></>}</div>
+
+
         <Button onClick={event => {
             if (state) {
                 const uri = `lat=${state.center.lat}&lng=${state.center.lng}&zoom=${state.zoom}`;

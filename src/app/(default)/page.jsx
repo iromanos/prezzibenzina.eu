@@ -79,7 +79,14 @@ export default function Home() {
             <div className={'container mb-4'}>
                 <Descrizione/>
             </div>
+
+
             <Motivi/>
+
+            <div className={'container mb-4'}>
+                <Display6977770298/>
+            </div>
+
             <div className="container py-5">
                 <h2 className="text-center mb-5 fw-bold" style={{fontFamily: 'Montserrat, sans-serif'}}>Come
                     funziona</h2>
@@ -115,6 +122,9 @@ export default function Home() {
 
             <CTA/>
 
+            <div className={'container mb-4'}>
+                <Display6977770298/>
+            </div>
 
         </>
     );

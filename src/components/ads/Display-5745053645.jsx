@@ -3,11 +3,11 @@
 import {useEffect} from "react";
 
 
-export default function Display6977770298() {
+export default function Display5745053645() {
 
 
     if (process.env.NODE_ENV === 'development') return <div
-        className={'bg-success-subtle p-4 rounded mb-3'}>Display6977770298</div>;
+        className={'bg-success-subtle p-4 rounded mb-3'}>Display5745053645</div>;
 
     useEffect(() => {
         try {
@@ -19,9 +19,11 @@ export default function Display6977770298() {
 
     return <>
         <ins className="adsbygoogle mb-3"
-             style={{display: 'inline-block', height: '82px', width: '100%'}}
+             style={{display: 'block'}}
              data-ad-client="ca-pub-7775238513283854"
-             data-ad-slot="6977770298"
+             data-ad-slot="5745053645"
+             data-ad-format="auto"
+             data-full-width-responsive="true"
         ></ins>
     </>;
 }

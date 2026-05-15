@@ -14,7 +14,7 @@ export function MapSection() {
     const [stato, setStato] = useState(elencoStati[elencoStati.length - 1]);
 
     return (
-        <div className="container mb-4 bg-danger">
+        <div className="mb-4">
             <h2 className="text-center fw-bold mb-4">Mappa interattiva: Italia e Svizzera in un colpo d’occhio</h2>
             <div
                 style={{

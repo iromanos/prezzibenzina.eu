@@ -12,6 +12,8 @@ import MapIcon from '@mui/icons-material/Map';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import ComparaVicini from "@/components/ComparaVicini";
 import {notFound} from "next/navigation";
+import Display6977770298 from "@/components/ads/Display-6977770298";
+import Display5745053645 from "./ads/Display-5745053645";
 
 export default async function DistributoriPage({params}) {
 
@@ -79,7 +81,18 @@ export default async function DistributoriPage({params}) {
                 {comuni.length > 1 ? <LinkComuni
                     riepilogo={riepilogo}
                     comuni={comuni}/> : <></>}
+
+                <div className={'mb-4'}>
+                    <Display6977770298/>
+                </div>
+
+
             </IntroTextVersione2>
+
+            <div className={'mb-4'}>
+                <Display6977770298/>
+            </div>
+
 
             <div className={'row'}>
                 <div id="distributori" className={'col-md-5 order-1'}>
@@ -90,6 +103,7 @@ export default async function DistributoriPage({params}) {
                     <LinkCarburanti params={riepilogo.request} carburanti={carburanti}/>
                     <LinkMarchio params={riepilogo.request} marchi={marchi}/>
                     {distributori.length !== 0 ? <Mappa distributori={distributori}/> : <></>}
+                    <Display5745053645/>
                 </div>
             </div>
 

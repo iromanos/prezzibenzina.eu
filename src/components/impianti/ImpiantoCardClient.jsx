@@ -6,6 +6,7 @@ import {log} from "@/functions/helpers";
 import Button from "react-bootstrap/Button";
 import MapIcon from '@mui/icons-material/Map';
 import DirectionsIcon from '@mui/icons-material/Directions';
+import RadarIcon from '@mui/icons-material/Radar';
 
 export default function ImpiantoCardClient({impianto, apriMappa = true, vicini = true, isMobile = false}) {
 
@@ -17,7 +18,7 @@ export default function ImpiantoCardClient({impianto, apriMappa = true, vicini =
     } = impianto;
 
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`;
-    const schedaUrl = `/impianto/${link}`;
+
 
     const apriSuMappa = () => {
         window.dispatchEvent(new CustomEvent('map:focus', {
@@ -59,18 +60,14 @@ export default function ImpiantoCardClient({impianto, apriMappa = true, vicini =
         {vicini &&
         <button className="btn btn-outline-primary btn-sm"
                 onClick={confrontaVicini}>
-            Confronta vicini
+            <RadarIcon/> Vicini
         </button>}
 
         <a href={mapsUrl} target="_blank" rel="noopener"
            className="btn btn-outline-primary btn-sm"
            aria-label={`Naviga verso ${nome_impianto}`}>
-            <DirectionsIcon/> Naviga
+            <DirectionsIcon/> Vai
         </a>
-        {impianto.stato !== "AT" &&
-            <a href={schedaUrl} className="btn btn-link btn-sm">
-                Scheda
-        </a>}
 
     </div>
 

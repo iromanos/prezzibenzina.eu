@@ -18,7 +18,9 @@ export default function ImpiantoPopupMobile({impianto}) {
         provincia,
         prezzo,
         image,
+        link
     } = impianto;
+    const schedaUrl = `/impianto/${link}`;
 
 
     return (
@@ -29,8 +31,10 @@ export default function ImpiantoPopupMobile({impianto}) {
                     <Bandiera sigla={impianto.stato}/>
                 </div>
                 <div className={'col'}>
+                    <a href={schedaUrl} className={'text-decoration-none text-dark'}>
+
                     <h6 className="mb-0 text-uppercase">{nome_impianto}</h6>
-                    <small className="text-muted d-block">{gestore}</small>
+                        <small className="text-muted d-block">{gestore}</small></a>
                     {prezzo ? <>
                         <span className={'bg-success text-white rounded fs-3 px-2'}>{prezzo.toFixed(3)} <span style={{
                             fontSize: '0.8rem',

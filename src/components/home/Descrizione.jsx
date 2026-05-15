@@ -1,7 +1,7 @@
 export default function Descrizione() {
-    return <section className="bg-danger">
-        <div className="container">
-            <h2 className="mb-3 fw-bold">PrezziBenzina.eu: il tuo alleato per risparmiare</h2>
+    return <section className="">
+        <div className="card p-4">
+            <h2 className="mb-3 fw-bold text-center">PrezziBenzina.eu: il tuo alleato per risparmiare</h2>
             <p>
                 <strong>PrezziBenzina.eu</strong> ti aiuta a trovare i distributori più convenienti nella tua
                 zona. Grazie alla mappa interattiva e ai filtri intelligenti, puoi cercare impianti per <em>benzina,

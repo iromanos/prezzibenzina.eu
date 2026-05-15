@@ -15,5 +15,6 @@ export default function MappaWrapper({distributori, onMapLoad}) {
     };
 
 
-    return <MappaDistributori distributori={distributori} posizione={posizione} onMapLoad={onMapLoad}/>;
+    return <MappaDistributori distributori={distributori}
+                              posizione={posizione} onMapLoad={onMapLoad}/>;
 }

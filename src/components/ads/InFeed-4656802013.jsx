@@ -1,9 +1,12 @@
+'use client'
+
 import {useEffect} from "react";
 
 
 export default function InFeed4656802013() {
 
-    if (process.env.NODE_ENV === 'development') return <div>InFeed4656802013</div>;
+    if (process.env.NODE_ENV === 'development') return <div
+        className={'bg-success-subtle rounded p-3 mb-3'}>InFeed4656802013</div>;
 
     useEffect(() => {
         try {
@@ -13,7 +16,7 @@ export default function InFeed4656802013() {
         }
     }, []);
 
-    return <div className={"col"}>
+    return <div className={"col mb-3"}>
 
         <ins className={"adsbygoogle"}
              style={{display: 'block'}}

@@ -15,6 +15,7 @@ import {getElencoCarburanti} from "@/functions/api";
 import Breadcrumb from "@/components/Breadcrumb";
 import {getVectorTileLayer} from "@/functions/vector-tiles";
 import slugify from 'slugify';
+import Display5745053645 from "../ads/Display-5745053645";
 
 
 export default function ImpiantoScheda({impianto, cookie}) {
@@ -109,6 +110,8 @@ export default function ImpiantoScheda({impianto, cookie}) {
                     </div>
 
                     <ImpiantoDescrizione impianto={impianto}/>
+                    <Display5745053645/>
+
                     <h2 className={'h5'}>Indirizzo</h2>
                     <p>{indirizzo}{impianto.comune ? `, ${ucwords(impianto.comune)}` : null} {provincia ? `(${provincia})` : null}</p>
                     <div className={'mb-2'}>
@@ -129,7 +132,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
                             ))}
                             </tbody>
                         </table>
-
+                        <Display5745053645/>
 
                     </div>
                     <div className="d-flex gap-2 flex-wrap">
@@ -185,6 +188,8 @@ export default function ImpiantoScheda({impianto, cookie}) {
                         <FavoriteToggle id={impianto.id_impianto}/>
                         <ShareButton impianto={impianto}/>
                     </div>
+
+                    <Display5745053645/>
 
 
                 </div>

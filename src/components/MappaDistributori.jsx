@@ -4,7 +4,6 @@ import {useEffect, useRef, useState} from 'react';
 import Map, {Popup} from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import {isMobile} from 'react-device-detect';
 import ImpiantoPopup from "@/components/impianti/ImpiantoPopup";
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import TuttoSchermoButton from "@/components/TuttoSchermoButton";
@@ -77,11 +76,8 @@ export default function MappaDistributori({
                 if (map === null) return;
                 onMapLoad?.(map.getCenter(), map.getZoom());
             }}
-            dragPan={!isMobile}             // ❌ disabilita pan con un dito
-            scrollZoom={!isMobile}          // ❌ disabilita zoom con scroll
-            doubleClickZoom={!isMobile}     // ❌ disabilita zoom con doppio tap
-            touchZoomRotate={true}      // ✅ abilita pinch-to-zoom e rotazione con due dita
-            interactive={true}          // ✅ mantiene la mappa attiva
+
+            cooperativeGestures={true}
         >
 
             {popupInfo ? <Popup
@@ -106,13 +102,15 @@ export default function MappaDistributori({
 
                 key={d.id_impianto} d={d}/>)}
         </Map>
-
-            <TuttoSchermoButton onClick={() => {
-                if (!mapRef.current) return;
-                const center = mapRef.current.getCenter();
-                const zoom = mapRef.current.getZoom();
-                const uri = `lat=${center.lat}&lng=${center.lng}&zoom=${zoom}`;
-                window.location.href = `/mappa?${uri}`;
-            }}/></>
+            <div className={'position-absolute end-0 bottom-0 m-3'}>
+                <TuttoSchermoButton onClick={() => {
+                    if (!mapRef.current) return;
+                    const center = mapRef.current.getCenter();
+                    const zoom = mapRef.current.getZoom();
+                    const uri = `lat=${center.lat}&lng=${center.lng}&zoom=${zoom}`;
+                    window.location.href = `/mappa?${uri}`;
+                }}/>
+            </div>
+        </>
     );
 }
