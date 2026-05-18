@@ -16,12 +16,25 @@ import Breadcrumb from "@/components/Breadcrumb";
 import {getVectorTileLayer} from "@/functions/vector-tiles";
 import slugify from 'slugify';
 import Display5745053645 from "../ads/Display-5745053645";
-
+import DirectionsIcon from "@mui/icons-material/Directions";
+import {FooterMobile} from "@/components/FooterMobile";
+import Button from "react-bootstrap/Button";
+import {useRouter} from 'next/navigation';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import usePreferiti from "@/hooks/usePreferiti";
 
 export default function ImpiantoScheda({impianto, cookie}) {
     const [showPopup, setShowPopup] = useState(false);
     const styleUrl = getVectorTileLayer();//  'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
     const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
+    const router = useRouter();
+
+    const {preferiti, gestisciClickCuore, ModalComponent, ModalResult} = usePreferiti();
+
+    const isPreferito = () => {
+        return preferiti.includes(impianto.id_impianto);
+    };
 
     const confrontaVicini = () => {
         log('compare:open');
@@ -195,6 +208,27 @@ export default function ImpiantoScheda({impianto, cookie}) {
                 </div>
                 <ComparaVicini carburante={'benzina'}/>
             </div>
+            <FooterMobile>
+                <Button onClick={() => {
+                    router.push(`https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`);
+                }} variant={'success'} size={'lg'}><DirectionsIcon/> Portami qui</Button>
+
+
+                <Button
+                    onClick={() => {
+                        gestisciClickCuore(impianto);
+                    }}
+                    size={'lg'} variant={'light'} className={'text-danger bg-white border-white'}>
+
+                    {isPreferito() ? <FavoriteIcon/> :
+
+                        <FavoriteBorderIcon/>}</Button>
+
+            </FooterMobile>
+
+            {ModalResult}
+            {ModalComponent}
+
         </div>
     );
 }

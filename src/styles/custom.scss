@@ -109,3 +109,7 @@ $theme-colors: (
 .maplibregl-popup-content {
   border-radius: var(--bs-border-radius-lg) !important;
 }
+
+.z-top {
+  z-index: 100000;
+}

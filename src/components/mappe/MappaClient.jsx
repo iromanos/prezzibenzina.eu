@@ -50,20 +50,20 @@ export default function MappaClient({
         <>
             <div className="position-relative full-height-dvh">
                 <div className={"position-absolute top-0 start-0 w-100 h-100"}>
-
                     <MappaRisultati
+                        cooperativeGestures={false}
                         onMapClick={() => {
                             setStep(0);
                             setShowList(true);
                             footerRef.current.setStep(0);
                         }}
                         showPositionButton={showButton}
+                        /*
                         onMoveEnd={(lat, lng, zoom) => {
-                            /*
                             setFilters({
                                 lat: lat, lng: lng, zoom: zoom
-                            })*/
-                        }}
+                            })
+                        }}*/
                         showFilter={showList}
                         initialFilters={initialFilters}
                         posizione={viewState}

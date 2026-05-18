@@ -8,8 +8,12 @@ import MapIcon from '@mui/icons-material/Map';
 import {getCanonicalUrl, getOpenGraph, getTwitter} from "@/functions/server";
 import {headers} from "next/headers";
 import Display6977770298 from "../../components/ads/Display-6977770298";
+import {FooterMobile} from "@/components/FooterMobile";
+import FooterHome from "../../components/home/FooterHome";
 
 //TODO: CMP CookiesYes
+//TODO: gestione preferiti
+
 export async function generateMetadata() {
 
     const title = 'PrezziBenzina.eu | Risparmia sul Carburante';
@@ -34,11 +38,9 @@ export async function generateMetadata() {
     };
 }
 
-
 export default function Home() {
     return (
         <>
-            {/* HERO */}
             <div
                 className="container-fluid bg-primary bg-gradient text-white min-vh-50 d-flex align-items-center justify-content-center mb-4 py-4">
                 <div className="text-center px-4">
@@ -63,32 +65,25 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            {/*<div className={"container"}>*/}
-            {/*    <div className={'container'}>*/}
-            {/*        <PlaceHolders ID={102}/>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-
 
             <div id='mappa' className={'container mb-4'}>
                 <MapSection/>
             </div>
-            <div className={'container mb-4'}>
+            <div className={'container'}>
                 <Display6977770298/>
             </div>
             <div className={'container mb-4'}>
                 <Descrizione/>
             </div>
 
-
             <Motivi/>
 
-            <div className={'container mb-4'}>
+            <div className={'container'}>
                 <Display6977770298/>
             </div>
 
-            <div className="container py-5">
-                <h2 className="text-center mb-5 fw-bold" style={{fontFamily: 'Montserrat, sans-serif'}}>Come
+            <div className="container py-2">
+                <h2 className="text-center fw-bold mb-3" style={{fontFamily: 'Montserrat, sans-serif'}}>Come
                     funziona</h2>
                 <div className="row text-center">
                     {[
@@ -119,12 +114,15 @@ export default function Home() {
                 </div>
             </div>
 
-
             <CTA/>
 
             <div className={'container mb-4'}>
                 <Display6977770298/>
             </div>
+
+            <FooterMobile>
+                <FooterHome/>
+            </FooterMobile>
 
         </>
     );

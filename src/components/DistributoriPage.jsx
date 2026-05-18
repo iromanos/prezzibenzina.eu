@@ -14,6 +14,8 @@ import ComparaVicini from "@/components/ComparaVicini";
 import {notFound} from "next/navigation";
 import Display6977770298 from "@/components/ads/Display-6977770298";
 import Display5745053645 from "./ads/Display-5745053645";
+import FooterHome from "./home/FooterHome";
+import {FooterMobile} from "./FooterMobile";
 
 export default async function DistributoriPage({params}) {
 
@@ -110,7 +112,9 @@ export default async function DistributoriPage({params}) {
 
         </div>
 
-
+        <FooterMobile>
+            <FooterHome/>
+        </FooterMobile>
     </>;
 
 

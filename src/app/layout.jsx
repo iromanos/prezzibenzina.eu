@@ -53,12 +53,12 @@ export default async function RootLayout({children}) {
             <link rel="manifest" href="/site.webmanifest"/>
 
         </Head>
-
+        {process.env.NODE_ENV === 'production' &&
         <Script
             strategy="afterInteractive"
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7775238513283854"
             crossOrigin="anonymous"></Script>
-
+        }
         <body>
         <AppRouterCacheProvider>
             <CookieConsentProvider>

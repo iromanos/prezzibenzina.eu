@@ -5,10 +5,13 @@ import {cookies, headers} from "next/headers";
 import {notFound} from "next/navigation";
 import {getCanonicalUrl} from "@/functions/server";
 
-//TODO: link diretto a Svizzera e Italia
 //TODO: quando cambia la posizione aggiorna il titolo della pagina
 //TODO: quando cambia la posizione aggiorna il campo di ricerca con l'indirizzo
-//TODO: quando cambia il filtro aggionna url della pagina
+//TODO: quando cambia il filtro aggionna url senza fare il refresh continuo di tutta la pagina
+//TODO: impostare la destinazione e visualizzare i distributori lungo il tragitto
+//TODO: il prezzo va a capo nel box impianto
+//TODO: fare il cluster degli impianti
+
 export async function generateMetadata({params, searchParams}) {
 
     const queryParams = await searchParams;

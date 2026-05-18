@@ -102,7 +102,7 @@ export default function SearchForm() {
                 />
             </div>
 
-            <div className="text-center mb-4">
+            <div className="text-center mb-4 d-flex">
 
                 <Button
 
@@ -111,7 +111,7 @@ export default function SearchForm() {
                     onClick={handleGeolocalizza}
                     variant={"light"}
                     className={'me-2'}
-                ><FmdGoodIcon/> Usa la mia posizione</Button>
+                ><FmdGoodIcon/> La mia posizione</Button>
 
                 <button type="submit" className="btn btn-primary"><SearchIcon /> Cerca</button>
             </div>

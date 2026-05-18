@@ -5,6 +5,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import {getCanonicalUrl} from "@/functions/server";
 import {headers} from "next/headers";
 import Display5745053645 from "../../../components/ads/Display-5745053645";
+import {FooterMobile} from "@/components/FooterMobile";
+import FooterHome from "../../../components/home/FooterHome";
 
 
 export async function generateMetadata() {
@@ -104,6 +106,9 @@ export default function Ricerca() {
                     </div>
                 </div>
             </section>
+            <FooterMobile>
+                <FooterHome/>
+            </FooterMobile>
         </>
     );
 }

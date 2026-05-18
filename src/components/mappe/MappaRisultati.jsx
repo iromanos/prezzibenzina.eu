@@ -37,7 +37,8 @@ const MappaRisultati = forwardRef(({
                                        isWeFuel = false,
                                        showPositionButton = true,
                                        showFullScreen = false,
-                                       onMapClick
+                                       onMapClick,
+                                       cooperativeGestures = true
                                    }, ref) => {
 
     useImperativeHandle(ref, () => ({
@@ -477,7 +478,7 @@ const MappaRisultati = forwardRef(({
                 mapStyle={styleUrl}
                 mapLib={import('maplibre-gl')}
                 style={{width: '100%', height: '100%'}}
-                cooperativeGestures={true}
+                cooperativeGestures={cooperativeGestures}
                 onMoveEnd={() => {
                     debouncedBoundsChange();
                     setLoadMarker(true);

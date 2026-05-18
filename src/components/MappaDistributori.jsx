@@ -62,6 +62,14 @@ export default function MappaDistributori({
         });
     }, [bounds]);
     */
+
+    function handleOnMapLoad() {
+        const map = mapRef.current;
+        if (map === null) return;
+        onMapLoad?.(map.getCenter(), map.getZoom());
+    }
+
+
     return (
         <><Map
             ref={mapRef}
@@ -70,12 +78,8 @@ export default function MappaDistributori({
             initialViewState={initState}
             style={{width: '100%', height: '100%'}}
             attributionControl={false}
-            // onLoad={handleMapLoad}
-            onMoveEnd={() => {
-                const map = mapRef.current;
-                if (map === null) return;
-                onMapLoad?.(map.getCenter(), map.getZoom());
-            }}
+            onLoad={handleOnMapLoad}
+            onMoveEnd={handleOnMapLoad}
 
             cooperativeGestures={true}
         >

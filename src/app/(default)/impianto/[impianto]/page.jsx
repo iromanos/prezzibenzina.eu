@@ -64,5 +64,8 @@ export default async function Page({params}) {
     log(cookie);
 
     return <><Header/>
-        <ImpiantoScheda impianto={impianto} cookie={cookie}/></>;
+        <ImpiantoScheda impianto={impianto} cookie={cookie}/>
+
+
+    </>;
 }
