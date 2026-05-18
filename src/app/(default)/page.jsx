@@ -13,7 +13,7 @@ import FooterHome from "../../components/home/FooterHome";
 
 //TODO: CMP CookiesYes
 //TODO: gestione preferiti
-
+//TODO: nella home inserire header
 export async function generateMetadata() {
 
     const title = 'PrezziBenzina.eu | Risparmia sul Carburante';

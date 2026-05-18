@@ -13,6 +13,8 @@ import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 import {useModalHistory} from "@/hooks/useModalHistory";
 import {useFilters} from "@/hooks/useFilters";
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, initialFilters, onSelectStato}) {
 
@@ -21,16 +23,13 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
     const [modal, setModal] = useState(false);
 
     const [marchi, setMarchi] = useState([]);
-
-
     const {setFilters} = useFilters();
 
     const {carburante, setCarburante} = useCarburante(initialFilters.carburante);
     const [brand, setBrand] = useState(null);
     const {limit, setLimit} = useLimit();
 
-
-    // log(initialFilters);
+    const [isBookmark, setIsBookmark] = useState(false);
 
     const elencoCarburanti = getElencoCarburanti();
 
@@ -98,10 +97,6 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                                 <strong>{limit}</strong>
                             </Button>
 
-                            {/*<Button size={'sm'} variant={'light'} className={'border border-dark-subtle shadow-sm d-none'}>*/}
-                            {/*    <TuneIcon className={'me-1'}/>*/}
-                            {/*    <strong>FILTRI</strong></Button>*/}
-
                             <div className={"d-flex gap-2 flex-wrap"}>
                                 {elencoStati.map((c, i) => {
                                     return <Button
@@ -114,6 +109,18 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                                         }}> {c.icon}</Button>
                                 })}
                             </div>
+
+                            <Button size={'sm'} variant={'light'}
+
+                                    onClick={() => {
+                                        setIsBookmark(!isBookmark);
+                                        onChange({bookmark: !isBookmark});
+                                    }}
+
+                                    className={'border border-dark-subtle shadow-sm'}>
+                                {isBookmark ?
+                                    <FavoriteIcon className={'text-danger'}/> :
+                                    <FavoriteBorderIcon className={'text-danger'}/>}</Button>
 
                         </div>
                     </div>

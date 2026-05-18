@@ -5,7 +5,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import {useRouter} from 'next/navigation';
 
 export default function usePreferiti() {
-
+    //TODO: non gestisce gli id che iniziano con "IT-" o "CH-"
     const router = useRouter();
 
     const [preferiti, setPreferiti] = useState([]);

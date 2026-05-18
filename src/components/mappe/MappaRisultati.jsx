@@ -3,7 +3,7 @@
 import Map, {Popup} from 'react-map-gl/maplibre';
 import {forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import {getClustersByBounds, getImpiantiByDistance} from "@/functions/api";
+import {getClustersByBounds, getImpiantiByDistance, getPreferiti} from "@/functions/api";
 import {useDebouncedCallback} from '@/hooks/useDebouncedCallback';
 import PosizioneAttualeButton from "@/components/PosizioneAttualeButton";
 import {usePosizioneAttuale} from '@/hooks/usePosizioneAttuale';
@@ -21,6 +21,7 @@ import * as turf from '@turf/turf';
 import {bboxPolygon, booleanContains} from '@turf/turf';
 import {getVectorTileLayer} from "@/functions/vector-tiles";
 import TuttoSchermoButton from "@/components/TuttoSchermoButton";
+import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 
 const MappaRisultati = forwardRef(({
                                        posizione,
@@ -72,6 +73,8 @@ const MappaRisultati = forwardRef(({
     const [fadeOutMarker, setFadeOutMarker] = useState(false);
 
     const [loadMarker, setLoadMarker] = useState(true);
+
+    const {preferiti} = usePreferitiGlobal();
 
     const handleMapClick = (event) => {
         setPopupInfo(null);
@@ -229,19 +232,27 @@ const MappaRisultati = forwardRef(({
         // log("HAS MOVED ENOUGH: " + hasMovedEnough);
 //        setFadeOutMarker(true);
         try {
-            const response = await getImpiantiByDistance(
-                {
-                    bounds: riquadroAttuale,
-                    carburante: filter.carburante,
-                    sort: 'price',
-                    limit: filter.limite,
-                    brand: filter.brand?.nome
-                });
 
+            let record = [];
 
-            const record = await response.json();
-            if (response.status !== 200) {
-                return;
+            if (filter.bookmark) {
+                const dati = await getPreferiti(preferiti);
+                record = dati.impianti;
+            } else {
+
+                const response = await getImpiantiByDistance(
+                    {
+                        bounds: riquadroAttuale,
+                        carburante: filter.carburante,
+                        sort: 'price',
+                        limit: filter.limite,
+                        brand: filter.brand?.nome
+                    });
+
+                record = await response.json();
+                if (response.status !== 200) {
+                    return;
+                }
             }
             setDistributori(record);
             onFetchDistributori?.(record);
