@@ -78,7 +78,7 @@ const MappaRisultati = forwardRef(({
         const isFeatureClicked = event.features && event.features.length > 0;
 
         if (!isFeatureClicked) {
-            if (window.innerWidth < 768) {
+            if (window.innerWidth <= 768) {
                 onMapClick();
             }
         }

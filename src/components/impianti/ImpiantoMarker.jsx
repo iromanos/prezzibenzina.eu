@@ -36,7 +36,7 @@ export default function ImpiantoMarker({d, onClick, fadeOut = false}) {
             >
                 <img className={'d-block mx-auto my-1'} alt={d.bandiera} width="32" height="32"
                      src={URI_IMAGE + d.image}/>
-                <small>{d.prezzo ? d.prezzo.toFixed(3) : null}</small>
+                <small>{d.prezzo ? d.prezzo : null}</small>
             </div>
         </Marker>
     );

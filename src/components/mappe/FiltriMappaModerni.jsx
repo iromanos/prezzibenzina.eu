@@ -73,13 +73,13 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                 className="bg-transparent
                 d-flex
                 gap-3
-                col-12 col-lg-9
+                col-12 col-lg-6
                 position-absolute
                 start-0 top-0 p-3 z-3">
 
                 <>
-                    <div className={'col-lg-6'}>
-                        <div className={'mb-2 col'}>
+                    <div className={'col-12'}>
+                        <div className={'mb-2 '}>
                             <NominatimAutocomplete
                                 onSelect={(place) => {
                                     onSearch?.(place);
@@ -117,11 +117,6 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
 
                         </div>
                     </div>
-
-                    {/*<div className={'d-none d-xl-block col-5'}>*/}
-                    {/*    <Display6977770298/>*/}
-                    {/*</div>*/}
-
                 </>
             </div>
 

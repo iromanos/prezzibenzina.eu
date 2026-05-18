@@ -22,7 +22,7 @@ import Button from "react-bootstrap/Button";
 import {useRouter} from 'next/navigation';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import usePreferiti from "@/hooks/usePreferiti";
+import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 
 export default function ImpiantoScheda({impianto, cookie}) {
     const [showPopup, setShowPopup] = useState(false);
@@ -30,7 +30,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
     const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
     const router = useRouter();
 
-    const {preferiti, gestisciClickCuore, ModalComponent, ModalResult} = usePreferiti();
+    const {preferiti, gestisciClickCuore, ModalComponent, ModalResult} = usePreferitiGlobal();
 
     const isPreferito = () => {
         return preferiti.includes(impianto.id_impianto);

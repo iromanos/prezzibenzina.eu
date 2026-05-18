@@ -7,7 +7,7 @@ import {useRouter} from 'next/navigation';
 export default function usePreferiti() {
 
     const router = useRouter();
-    // Stato per memorizzare gli ID dei prodotti preferiti
+
     const [preferiti, setPreferiti] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [showResult, setShowResult] = useState(false);
@@ -65,8 +65,11 @@ export default function usePreferiti() {
             <Modal.Footer>
                 <Button onClick={() => {
                     router.push('/preferiti');
-                }} variant="outline-dark" className={''}><FavoriteIcon className={'text-danger'}/> Visualizza
+                }} variant="" className={''}><FavoriteIcon className={'text-danger'}/> Visualizza
                     tutti</Button>
+                <Button onClick={() => {
+                    setShowResult(false);
+                }}>Ok</Button>
             </Modal.Footer>
         </Modal>
     );
@@ -77,7 +80,7 @@ export default function usePreferiti() {
                 Sei sicuro di voler rimuovere <strong>{prodottoSelezionato?.nome_impianto}</strong> dai preferiti?
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="outline-secondary" onClick={chiudiModale}>Annulla</Button>
+                <Button variant="" onClick={chiudiModale}>Annulla</Button>
                 <Button variant="danger" onClick={() => eseguiToggle(prodottoSelezionato?.id_impianto)}>
                     Sì, rimuovi
                 </Button>

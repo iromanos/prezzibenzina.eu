@@ -24,6 +24,8 @@ export default function Header() {
 
                 {/* Desktop menu */}
                     <ul className="nav d-none d-lg-flex">
+                        <li className="nav-item"><Link title={"Preferiti"} href="/preferiti"
+                                                       className="nav-link text-dark">Preferiti</Link></li>
                         <li className="nav-item"><Link title={"Ricerca"} href="/ricerca"
                                                        className="nav-link text-dark">Ricerca</Link></li>
                         <li className="nav-item"><Link title={"Mappa"} href="/mappa"
@@ -40,7 +42,7 @@ export default function Header() {
 
                 {/* Hamburger toggle for mobile */}
                 <button
-                    className="btn"
+                    className="btn d-lg-none"
                     type="button"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#mobileMenu"
@@ -65,6 +67,8 @@ export default function Header() {
 
                 <div className="container">
                     <ul className="nav flex-column ">
+                        <li className="nav-item"><Link title={"Preferiti"} href="/preferiti"
+                                                       className="nav-link text-white">Preferiti</Link></li>
                         <li className="nav-item"><Link title={"Ricerca"} href="/ricerca"
                                                        className="nav-link text-white ">Ricerca</Link></li>
                         <li className="nav-item"><Link title={"Mappa"} href="/mappa"

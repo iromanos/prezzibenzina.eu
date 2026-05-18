@@ -2,6 +2,8 @@ import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react
 import {motion} from 'framer-motion';
 import HomeIcon from '@mui/icons-material/Home';
 import ImpiantoCard from "@/components/impianti/ImpiantoCard";
+import {usePreferitiGlobal} from "@/context/PreferitiProvider";
+import InFeed4656802013 from "@/components/ads/InFeed-4656802013";
 
 const BottomSheet = forwardRef(({
                                     onChangeStep,
@@ -14,8 +16,11 @@ const BottomSheet = forwardRef(({
     const [vh, setVh] = useState(0);
     const [isMobile, setIsMobile] = useState(null);
 
-    const HEADER_HEIGHT = 58;
+    const HEADER_HEIGHT = 72;
     const SIDEBAR_WIDTH = 400;
+
+    const {gestisciClickCuore} = usePreferitiGlobal();
+
 
     useEffect(() => {
         if (isMobile) {
@@ -26,7 +31,7 @@ const BottomSheet = forwardRef(({
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
-            const mobile = width < 768;
+            const mobile = width <= 768;
             setVh(window.innerHeight);
             setIsMobile(mobile);
 
@@ -126,18 +131,18 @@ const BottomSheet = forwardRef(({
                 {/* HEADER - Area Cliccabile */}
                 <div
                     onClick={nextStep}
-                    className={`p-2 border-bottom flex-shrink-0 ${isMobile ? 'cursor-pointer' : ''}`}
-                    style={{height: `${isMobile ? HEADER_HEIGHT : HEADER_HEIGHT - 16}px`, touchAction: 'none'}}
+                    className={`p-3 border-bottom flex-shrink-0 ${isMobile ? 'cursor-pointer' : ''}`}
+                    // style={{height: `${isMobile ? HEADER_HEIGHT : HEADER_HEIGHT}px`, touchAction: 'none'}}
                 >
                     {isMobile && (
                         <div className="mx-auto bg-dark bg-opacity-25 rounded-pill mb-2"
                              style={{width: '40px', height: '5px'}}/>
                     )}
-                    <div className="px-2 d-flex align-items-center justify-content-between">
+                    <div className="d-flex align-items-center justify-content-between">
                         <h6 className="m-0 fw-bold text-dark text-uppercase">
                             Distributori ({distributori.length})
                         </h6>
-                        <a className={'nav-link text-primary'} href={'/'}><HomeIcon/> Home</a>
+                        <a className={'nav-link text-primary'} href={'/'}><HomeIcon className={'fs-2'}/></a>
                     </div>
                 </div>
 
@@ -149,12 +154,18 @@ const BottomSheet = forwardRef(({
                     }}
                 >
                     <div className="p-3">
+
                         {distributori.map((d, i) => {
                             const isAdStep = (i + 1) % 2 === 0;
 
                             return <div key={i}>
-                                <ImpiantoCard key={i} impianto={d.properties} cardClient={true}/>
-                                {/*{isAdStep ? <InFeed4656802013/> : null}*/}
+                                <ImpiantoCard
+                                    onClickPreferiti={() => {
+                                        gestisciClickCuore(d.properties);
+                                    }}
+
+                                    key={i} impianto={d.properties} cardClient={true}/>
+                                {isAdStep ? <InFeed4656802013/> : null}
                             </div>
 
                         })}

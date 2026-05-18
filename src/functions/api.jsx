@@ -19,6 +19,25 @@ const Carburanti = {
     'gpl': '4-x',
 };
 
+export async function getPreferiti(impianti) {
+
+    const body = {
+        ids: impianti
+    };
+
+    const response = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT + '/api/preferiti-guest', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(body)
+    });
+
+    return response.json();
+
+}
+
 export function getElencoStati() {
     const r = [];
 

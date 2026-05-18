@@ -5,6 +5,7 @@ import {useEffect, useRef, useState} from 'react';
 import {useFilters} from "@/hooks/useFilters";
 import useNavBarPresence from "@/hooks/useNavBarPresence";
 import BottomSheet from "@/components/BottomSheet";
+import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 
 export default function MappaClient({
                                         posizione,
@@ -37,6 +38,9 @@ export default function MappaClient({
 
     });
 
+    const {ModalComponent, ModalResult} = usePreferitiGlobal();
+
+
     useEffect(() => {
         const handleFocus = e => {
             setShowList(false);
@@ -58,12 +62,6 @@ export default function MappaClient({
                             footerRef.current.setStep(0);
                         }}
                         showPositionButton={showButton}
-                        /*
-                        onMoveEnd={(lat, lng, zoom) => {
-                            setFilters({
-                                lat: lat, lng: lng, zoom: zoom
-                            })
-                        }}*/
                         showFilter={showList}
                         initialFilters={initialFilters}
                         posizione={viewState}
@@ -80,11 +78,9 @@ export default function MappaClient({
                     ref={footerRef}
 
                     onWidthChange={(w) => {
-                        // console.log("FOOTER WIDTH: " + w);
                         setRightWidth(w);
                     }}
                     onHeightChange={(height) => {
-                        // console.log("FOOTER HEIGHT: " + height);
                         setFooterHeight(height);
                     }}
                     onChangeStep={(step) => {
@@ -92,11 +88,12 @@ export default function MappaClient({
                         setShowList(step !== 2)
                     }}
                     onSheetHeightChange={(h) => {
-                        // console.log("SHEET HEIGHT: " + h);
                         setSheetHeight(h);
                     }}
                     distributori={distributori}/>
             </div>
+            {ModalComponent}
+            {ModalResult}
         </>);
 
 }

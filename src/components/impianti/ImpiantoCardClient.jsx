@@ -7,11 +7,17 @@ import Button from "react-bootstrap/Button";
 import MapIcon from '@mui/icons-material/Map';
 import DirectionsIcon from '@mui/icons-material/Directions';
 import RadarIcon from '@mui/icons-material/Radar';
-import usePreferiti from "../../hooks/usePreferiti";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 
-export default function ImpiantoCardClient({impianto, apriMappa = true, vicini = true, isMobile = false}) {
+export default function ImpiantoCardClient({
+                                               impianto,
+                                               apriMappa = true,
+                                               vicini = true,
+                                               isMobile = false,
+                                               onClickPreferiti = null
+                                           }) {
 
     const {
         nome_impianto,
@@ -20,7 +26,7 @@ export default function ImpiantoCardClient({impianto, apriMappa = true, vicini =
         link,
     } = impianto;
 
-    const {preferiti, gestisciClickCuore, ModalResult, ModalComponent} = usePreferiti();
+    const {preferiti, gestisciClickCuore} = usePreferitiGlobal();
 
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`;
     const isPreferito = () => {
@@ -85,8 +91,6 @@ export default function ImpiantoCardClient({impianto, apriMappa = true, vicini =
             size={"sm"} variant={isPreferito() ? 'danger' : ''} className={isPreferito() ? null : 'text-danger'}>
             {isPreferito() ? <FavoriteIcon/> : <FavoriteBorderIcon/>}
         </Button>
-        {ModalResult}
-        {ModalComponent}
 
     </div>
 

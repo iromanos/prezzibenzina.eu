@@ -7,6 +7,7 @@ import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
 import {headers} from "next/headers";
 import Script from "next/script";
 import CookieBanner from "@/components/CookieBanner";
+import {PreferitiProvider} from "../context/PreferitiProvider";
 
 
 const montserrat = Montserrat({
@@ -61,11 +62,13 @@ export default async function RootLayout({children}) {
         }
         <body>
         <AppRouterCacheProvider>
-            <CookieConsentProvider>
-                {children}
-                {isFuel === false && <CookieBanner/>}
-                <Analytics trackId={trackId}/>
-            </CookieConsentProvider>
+            <PreferitiProvider>
+                <CookieConsentProvider>
+                    {children}
+                    {isFuel === false && <CookieBanner/>}
+                    <Analytics trackId={trackId}/>
+                </CookieConsentProvider>
+            </PreferitiProvider>
         </AppRouterCacheProvider>
         </body>
         </html>
