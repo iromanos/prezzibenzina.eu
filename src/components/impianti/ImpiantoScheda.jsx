@@ -6,7 +6,6 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import ImpiantoPopup from "@/components/impianti/ImpiantoPopup";
 import {isMobile} from "react-device-detect";
-import FavoriteToggle from "@/components/FavoriteToogle";
 import ShareButton from "@/components/ShareButton";
 import ComparaVicini from "@/components/ComparaVicini";
 import {log, ucwords} from "@/functions/helpers";
@@ -23,6 +22,9 @@ import {useRouter} from 'next/navigation';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
+import Link from "next/link";
+import MapIcon from "@mui/icons-material/Map";
+import NearMeIcon from '@mui/icons-material/NearMe';
 
 export default function ImpiantoScheda({impianto, cookie}) {
     const [showPopup, setShowPopup] = useState(false);
@@ -33,7 +35,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
     const {preferiti, gestisciClickCuore, ModalComponent, ModalResult} = usePreferitiGlobal();
 
     const isPreferito = () => {
-        return preferiti.includes(impianto.id_impianto);
+        return preferiti.includes(impianto.id_impianto_pb);
     };
 
     const confrontaVicini = () => {
@@ -149,15 +151,15 @@ export default function ImpiantoScheda({impianto, cookie}) {
 
                     </div>
                     <div className="d-flex gap-2 flex-wrap">
-                        <button id={'confronta'} className="btn btn-outline-primary btn-sm"
+                        <Button size={'sm'} variant={'outline-primary'} id={'confronta'}
                                 onClick={() => confrontaVicini()}>
-                            Confronta Vicini
-                        </button>
-                        <a className="btn btn-primary btn-sm"
+                            <NearMeIcon/> Confronta Vicini
+                        </Button>
+                        <Link className="btn btn-primary btn-sm"
                            href={`https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`}
                            target="_blank" rel="noopener">
-                            Vai con Google Maps
-                        </a>
+                            <MapIcon/> Vai con Google Maps
+                        </Link>
                     </div>
 
 
@@ -197,8 +199,14 @@ export default function ImpiantoScheda({impianto, cookie}) {
                             }
                         </Map>
                     </div>
-                    <div className={'mb-3'}>
-                        <FavoriteToggle id={impianto.id_impianto}/>
+                    <div className={'d-flex gap-2 mb-3'}>
+                        <Button
+                            variant={isPreferito() ? 'danger' : 'outline-danger'}
+                            onClick={() => {
+                                gestisciClickCuore(impianto);
+                            }}
+                            size={'sm'}> {isPreferito() ? <><FavoriteIcon/> Rimuovi dai preferiti</> : <>
+                            <FavoriteBorderIcon/> Aggiungi ai preferiti</>} </Button>
                         <ShareButton impianto={impianto}/>
                     </div>
 

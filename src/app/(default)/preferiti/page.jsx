@@ -22,12 +22,17 @@ export default function Page() {
             return;
         }
         getPreferiti(preferiti).then(value => {
-            setImpianti(value.impianti);
+
+            const record = value.impianti.map((m) => {
+                return m.properties;
+            });
+
+            setImpianti(record);
         })
     }, [preferiti]);
 
 
-    console.log(impianti);
+    console.log("IMPIANTI PREFERITI", impianti);
 
     return <>
         <Header/>

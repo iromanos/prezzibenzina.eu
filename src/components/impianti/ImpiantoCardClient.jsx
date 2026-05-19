@@ -23,14 +23,16 @@ export default function ImpiantoCardClient({
         nome_impianto,
         latitudine,
         longitudine,
-        link,
     } = impianto;
 
     const {preferiti, gestisciClickCuore} = usePreferitiGlobal();
 
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`;
     const isPreferito = () => {
-        return preferiti.includes(impianto.id_impianto);
+
+        const _r = preferiti.includes(impianto.id_impianto_pb);
+
+        return _r;
     };
 
 

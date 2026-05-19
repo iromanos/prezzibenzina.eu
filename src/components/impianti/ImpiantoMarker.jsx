@@ -15,9 +15,9 @@ export default function ImpiantoMarker({d, onClick, fadeOut = false}) {
 
     const color = getMarkerColor(d);
     function getMarkerColor(d) {
-        if (d.color === 0) return 'bg-success';
-        if (d.color === -1) return 'bg-danger';
-        return 'bg-danger';
+        // if (d.color === 0) return 'bg-success';
+        // if (d.color === -1) return 'bg-danger';
+        return '';
     }
 
     return (
@@ -29,12 +29,18 @@ export default function ImpiantoMarker({d, onClick, fadeOut = false}) {
             onClick={onClick}
         >
             <div
-                className={` ${color} text-center border border-white rounded py-1 px-1 cluster-marker ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}`}
+                className={` ${color} text-center 
+                bg-light-subtle
+                pt-1
+                shadow-lg
+                text-dark
+                border border-1 border-secondary 
+                rounded px-1 cluster-marker ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}`}
                  style={{
                      color: 'white',
                  }}
             >
-                <img className={'d-block mx-auto my-1'} alt={d.bandiera} width="32" height="32"
+                <img className={'d-block mx-auto'} alt={d.bandiera} width="32" height="32"
                      src={URI_IMAGE + d.image}/>
                 <small>{d.prezzo ? d.prezzo : null}</small>
             </div>

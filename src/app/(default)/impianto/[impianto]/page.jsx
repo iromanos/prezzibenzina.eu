@@ -28,6 +28,7 @@ export async function generateMetadata({params}) {
 
     const canonicalUrl = getCanonicalUrl(await headerList) + '/impianto/' + params.impianto;
 
+    console.log(impianto);
 
     return {
         title: title,

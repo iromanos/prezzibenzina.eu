@@ -15,7 +15,7 @@ import useCarburante from "@/hooks/useCarburante";
 import useLimit from "@/hooks/useLimit";
 import ImpiantoPopupMobile from "@/components/impianti/ImpiantoPopupMobile";
 import Loader from "@/components/home/Loader";
-import Cluster from "@/components/home/Cluster";
+import {HeatMapLayer} from "@/components/home/Cluster";
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import * as turf from '@turf/turf';
 import {bboxPolygon, booleanContains} from '@turf/turf';
@@ -283,7 +283,7 @@ const MappaRisultati = forwardRef(({
     const points = useMemo(() => {
         setFadeOutMarker(true);
 
-        var record = clusteredPoints.map(f => ({
+        const record = clusteredPoints.map(f => ({
             lng: parseFloat(f.geometry.coordinates[0]),
             lat: parseFloat(f.geometry.coordinates[1]),
             prezzo: f.properties.prezzo,
@@ -513,14 +513,20 @@ const MappaRisultati = forwardRef(({
                     <ImpiantoPopupMobile impianto={popupInfo}/>
 
                 </Popup> : null}
-                <Cluster
-                    fadeOut={fadeOutMarker}
-                    clusters={KDclusters}
-                    onClusterClick={(cluster) => {
-                        const [lng, lat] = cluster.position;
-                        const expansionZoom = mapRef.current.getZoom() + 2;
-                        mapRef.current.getMap().flyTo({center: [lng, lat], zoom: expansionZoom});
-                    }}/>
+
+                <HeatMapLayer distributori={clusteredPoints}/>
+
+                {/*<ClusterLayer distributori={clusteredPoints} />*/}
+
+
+                {/*<Cluster*/}
+                {/*    fadeOut={fadeOutMarker}*/}
+                {/*    clusters={KDclusters}*/}
+                {/*    onClusterClick={(cluster) => {*/}
+                {/*        const [lng, lat] = cluster.position;*/}
+                {/*        const expansionZoom = mapRef.current.getZoom() + 2;*/}
+                {/*        mapRef.current.getMap().flyTo({center: [lng, lat], zoom: expansionZoom});*/}
+                {/*    }}/>*/}
                 <>
                     {distributori.map((d) => {
 

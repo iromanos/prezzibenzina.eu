@@ -31,7 +31,8 @@ export default function MappaDistributori({
     log("bboX: " + JSON.stringify(distributori));
 
     const initState = {
-        bounds: b
+        bounds: b,
+        maxZoom: 13
     }
 
 

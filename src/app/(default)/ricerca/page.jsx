@@ -45,7 +45,7 @@ export default function Ricerca() {
             <Header />
 
             {/* HERO */}
-            <section className=" bg-primary bg-gradient text-white py-5 text-center">
+            <section className=" bg-primary text-white py-5 text-center">
                 <div className="container">
                     <h1 className="display-5 fw-bold mb-3">Trova il distributore più conveniente</h1>
                     <p className="lead mb-4">Filtra per carburante, inserisci la tua posizione e risparmia subito.</p>

@@ -35,7 +35,7 @@ export default function ImpiantoCard({impianto, cardClient = true, onClickPrefer
                         <h5 className="mb-0 text-uppercase">{nome_impianto}</h5>
                         <small className="text-muted">{gestore}</small>
                     </div>
-                    <div className={'col-1'}>
+                    <div className={'col-1 text-end'}>
                         <Bandiera sigla={impianto.stato}/></div>
 
                 </div>

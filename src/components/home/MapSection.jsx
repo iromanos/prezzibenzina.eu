@@ -5,6 +5,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import {getElencoStati} from "@/functions/api";
 import Button from 'react-bootstrap/Button';
 import MappaRisultati from "@/components/mappe/MappaRisultati";
+import {usePreferitiGlobal} from "../../context/PreferitiProvider";
 
 export function MapSection() {
     const mapRef = useRef();
@@ -12,6 +13,7 @@ export function MapSection() {
     const elencoStati = getElencoStati();
 
     const [stato, setStato] = useState(elencoStati[elencoStati.length - 1]);
+    const {preferiti, ModalComponent, ModalResult} = usePreferitiGlobal();
 
     return (
         <div className="mb-4">
@@ -43,7 +45,7 @@ export function MapSection() {
                 {elencoStati.map((c, i) => {
                     return <Button
                         key={i}
-                        variant={` ${stato !== null && stato.id === c.id ? 'btn-primary' : 'btn-outline-primary'} `}
+                        variant={` ${stato !== null && stato.id === c.id ? 'btn-primary' : 'btn-light'} `}
                         onClick={() => {
                             mapRef.current.flyTo({
                                 center: [c.lng, c.lat], zoom: c.zoom,
@@ -52,6 +54,8 @@ export function MapSection() {
                         }}> {c.icon} {c.name}</Button>
                 })}
             </div>
+            {ModalComponent}
+            {ModalResult}
         </div>
     );
 }

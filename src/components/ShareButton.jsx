@@ -1,3 +1,6 @@
+import Button from "react-bootstrap/Button";
+import ShareIcon from '@mui/icons-material/Share';
+
 export default function ShareButton({impianto}) {
     const handleShare = () => {
         if (navigator.share) {
@@ -12,8 +15,8 @@ export default function ShareButton({impianto}) {
     };
 
     return (
-        <button className="btn btn-sm btn-outline-dark" onClick={handleShare}>
-            Condividi
-        </button>
+        <Button variant={'light'} size={'sm'} onClick={handleShare}>
+            <ShareIcon/> Condividi
+        </Button>
     );
 }

@@ -5,7 +5,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import {useRouter} from 'next/navigation';
 
 export default function usePreferiti() {
-    //TODO: non gestisce gli id che iniziano con "IT-" o "CH-"
     const router = useRouter();
 
     const [preferiti, setPreferiti] = useState([]);
@@ -22,12 +21,12 @@ export default function usePreferiti() {
     }, []);
 
     const gestisciClickCuore = (prodotto) => {
-        const isPreferito = preferiti.includes(prodotto.id_impianto);
+        const isPreferito = preferiti.includes(prodotto.id_impianto_pb);
         setProdottoSelezionato(prodotto);
         if (isPreferito) {
             setShowModal(true);
         } else {
-            eseguiToggle(prodotto.id_impianto);
+            eseguiToggle(prodotto.id_impianto_pb);
         }
     };
 
@@ -64,6 +63,7 @@ export default function usePreferiti() {
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={() => {
+                    setShowResult(false);
                     router.push('/preferiti');
                 }} variant="" className={''}><FavoriteIcon className={'text-danger'}/> Visualizza
                     tutti</Button>
@@ -81,7 +81,7 @@ export default function usePreferiti() {
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="" onClick={chiudiModale}>Annulla</Button>
-                <Button variant="danger" onClick={() => eseguiToggle(prodottoSelezionato?.id_impianto)}>
+                <Button variant="danger" onClick={() => eseguiToggle(prodottoSelezionato?.id_impianto_pb)}>
                     Sì, rimuovi
                 </Button>
             </Modal.Footer>

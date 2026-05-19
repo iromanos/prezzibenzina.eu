@@ -25,7 +25,7 @@ export async function getPreferiti(impianti) {
         ids: impianti
     };
 
-    const response = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT + '/api/preferiti-guest', {
+    const response = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT + '/pb/preferiti-guest', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

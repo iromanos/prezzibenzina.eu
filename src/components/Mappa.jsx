@@ -41,9 +41,9 @@ export default function Mappa({distributori, title = true, height = '75vh'}) {
 
     return <section className={"mb-4"}>
         {title ? <h2 className="h5 mb-3">Mappa dei distributori</h2> : null}
-        <div ref={containerRef} className={'border rounded position-relative mb-4'} style={{
-            height: height
-        }}>
+        <div ref={containerRef} className={'border rounded position-relative mb-4 vh-50'}
+            // style={{height: height}}
+        >
             {isVisible ? <><MappaWrapper
                 onMapLoad={(center, zoom) => {
                     setState({

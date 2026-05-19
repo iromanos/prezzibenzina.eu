@@ -10,10 +10,9 @@ import {headers} from "next/headers";
 import Display6977770298 from "../../components/ads/Display-6977770298";
 import {FooterMobile} from "@/components/FooterMobile";
 import FooterHome from "../../components/home/FooterHome";
+import Header from "@/components/Header";
 
 //TODO: CMP CookiesYes
-//TODO: gestione preferiti
-//TODO: nella home inserire header
 export async function generateMetadata() {
 
     const title = 'PrezziBenzina.eu | Risparmia sul Carburante';
@@ -38,16 +37,16 @@ export async function generateMetadata() {
     };
 }
 
+//TODO: inserire sotto la mappa, elenco dei principali comuni italiani
+
 export default function Home() {
     return (
         <>
+            <Header/>
             <div
-                className="container-fluid bg-primary bg-gradient text-white min-vh-50 d-flex align-items-center justify-content-center mb-4 py-4">
+                className="container-fluid bg-primary text-white min-vh-50 d-flex align-items-center justify-content-center mb-4 py-4">
                 <div className="text-center px-4">
-                    <img src="/assets/logo-transparent.png" alt="Logo PrezziBenzina.eu"
-                         className={'col-8'}
-                         style={{maxWidth: '320px'}}/>
-                    <h1 className="display-3 fw-bold">
+                    <h1 className="display-5 fw-bold">
                         Risparmia ogni giorno sul carburante.
                     </h1>
                     <p className="lead mb-4">

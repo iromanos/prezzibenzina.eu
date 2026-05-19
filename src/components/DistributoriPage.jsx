@@ -42,6 +42,9 @@ export default async function DistributoriPage({params}) {
 
     const distributori = await response.json();
 
+
+    console.log(distributori);
+
     const riepilogo = await getSeoRegione(regione, carburante, marchio, sigla, comune);
 
     const comuni = riepilogo.comuni;
