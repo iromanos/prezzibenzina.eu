@@ -44,7 +44,6 @@ export default function Ricerca() {
         <>
             <Header />
 
-            {/* HERO */}
             <section className=" bg-primary text-white py-5 text-center">
                 <div className="container">
                     <h1 className="display-5 fw-bold mb-3">Trova il distributore più conveniente</h1>
@@ -56,25 +55,31 @@ export default function Ricerca() {
 
 
             <div className={"container"}>
-
-            {/* FORM */}
                 <div id='ricerca' className="bg-white rounded-4 shadow p-4 border my-4">
-                <SearchForm />
-            </div>
+                    <SearchForm/>
+                </div>
 
 
                 <section className="my-5">
-                <h2 className="h4">Trova distributori di carburante vicino a te</h2>
-                <p>
-                    Con <strong>PrezziBenzina.eu</strong> puoi cercare in modo semplice e veloce i distributori di carburante più convenienti nella tua zona. Grazie alla nostra piattaforma aggiornata quotidianamente, hai accesso a informazioni affidabili su prezzi di <em>benzina, diesel, GPL, metano ed elettrico</em>.
-                </p>
-                <p>
-                    Inserisci un indirizzo, una città o usa la tua posizione per visualizzare sulla mappa gli impianti più vicini. Puoi filtrare per tipo di carburante, distanza e marchio, così da trovare esattamente ciò che ti serve. Il nostro sistema è ottimizzato per smartphone e tablet, ideale anche per chi è in viaggio.
-                </p>
-                <p>
-                    Ogni giorno migliaia di automobilisti usano <strong>PrezziBenzina.eu</strong> per <strong>risparmiare sul pieno</strong> e scegliere con consapevolezza dove fare rifornimento. Inizia la tua ricerca ora e scopri quanto puoi risparmiare.
-                </p>
-            </section>
+                    <h2 className="h4">Trova distributori di carburante vicino a te</h2>
+                    <p>
+                        Con <strong>PrezziBenzina.eu</strong> puoi cercare in modo semplice e veloce i distributori di
+                        carburante più convenienti nella tua zona. Grazie alla nostra piattaforma aggiornata
+                        quotidianamente, hai accesso a informazioni affidabili su prezzi di <em>benzina, diesel, GPL,
+                        metano ed elettrico</em>.
+                    </p>
+                    <p>
+                        Inserisci un indirizzo, una città o usa la tua posizione per visualizzare sulla mappa gli
+                        impianti più vicini. Puoi filtrare per tipo di carburante, distanza e marchio, così da trovare
+                        esattamente ciò che ti serve. Il nostro sistema è ottimizzato per smartphone e tablet, ideale
+                        anche per chi è in viaggio.
+                    </p>
+                    <p>
+                        Ogni giorno migliaia di automobilisti usano <strong>PrezziBenzina.eu</strong> per <strong>risparmiare
+                        sul pieno</strong> e scegliere con consapevolezza dove fare rifornimento. Inizia la tua ricerca
+                        ora e scopri quanto puoi risparmiare.
+                    </p>
+                </section>
             </div>
             <div className={'container'}>
                 <Display5745053645/>
