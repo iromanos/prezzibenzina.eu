@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Footer() {
     return (
         <footer className="bg-dark text-white mt-auto py-4">
@@ -6,11 +8,10 @@ export default function Footer() {
                     {/* Logo e descrizione */}
                     <div className="col-md-4 mb-3 text-center text-md-start">
                         <a href={'/'} title={'Prezzibenzina.eu'}>
-                        <img
+                            <Image
 
                             width={120}
                             height={120}
-
                             src="/assets/logo-transparent-120.png" alt="Logo PrezziBenzina.eu" className="mb-2"/></a>
                         <p className="small mb-0">
                             PrezziBenzina.eu ti aiuta a trovare i distributori più convenienti nella tua zona. Risparmia ogni giorno.

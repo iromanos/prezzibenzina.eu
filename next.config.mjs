@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    images: {
+        remotePatterns: [
+            new URL('http://localhost:8080/impianto/**'),
+            new URL('http://127.0.0.1:8080/impianto/**'),
+            new URL('https://www.wefuel.it/impianto/**')
+        ],
+    },
     assetPrefix: '/mappa-static',
     sassOptions: {
         quietDeps: true, // silenzia warning da dipendenze

@@ -1,6 +1,7 @@
 import React from 'react';
 import Bandiera from "@/components/Bandiera";
 import ImpiantoCardClient from "@/components/impianti/ImpiantoCardClient";
+import Image from "next/image";
 
 export default function ImpiantoPopupMobile({impianto}) {
 
@@ -27,7 +28,7 @@ export default function ImpiantoPopupMobile({impianto}) {
         <div className={''} key={id_impianto}>
             <div className="d-flex align-items-start gap-3 mb-2">
                 <div className={'text-center'}>
-                    <img className={'d-block'} src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
+                    <Image className={'d-block'} src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
                     <Bandiera sigla={impianto.stato}/>
                 </div>
                 <div className={'col'}>

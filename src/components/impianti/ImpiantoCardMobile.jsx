@@ -1,6 +1,7 @@
 import React from 'react';
 import ImpiantoCardClient from "@/components/impianti/ImpiantoCardClient";
 import Bandiera from "@/components/Bandiera";
+import Image from "next/image";
 
 
 export default function ImpiantoCardMobile({impianto, cardClient = true}) {
@@ -25,7 +26,7 @@ export default function ImpiantoCardMobile({impianto, cardClient = true}) {
         <div className="card mb-3 shadow-sm" key={id_impianto}>
             <div className="card-body p-2">
                 <div className="d-flex align-items-start gap-2">
-                    <img src={URI_IMAGE + image} alt={bandiera} width={56} height={56}/>
+                    <Image src={URI_IMAGE + image} alt={bandiera} width={56} height={56}/>
                     <div className={'col overflow-hidden'}>
                         <h6 className="mb-0 text-uppercase">{nome_impianto}</h6>
                         <small className="text-muted">{gestore}</small>

@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import CloseIcon from '@mui/icons-material/Close';
 import Button from "react-bootstrap/Button";
+import Image from "next/image";
 
 export default function Header() {
 
@@ -17,8 +18,14 @@ export default function Header() {
         <header className="bg-primary sticky-top">
             <div className={'container '}>
                 <nav className="navbar navbar-expand-lg py-3 justify-content-between align-items-center">
-                    <Link title={"Home"} href="/" className="d-flex align-items-center text-decoration-none">
-                        <img height={48} src="/assets/svg/logo-header.svg" alt="PrezziBenzina.eu"
+                    <Link title={"Home"} href="/" className="text-decoration-none">
+                        <Image
+                            width={1024}
+                            height={374}
+                            style={{
+                                width: 'auto',
+                                height: '48px'
+                            }} src="/assets/svg/logo-header.svg" alt="PrezziBenzina.eu"
                          className="me-2"/>
                 </Link>
 
@@ -80,7 +87,7 @@ export default function Header() {
                         {/*    distributori</Link></li>*/}
                     </ul>
                     <div className="text-center px-4">
-                        <img src="/assets/logo-transparent.png" alt="Logo PrezziBenzina.eu"
+                        <Image width={320} height={320} src="/assets/logo-transparent.png" alt="Logo PrezziBenzina.eu"
                              className={'col-8'}
                              style={{maxWidth: '320px'}}/>
                     </div>

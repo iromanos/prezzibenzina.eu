@@ -25,6 +25,7 @@ import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 import Link from "next/link";
 import MapIcon from "@mui/icons-material/Map";
 import NearMeIcon from '@mui/icons-material/NearMe';
+import Image from "next/image";
 
 export default function ImpiantoScheda({impianto, cookie}) {
     const [showPopup, setShowPopup] = useState(false);
@@ -117,7 +118,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
             <div className={'row'}>
                 <div className={'col-lg-7 mb-4'}>
                     <div className="d-flex align-items-center gap-3 mb-3">
-                        <img src={URI_IMAGE + impianto.image} alt={impianto.bandiera} width={96} height={96}/>
+                        <Image src={URI_IMAGE + impianto.image} alt={impianto.bandiera} width={96} height={96}/>
                         <div>
                             <h1 className="mb-0">{impianto.nome_impianto}</h1>
                             <small className="text-muted">{impianto.gestore}</small>

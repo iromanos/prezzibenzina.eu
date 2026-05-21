@@ -1,11 +1,12 @@
 import React from 'react';
 import ImpiantoCardClient from "@/components/impianti/ImpiantoCardClient";
 import Bandiera from "@/components/Bandiera";
+import Image from "next/image";
 
 
 export default function ImpiantoCard({impianto, cardClient = true, onClickPreferiti = null}) {
 
-    const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
+    const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
 
     const {
         id_impianto,
@@ -30,7 +31,7 @@ export default function ImpiantoCard({impianto, cardClient = true, onClickPrefer
             <div className="card-body">
                 <a href={schedaUrl} className={'text-decoration-none text-dark'}>
                 <div className="d-flex align-items-start gap-3 mb-2">
-                    <img src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
+                    <Image src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
                     <div className={'col'}>
                         <h5 className="mb-0 text-uppercase">{nome_impianto}</h5>
                         <small className="text-muted">{gestore}</small>

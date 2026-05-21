@@ -15,6 +15,7 @@ import {useFilters} from "@/hooks/useFilters";
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import Image from "next/image";
 
 export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, initialFilters, onSelectStato}) {
 
@@ -184,7 +185,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                             }}
                         >
                             {m.logo &&
-                                <img width={32} height={32} src={URI_IMAGE + m.logo} alt={m.nome}/>}
+                                <Image width={32} height={32} src={URI_IMAGE + m.logo} alt={m.nome}/>}
                             {m.nome}
                         </Button>
                     ))}

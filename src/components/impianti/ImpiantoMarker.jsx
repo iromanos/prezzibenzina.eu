@@ -1,5 +1,6 @@
 import {Marker} from "react-map-gl/maplibre";
 import {useEffect, useState} from "react";
+import Image from "next/image";
 
 export default function ImpiantoMarker({d, onClick, fadeOut = false}) {
 
@@ -40,7 +41,7 @@ export default function ImpiantoMarker({d, onClick, fadeOut = false}) {
                      color: 'white',
                  }}
             >
-                <img className={'d-block mx-auto'} alt={d.bandiera} width="32" height="32"
+                <Image className={'d-block mx-auto'} alt={d.bandiera} width={32} height={32}
                      src={URI_IMAGE + d.image}/>
                 <small>{d.prezzo ? d.prezzo : null}</small>
             </div>
