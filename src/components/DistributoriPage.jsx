@@ -10,7 +10,6 @@ import {IntroTextVersione2} from "@/components/IntroText";
 import Mappa from "@/components/Mappa";
 import MapIcon from '@mui/icons-material/Map';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import ComparaVicini from "@/components/ComparaVicini";
 import {notFound} from "next/navigation";
 import Display6977770298 from "@/components/ads/Display-6977770298";
 import Display5745053645 from "./ads/Display-5745053645";
@@ -102,7 +101,7 @@ export default async function DistributoriPage({params}) {
             <div className={'row'}>
                 <div id="distributori" className={'col-md-5 order-1'}>
                     <ElencoDistributori Regione={regione} distributori={distributori}/>
-                    <ComparaVicini carburante={carburante}/>
+                    {/*<ComparaVicini carburante={carburante}/>*/}
                 </div>
                 <div id={"mappa"} className={'col-md-7 order-0'}>
                     <LinkCarburanti params={riepilogo.request} carburanti={carburanti}/>

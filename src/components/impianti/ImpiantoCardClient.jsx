@@ -6,7 +6,6 @@ import {log} from "@/functions/helpers";
 import Button from "react-bootstrap/Button";
 import MapIcon from '@mui/icons-material/Map';
 import DirectionsIcon from '@mui/icons-material/Directions';
-import RadarIcon from '@mui/icons-material/Radar';
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
@@ -62,22 +61,16 @@ export default function ImpiantoCardClient({
 
     return <div className={'d-flex gap-2 flex-wrap align-items-center'}>
         {apriMappa && isMobile && <Button
+            aria-label={"Apri sulla mappa"}
             onClick={apriSuMappa}
             className="btn btn-primary btn-sm">
             <MapIcon/>
         </Button>}
-        {apriMappa && isMobile === false ?
-            <button
-                onClick={apriSuMappa}
-                className="btn btn-primary btn-sm"
-                aria-label={`Apri ${impianto.nome_impianto} sulla mappa`}>
-                Apri sulla mappa
-            </button> : null}
-        {vicini &&
-        <button className="btn btn-outline-primary btn-sm"
-                onClick={confrontaVicini}>
-            <RadarIcon/> Vicini
-        </button>}
+        {/*{vicini &&*/}
+        {/*<button className="btn btn-outline-primary btn-sm"*/}
+        {/*        onClick={confrontaVicini}>*/}
+        {/*    <RadarIcon/> Vicini*/}
+        {/*</button>}*/}
 
 
         <a href={mapsUrl} target="_blank" rel="noopener"
@@ -87,6 +80,7 @@ export default function ImpiantoCardClient({
         </a>
 
         <Button
+            aria-label={isPreferito() ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
             onClick={() => {
                 gestisciClickCuore(impianto);
             }}

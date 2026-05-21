@@ -5,9 +5,9 @@ import {CookieConsentProvider} from "@/components/CookieConsentContext";
 import Analytics from "@/components/Analytics";
 import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
 import {headers} from "next/headers";
-import Script from "next/script";
 import CookieBanner from "@/components/CookieBanner";
 import {PreferitiProvider} from "../context/PreferitiProvider";
+import LoadAdSense from "../components/ads/LoadAdSense";
 
 
 const montserrat = Montserrat({
@@ -54,12 +54,7 @@ export default async function RootLayout({children}) {
             <link rel="manifest" href="/site.webmanifest"/>
 
         </Head>
-        {process.env.NODE_ENV === 'production' &&
-        <Script
-            strategy="afterInteractive"
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7775238513283854"
-            crossOrigin="anonymous"></Script>
-        }
+
         <body>
         <AppRouterCacheProvider>
             <PreferitiProvider>
@@ -70,6 +65,11 @@ export default async function RootLayout({children}) {
                 </CookieConsentProvider>
             </PreferitiProvider>
         </AppRouterCacheProvider>
+
+
+        {process.env.NODE_ENV === 'production' &&
+            <LoadAdSense/>
+        }
         </body>
         </html>
     );

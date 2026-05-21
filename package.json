@@ -15,6 +15,7 @@
     "@mui/icons-material": "^7.3.9",
     "@mui/material": "^7.3.9",
     "@mui/material-nextjs": "^7.3.9",
+    "@next/bundle-analyzer": "^16.2.6",
     "@turf/turf": "^7.3.5",
     "axios": "^1.16.0",
     "bootstrap": "^5.3.8",

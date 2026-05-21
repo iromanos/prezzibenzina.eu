@@ -7,7 +7,6 @@ import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import ImpiantoPopup from "@/components/impianti/ImpiantoPopup";
 import {isMobile} from "react-device-detect";
 import ShareButton from "@/components/ShareButton";
-import ComparaVicini from "@/components/ComparaVicini";
 import {log, ucwords} from "@/functions/helpers";
 import ImpiantoDescrizione from "@/components/impianti/ImpiantoDescrizione";
 import {getElencoCarburanti} from "@/functions/api";
@@ -215,7 +214,6 @@ export default function ImpiantoScheda({impianto, cookie}) {
 
 
                 </div>
-                <ComparaVicini carburante={'benzina'}/>
             </div>
             <FooterMobile>
                 <Button onClick={() => {

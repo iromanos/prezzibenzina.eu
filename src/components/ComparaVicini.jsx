@@ -9,6 +9,11 @@ import MappaRisultati from "@/components/mappe/MappaRisultati";
 
 export default function ComparaVicini({carburante}) {
 
+
+    return <></>;
+
+
+
     const [open, setOpen] = useState(false);
     // const [baseId, setBaseId] = useState(null);
     const [vicini, setVicini] = useState([]);

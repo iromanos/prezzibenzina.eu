@@ -10,7 +10,6 @@ import {usePosizioneAttuale} from '@/hooks/usePosizioneAttuale';
 import PosizioneAttualeMarker from "@/components/PosizioneAttualeMarker";
 import FiltriMappaModerni from "@/components/mappe/FiltriMappaModerni";
 import maplibregl from "maplibre-gl";
-import ComparaVicini from "@/components/ComparaVicini";
 import useCarburante from "@/hooks/useCarburante";
 import useLimit from "@/hooks/useLimit";
 import ImpiantoPopupMobile from "@/components/impianti/ImpiantoPopupMobile";
@@ -432,8 +431,6 @@ const MappaRisultati = forwardRef(({
                 <Loader rightWidth={rightWidth}/>
             )}
 
-            {filter.carburante ? <>
-                <ComparaVicini carburante={filter.carburante}/></> : null}
             {showFilter ?
 
                     <FiltriMappaModerni
