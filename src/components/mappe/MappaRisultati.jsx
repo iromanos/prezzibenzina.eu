@@ -406,7 +406,7 @@ const MappaRisultati = forwardRef(({
     useMemo(() => {
         ultimoRiquadroRef.current = null;
         listImpiantiRef.current = [];
-        debouncedBoundsChange();
+        // debouncedBoundsChange();
     }, [filter]);
 
     useEffect(() => {
@@ -417,7 +417,7 @@ const MappaRisultati = forwardRef(({
 
         console.log("IMPOSTO POSIZIONE INIZIALE DA GEO");
 
-        handlePosizione(posizioneAttuale);
+        // handlePosizione(posizioneAttuale);
 
         // log('MAPPA CLIENT: MOUNTED');
         // fetch('api/set-cookie', {method: 'POST', body: JSON.stringify(initialFilters)});
@@ -481,14 +481,14 @@ const MappaRisultati = forwardRef(({
                 onClick={handleMapClick}
                 ref={mapRef}
                 attributionControl={false}
-                onLoad={debouncedBoundsChange}
+                // onLoad={debouncedBoundsChange}
                 initialViewState={posizione}
                 mapStyle={styleUrl}
                 mapLib={import('maplibre-gl')}
                 style={{width: '100%', height: '100%'}}
                 cooperativeGestures={cooperativeGestures}
                 onMoveEnd={() => {
-                    debouncedBoundsChange();
+                    // debouncedBoundsChange();
                     setLoadMarker(true);
                 }}
 

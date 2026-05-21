@@ -86,10 +86,9 @@ export default function Header() {
                         {/*                                    className="btn btn-primary w-100"><SearchIcon/> Trova*/}
                         {/*    distributori</Link></li>*/}
                     </ul>
-                    <div className="text-center px-4">
+                    <div className="text-center">
                         <Image width={320} height={320} src="/assets/logo-transparent.png" alt="Logo PrezziBenzina.eu"
-                             className={'col-8'}
-                             style={{maxWidth: '320px'}}/>
+                        />
                     </div>
                 </div>
             </div>

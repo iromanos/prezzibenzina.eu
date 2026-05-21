@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function ImpiantoMarker({d, onClick, fadeOut = false}) {
 
-    const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
+    const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
 
     const [animate, setAnimate] = useState(false);
 

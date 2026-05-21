@@ -1,11 +1,20 @@
 'use client';
 
 import {useRef, useState} from 'react';
-import 'maplibre-gl/dist/maplibre-gl.css';
 import {getElencoStati} from "@/functions/api";
 import Button from 'react-bootstrap/Button';
-import MappaRisultati from "@/components/mappe/MappaRisultati";
-import {usePreferitiGlobal} from "../../context/PreferitiProvider";
+// import MappaRisultati from "@/components/mappe/MappaRisultati";
+import {usePreferitiGlobal} from "@/context/PreferitiProvider";
+
+import dynamic from 'next/dynamic';
+
+// Import dinamico della mappa, solo lato client
+const MappaRisultati = dynamic(() => import('@/components/mappe/MappaRisultati'), {
+    ssr: false,
+});
+
+
+
 
 export function MapSection() {
     const mapRef = useRef();
