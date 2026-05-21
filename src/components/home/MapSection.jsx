@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 
 import dynamic from 'next/dynamic';
+import Image from "next/image";
 
 // Import dinamico della mappa, solo lato client
 const MappaRisultati = dynamic(() => import('@/components/mappe/MappaRisultati'), {
@@ -21,6 +22,8 @@ export function MapSection() {
 
     const elencoStati = getElencoStati();
 
+    const [attivaInterattiva, setAttivaInterattiva] = useState(false);
+
     const [stato, setStato] = useState(elencoStati[elencoStati.length - 1]);
     const {preferiti, ModalComponent, ModalResult} = usePreferitiGlobal();
 
@@ -29,9 +32,23 @@ export function MapSection() {
             <h2 className="text-center fw-bold mb-4">Mappa interattiva: Italia e Svizzera in un colpo d’occhio</h2>
             <div
                 style={{
-                    height: '75vh'
+                    height: '616px'
                 }}
-                className="col border rounded overflow-hidden position-relative">
+                className="d-flex border rounded overflow-hidden position-relative justify-content-center align-items-center">
+                {attivaInterattiva === false &&
+                    <Image
+
+                        onMouseEnter={() => {
+                            setAttivaInterattiva(true);
+                        }}
+                        priority={true}
+                        sizes="(max-width: 768px) 100vw, 1170px"
+                        fill={true}
+                        src={'/assets/static/staticmap-home.jpg'}
+                        alt={'Mappa impianti'}
+                        fetchPriority="high"
+                    />}
+                {attivaInterattiva &&
                 <MappaRisultati
                     ref={mapRef}
                     showFullScreen={true}
@@ -45,7 +62,7 @@ export function MapSection() {
                     onMapClick={() => {
                     }}
                     initialFilters={{carburante: 'benzina', limite: 20, 'position': {lat: -1, lng: -1}}}
-                />
+                />}
             </div>
 
 

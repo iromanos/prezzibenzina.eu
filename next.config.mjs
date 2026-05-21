@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    experimental: {
+        optimizeCss: true, // Abilita l'inlining del CSS critico
+    },
     images: {
         remotePatterns: [
             new URL('http://localhost:8080/impianto/**'),

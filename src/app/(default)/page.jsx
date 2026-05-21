@@ -1,5 +1,4 @@
 import SearchIcon from "@mui/icons-material/Search";
-import {MapSection} from "@/components/home/MapSection";
 import CTA from "@/components/home/CTA";
 import "flag-icons/css/flag-icons.min.css";
 import Descrizione from "@/components/home/Descrizione";
@@ -11,6 +10,7 @@ import Display6977770298 from "../../components/ads/Display-6977770298";
 import {FooterMobile} from "@/components/FooterMobile";
 import FooterHome from "../../components/home/FooterHome";
 import Header from "@/components/Header";
+import {MapSection} from "@/components/home/MapSection";
 
 //TODO: CMP CookiesYes
 export async function generateMetadata() {

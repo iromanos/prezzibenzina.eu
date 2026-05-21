@@ -5,19 +5,22 @@ import {CookieConsentProvider} from "@/components/CookieConsentContext";
 import Analytics from "@/components/Analytics";
 import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
 import {headers} from "next/headers";
-import CookieBanner from "@/components/CookieBanner";
-import {PreferitiProvider} from "../context/PreferitiProvider";
+import {PreferitiProvider} from "@/context/PreferitiProvider";
 import LoadAdSense from "../components/ads/LoadAdSense";
 
 
 const montserrat = Montserrat({
     weight: "800",
+    subsets: ['latin'],
     display: 'swap',
+    variable: '--font-montserrat',
 })
 
-const openSans = Quicksand({
+const quicksand = Quicksand({
     weight: "400",
+    subsets: ['latin'], // <-- Importante
     display: 'swap',
+    variable: '--font-quicksand', // <-- Definisci la variabile CSS
 })
 
 export const metadata = {
@@ -43,7 +46,7 @@ export default async function RootLayout({children}) {
     console.log("REFERER: " + referer);
 
     return (
-        <html lang="it" className={montserrat.className + ' ' + openSans.className}>
+        <html lang="it" className={`${montserrat.variable} ${quicksand.variable}`}>
         <Head>
 
 
@@ -60,7 +63,7 @@ export default async function RootLayout({children}) {
             <PreferitiProvider>
                 <CookieConsentProvider>
                     {children}
-                    {isFuel === false && <CookieBanner/>}
+                    {/*{isFuel === false && <CookieBanner/>}*/}
                     <Analytics trackId={trackId}/>
                 </CookieConsentProvider>
             </PreferitiProvider>
