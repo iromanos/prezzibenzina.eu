@@ -154,7 +154,12 @@ const BottomSheet = forwardRef(({
                     }}
                 >
                     <div className="p-3">
-
+                        {distributori.length === 0 &&
+                            <div>
+                                Nessun distribuitore presente in questa zona. Prova a fare lo zoom sulla mappa o a
+                                spostare la posizione.
+                            </div>
+                        }
                         {distributori.map((d, i) => {
                             const isAdStep = (i + 1) % 2 === 0;
 

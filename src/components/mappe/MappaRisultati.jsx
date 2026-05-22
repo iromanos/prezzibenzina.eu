@@ -226,31 +226,33 @@ const MappaRisultati = forwardRef(({
 
         const hasMovedEnough = ultimoRiquadro != null ? !isContained(riquadroAttuale, ultimoRiquadro) : true;
         setBounds(toEnvelopeArray(riquadroAttuale));
-        setZoom(mapRef.current.getZoom());
+        setZoom(zoom);
+
+        console.log("ZOOM:", zoom);
 
         // log("HAS MOVED ENOUGH: " + hasMovedEnough);
 //        setFadeOutMarker(true);
         try {
 
             let record = [];
+            if (zoom > 9.5) {
+                if (filter.bookmark) {
+                    const dati = await getPreferiti(preferiti);
+                    record = dati.impianti;
+                } else {
+                    const response = await getImpiantiByDistance(
+                        {
+                            bounds: riquadroAttuale,
+                            carburante: filter.carburante,
+                            sort: 'price',
+                            limit: filter.limite,
+                            brand: filter.brand?.nome
+                        });
 
-            if (filter.bookmark) {
-                const dati = await getPreferiti(preferiti);
-                record = dati.impianti;
-            } else {
-
-                const response = await getImpiantiByDistance(
-                    {
-                        bounds: riquadroAttuale,
-                        carburante: filter.carburante,
-                        sort: 'price',
-                        limit: filter.limite,
-                        brand: filter.brand?.nome
-                    });
-
-                record = await response.json();
-                if (response.status !== 200) {
-                    return;
+                    record = await response.json();
+                    if (response.status !== 200) {
+                        return;
+                    }
                 }
             }
             setDistributori(record);
@@ -481,14 +483,14 @@ const MappaRisultati = forwardRef(({
                 onClick={handleMapClick}
                 ref={mapRef}
                 attributionControl={false}
-                // onLoad={debouncedBoundsChange}
+                onLoad={debouncedBoundsChange}
                 initialViewState={posizione}
                 mapStyle={styleUrl}
                 mapLib={import('maplibre-gl')}
                 style={{width: '100%', height: '100%'}}
                 cooperativeGestures={cooperativeGestures}
                 onMoveEnd={() => {
-                    // debouncedBoundsChange();
+                    debouncedBoundsChange();
                     setLoadMarker(true);
                 }}
 

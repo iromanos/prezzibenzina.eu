@@ -36,18 +36,29 @@ export function MapSection() {
                 }}
                 className="d-flex border rounded overflow-hidden position-relative justify-content-center align-items-center">
                 {attivaInterattiva === false &&
+                    <div
+                        onClick={() => setAttivaInterattiva(true)}
+                        style={{cursor: 'pointer'}}
+                        className="position-relative w-100 h-100"
+                    >
                     <Image
-
                         onMouseEnter={() => {
                             setAttivaInterattiva(true);
                         }}
+                        width={1170}
+                        height={616}
                         priority={true}
-                        sizes="(max-width: 768px) 100vw, 1170px"
-                        fill={true}
                         src={'/assets/static/staticmap-home.jpg'}
                         alt={'Mappa impianti'}
                         fetchPriority="high"
-                    />}
+                    />
+
+                        {/* Un piccolo overlay per far capire che è cliccabile */}
+                        <div className="position-absolute top-50 start-50 translate-middle btn btn-dark opacity-90">
+                            Attiva Mappa Interattiva
+                        </div>
+
+                    </div>}
                 {attivaInterattiva &&
                 <MappaRisultati
                     ref={mapRef}

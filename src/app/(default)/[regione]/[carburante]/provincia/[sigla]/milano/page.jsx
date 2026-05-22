@@ -4,6 +4,7 @@ import {generateMicrodataGraph, getLink, log, ucwords} from "@/functions/helpers
 import {getCarburanti, getDistributoriRegione, getMarchi, getSeoRegione} from "@/functions/api";
 import {notFound} from "next/navigation";
 
+export const revalidate = 43200;
 
 export async function generateMetadata({params}) {
     return getMetadataMilano({params});

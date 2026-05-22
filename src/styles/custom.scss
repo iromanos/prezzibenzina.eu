@@ -136,3 +136,9 @@ $utilities: map-merge(
 .cluster-green {
   background: radial-gradient(circle, $success 0%, #00000000 50%);
 }
+
+.maplibregl-cooperative-gesture-screen {
+  text-align: center;
+  z-index: 10 !important;
+  background: #0004 !important;
+}
