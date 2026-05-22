@@ -1,6 +1,6 @@
 'use client';
 
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {getElencoStati} from "@/functions/api";
 import Button from 'react-bootstrap/Button';
 // import MappaRisultati from "@/components/mappe/MappaRisultati";
@@ -8,14 +8,11 @@ import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 
 import dynamic from 'next/dynamic';
 import Image from "next/image";
+import useUltimaPosizione from "@/hooks/useUltimaPosizione";
 
-// Import dinamico della mappa, solo lato client
 const MappaRisultati = dynamic(() => import('@/components/mappe/MappaRisultati'), {
     ssr: false,
 });
-
-
-
 
 export function MapSection() {
     const mapRef = useRef();
@@ -26,6 +23,32 @@ export function MapSection() {
 
     const [stato, setStato] = useState(elencoStati[elencoStati.length - 1]);
     const {preferiti, ModalComponent, ModalResult} = usePreferitiGlobal();
+
+    const hookUltimaPosizione = useUltimaPosizione();
+
+    const [viewState, setViewState] = useState(null);
+
+
+    useEffect(() => {
+        if (hookUltimaPosizione.posizione === null) return;
+
+        if (hookUltimaPosizione.posizione === false) {
+            setViewState({
+                latitude: stato.lat,
+                longitude: stato.lng,
+                zoom: stato.zoom,
+            });
+            return;
+        }
+        console.log('AGGIORNA VIEW STATE CON ULTIMA POSIZIONE: ', hookUltimaPosizione.posizione);
+        setViewState({
+            latitude: hookUltimaPosizione.posizione.center.lat,
+            longitude: hookUltimaPosizione.posizione.center.lng,
+            zoom: hookUltimaPosizione.posizione.zoom
+        });
+    }, [hookUltimaPosizione.posizione]);
+
+
 
     return (
         <div className="mb-4">
@@ -61,15 +84,13 @@ export function MapSection() {
                     </div>}
                 {attivaInterattiva &&
                 <MappaRisultati
+
                     ref={mapRef}
                     showFullScreen={true}
                     showLinkHome={false}
                     showFilter={false}
-                    posizione={{
-                        longitude: stato.lng,
-                        latitude: stato.lat,
-                        zoom: stato.zoom,
-                    }}
+                    posizione={viewState}
+                    headerHeight={0}
                     onMapClick={() => {
                     }}
                     initialFilters={{carburante: 'benzina', limite: 20, 'position': {lat: -1, lng: -1}}}

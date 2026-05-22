@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function ImpiantoPopupMobile({impianto}) {
 
-    const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
+    const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
 
 
     const {

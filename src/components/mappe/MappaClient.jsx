@@ -6,6 +6,7 @@ import {useFilters} from "@/hooks/useFilters";
 import useNavBarPresence from "@/hooks/useNavBarPresence";
 import BottomSheet from "@/components/BottomSheet";
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
+import useUltimaPosizione from "@/hooks/useUltimaPosizione";
 
 export default function MappaClient({
                                         posizione,
@@ -31,15 +32,33 @@ export default function MappaClient({
     const [step, setStep] = useState(0);
     const [showButton, setShowButton] = useState(true);
 
-    const [viewState, setViewState] = useState({
-        latitude: posizione.lat,
-        longitude: posizione.lng,
-        zoom: zoomIniziale,
+    const hookUltimaPosizione = useUltimaPosizione();
 
-    });
+    console.log("ULTIMA POSIZIONE: ", hookUltimaPosizione.posizione);
+
+    const [viewState, setViewState] = useState(null);
 
     const {ModalComponent, ModalResult} = usePreferitiGlobal();
 
+
+    useEffect(() => {
+        if (hookUltimaPosizione.posizione === null) return;
+
+        if (hookUltimaPosizione.posizione === false) {
+            setViewState({
+                latitude: posizione.lat,
+                longitude: posizione.lng,
+                zoom: zoomIniziale,
+            });
+            return;
+        }
+        console.log('AGGIORNA VIEW STATE CON ULTIMA POSIZIONE: ', hookUltimaPosizione.posizione);
+        setViewState({
+            latitude: hookUltimaPosizione.posizione.center.lat,
+            longitude: hookUltimaPosizione.posizione.center.lng,
+            zoom: hookUltimaPosizione.posizione.zoom
+        });
+    }, [hookUltimaPosizione.posizione]);
 
     useEffect(() => {
         const handleFocus = e => {
@@ -49,6 +68,10 @@ export default function MappaClient({
         window.addEventListener('map:focus', handleFocus);
         return () => window.removeEventListener('map:focus', handleFocus);
     }, []);
+
+    console.log("VIEW STATE: ", viewState);
+
+    if (viewState === null) return;
 
     return (
         <>

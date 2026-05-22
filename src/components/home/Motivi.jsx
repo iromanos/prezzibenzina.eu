@@ -5,7 +5,7 @@ export default function Motivi() {
             usarlo</h2>
         <div className="row justify-content-center">
             <div className="col-md-8">
-                <ul className="list-group list-group-flush fs-5">
+                <ul className="list-group list-group-flush">
                     <li className="list-group-item bg-transparent">✅ Risparmi tempo e denaro</li>
                     <li className="list-group-item bg-transparent">✅ Eviti sorprese alla pompa</li>
                     <li className="list-group-item bg-transparent">✅ Scopri impianti serviti e self-service</li>

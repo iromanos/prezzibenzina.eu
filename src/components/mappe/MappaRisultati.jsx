@@ -21,6 +21,7 @@ import {bboxPolygon, booleanContains} from '@turf/turf';
 import {getVectorTileLayer} from "@/functions/vector-tiles";
 import TuttoSchermoButton from "@/components/TuttoSchermoButton";
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
+import useUltimaPosizione from "@/hooks/useUltimaPosizione";
 
 const MappaRisultati = forwardRef(({
                                        posizione,
@@ -38,7 +39,8 @@ const MappaRisultati = forwardRef(({
                                        showPositionButton = true,
                                        showFullScreen = false,
                                        onMapClick,
-                                       cooperativeGestures = true
+                                       cooperativeGestures = true,
+                                       headerHeight = 120
                                    }, ref) => {
 
     useImperativeHandle(ref, () => ({
@@ -48,14 +50,13 @@ const MappaRisultati = forwardRef(({
         }
     }));
 
+    const hookUltimaPosizione = useUltimaPosizione();
+
     const ultimoRiquadroRef = useRef(null);
     const mapRef = useRef(null);
     const boundsRef = useRef([]);
     const isFetching = useRef(false);
     const listImpiantiRef = useRef([]);
-
-
-    const headerHeight = 190;
 
     const [distributori, setDistributori] = useState(distributoriIniziali);
     const [clusteredPoints, setClusteredPoints] = useState([]);
@@ -220,6 +221,10 @@ const MappaRisultati = forwardRef(({
 
         const center = mapRef.current.getCenter();
         const zoom = mapRef.current.getZoom();
+
+        hookUltimaPosizione.aggiornaPosizione({center, zoom});
+
+
         onMoveEnd?.(center.lat, center.lng, zoom);
 
         const ultimoRiquadro = ultimoRiquadroRef.current;

@@ -52,6 +52,12 @@ export default async function Mappa({searchParams}) {
 
     const fuel = queryParams.carburante || "";
 
+
+///    const hookUltimaPosizione = useUltimaPosizione();
+
+
+
+
     const elencoCarburanti = getElencoCarburanti();
     // log(elencoCarburanti);
     if (fuel !== "") {
@@ -108,6 +114,7 @@ export default async function Mappa({searchParams}) {
         initialFilters.limite = ckLimite;
     }
 
+
     if (posizione.lat === undefined) posizione.lat = 0;
     if (posizione.lng === undefined) posizione.lng = 0;
 
@@ -115,7 +122,12 @@ export default async function Mappa({searchParams}) {
 
     let distributori = [];
 
-    if (posizione.lat !== null && posizione.lng !== null) {
+    let zoom = queryParams.zoom;
+
+    if (!zoom) zoom = 5;
+
+
+    if (posizione.lat !== null && posizione.lng !== null && zoom > 9.5) {
 
         const response = await getImpiantiByDistance(
             {
@@ -131,9 +143,6 @@ export default async function Mappa({searchParams}) {
         console.log("DISTRIBUTORI: " + distributori.length);
     }
 
-    let zoom = queryParams.zoom;
-
-    if (!zoom) zoom = 5;
 
     const headersList = await headers();
 
