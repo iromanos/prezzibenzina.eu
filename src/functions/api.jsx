@@ -19,6 +19,38 @@ const Carburanti = {
     'gpl': '4-x',
 };
 
+export async function fetchImpiantiByRoute(data, tipo_impianto, servizi) {
+    const coords = data.features[0].geometry.coordinates;
+
+    console.log('IMPIANTI REQUEST');
+
+    const response = await axios.post(process.env.NEXT_PUBLIC_API_ENDPOINT + '/api/route/poi', {
+        steps: coords,
+        fuel: 1,
+        order: 'price',
+        limit: 10,
+        servizi: [],
+        // tipoImpianto: tipo_impianto
+    });
+
+    return response.data;
+}
+
+export async function getDrivingCar(payload) {
+
+    const response = await fetch('/api/pb/directions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    });
+
+    return response.json();
+
+}
+
 export async function getPreferiti(impianti) {
 
     const body = {

@@ -11,6 +11,8 @@ import {getCanonicalUrl} from "@/functions/server";
 //TODO: impostare la destinazione e visualizzare i distributori lungo il tragitto
 //TODO: pagina dedicata alla svizzera
 //TODO: gestione utenti
+//TODO: errori in search console
+
 export async function generateMetadata({params, searchParams}) {
 
     const queryParams = await searchParams;

@@ -37,3 +37,4 @@ export async function POST(request) {
     }
     return NextResponse.redirect(new URL(target, request.url), 301);
 }
+

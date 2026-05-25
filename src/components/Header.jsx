@@ -82,9 +82,6 @@ export default function Header() {
                                                        className="nav-link text-white ">Mappa</Link></li>
                         <li className="nav-item"><Link title={"Contatti"} href="/contatti"
                                                        className="nav-link text-white ">Contatti</Link></li>
-                        {/*<li className="nav-item mt-3"><Link title={"Trova distributori"} href="/ricerca"*/}
-                        {/*                                    className="btn btn-primary w-100"><SearchIcon/> Trova*/}
-                        {/*    distributori</Link></li>*/}
                     </ul>
                     <div className="text-center">
                         <Image width={320} height={320} src="/assets/logo-transparent.png" alt="Logo PrezziBenzina.eu"

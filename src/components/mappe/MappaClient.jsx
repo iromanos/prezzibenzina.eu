@@ -34,7 +34,7 @@ export default function MappaClient({
 
     const hookUltimaPosizione = useUltimaPosizione();
 
-    console.log("ULTIMA POSIZIONE: ", hookUltimaPosizione.posizione);
+    // console.log("ULTIMA POSIZIONE: ", hookUltimaPosizione.posizione);
 
     const [viewState, setViewState] = useState(null);
 
@@ -52,7 +52,7 @@ export default function MappaClient({
             });
             return;
         }
-        console.log('AGGIORNA VIEW STATE CON ULTIMA POSIZIONE: ', hookUltimaPosizione.posizione);
+        // console.log('AGGIORNA VIEW STATE CON ULTIMA POSIZIONE: ', hookUltimaPosizione.posizione);
         setViewState({
             latitude: hookUltimaPosizione.posizione.center.lat,
             longitude: hookUltimaPosizione.posizione.center.lng,
@@ -69,7 +69,7 @@ export default function MappaClient({
         return () => window.removeEventListener('map:focus', handleFocus);
     }, []);
 
-    console.log("VIEW STATE: ", viewState);
+    // console.log("VIEW STATE: ", viewState);
 
     if (viewState === null) return;
 

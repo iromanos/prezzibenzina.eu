@@ -1,22 +1,25 @@
 import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 import {motion} from 'framer-motion';
 import HomeIcon from '@mui/icons-material/Home';
-import ImpiantoCard from "@/components/impianti/ImpiantoCard";
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 import InFeed4656802013 from "@/components/ads/InFeed-4656802013";
+import Image from "next/image";
+import Link from "next/link";
+import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 
 const BottomSheet = forwardRef(({
                                     onChangeStep,
                                     onWidthChange,
                                     onHeightChange,
                                     onSheetHeightChange,
-                                    distributori = []
+                                    distributori = [],
+                                    client = 'pb'
                                 }, ref) => {
     const [step, setStep] = useState(0);
     const [vh, setVh] = useState(0);
     const [isMobile, setIsMobile] = useState(null);
 
-    const HEADER_HEIGHT = 72;
+    const HEADER_HEIGHT = 78;
     const SIDEBAR_WIDTH = 400;
 
     const {gestisciClickCuore} = usePreferitiGlobal();
@@ -87,15 +90,12 @@ const BottomSheet = forwardRef(({
 
     return (
         <div
-
             className={`z-3 pointer-events-none ${isMobile ? 'fixed-bottom w-100' : 'position-fixed end-0 top-0 h-100'}`}
             style={{
                 height: isMobile ? 0 : '100vh',
                 width: isMobile ? '100%' : `${SIDEBAR_WIDTH}px`,
                 overflow: 'visible'
-            }}
-        >
-            {/* Overlay: solo mobile e solo se aperto */}
+            }}>
             {isMobile && step > 0 && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-25 pointer-events-auto"
@@ -111,7 +111,6 @@ const BottomSheet = forwardRef(({
                 transition={{type: "spring", damping: 25, stiffness: 200}}
                 onAnimationComplete={() => {
                     if (onHeightChange && isMobile) {
-                        // Calcoliamo l'altezza basandoci sulla variante corrente
                         const currentY = variants.mobile[step].y;
                         onSheetHeightChange(HEADER_HEIGHT + Math.abs(currentY));
                     }
@@ -132,17 +131,27 @@ const BottomSheet = forwardRef(({
                 <div
                     onClick={nextStep}
                     className={`p-3 border-bottom flex-shrink-0 ${isMobile ? 'cursor-pointer' : ''}`}
-                    // style={{height: `${isMobile ? HEADER_HEIGHT : HEADER_HEIGHT}px`, touchAction: 'none'}}
                 >
                     {isMobile && (
-                        <div className="mx-auto bg-dark bg-opacity-25 rounded-pill mb-2"
+                        <div className=" mx-auto bg-dark bg-opacity-25 rounded-pill"
                              style={{width: '40px', height: '5px'}}/>
                     )}
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h6 className="m-0 fw-bold text-dark text-uppercase">
+                    <div className="d-flex align-items-end justify-content-between">
+                        <Link className={'nav-link text-primary'} href={'/'}>
+                            {client === 'pb' ?
+                                <Image
+                                    width={1024}
+                                    height={374}
+                                    style={{
+                                        width: 'auto',
+                                        height: '40px'
+                                    }} src="/assets/svg/logo-mappa.svg" alt="PrezziBenzina.eu"
+                                /> :
+                                <HomeIcon/>}
+                        </Link>
+                        <span className="m-0 text-dark ">
                             Distributori ({distributori.length})
-                        </h6>
-                        <a className={'nav-link text-primary'} href={'/'}><HomeIcon className={'fs-2'}/></a>
+                        </span>
                     </div>
                 </div>
 
@@ -153,9 +162,9 @@ const BottomSheet = forwardRef(({
                         pointerEvents: (isMobile && step === 0) ? 'none' : 'auto',
                     }}
                 >
-                    <div className="p-3">
+                    <div className="">
                         {distributori.length === 0 &&
-                            <div>
+                            <div className={'p-3'}>
                                 Nessun distribuitore presente in questa zona. Prova a fare lo zoom sulla mappa o a
                                 spostare la posizione.
                             </div>
@@ -164,18 +173,18 @@ const BottomSheet = forwardRef(({
                             const isAdStep = (i + 1) % 2 === 0;
 
                             return <div key={i}>
-                                <ImpiantoCard
+                                <ImpiantoCardMobile
                                     onClickPreferiti={() => {
                                         gestisciClickCuore(d.properties);
                                     }}
 
                                     key={i} impianto={d.properties} cardClient={true}/>
-                                {isAdStep ? <InFeed4656802013/> : null}
+                                {isAdStep ? <div className={'border-bottom'}><InFeed4656802013/></div> : null}
                             </div>
 
                         })}
                         {isMobile && step !== 2 && <div style={{height: '320px'}}/>}
-                        {isMobile && step === 2 && <div style={{height: '80px'}}/>}
+                        {isMobile && step === 2 && <div style={{height: `${HEADER_HEIGHT + 8}px`}}/>}
                     </div>
                 </div>
             </motion.div>

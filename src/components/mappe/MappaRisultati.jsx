@@ -1,9 +1,15 @@
 'use client';
 
-import Map, {Popup} from 'react-map-gl/maplibre';
+import Map, {Layer, Marker, Popup, Source} from 'react-map-gl/maplibre';
 import {forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import {getClustersByBounds, getImpiantiByDistance, getPreferiti} from "@/functions/api";
+import {
+    fetchImpiantiByRoute,
+    getClustersByBounds,
+    getDrivingCar,
+    getImpiantiByDistance,
+    getPreferiti
+} from "@/functions/api";
 import {useDebouncedCallback} from '@/hooks/useDebouncedCallback';
 import PosizioneAttualeButton from "@/components/PosizioneAttualeButton";
 import {usePosizioneAttuale} from '@/hooks/usePosizioneAttuale';
@@ -75,6 +81,27 @@ const MappaRisultati = forwardRef(({
     const [loadMarker, setLoadMarker] = useState(true);
 
     const {preferiti} = usePreferitiGlobal();
+
+    const [destinazioneFinale, setDestinazioneFinale] = useState(null);
+
+    const [route, setRoute] = useState(null);
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const layerStyle = {
+        id: 'point',
+        type: 'line',
+        layout: {
+            'line-join': 'round',
+            'line-cap': 'round'
+        },
+        paint: {
+            'line-color': '#336699',
+            'line-width': 5,
+            'line-blur': 0.5
+        }
+    };
+
 
     const handleMapClick = (event) => {
         setPopupInfo(null);
@@ -215,8 +242,12 @@ const MappaRisultati = forwardRef(({
         if (isReadOnly) return;
         if (popupInfo) return;
         if (loadMarker === false) return;
-
         if (mapRef.current === null) return;
+
+        if (destinazioneFinale !== null) {
+            return;
+        }
+
         const riquadroAttuale = calcolaBounds();
 
         const center = mapRef.current.getCenter();
@@ -281,9 +312,18 @@ const MappaRisultati = forwardRef(({
 
     const posizioneAttuale = usePosizioneAttuale();
     const handlePosizione = (pos) => {
+        if (pos === null) return;
         setFadeOutMarker(true);
+        setRoute(null);
+        setDestinazioneFinale(null);
+        setIsLoading(true);
+
         const map = mapRef.current;
-        map.flyTo({center: [pos.lon, pos.lat], zoom: 13});
+
+        const dist = 120;
+        const padding = {top: headerHeight + dist, bottom: footerHeight + dist, right: rightWidth + dist, left: dist};
+
+        map.flyTo({center: [pos.lon, pos.lat], zoom: 13, padding: padding});
     };
 
     const points = useMemo(() => {
@@ -424,40 +464,122 @@ const MappaRisultati = forwardRef(({
 
         console.log("IMPOSTO POSIZIONE INIZIALE DA GEO");
 
-        // handlePosizione(posizioneAttuale);
-
-        // log('MAPPA CLIENT: MOUNTED');
-        // fetch('api/set-cookie', {method: 'POST', body: JSON.stringify(initialFilters)});
     }, [posizioneAttuale]);
+
+    useEffect(() => {
+        if (posizioneAttuale === null) return;
+        if (destinazioneFinale === null) return;
+        setIsLoading(true);
+
+        getDrivingCar({
+            start: {
+                lat: posizioneAttuale.lat,
+                lng: posizioneAttuale.lon,
+            },
+            end: {
+                lat: parseFloat(destinazioneFinale.lat),
+                lng: parseFloat(destinazioneFinale.lon)
+            }
+        }).then(value => {
+            setRoute(value);
+            const map = mapRef.current;
+
+            const dist = 120;
+            const padding = {
+                top: headerHeight + dist,
+                bottom: footerHeight + dist,
+                right: rightWidth + dist,
+                left: dist
+            };
+
+            map.fitBounds(
+                [
+                    [value.bbox[0], value.bbox[1]],
+                    [value.bbox[2], value.bbox[3]],
+                ],
+                {
+                    // padding: padding,
+                    duration: 1000
+                }
+            );
+
+
+            setIsLoading(false);
+
+        })
+
+    }, [posizioneAttuale, destinazioneFinale]);
+
+
+    useEffect(() => {
+        if (route === null) return;
+        fetchImpiantiByRoute(route).then(value => {
+
+            const impianti = value.map((i) => {
+
+                const impianto = {};
+
+
+                impianto.properties = i;
+
+                return impianto;
+            });
+
+            setDistributori(impianti);
+            onFetchDistributori(impianti);
+        });
+    }, [route]);
 
     // log('MappaRisultati: BUILD');
     return (
         <>
-
             {loading && (
                 <Loader rightWidth={rightWidth}/>
             )}
-
             {showFilter ?
-
                     <FiltriMappaModerni
                         initialFilters={initialFilters}
                         rightWidth={rightWidth}
                         onSelectStato={(c) => {
+                            setIsLoading(true);
                             setFadeOutMarker(true);
+                            setDestinazioneFinale(null);
+                            setRoute(null);
+
+                            const dist = 120;
+                            const padding = {
+                                top: headerHeight + dist,
+                                bottom: footerHeight + dist,
+                                right: rightWidth + dist,
+                                left: dist
+                            };
+
+
                             mapRef.current.flyTo({
                                 center: [c.lng, c.lat], zoom: c.zoom,
+                                padding: padding
                             });
                         }}
                         onSearch={(place) => {
+                            console.log("DESTINAZIONE", place);
+                            setDestinazioneFinale(place);
                             setFadeOutMarker(true);
-                            const bbox = [
-                                place.boundingbox[2],
-                                place.boundingbox[0],
-                                place.boundingbox[3],
-                                place.boundingbox[1],
-                            ];
-                            mapRef.current?.fitBounds(bbox);
+
+                            if (place === null) {
+                                setRoute(null);
+                                handlePosizione(posizioneAttuale);
+                            }
+
+
+                            if (posizioneAttuale === null && place !== null) {
+                                const bbox = [
+                                    place.boundingbox[2],
+                                    place.boundingbox[0],
+                                    place.boundingbox[3],
+                                    place.boundingbox[1],
+                                ];
+                                mapRef.current?.fitBounds(bbox);
+                            }
                         }}
                         onChange={(state) => {
                             const currentFilter = {
@@ -497,6 +619,7 @@ const MappaRisultati = forwardRef(({
                 onMoveEnd={() => {
                     debouncedBoundsChange();
                     setLoadMarker(true);
+                    setIsLoading(false);
                 }}
 
             >
@@ -518,20 +641,42 @@ const MappaRisultati = forwardRef(({
 
                 </Popup> : null}
 
-                <HeatMapLayer distributori={clusteredPoints}/>
 
-                {/*<ClusterLayer distributori={clusteredPoints} />*/}
+                {isLoading === false &&
+
+                    <>
+
+                        {route &&
+                            <><Source type="geojson" data={route}>
+                                <Layer {...layerStyle} />
+                            </Source>
 
 
-                {/*<Cluster*/}
-                {/*    fadeOut={fadeOutMarker}*/}
-                {/*    clusters={KDclusters}*/}
-                {/*    onClusterClick={(cluster) => {*/}
-                {/*        const [lng, lat] = cluster.position;*/}
-                {/*        const expansionZoom = mapRef.current.getZoom() + 2;*/}
-                {/*        mapRef.current.getMap().flyTo({center: [lng, lat], zoom: expansionZoom});*/}
-                {/*    }}/>*/}
-                <>
+                                {posizioneAttuale &&
+                                    <Marker
+                                        anchor="bottom"
+                                        key={'marker-start'}
+                                        longitude={posizioneAttuale.lon}
+                                        latitude={posizioneAttuale.lat}
+                                    ><><img src={'/assets/markers/marker.png'} alt={''}/></>
+                                    </Marker>}
+
+                                {destinazioneFinale &&
+                                    <Marker
+                                        anchor="bottom"
+                                        key={'marker-end'}
+                                        longitude={destinazioneFinale.lon}
+                                        latitude={destinazioneFinale.lat}
+                                    ><><img src={'/assets/markers/marker.png'} alt={''}/></>
+                                    </Marker>}
+
+                            </>}
+
+
+                        {route === null &&
+                            <HeatMapLayer distributori={clusteredPoints}/>
+                        }
+
                     {distributori.map((d) => {
 
                         const impianto = d.properties;
@@ -539,7 +684,7 @@ const MappaRisultati = forwardRef(({
                         return <ImpiantoMarker
                             fadeOut={fadeOutMarker}
                             onClick={e => {
-                                e.originalEvent.stopPropagation(); // evita chiusura globale
+                                e.originalEvent.stopPropagation();
                                 mapRef.current?.flyTo({
                                     center: [impianto.longitudine, impianto.latitudine],
                                     essential: true
@@ -548,6 +693,7 @@ const MappaRisultati = forwardRef(({
                             }}
                             key={impianto.id_impianto} d={impianto}/>;
                     })}</>
+                }
 
             </Map>
         </>
