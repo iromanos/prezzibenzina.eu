@@ -39,7 +39,7 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
     }
 
     if (marchio && marchio !== "Tutti") {
-        path.push(`/marchio/${slugify(marchio)}`);
+        path.push(`/marchio/${slugify(marchio.toLowerCase())}`);
     }
 
     return {

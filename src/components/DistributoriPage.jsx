@@ -101,7 +101,6 @@ export default async function DistributoriPage({params}) {
             <div className={'row'}>
                 <div id="distributori" className={'col-md-5 order-1'}>
                     <ElencoDistributori Regione={regione} distributori={distributori}/>
-                    {/*<ComparaVicini carburante={carburante}/>*/}
                 </div>
                 <div id={"mappa"} className={'col-md-7 order-0'}>
                     <LinkCarburanti params={riepilogo.request} carburanti={carburanti}/>
