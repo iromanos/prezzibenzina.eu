@@ -26,7 +26,7 @@ export async function generateMetadata({params}) {
     const description = `Prezzi aggiornati per ${impianto.nome_impianto} a ${impianto.comune}. Consulta mappa, orari, carburanti e confronta con i vicini.`;
     const headerList = headers();
 
-    const canonicalUrl = getCanonicalUrl(await headerList) + '/impianto/' + params.impianto;
+    const canonicalUrl = getCanonicalUrl(await headerList) + '/impianto/' + impianto.link;
 
     console.log(impianto);
 
