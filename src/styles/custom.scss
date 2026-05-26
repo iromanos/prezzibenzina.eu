@@ -142,3 +142,13 @@ $utilities: map-merge(
   z-index: 10 !important;
   background: #0004 !important;
 }
+
+.maplibregl-popup-close-button {
+  //color: #FFFFFF !important;
+  //background-color: $danger !important;
+  //border-radius: var(--bs-border-radius) !important;
+  //margin: .5rem !important;
+  line-height: 1;
+  font-weight: bold;
+  //font-size: var(--bs-body-font-size);
+}

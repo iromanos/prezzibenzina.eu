@@ -131,10 +131,6 @@ const MappaRisultati = forwardRef(({
             const {lat, lng, zoom} = e.detail;
 
             mapRef.current?.flyTo({
-                padding: {
-                    right: !isMobile ? rightWidth : 0,
-                    bottom: isMobile ? sheetHeight : 0,
-                },
                 center: [lng, lat], zoom,
                 essential: true,
             });
@@ -145,7 +141,7 @@ const MappaRisultati = forwardRef(({
 
         window.addEventListener('map:focus', handleFocus);
         return () => window.removeEventListener('map:focus', handleFocus);
-    }, [rightWidth, sheetHeight]);
+    }, [rightWidth, footerHeight]);
 
     useEffect(() => {
         // log('MappaRisultati: MOUNTED');
@@ -243,10 +239,7 @@ const MappaRisultati = forwardRef(({
         if (popupInfo) return;
         if (loadMarker === false) return;
         if (mapRef.current === null) return;
-
-        if (destinazioneFinale !== null) {
-            return;
-        }
+        if (destinazioneFinale !== null) return;
 
         const riquadroAttuale = calcolaBounds();
 
@@ -320,10 +313,7 @@ const MappaRisultati = forwardRef(({
 
         const map = mapRef.current;
 
-        const dist = 120;
-        const padding = {top: headerHeight + dist, bottom: footerHeight + dist, right: rightWidth + dist, left: dist};
-
-        map.flyTo({center: [pos.lon, pos.lat], zoom: 13, padding: padding});
+        map.flyTo({center: [pos.lon, pos.lat], zoom: 13});
     };
 
     const points = useMemo(() => {
@@ -453,7 +443,7 @@ const MappaRisultati = forwardRef(({
     useMemo(() => {
         ultimoRiquadroRef.current = null;
         listImpiantiRef.current = [];
-        // debouncedBoundsChange();
+        debouncedBoundsChange();
     }, [filter]);
 
     useEffect(() => {
@@ -585,6 +575,9 @@ const MappaRisultati = forwardRef(({
                             const currentFilter = {
                                 ...filter, ...state
                             };
+
+                            console.log("FILTER CHANGED: ", currentFilter);
+
                             setFilter(currentFilter);
                         }}/>
                 : null}
@@ -610,7 +603,20 @@ const MappaRisultati = forwardRef(({
                 onClick={handleMapClick}
                 ref={mapRef}
                 attributionControl={false}
-                onLoad={debouncedBoundsChange}
+                onLoad={() => {
+                    debouncedBoundsChange();
+                    const dist = 120;
+                    const padding = {
+                        top: headerHeight + dist,
+                        bottom: footerHeight + dist,
+                        right: rightWidth + dist,
+                        left: dist
+                    };
+
+                    const map = mapRef.current;
+                    map.setPadding(padding);
+
+                }}
                 initialViewState={posizione}
                 mapStyle={styleUrl}
                 mapLib={import('maplibre-gl')}
@@ -620,6 +626,7 @@ const MappaRisultati = forwardRef(({
                     debouncedBoundsChange();
                     setLoadMarker(true);
                     setIsLoading(false);
+                    setFadeOutMarker(false);
                 }}
 
             >
