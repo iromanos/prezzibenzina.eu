@@ -10,7 +10,7 @@ export const defaultConsent = {
 };
 
 export const resetConsent = {
-    technical: false, // sempre attivi
+    technical: false,
     preferences: false,
     analytics: false,
     marketing: false,

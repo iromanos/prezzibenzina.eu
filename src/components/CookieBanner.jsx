@@ -1,21 +1,49 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {defaultConsent, useCookieConsent} from './CookieConsentContext';
 import CookieIcon from '@mui/icons-material/Cookie';
 import {log} from "@/functions/helpers";
 import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 export default function CookieBanner() {
     const {consent, updateConsent, initialized} = useCookieConsent();
     const [expanded, setExpanded] = useState(false);
 
+
+    const [show, setShow] = useState(false);
+
     log(initialized);
     log(consent);
 
-    if (!initialized) return null;
+    const updateGoogleConsent = (status) => {
+        if (typeof window.gtag !== 'undefined') {
+            window.gtag('consent', 'update', {
+                'ad_storage': status,
+                'ad_user_data': status,
+                'ad_personalization': status,
+                'analytics_storage': status
+            });
+        }
+    };
 
-    // if (!initialized || consent.preferences || consent.analytics || consent.marketing || consent.technical) return null;
+    useEffect(() => {
+        if (!initialized) return;
+        if (consent.technical === false) {
+            setShow(true);
+        }
+
+        if (consent.marketing) {
+            updateGoogleConsent('granted');
+        }
+        if (consent.marketing === false) {
+            updateGoogleConsent('denied');
+        }
+
+    }, [consent, initialized]);
+
+    if (!initialized) return null;
 
 
     const handleAcceptAll = () => {
@@ -25,10 +53,12 @@ export default function CookieBanner() {
             analytics: true,
             marketing: true,
         });
+        updateGoogleConsent('granted');
     };
 
     const handleRejectAll = () => {
         updateConsent(defaultConsent);
+        updateGoogleConsent('denied');
     };
 
 
@@ -41,77 +71,110 @@ export default function CookieBanner() {
             analytics: form.analytics.checked,
             marketing: form.marketing.checked,
         });
+        setShow(false);
+        setExpanded(false);
     };
 
+
+    if (show === false) {
+        return <Button
+            onClick={() => {
+                setShow(true);
+            }}
+            style={{
+                width: 56,
+                height: 56
+            }}
+            className={'border rounded-circle shadow ' +
+                'd-flex align-items-center justify-content-center ' +
+                'position-fixed m-4 z-50 end-0 bottom-0'}
+            size={'lg'}
+            variant={'primary'}
+
+        ><CookieIcon/></Button>;
+    }
+
+
+
     return <Modal
-        size={'lg'} centered show={true}>
+        size={'lg'} centered show={show}>
         <Modal.Header>
             <Modal.Title>
                 <CookieIcon className="me-3 text-warning"/>Gestione dei cookies
             </Modal.Title>
         </Modal.Header>
+        <form onSubmit={handleSave}>
         <Modal.Body>
-            <p>
+            {expanded ? <CookieForm consent={consent}/> :
+                <><p>
                 <strong>Usiamo i cookie</strong> per migliorare l’esperienza utente.</p>
-            <a href="/cookie" className="link-primary">Scopri di più</a>
-
+                    <a href="/cookie" className="link-primary">Scopri di più</a></>
+            }
         </Modal.Body>
-    </Modal>;
+            <Modal.Footer>
 
-
-    /*
-    <div className="position-fixed bottom-0 start-0 end-0 bg-light border-top shadow p-3 z-index-fixed">
-        <div className="container ">
-            <div className="mb-2 text-center">
-                <span className={'d-block'}><CookieIcon className="me-2 text-warning" fontSize="small"/>
-                    <strong>Usiamo i cookie</strong> per migliorare l’esperienza utente.</span>
-                <a href="/cookie" className="link-primary">Scopri di più</a>.
-            </div>
-
-            {!expanded ? (
-                <div className="d-flex gap-2 justify-content-center">
-                    <button className="btn btn-primary btn-sm" onClick={handleAcceptAll}>
-                        Accetta tutti
-                    </button>
-                    <button className="btn btn-outline-primary btn-sm" onClick={handleRejectAll}>
-                        Rifiuta tutti
-                    </button>
-                    <button className="btn btn-outline-secondary btn-sm" onClick={() => setExpanded(true)}>
-                        Personalizza
-                    </button>
-                </div>
-            ) : (
-                <form className={'mx-auto col-6 p-2 rounded border'} onSubmit={handleSave}>
-                    <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="preferences" name="preferences"/>
-                        <label className="form-check-label" htmlFor="preferences">
-                            Cookie di preferenza
-                        </label>
-                    </div>
-                    <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="analytics" name="analytics"/>
-                        <label className="form-check-label" htmlFor="analytics">
-                            Cookie statistici
-                        </label>
-                    </div>
-                    <div className="form-check mb-2">
-                        <input className="form-check-input" type="checkbox" id="marketing" name="marketing"/>
-                        <label className="form-check-label" htmlFor="marketing">
-                            Cookie di marketing
-                        </label>
-                    </div>
-                    <div className="d-flex gap-2 justify-content-center">
+                {expanded ? <>
                         <button type="submit" className="btn btn-success btn-sm">
                             Salva preferenze
                         </button>
                         <button type="button" className="btn btn-outline-secondary btn-sm"
-                                onClick={() => setExpanded(false)}>
+                                onClick={() => {
+                                    setExpanded(false);
+                                }}>
                             Annulla
                         </button>
-                    </div>
-                </form>
-            )}
+                    </> :
+
+                    <><Button
+                        variant={'primary'}
+                        size={'sm'}
+                        onClick={() => {
+                            handleAcceptAll();
+                            setShow(false);
+                        }}>
+                        Accetta tutti
+                    </Button>
+                        <Button
+                            size={'sm'}
+                            variant={'outline-primary'}
+                            onClick={() => setExpanded(true)}>
+                            Personalizza
+                        </Button>
+                        <Button
+                            variant={'outline-secondary'}
+                            size={'sm'}
+                            onClick={() => {
+                                handleRejectAll();
+                                setShow(false);
+                            }}>
+                            Rifiuta tutti
+                        </Button></>}
+            </Modal.Footer></form>
+    </Modal>;
+}
+
+function CookieForm({consent}) {
+    return <>
+        <div className="form-check">
+            <input className="form-check-input" type="checkbox" id="preferences" name="preferences"
+                   defaultChecked={consent.preferences}/>
+            <label className="form-check-label" htmlFor="preferences">
+                Cookie di preferenza
+            </label>
         </div>
-    </div>
-);*/
+        <div className="form-check">
+            <input className="form-check-input" type="checkbox" id="analytics" name="analytics"
+                   defaultChecked={consent.analytics}/>
+            <label className="form-check-label" htmlFor="analytics">
+                Cookie statistici
+            </label>
+        </div>
+        <div className="form-check mb-2">
+            <input className="form-check-input" type="checkbox" id="marketing" name="marketing"
+                   defaultChecked={consent.marketing}/>
+            <label className="form-check-label" htmlFor="marketing">
+                Cookie di marketing
+            </label>
+        </div>
+    </>;
 }

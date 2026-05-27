@@ -8,6 +8,7 @@ import {headers} from "next/headers";
 import {PreferitiProvider} from "@/context/PreferitiProvider";
 import LoadAdSense from "../components/ads/LoadAdSense";
 import CookieBanner from "@/components/CookieBanner";
+import Script from "next/script";
 
 
 const montserrat = Montserrat({
@@ -50,7 +51,6 @@ export default async function RootLayout({children}) {
         <html lang="it" className={`${montserrat.variable} ${quicksand.variable}`}>
         <Head>
 
-
             <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96"/>
             <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
             <link rel="shortcut icon" href="/favicon.ico"/>
@@ -60,6 +60,25 @@ export default async function RootLayout({children}) {
         </Head>
 
         <body>
+        <Script
+            id="google-consent-mode"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{
+                __html: `
+                      window.dataLayer = window.dataLayer || [];
+                      function gtag(){window.dataLayer.push(arguments);}
+                      gtag('consent', 'default', {
+                        'ad_storage': 'denied',
+                        'ad_user_data': 'denied',
+                        'ad_personalization': 'denied',
+                        'analytics_storage': 'denied'
+                      });
+                    `,
+            }}
+        />
+
+
+
         <AppRouterCacheProvider>
             <PreferitiProvider>
                 <CookieConsentProvider>
