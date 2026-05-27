@@ -5,7 +5,30 @@ import {getPreferiti} from "@/functions/api";
 import ElencoDistributori from "../../../components/ElencoDistributori";
 import Mappa from "@/components/Mappa";
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
-import {FooterMobile} from "../../../components/FooterMobile";
+import {FooterMobile} from "@/components/FooterMobile";
+import {getCanonicalUrl} from "@/functions/server";
+import {headers} from "next/headers";
+
+
+export async function generateMetadata() {
+
+    const canonicalUrl = getCanonicalUrl(await headers()) + '/preferiti';
+
+    return {
+        title: 'Preferiti | PrezziBenzina.eu',
+        description:
+            'I miei distributori preferiti',
+        alternates: {
+            canonical: canonicalUrl,
+            languages: {
+                'it': canonicalUrl,
+                'x-default': canonicalUrl,
+            },
+
+        },
+        robots: 'index, follow',
+    };
+}
 
 
 export default function Page() {

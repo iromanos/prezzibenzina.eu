@@ -9,16 +9,22 @@ export default function Analytics({trackId}) {
 
     const allowTracking =
         consent?.analytics === true || consent?.marketing === true;
+    if (!allowTracking && process.env.NODE_ENV === 'development') return <>
 
-    // const trackId = "G-Q603H5VH66";
+        <div className={'bg-danger text-center p-4 text-white'}>
+            GA4 ID: {trackId} - Tracking is disabled by cookie consent.
+        </div>
+    </>
 
-    if (process.env.NODE_ENV === 'development') return null;
-
-    // console.log("Analytics: Consent status", JSON.stringify(consent));
 
     if (!allowTracking) return null;
 
-    // console.log("Analytics: Tracking enabled with ID", trackId);
+    if (process.env.NODE_ENV === 'development') return <>
+        <div className={'bg-success text-center'}>
+            GA4 ID: {trackId} - Tracking is disabled in development mode.
+        </div>
+    </>;
+
 
     return (
         <>
