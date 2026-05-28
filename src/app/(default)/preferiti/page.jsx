@@ -1,13 +1,9 @@
-'use client'
 import Header from "@/components/Header";
-import React, {useEffect, useState} from "react";
-import {getPreferiti} from "@/functions/api";
-import ElencoDistributori from "../../../components/ElencoDistributori";
-import Mappa from "@/components/Mappa";
-import {usePreferitiGlobal} from "@/context/PreferitiProvider";
+import React from "react";
 import {FooterMobile} from "@/components/FooterMobile";
 import {getCanonicalUrl} from "@/functions/server";
 import {headers} from "next/headers";
+import Preferiti from "../../../components/Preferiti";
 
 
 export async function generateMetadata() {
@@ -34,36 +30,13 @@ export async function generateMetadata() {
 export default function Page() {
 
 
-    const [impianti, setImpianti] = useState([]);
-
-    const {preferiti} = usePreferitiGlobal();
-
-
-    useEffect(() => {
-        if (preferiti.length === 0) {
-            setImpianti([]);
-            return;
-        }
-        getPreferiti(preferiti).then(value => {
-
-            const record = value.impianti.map((m) => {
-                return m.properties;
-            });
-
-            setImpianti(record);
-        })
-    }, [preferiti]);
-
-
-    console.log("IMPIANTI PREFERITI", impianti);
-
     return <>
         <Header/>
         <main className="container py-3">
             <h1>Preferiti</h1>
-            {impianti.length !== 0 &&
-                <Mappa distributori={impianti}/>}
-            <ElencoDistributori distributori={impianti}/>
+
+            <Preferiti/>
+
             <FooterMobile/>
         </main>
     </>;

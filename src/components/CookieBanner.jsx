@@ -53,12 +53,12 @@ export default function CookieBanner() {
             analytics: true,
             marketing: true,
         });
-        updateGoogleConsent('granted');
+        // updateGoogleConsent('granted');
     };
 
     const handleRejectAll = () => {
         updateConsent(defaultConsent);
-        updateGoogleConsent('denied');
+//        updateGoogleConsent('denied');
     };
 
 
@@ -95,7 +95,6 @@ export default function CookieBanner() {
     }
 
 
-
     return <Modal
         size={'lg'} centered show={show}>
         <Modal.Header>
@@ -104,13 +103,13 @@ export default function CookieBanner() {
             </Modal.Title>
         </Modal.Header>
         <form onSubmit={handleSave}>
-        <Modal.Body>
-            {expanded ? <CookieForm consent={consent}/> :
-                <><p>
-                <strong>Usiamo i cookie</strong> per migliorare l’esperienza utente.</p>
-                    <a href="/cookie" className="link-primary">Scopri di più</a></>
-            }
-        </Modal.Body>
+            <Modal.Body>
+                {expanded ? <CookieForm consent={consent}/> :
+                    <><p>
+                        <strong>Usiamo i cookie</strong> per migliorare l’esperienza utente.</p>
+                        <a href="/cookie" className="link-primary">Scopri di più</a></>
+                }
+            </Modal.Body>
             <Modal.Footer>
 
                 {expanded ? <>

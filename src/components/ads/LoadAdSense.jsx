@@ -8,7 +8,6 @@ export default function LoadAdSense() {
     useEffect(() => {
         const handleInteraction = () => {
             setLoadAds(true);
-            // Rimuove i listener una volta attivato
             window.removeEventListener('scroll', handleInteraction);
             window.removeEventListener('pointerdown', handleInteraction);
         };
@@ -26,8 +25,24 @@ export default function LoadAdSense() {
 
     return (
         <Script
+
+            onReady={() => {
+                window.dataLayer = window.dataLayer || [];
+                window.gtag = function () {
+                    window.dataLayer.push(arguments);
+                    console.log(arguments);
+                };
+
+                window.gtag('consent', 'default', {
+                    'ad_storage': 'denied',
+                    'ad_user_data': 'denied',
+                    'ad_personalization': 'denied',
+                    'analytics_storage': 'denied'
+                });
+            }}
+
             strategy="afterInteractive"
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7775238513283854"
-            crossOrigin="anonymous"></Script>
+            crossOrigin="anonymous"/>
     );
 }
