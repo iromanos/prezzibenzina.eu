@@ -15,8 +15,15 @@ import Display6977770298 from "@/components/ads/Display-6977770298";
 import Display5745053645 from "./ads/Display-5745053645";
 import FooterHome from "./home/FooterHome";
 import {FooterMobile} from "./FooterMobile";
+import {ucwords} from "@/functions/helpers";
+import {Card} from "react-bootstrap";
+import Image from "next/image";
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 export default async function DistributoriPage({params}) {
+
+    const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
+
 
     const {regione, carburante, marchio, sigla, comune} = await params;
 
@@ -41,9 +48,6 @@ export default async function DistributoriPage({params}) {
 
     const distributori = await response.json();
 
-
-    console.log(distributori);
-
     const riepilogo = await getSeoRegione(regione, carburante, marchio, sigla, comune);
 
     const comuni = riepilogo.comuni;
@@ -56,6 +60,26 @@ export default async function DistributoriPage({params}) {
         month: 'long',
         day: 'numeric',
     }).format(date);
+
+
+    const {request} = riepilogo;
+
+
+    const scope = request.comune
+        ? {livello: 'comune', valore: request.comune.description}
+        : request.provincia
+            ? {livello: 'provincia', valore: request.provincia}
+            : {livello: 'regione', valore: request.regione || regione};
+
+    console.log(riepilogo);
+
+    const localita =
+        scope.livello === 'comune'
+            ? `a ${ucwords(scope.valore)} (${request.provincia.toUpperCase()})`
+            : scope.livello === 'provincia'
+                ? `in provincia di ${request.provincia_descrizione}`
+                : `in ${ucwords(scope.valore)}`;
+
 
     return <>
         <Header/>
@@ -70,28 +94,34 @@ export default async function DistributoriPage({params}) {
                 comune={riepilogo.request.comune}
                 marchio={marchio}/>
 
-            <IntroTextVersione2 data={riepilogo} distributori={distributori}>
-                <ul className={'list-unstyled'}>
-                    <li>✅ Dati aggiornati: {formatted}</li>
-                    <li>✅ Prezzi ufficiali MIMIT</li>
-                    <li>✅ Rifornimento veloce e sicuro</li>
-                </ul>
-                <div className={'d-flex gap-2 mb-4'}>
-                    <a title={"Elenco distributori"} href={"#distributori"}
-                       className={'btn btn-primary'}><FormatListBulletedIcon/> Elenco
-                        distributori</a>
-                    <a title={"Mappa"} href={"#mappa"} className={'btn btn-outline-primary'}><MapIcon/> Mappa</a>
-                </div>
-                {comuni.length > 1 ? <LinkComuni
-                    riepilogo={riepilogo}
-                    comuni={comuni}/> : <></>}
 
-                <div className={'mb-4'}>
-                    <Display6977770298/>
-                </div>
+            <div className={'d-flex flex-column flex-md-row align-items-md-start align-items-center gap-4 mb-2'}>
+                {marchio &&
+                    <Image src={URI_IMAGE + `/impianto/logo/${marchio}/128`} alt={marchio} width={128} height={128}/>
+                }
+                <div>
+                    <h1>Prezzi {carburante} {marchio ? ` ${ucwords(marchio)}` : ''} {localita}</h1>
+                    <p className="lead text-muted">
+                        Scopri i <strong>prezzi</strong> aggiornati della <strong>{carburante}</strong> {marchio ?
+                        <strong>{ucwords(marchio)}</strong> : ''} {localita} e pianifica il tuo rifornimento in modo
+                        intelligente.
+                    </p></div>
+            </div>
+            <ul className={'list-unstyled'}>
+                <li><CheckBoxIcon className={'text-success'}/> Dati aggiornati: {formatted}</li>
+                <li><CheckBoxIcon className={'text-success'}/> Prezzi ufficiali MIMIT</li>
+                <li><CheckBoxIcon className={'text-success'}/> Rifornimento veloce e sicuro</li>
+            </ul>
+            <div className={'d-flex gap-2 mb-4'}>
+                <a title={"Elenco distributori"} href={"#distributori"}
+                   className={'btn btn-primary'}><FormatListBulletedIcon/> Elenco
+                    distributori</a>
+                <a title={"Mappa"} href={"#mappa"} className={'btn btn-outline-primary'}><MapIcon/> Mappa</a>
+            </div>
 
-
-            </IntroTextVersione2>
+            {comuni.length > 1 ? <LinkComuni
+                riepilogo={riepilogo}
+                comuni={comuni}/> : <></>}
 
             <div className={'mb-4'}>
                 <Display6977770298/>
@@ -107,6 +137,14 @@ export default async function DistributoriPage({params}) {
                     <LinkMarchio params={riepilogo.request} marchi={marchi}/>
                     {distributori.length !== 0 ? <Mappa distributori={distributori}/> : <></>}
                     <Display5745053645/>
+
+                    <Card className={'bg-white mb-4'}>
+                        <div className={'card-body'}>
+                            <IntroTextVersione2 data={riepilogo} distributori={distributori}/>
+                        </div>
+                    </Card>
+                    <Display6977770298/>
+
                 </div>
             </div>
 

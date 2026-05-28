@@ -12,7 +12,6 @@ import FooterHome from "../../components/home/FooterHome";
 import Header from "@/components/Header";
 import {MapSection} from "@/components/home/MapSection";
 
-//TODO: CMP CookiesYes
 export async function generateMetadata() {
 
     const title = 'PrezziBenzina.eu | Risparmia sul Carburante';

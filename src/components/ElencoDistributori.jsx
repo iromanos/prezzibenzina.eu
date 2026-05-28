@@ -11,7 +11,7 @@ export default function ElencoDistributori({distributori}){
 
 
     return <section className={'mb-4'}>
-        <h2 className="h5 mb-3">Elenco distributori</h2>
+        <h2 className="h6 mb-3 text-uppercase">Elenco distributori</h2>
         {distributori.length === 0 ? (
             <p className="text-muted">Nessun distributore trovato nella regione.</p>
         ) : (
@@ -22,7 +22,7 @@ export default function ElencoDistributori({distributori}){
                         <div key={index}><ImpiantoCard
                             key={d.id_impianto} impianto={d}/>
                             {(index + 1) % 3 === 0 &&
-                                <InFeed4656802013/>}
+                                <InFeed4656802013 className={'mb-3'}/>}
                         </div>
                     );
                 })}

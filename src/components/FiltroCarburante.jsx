@@ -4,7 +4,7 @@ import {getRouteLink} from "@/functions/helpers";
 
 export function LinkCarburanti({params, carburanti}){
     return                 <section className="mb-4">
-        <h2 className="h5 mb-3">Filtra per tipo di carburante</h2>
+        <h2 className="h6 mb-3 text-uppercase">Carburante</h2>
         <div className="d-flex flex-wrap gap-1" role="group">
             {carburanti.map((tipo) => {
 
@@ -24,7 +24,7 @@ export function LinkCarburanti({params, carburanti}){
 
 export default function FiltroCarburante({regione, carburanti, selezionato}){
     return                 <section className="mb-4">
-        <h2 className="h5 mb-3">Filtra per tipo di carburante</h2>
+        <h2 className="h6 mb-3 text-uppercase">Carburante</h2>
         <div className="btn-group" role="group">
             {carburanti.map((tipo) => (
 

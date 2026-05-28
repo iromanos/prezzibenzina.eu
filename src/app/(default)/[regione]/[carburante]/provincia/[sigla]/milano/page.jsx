@@ -60,14 +60,14 @@ export async function getMetadataMilano({params}) {
     const descrizioneCarburante = carburante ? carburante.toLowerCase() : 'carburante';
 
     const localizzazione = comune
-        ? `a ${ucwords(riepilogo.request.comune.description)}, ${sigla?.toUpperCase()}`
+        ? `a ${ucwords(riepilogo.request.comune.description)} (${sigla?.toUpperCase()})`
         : sigla
             ? `in provincia di ${sigla.toUpperCase()}`
             : `in ${ucwords(regione)}`;
 
-    const descrizioneMarchio = marchio ? ` ${marchio.toUpperCase()}` : '';
+    const descrizioneMarchio = marchio ? `${ucwords(marchio)} - ` : '';
 
-    const titolo = `${ucwords(descrizioneCarburante)} ${localizzazione}${descrizioneMarchio}: scopri i distributori più economici oggi`;
+    const titolo = `${descrizioneMarchio}${ucwords(descrizioneCarburante)} ${localizzazione}: scopri i distributori più economici oggi`;
 
     const stats = riepilogo.carburanti[carburante] || {};
 

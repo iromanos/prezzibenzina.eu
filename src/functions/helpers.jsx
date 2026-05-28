@@ -116,18 +116,17 @@ export async function getMetadata({params}) {
     const riepilogo = await getSeoRegione(regione, carburante, marchio, sigla, comune);
 
     const distributori = await response.json();
-
-    const descrizioneCarburante = carburante ? carburante.toLowerCase() : 'carburante';
+    const descrizioneCarburante = carburante ? ucwords(carburante) : 'carburante';
 
     const localizzazione = comune
-        ? `a ${ucwords(riepilogo.request.comune.description)}, ${sigla?.toUpperCase()}`
+        ? `a ${ucwords(riepilogo.request.comune.description)} (${sigla?.toUpperCase()})`
         : sigla
-            ? `in provincia di ${sigla.toUpperCase()}`
+            ? `in provincia di ${riepilogo.request.provincia_descrizione}`
             : `in ${ucwords(regione)}`;
 
-    const descrizioneMarchio = marchio ? ` ${marchio.toUpperCase()}` : '';
+    const descrizioneMarchio = marchio ? `${ucwords(marchio)} - ` : '';
 
-    const titolo = `Prezzi ${descrizioneCarburante} ${localizzazione}${descrizioneMarchio} | Distributori attivi`;
+    const titolo = `${descrizioneMarchio}Prezzi ${descrizioneCarburante} ${localizzazione} | Distributori attivi`;
     const descrizione = `Consulta i prezzi aggiornati di ${carburante} ${localizzazione}${descrizioneMarchio}. Trova i distributori più convenienti e naviga per città e tipo di carburante.`;
 
     const canonicalUrl = getLink(regione, carburante, marchio, sigla, riepilogo.request.comune);

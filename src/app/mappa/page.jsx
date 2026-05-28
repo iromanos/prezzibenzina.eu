@@ -8,10 +8,8 @@ import {getCanonicalUrl} from "@/functions/server";
 //TODO: quando cambia la posizione aggiorna il titolo della pagina
 //TODO: quando cambia la posizione aggiorna il campo di ricerca con l'indirizzo
 //TODO: quando cambia il filtro aggionna url senza fare il refresh continuo di tutta la pagina
-//TODO: impostare la destinazione e visualizzare i distributori lungo il tragitto
 //TODO: pagina dedicata alla svizzera
 //TODO: gestione utenti
-//TODO: errori in search console
 
 export async function generateMetadata({params, searchParams}) {
 

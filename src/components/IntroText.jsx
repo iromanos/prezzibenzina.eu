@@ -13,34 +13,33 @@ export function IntroTextVersione2({data, distributori, children}) {
     log(distributori);
 
     const {request, carburanti, marchi = [], comuni = [], regione, totaleImpianti, dataAggiornamento} = data;
-    const scope = request.comune
-        ? {livello: 'comune', valore: request.comune.description}
-        : request.provincia
-            ? {livello: 'provincia', valore: request.provincia}
-            : {livello: 'regione', valore: request.regione || regione};
 
     const carburante = request.carburante.toLowerCase();
     const carburanteLabel = capitalize(carburante);
     const stats = carburanti[carburante] || {};
     const marchio = data.marchio ? data.marchio.nome : null;
     const dataFormatted = formatDate(dataAggiornamento);
-    const localita =
-        scope.livello === 'comune'
-            ? `a ${ucwords(scope.valore)}`
-            : scope.livello === 'provincia'
-                ? `in provincia di ${scope.valore.toUpperCase()}`
-                : `in ${ucwords(scope.valore)}`;
     const marchioImpianti = marchio ? marchi.find(m => m.marchio.toUpperCase() === marchio)?.impianti : null;
 
     const noResults = distributori.length === 0;
 
+    const scope = request.comune
+        ? {livello: 'comune', valore: request.comune.description}
+        : request.provincia
+            ? {livello: 'provincia', valore: request.provincia}
+            : {livello: 'regione', valore: request.regione || regione};
+
+
+    const localita =
+        scope.livello === 'comune'
+            ? `a ${ucwords(scope.valore)}`
+            : scope.livello === 'provincia'
+                ? `in provincia di ${request.provincia_descrizione}`
+                : `in ${ucwords(scope.valore)}`;
+
+
     return (
         <section className="intro-text">
-            <h1>Prezzi {carburante} {marchio ? ` ${marchio}` : ''} {localita}</h1>
-            <p className="lead text-muted">
-                Scopri i <strong>prezzi</strong> aggiornati della <strong>{carburante}</strong> {marchio ?
-                <strong>{marchio}</strong> : ''} {localita} e pianifica il tuo rifornimento in modo intelligente.
-            </p>
 
             {noResults ? (
                 <>
@@ -85,7 +84,7 @@ export function IntroTextVersione2({data, distributori, children}) {
                     al <strong>{dataFormatted}</strong>, garantendo trasparenza e affidabilità.
                 </p>
                 <p>
-                    <strong>{ucwords(localita)}</strong> sono
+                    Attualmente <strong>{(localita)}</strong> sono
                     attivi <strong>{totaleImpianti || 'numerosi'}</strong> impianti, e molti di essi offrono servizi
                     aggiuntivi come sconti, programmi fedeltà e promozioni stagionali. Se sei fedele al
                     marchio {marchio ? <strong>{marchio}</strong> : ''}, puoi usare la mappa per localizzare gli

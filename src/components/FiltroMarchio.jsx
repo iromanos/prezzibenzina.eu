@@ -12,7 +12,7 @@ export function LinkMarchio({marchi, params}){
     if(params.marchio === undefined) params.marchio = '';
 
     return <section className="mb-4">
-            <h2 className="h5 mb-3">Filtra per marchio</h2>
+        <h2 className="h6 mb-3 text-uppercase">Marchio</h2>
         <div className="d-flex flex-wrap gap-1" role="group">
                 {marchi.map((marchio) => {
 
