@@ -11,7 +11,7 @@ export default function Analytics({trackId}) {
         consent?.analytics === true || consent?.marketing === true;
     if (!allowTracking && process.env.NODE_ENV === 'development') return <>
 
-        <div className={'bg-danger text-center p-4 text-white'}>
+        <div className={'bg-danger text-center text-white'}>
             GA4 ID: {trackId} - Tracking is disabled by cookie consent.
         </div>
     </>
@@ -20,7 +20,7 @@ export default function Analytics({trackId}) {
     if (!allowTracking) return null;
 
     if (process.env.NODE_ENV === 'development') return <>
-        <div className={'bg-success text-center'}>
+        <div className={'bg-success text-center text-white'}>
             GA4 ID: {trackId} - Tracking is disabled in development mode.
         </div>
     </>;

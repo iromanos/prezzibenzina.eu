@@ -1,12 +1,10 @@
 'use client'
 
 import {useEffect} from "react";
+import {AdSenseDev} from "./LoadAdSense";
 
 
 export default function InFeed4656802013({className}) {
-
-    if (process.env.NODE_ENV === 'development') return <div
-        className={`bg-success-subtle p-3 rounded ${className}`}>InFeed4656802013</div>;
 
     useEffect(() => {
         try {
@@ -22,7 +20,10 @@ export default function InFeed4656802013({className}) {
              data-ad-format="fluid"
              data-ad-layout-key="-hf-g+17-6r+e5"
              data-ad-client="ca-pub-7775238513283854"
-             data-ad-slot="4656802013"></ins>
+             data-ad-slot="4656802013">
+            <AdSenseDev slotAdSense={"4656802013"}/>
+
+        </ins>
     </>;
 
 }

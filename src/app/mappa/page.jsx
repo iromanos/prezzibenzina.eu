@@ -29,7 +29,6 @@ export async function generateMetadata({params, searchParams}) {
 
     const canonicalUrl = getCanonicalUrl(headersList) + '/mappa';
 
-    // Mappa Prezzi Benzina in Italia - Distributori e Carburanti
     return {
         title: `Mappa Prezzi ${fuel}${brand ? ` - ${brand}` : ""} - Distributori e Carburanti | ` + title,
         description: `Consulta la mappa interattiva dei distributori di ${fuel}${brand ? ` marchio ${brand} ` : ""} in Italia ed Europa. Prezzi aggiornati per risparmiare sul rifornimento.`,

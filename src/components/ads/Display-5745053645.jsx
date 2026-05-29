@@ -1,13 +1,10 @@
 'use client'
 
 import {useEffect} from "react";
+import {AdSenseDev} from "./LoadAdSense";
 
 
 export default function Display5745053645() {
-
-
-    if (process.env.NODE_ENV === 'development') return <div
-        className={'bg-success-subtle p-4 rounded mb-3'}>Display5745053645</div>;
 
     useEffect(() => {
         try {
@@ -24,6 +21,9 @@ export default function Display5745053645() {
              data-ad-slot="5745053645"
              data-ad-format="auto"
              data-full-width-responsive="true"
-        ></ins>
+        >
+            <AdSenseDev slotAdSense={"5745053645"}/>
+
+        </ins>
     </>;
 }

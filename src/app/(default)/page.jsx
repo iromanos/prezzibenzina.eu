@@ -11,6 +11,9 @@ import {FooterMobile} from "@/components/FooterMobile";
 import FooterHome from "../../components/home/FooterHome";
 import Header from "@/components/Header";
 import {MapSection} from "@/components/home/MapSection";
+import SavingsIcon from '@mui/icons-material/Savings';
+import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import PlaceIcon from '@mui/icons-material/Place';
 
 export async function generateMetadata() {
 
@@ -67,7 +70,7 @@ export default function Home() {
             <div id='mappa' className={'container mb-4'}>
                 <MapSection/>
             </div>
-            <div className={'container'}>
+            <div className={'container mb-4'}>
                 <Display6977770298/>
             </div>
             <div className={'container mb-4'}>
@@ -76,7 +79,7 @@ export default function Home() {
 
             <Motivi/>
 
-            <div className={'container'}>
+            <div className={'container mb-4'}>
                 <Display6977770298/>
             </div>
 
@@ -86,24 +89,24 @@ export default function Home() {
                 <div className="row text-center">
                     {[
                         {
-                            icon: '⛽',
+                            icon: <LocalGasStationIcon fontSize={'inherit'}/>,
                             title: 'Scegli il carburante',
                             text: 'Filtra per benzina, diesel, GPL, metano o elettrico.'
                         },
                         {
-                            icon: '📍',
+                            icon: <PlaceIcon fontSize={'inherit'}/>,
                             title: 'Inserisci la posizione',
                             text: 'Digita un indirizzo o usa la tua geolocalizzazione.'
                         },
                         {
-                            icon: '💰',
+                            icon: <SavingsIcon fontSize={'inherit'}/>,
                             title: 'Confronta e risparmia',
                             text: 'Visualizza i prezzi e scegli il distributore migliore.'
                         },
                     ].map((step, i) => (
                         <div className="col-md-4 mb-4" key={i}>
                             <div className="p-4 border rounded shadow-sm h-100 bg-light hover-shadow">
-                                <div className="mb-2 fs-1">{step.icon}</div>
+                                <div className="mb-2 display-3">{step.icon}</div>
                                 <h5 className="fw-bold">{step.title}</h5>
                                 <p>{step.text}</p>
                             </div>
