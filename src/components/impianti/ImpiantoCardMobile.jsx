@@ -3,6 +3,9 @@ import ImpiantoCardClient from "@/components/impianti/ImpiantoCardClient";
 import Bandiera from "@/components/Bandiera";
 import Image from "next/image";
 
+//TODO: indicare il risparmio teorico sui 50litri
+//TODO: indicare se il prezzo è discesa rispetto agli ultimi sette giorni
+
 
 export default function ImpiantoCardMobile({impianto, cardClient = true, onClickPreferiti = null}) {
 
