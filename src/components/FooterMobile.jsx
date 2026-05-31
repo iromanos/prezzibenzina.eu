@@ -5,7 +5,7 @@ import MapIcon from "@mui/icons-material/Map";
 import Link from "next/link";
 
 
-export function FooterMobile({children}) {
+export function FooterMobile({children, added}) {
 
 
     const {isMobile} = useMobile();
@@ -19,6 +19,7 @@ export function FooterMobile({children}) {
         <div className={'d-flex align-items-center gap-2'}>
             {children === undefined && <Link className={'btn btn-success'} href={'/mappa'}><MapIcon/> Mappa</Link>}
             {children}
+            {added}
         </div>
     </footer>;
 }

@@ -9,8 +9,8 @@ export default function CTA() {
             <p className="lead mb-4">
                 Scopri subito dove fare il pieno al prezzo più basso. Ogni minuto che aspetti, potresti spendere di più.
             </p>
-            <a href="/ricerca" className="btn btn-light btn-lg px-5 py-3 shadow-sm">
-                <RocketLaunchIcon/> Trova il distributore più conveniente ADESSO
+            <a href="/ricerca" className="btn btn-light">
+                <RocketLaunchIcon/> Trova il distributore più conveniente <strong>ADESSO</strong>
             </a></div>
     </div>
 }

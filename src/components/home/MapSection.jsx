@@ -9,6 +9,7 @@ import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 import dynamic from 'next/dynamic';
 import Image from "next/image";
 import useUltimaPosizione from "@/hooks/useUltimaPosizione";
+import useInteraction from "@/hooks/useInteraction";
 
 const MappaRisultati = dynamic(() => import('@/components/mappe/MappaRisultati'), {
     ssr: false,
@@ -48,7 +49,7 @@ export function MapSection() {
         });
     }, [hookUltimaPosizione.posizione]);
 
-
+    const {active} = useInteraction();
 
     return (
         <div className="mb-4">
@@ -58,16 +59,16 @@ export function MapSection() {
                     height: '616px'
                 }}
                 className="d-flex border rounded overflow-hidden position-relative justify-content-center align-items-center">
-                {attivaInterattiva === false &&
+                {active === false &&
                     <div
-                        onClick={() => setAttivaInterattiva(true)}
+                        // onClick={() => setAttivaInterattiva(true)}
                         style={{cursor: 'pointer'}}
                         className="position-relative w-100 h-100"
                     >
                     <Image
-                        onMouseEnter={() => {
-                            setAttivaInterattiva(true);
-                        }}
+                        // onMouseEnter={() => {
+                        //     setAttivaInterattiva(true);
+                        // }}
                         width={1170}
                         height={616}
                         priority={true}
@@ -82,7 +83,7 @@ export function MapSection() {
                         </div>
 
                     </div>}
-                {attivaInterattiva &&
+                {active &&
                 <MappaRisultati
 
                     ref={mapRef}

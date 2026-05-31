@@ -6,10 +6,13 @@ import CookieIcon from '@mui/icons-material/Cookie';
 import {log} from "@/functions/helpers";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import useMobile from "@/hooks/useMobile";
 
-export default function CookieBanner() {
+export default function CookieBanner({forMobile = false}) {
     const {consent, updateConsent, initialized} = useCookieConsent();
     const [expanded, setExpanded] = useState(false);
+
+    const {isMobile} = useMobile();
 
 
     const [show, setShow] = useState(false);
@@ -53,12 +56,10 @@ export default function CookieBanner() {
             analytics: true,
             marketing: true,
         });
-        // updateGoogleConsent('granted');
     };
 
     const handleRejectAll = () => {
         updateConsent(defaultConsent);
-//        updateGoogleConsent('denied');
     };
 
 
@@ -75,8 +76,7 @@ export default function CookieBanner() {
         setExpanded(false);
     };
 
-
-    if (show === false) {
+    if (show === false && forMobile === false && isMobile === false) {
         return <Button
             onClick={() => {
                 setShow(true);
@@ -94,6 +94,16 @@ export default function CookieBanner() {
         ><CookieIcon/></Button>;
     }
 
+    if (show === false && forMobile === true && isMobile === true) {
+        return <Button
+            onClick={() => {
+                setShow(true);
+            }}
+
+            variant={'light'}
+            className={'ms-auto'}
+        ><CookieIcon className={'text-primary'}/></Button>;
+    }
 
     return <Modal
         size={'lg'} centered show={show}>

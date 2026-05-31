@@ -1,20 +1,23 @@
 import {useEffect, useState} from 'react';
+import {getElencoCarburanti} from "@/functions/api";
 
 export default function useCarburante(defaultValue = '') {
     const [carburante, setCarburanteState] = useState(defaultValue);
 
+
     useEffect(() => {
         if (defaultValue !== '') return;
-        const match = document.cookie.match(/(?:^|; )carburante=([^;]*)/);
-        if (match) {
-            setCarburanteState(decodeURIComponent(match[1]));
-        } else setCarburanteState(defaultValue);
-    }, []);
+        const elencoCarburanti = getElencoCarburanti();
+        const match = localStorage.getItem('carburante');
+        const tipo = elencoCarburanti.find(u => u.tipo === match) || elencoCarburanti[0];
+        setCarburanteState(tipo);
+    }, [defaultValue]);
 
     const setCarburante = (tipo) => {
-        const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString(); // 30 giorni
-        document.cookie = `carburante=${encodeURIComponent(tipo)}; path=/; expires=${expires}; SameSite=Lax`;
-        setCarburanteState(tipo);
+        const elencoCarburanti = getElencoCarburanti();
+        localStorage.setItem('carburante', tipo);
+        const record = elencoCarburanti.find(u => u.tipo === tipo) || elencoCarburanti[0];
+        setCarburanteState(record);
     };
 
     return {carburante, setCarburante};

@@ -4,18 +4,17 @@ import {useState} from 'react';
 import {useRouter} from "next/navigation";
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import SearchIcon from "@mui/icons-material/Search";
-import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
-import EvStationIcon from '@mui/icons-material/EvStation';
-import PropaneIcon from '@mui/icons-material/Propane';
-import BubbleChartIcon from '@mui/icons-material/BubbleChart';
 import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 import {log} from "@/functions/helpers";
 import useCarburante from "@/hooks/useCarburante";
-import {getNominatimReverse, getRouteByPosition} from "@/functions/api";
+import {getElencoCarburanti, getNominatimReverse, getRouteByPosition} from "@/functions/api";
 import {usePosizioneAttuale} from "@/hooks/usePosizioneAttuale";
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
 export default function SearchForm() {
+
+    const [modal, setModal] = useState(false);
 
     const [place, setPlace] = useState(null);
     const [location, setLocation] = useState('');
@@ -26,13 +25,15 @@ export default function SearchForm() {
 
     const posizioneAttuale = usePosizioneAttuale();
 
+    const elencoCarburanti = getElencoCarburanti();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
 
             const payload = place;
-            payload['carburante'] = carburante;
+            payload['carburante'] = carburante.tipo;
 
             console.log(payload);
 
@@ -57,39 +58,36 @@ export default function SearchForm() {
                     setPlace(r);
                 }
             );
-
-        // const lat = posizioneAttuale.lat;
-        // const lon = posizioneAttuale.lon;
-        // window.location.href = `/mappa?lat=${lat}&lng=${lon}`;
     };
 
     log(carburante);
 
     return (
-        <><form onSubmit={handleSubmit}>
-            <input type="hidden" name="carburante" value={carburante} />
-
-            <div className="mb-3">
-                <label className="form-label h6">Tipo di Carburante</label>
-                <div className="d-flex flex-wrap gap-2">
-                    {[
-                        {tipo: 'benzina', icon: <LocalGasStationIcon/>},
-                        {tipo: 'diesel', icon: <EvStationIcon/>},
-                        {tipo: 'gpl', icon: <PropaneIcon/>},
-                        {tipo: 'metano', icon: <BubbleChartIcon/>},
-                    ].map(({ tipo, icon }) => (
-                        <button
-                            key={tipo}
-                            type="button"
-                            className={`btn ${carburante === tipo ? 'btn-primary' : 'btn-light'}`}
-                            onClick={() => setCarburante(tipo)}
-                        >
-                            {icon} {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
-                        </button>
+        <>
+            {modal && <Modal show={modal} onHide={() => setModal(false)} centered>
+                <Modal.Header closeButton><Modal.Title>Seleziona carburante</Modal.Title></Modal.Header>
+                <Modal.Body className={'d-flex flex-wrap gap-2'}>
+                    {elencoCarburanti.map((c) => (
+                        <Button
+                            key={c.id}
+                            size={'sm'}
+                            variant={c.id === carburante.id ? 'primary' : 'outline-dark'}
+                            className="mb-2 text-uppercase"
+                            onClick={() => {
+                                setModal(false);
+                                setCarburante(c.tipo);
+                            }}
+                        >{c.icon} {c.tipo}</Button>
                     ))}
-                </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setModal(false)}>Annulla</Button>
+                </Modal.Footer>
+            </Modal>}
 
-            </div>
+
+            <form onSubmit={handleSubmit}>
+                {carburante && <input type="hidden" name="carburante" value={carburante.tipo}/>}
 
             <div className="mb-3">
                 <NominatimAutocomplete
@@ -102,18 +100,23 @@ export default function SearchForm() {
                 />
             </div>
 
-            <div className="text-center mb-4 d-flex">
+                <div className="text-center mb-4 d-flex gap-2 flex-wrap">
 
+                    <Button
+                        onClick={() => setModal(true)}
+                        className={'text-uppercase'} variant={'light'} size={'sm'}>
+                        {carburante.icon} {carburante.tipo}</Button>
                 <Button
 
                     disabled={posizioneAttuale === null}
 
                     onClick={handleGeolocalizza}
                     variant={"light"}
-                    className={'me-2'}
+                    size={'sm'}
+                    className={''}
                 ><FmdGoodIcon/> La mia posizione</Button>
 
-                <button type="submit" className="btn btn-primary"><SearchIcon /> Cerca</button>
+                    <button type="submit" className="btn btn-primary btn-sm"><SearchIcon/> Cerca</button>
             </div>
         </form>
 

@@ -47,7 +47,7 @@ export default function Home() {
             <Header/>
             <div
                 className="container-fluid bg-primary text-white min-vh-50 d-flex align-items-center justify-content-center mb-4 py-4">
-                <div className="text-center px-4">
+                <div className="text-center px-md-4">
                     <h1 className="display-5 fw-bold">
                         Risparmia ogni giorno sul carburante.
                     </h1>
@@ -56,11 +56,11 @@ export default function Home() {
                         className="fi fi-it"></span> <span className="fi fi-ch"></span>
                     </p>
                     <div className={'d-flex gap-3 justify-content-center align-items-center flex-wrap'}>
-                        <a title={'Inizia la ricerca'} href="/ricerca" className="btn btn-light btn-lg shadow-sm">
+                        <a title={'Inizia la ricerca'} href="/ricerca" className="btn btn-light shadow-sm">
                         <SearchIcon/> Inizia la ricerca
                     </a>
                         <a title={'Vai alla mappa di Italia e Svizzera'} href="#mappa"
-                           className="btn btn-light btn-lg shadow-sm">
+                           className="btn btn-light shadow-sm">
                             <MapIcon/> Vai alla mappa
                         </a>
                     </div>
@@ -84,7 +84,7 @@ export default function Home() {
             </div>
 
             <div className="container py-2">
-                <h2 className="text-center fw-bold mb-3" style={{fontFamily: 'Montserrat, sans-serif'}}>Come
+                <h2 className="text-center mb-3" style={{fontFamily: 'Montserrat, sans-serif'}}>Come
                     funziona</h2>
                 <div className="row text-center">
                     {[

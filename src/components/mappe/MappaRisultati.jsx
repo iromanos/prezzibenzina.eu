@@ -284,7 +284,7 @@ const MappaRisultati = forwardRef(({
                     }
                 }
             }
-            setDistributori(record);
+            setDistributori(record || []);
             onFetchDistributori?.(record);
         } catch (e) {
             setDistributori([]);

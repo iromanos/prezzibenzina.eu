@@ -1,7 +1,6 @@
 import SearchForm from '@/components/SearchForm';
 import Header from "@/components/Header";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
-import SearchIcon from "@mui/icons-material/Search";
 import {getCanonicalUrl} from "@/functions/server";
 import {headers} from "next/headers";
 import Display5745053645 from "../../../components/ads/Display-5745053645";
@@ -44,18 +43,16 @@ export default function Ricerca() {
         <>
             <Header />
 
-            <section className=" bg-primary text-white py-5 text-center">
+            <section className=" bg-primary text-white py-3 text-center mb-3">
                 <div className="container">
                     <h1 className="display-5 fw-bold mb-3">Trova il distributore più conveniente</h1>
-                    <p className="lead mb-4">Filtra per carburante, inserisci la tua posizione e risparmia subito.</p>
-                    <a href="#ricerca" className="btn btn-light btn-lg px-4 py-2 shadow-sm"><SearchIcon/> Inizia la
-                        ricerca</a>
+                    <p className="lead">Filtra per carburante, inserisci la tua posizione e risparmia subito.</p>
                 </div>
             </section>
 
 
             <div className={"container"}>
-                <div id='ricerca' className="bg-white rounded-4 shadow p-4 border my-4">
+                <div id='ricerca' className="card p-3 bg-white">
                     <SearchForm/>
                 </div>
 
@@ -70,7 +67,10 @@ export default function Ricerca() {
                     </p>
                     <p>
                         Inserisci un indirizzo, una città o usa la tua posizione per visualizzare sulla mappa gli
-                        impianti più vicini. Puoi filtrare per tipo di carburante, distanza e marchio, così da trovare
+                        impianti più vicini.
+                    </p>
+                    <p>
+                        Puoi filtrare per tipo di carburante, distanza e marchio, così da trovare
                         esattamente ciò che ti serve. Il nostro sistema è ottimizzato per smartphone e tablet, ideale
                         anche per chi è in viaggio.
                     </p>
@@ -85,32 +85,17 @@ export default function Ricerca() {
                 <Display5745053645/>
             </div>
             {/* CTA AGGRESSIVA */}
-            <section className="bg-danger text-white py-5 text-center">
+            <section className="bg-danger text-white py-5 text-center mb-3">
                 <div className="container">
                     <h2 className="fw-bold display-6 mb-3">Stai ancora pagando troppo per il carburante?</h2>
                     <p className="lead mb-4">Ogni minuto che aspetti, potresti spendere di più. Trova subito il distributore migliore.</p>
-                    <a href="/mappa" className="btn btn-light btn-lg px-5 py-3 shadow-sm"><RocketLaunchIcon/> Cerca ora</a>
+                    <a href="/mappa" className="btn btn-light"><RocketLaunchIcon/> Cerca ora</a>
                 </div>
             </section>
 
-            {/* VANTAGGI */}
-            <section className="bg-light py-5">
-                <div className="container text-center">
-                    <h2 className="mb-4">Perché usare PrezziBenzina.eu?</h2>
-                    <div className="row">
-                        {[
-                            'Risparmi tempo e denaro',
-                            'Eviti sorprese alla pompa',
-                            'Scopri impianti serviti e self',
-                            'Ottimizzato per smartphone'
-                        ].map((v, i) => (
-                            <div key={i} className="col-md-3 mb-3">
-                                <div className="p-3 border rounded bg-white shadow-sm h-100">{v}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <div className={'container'}>
+                <Display5745053645/>
+            </div>
             <FooterMobile>
                 <FooterHome/>
             </FooterMobile>

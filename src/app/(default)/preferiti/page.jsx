@@ -4,6 +4,7 @@ import {FooterMobile} from "@/components/FooterMobile";
 import {getCanonicalUrl} from "@/functions/server";
 import {headers} from "next/headers";
 import Preferiti from "../../../components/Preferiti";
+import CookieBanner from "@/components/CookieBanner";
 
 
 export async function generateMetadata() {
@@ -37,7 +38,9 @@ export default function Page() {
 
             <Preferiti/>
 
-            <FooterMobile/>
+            <FooterMobile added={<CookieBanner forMobile={true}/>}>
+
+            </FooterMobile>
         </main>
     </>;
 }
