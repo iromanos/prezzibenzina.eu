@@ -45,10 +45,11 @@ export function LinkCarburanti({params, carburanti}){
         }
         <section className="mb-4">
             <h2 className="h6 mb-3 text-uppercase">Carburante</h2>
+            {carburante &&
             <Button
                 onClick={() => setModal(true)}
                 className={'text-uppercase'} variant={'primary'} size={'sm'}>
-                {carburante.icon} {carburante.tipo}</Button></section>
+                {carburante.icon} {carburante.tipo}</Button>}</section>
     </>;
 
 

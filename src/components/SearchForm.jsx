@@ -62,76 +62,85 @@ export default function SearchForm() {
 
     logDebug(carburante);
 
+    const Dialog = () => {
+        return <Modal show={modal} onHide={() => setModal(false)} centered>
+            <Modal.Header closeButton><Modal.Title>Seleziona carburante</Modal.Title></Modal.Header>
+            <Modal.Body className={'d-flex flex-wrap gap-2'}>
+                {elencoCarburanti.map((c) => (
+                    <Button
+                        key={c.id}
+                        size={'sm'}
+                        variant={c.id === carburante.id ? 'primary' : 'outline-dark'}
+                        className="mb-2 text-uppercase"
+                        onClick={() => {
+                            setModal(false);
+                            setCarburante(c.tipo);
+                        }}
+                    >{c.icon} {c.tipo}</Button>
+                ))}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={() => setModal(false)}>Annulla</Button>
+            </Modal.Footer>
+        </Modal>;
+    }
+
     return (
         <>
-            {modal && <Modal show={modal} onHide={() => setModal(false)} centered>
-                <Modal.Header closeButton><Modal.Title>Seleziona carburante</Modal.Title></Modal.Header>
-                <Modal.Body className={'d-flex flex-wrap gap-2'}>
-                    {elencoCarburanti.map((c) => (
-                        <Button
-                            key={c.id}
-                            size={'sm'}
-                            variant={c.id === carburante.id ? 'primary' : 'outline-dark'}
-                            className="mb-2 text-uppercase"
-                            onClick={() => {
-                                setModal(false);
-                                setCarburante(c.tipo);
-                            }}
-                        >{c.icon} {c.tipo}</Button>
-                    ))}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setModal(false)}>Annulla</Button>
-                </Modal.Footer>
-            </Modal>}
-
+            {modal && <Dialog/>}
 
             <form onSubmit={handleSubmit}>
                 {carburante && <input type="hidden" name="carburante" value={carburante.tipo}/>}
 
-            <div className="mb-3">
-                <NominatimAutocomplete
-                    initialValue={location}
-                    onSelect={(place) => {
-                        logDebug('Selezionato:');
-                        logDebug(place);
-                        setPlace(place);
-                    }}
-                />
-            </div>
+                <div className="mb-3">
 
-                <div className="text-center mb-4 d-flex gap-2 flex-wrap">
+                    <div className="input-group">
+                        <NominatimAutocomplete
+                            color={'#FFFFFF'}
+                            initialValue={location}
+                            onSelect={(place) => {
+                                logDebug('Selezionato:');
+                                logDebug(place);
+                                setPlace(place);
+                            }}
+                        />
+                        <Button className={''} variant={'primary'} type="submit"><SearchIcon/></Button>
+                    </div>
+                </div>
 
+                <div className="text-center mb-4 d-flex gap-2 justify-content-center">
+                    {carburante &&
+                        <Button
+                            onClick={() => setModal(true)}
+                            className={'text-uppercase'} variant={'light'} size={'sm'}>
+                            {carburante.icon} {carburante.tipo}</Button>}
                     <Button
-                        onClick={() => setModal(true)}
-                        className={'text-uppercase'} variant={'light'} size={'sm'}>
-                        {carburante.icon} {carburante.tipo}</Button>
-                <Button
 
-                    disabled={posizioneAttuale === null}
+                        disabled={posizioneAttuale === null}
 
-                    onClick={handleGeolocalizza}
-                    variant={"light"}
-                    size={'sm'}
-                    className={''}
-                ><FmdGoodIcon/> La mia posizione</Button>
+                        onClick={handleGeolocalizza}
+                        variant={"light"}
+                        size={'sm'}
+                        className={''}
+                    ><FmdGoodIcon/> La mia posizione</Button>
 
-                    <button type="submit" className="btn btn-primary btn-sm"><SearchIcon/> Cerca</button>
-            </div>
-        </form>
+                    {/*<button type="submit" className="btn btn-primary btn-sm"><SearchIcon/> Cerca</button>*/}
+                </div>
+            </form>
 
-    <div className="mt-4">
+            <div className="mt-4 py-4">
         <h6 className="mb-3">Suggerimenti rapidi:</h6>
-        <div className="d-flex flex-wrap gap-2">
+                <div className="d-flex flex-wrap gap-2 justify-content-center">
             {[
                 {label: 'Benzina a Milano', query: '/lombardia/benzina/provincia/mi/milano'},
                 {label: 'Diesel a Roma', query: '/lazio/diesel/provincia/rm/roma'},
                 {label: 'GPL a Napoli', query: '/campania/gpl/provincia/na/napoli', indirizzo: 'Napoli'},
             ].map((s, i) => (
                 <a
+                    title={`${s.label}`}
                     key={i}
                     href={s.query}
-                    className="btn btn-outline-secondary btn-sm"
+                    className="btn btn-sm btn-primary"
                 >
                     {s.label}
                 </a>

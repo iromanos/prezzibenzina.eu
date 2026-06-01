@@ -1,4 +1,4 @@
-import {Autocomplete, TextField} from '@mui/material';
+import {Autocomplete} from '@mui/material';
 import {useEffect, useState} from 'react';
 import {logDebug} from "@/functions/helpers";
 
@@ -30,14 +30,15 @@ function getIcon(tipo) {
 }
 
 export default function NominatimAutocomplete({onSelect, initialValue}) {
-    const [inputValue, setInputValue] = useState('');
+    const [inputValue, setInputValue] = useState(initialValue);
     const [options, setOptions] = useState([]);
 
     const NOMINATIM_ENDPOINT = 'https://nominatim.openstreetmap.org/search.php?dedupe=1&limit=5&format=jsonv2&countrycodes=it,ch&q=';
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
+        if (inputValue === undefined) return;
 
+        const timeout = setTimeout(() => {
             const controller = new AbortController();
             if (inputValue.length < 2) return;
 
@@ -69,12 +70,17 @@ export default function NominatimAutocomplete({onSelect, initialValue}) {
         return () => clearTimeout(timeout);
     }, [inputValue]);
 
+    useEffect(() => {
+        setInputValue(initialValue);
+    }, [initialValue])
+
+    console.log("INITIAL VALUE", initialValue);
+
     return (
         <Autocomplete
-            value={initialValue}
-            size='small'
-            className={'shadow-sm'}
+            value={inputValue ?? null}
             freeSolo
+            className={'flex-grow-1'}
             options={options}
             filterOptions={(opts) => opts}
             renderOption={(props, option) => {
@@ -95,13 +101,27 @@ export default function NominatimAutocomplete({onSelect, initialValue}) {
             onChange={(e, val) => {
                 return onSelect(val);
             }}
-            renderInput={(params) => (
-                <TextField
-                    className={'bg-white rounded'}
-                    value={initialValue}
-                    {...params}
-                    label="Indirizzo, città o CAP"/>
-            )}
+            renderInput={(params) => {
+                const {ref, endAdornment} = params.InputProps;
+                return (
+                    <div ref={ref}
+                         className={'d-flex align-items-center border-dark-subtle border rounded bg-white form-control position-relative'}
+                    >
+                        <input
+                            placeholder={"Indirizzo, città o codice postale"}
+                            {...params.inputProps}
+                            style={{
+                                backgroundColor: 'transparent',
+                                border: 'none',
+                                outline: 'none',
+                            }}
+                        />
+                        <div className={'me-0 position-relative'} style={{display: 'flex', alignItems: 'center'}}>
+                            {endAdornment}
+                        </div>
+                    </div>
+                );
+            }}
         />
     );
 }

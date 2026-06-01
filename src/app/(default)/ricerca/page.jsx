@@ -7,8 +7,6 @@ import Display5745053645 from "../../../components/ads/Display-5745053645";
 import {FooterMobile} from "@/components/FooterMobile";
 import FooterHome from "../../../components/home/FooterHome";
 
-//TODO: inserire il form di ricerca nella sezione hero
-
 export async function generateMetadata() {
 
     const canonicalUrl = getCanonicalUrl(await headers()) + '/ricerca';
@@ -48,14 +46,12 @@ export default function Ricerca() {
                 <div className="container">
                     <h1 className="display-5 fw-bold mb-3">Trova il distributore più conveniente</h1>
                     <p className="lead">Filtra per carburante, inserisci la tua posizione e risparmia subito.</p>
+                    <SearchForm/>
                 </div>
             </section>
 
 
             <div className={"container"}>
-                <div id='ricerca' className="card p-3 bg-white">
-                    <SearchForm/>
-                </div>
 
 
                 <section className="my-5">

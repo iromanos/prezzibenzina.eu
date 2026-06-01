@@ -11,7 +11,7 @@ import {
     getPreferiti
 } from "@/functions/api";
 import {useDebouncedCallback} from '@/hooks/useDebouncedCallback';
-import PosizioneAttualeButton from "@/components/PosizioneAttualeButton";
+import PosizioneAttualeButton, {IndicazioniButton} from "@/components/PosizioneAttualeButton";
 import {usePosizioneAttuale} from '@/hooks/usePosizioneAttuale';
 import PosizioneAttualeMarker from "@/components/PosizioneAttualeMarker";
 import FiltriMappaModerni from "@/components/mappe/FiltriMappaModerni";
@@ -86,7 +86,10 @@ const MappaRisultati = forwardRef(({
 
     const [route, setRoute] = useState(null);
 
+    const [showRoute, setShowRoute] = useState(false);
+
     const [isLoading, setIsLoading] = useState(false);
+
 
     const layerStyle = {
         id: 'point',
@@ -239,7 +242,9 @@ const MappaRisultati = forwardRef(({
         if (popupInfo) return;
         if (loadMarker === false) return;
         if (mapRef.current === null) return;
-        if (destinazioneFinale !== null) return;
+        if (showRoute === true) return;
+
+//        if (destinazioneFinale !== null) return;
 
         const riquadroAttuale = calcolaBounds();
 
@@ -459,6 +464,8 @@ const MappaRisultati = forwardRef(({
     useEffect(() => {
         if (posizioneAttuale === null) return;
         if (destinazioneFinale === null) return;
+        if (showRoute === false) return;
+
         setIsLoading(true);
 
         getDrivingCar({
@@ -474,14 +481,6 @@ const MappaRisultati = forwardRef(({
             setRoute(value);
             const map = mapRef.current;
 
-            const dist = 120;
-            const padding = {
-                top: headerHeight + dist,
-                bottom: footerHeight + dist,
-                right: rightWidth + dist,
-                left: dist
-            };
-
             map.fitBounds(
                 [
                     [value.bbox[0], value.bbox[1]],
@@ -492,13 +491,12 @@ const MappaRisultati = forwardRef(({
                     duration: 1000
                 }
             );
-
-
+            setDistributori([]);
             setIsLoading(false);
 
         })
 
-    }, [posizioneAttuale, destinazioneFinale]);
+    }, [posizioneAttuale, destinazioneFinale, showRoute]);
 
 
     useEffect(() => {
@@ -528,7 +526,7 @@ const MappaRisultati = forwardRef(({
             )}
             {showFilter ?
                     <FiltriMappaModerni
-                        initialFilters={initialFilters}
+                        initialFilters={filter}
                         rightWidth={rightWidth}
                         onSelectStato={(c) => {
                             setIsLoading(true);
@@ -554,14 +552,9 @@ const MappaRisultati = forwardRef(({
                             console.log("DESTINAZIONE", place);
                             setDestinazioneFinale(place);
                             setFadeOutMarker(true);
+                            setRoute(null);
 
-                            if (place === null) {
-                                setRoute(null);
-                                handlePosizione(posizioneAttuale);
-                            }
-
-
-                            if (posizioneAttuale === null && place !== null) {
+                            if (place !== null) {
                                 const bbox = [
                                     place.boundingbox[2],
                                     place.boundingbox[0],
@@ -570,14 +563,18 @@ const MappaRisultati = forwardRef(({
                                 ];
                                 mapRef.current?.fitBounds(bbox);
                             }
+
+                            const currentFilter = {
+                                ...filter, ...{place: place}
+                            };
+
+                            console.log("FILTER CHANGED: ", currentFilter);
                         }}
                         onChange={(state) => {
                             const currentFilter = {
                                 ...filter, ...state
                             };
-
                             console.log("FILTER CHANGED: ", currentFilter);
-
                             setFilter(currentFilter);
                         }}/>
                 : null}
@@ -593,9 +590,25 @@ const MappaRisultati = forwardRef(({
                         const uri = `lat=${center.lat}&lng=${center.lng}&zoom=${zoom}`;
                         window.location.href = `/mappa?${uri}`;
                     }}/>}
+
+                {destinazioneFinale && <IndicazioniButton onClick={() => {
+                    setIsLoading(true);
+                    setShowRoute(true);
+                }}/>}
+
                 {showPositionButton &&
                     <PosizioneAttualeButton
-                        onPosizione={handlePosizione}
+                        onPosizione={(pos) => {
+                            const currentFilter = {
+                                ...filter, ...{place: null}
+                            };
+                            console.log("FILTER CHANGED: ", currentFilter);
+                            setFilter(currentFilter);
+
+                            setIsLoading(true);
+                            setShowRoute(false);
+                            handlePosizione(pos);
+                        }}
                     />}
             </div>
 

@@ -34,12 +34,17 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
 
     const elencoCarburanti = getElencoCarburanti();
 
+    const [place, setPlace] = useState(null);
+
     useEffect(() => {
         if (info || show !== null) {
             setModal(true);
         }
     }, [show, info]);
 
+    useEffect(() => {
+        setPlace(initialFilters.place || null);
+    }, [initialFilters]);
 
     useModalHistory(modal, () => {
         setModal(false);
@@ -67,6 +72,8 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
 
     const elencoStati = getElencoStati();
 
+    // console.log(carburante);
+
     return (
         <>
             <div
@@ -79,9 +86,12 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
 
                 <>
                     <div className={'col-12'}>
-                        <div className={'mb-2 '}>
+                        <div className={'mb-2'}>
                             <NominatimAutocomplete
+                                initialValue={place !== null ? place?.label : ''}
                                 onSelect={(place) => {
+                                    console.log(place);
+                                    setPlace(place);
                                     onSearch?.(place);
                                 }}
                             />
@@ -91,7 +101,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                             {carburante ?
                                 <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
                                         onClick={() => setShow('carburante')}><LocalGasStationIcon className={'me-1'}/>
-                                    <strong>{carburante.toUpperCase()}</strong>
+                                    <strong>{carburante.tipo.toUpperCase()}</strong>
                                 </Button> : null}
                             <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
                                     onClick={() => setShow('limite')}>
@@ -148,9 +158,10 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                 <Modal.Body className={'d-flex flex-wrap gap-2'}>
                     {elencoCarburanti.map((c) => (
                         <Button
+                            size={'sm'}
                             key={c.id}
-                            variant={c.tipo === carburante ? 'primary' : 'outline-primary'}
-                            className="mb-2"
+                            variant={c.tipo === carburante?.tipo ? 'primary' : 'outline-dark'}
+                            className="mb-2 text-uppercase"
                             onClick={() => {
                                 setCarburante(c.tipo);
                                 setShow(null);

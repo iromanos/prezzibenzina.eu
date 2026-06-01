@@ -9,6 +9,7 @@ import {PreferitiProvider} from "@/context/PreferitiProvider";
 import LoadAdSense from "../components/ads/LoadAdSense";
 import CookieBanner from "@/components/CookieBanner";
 
+//TODO: sito multilingua con controllo della SEO
 
 const montserrat = Montserrat({
     weight: "800",
