@@ -7,7 +7,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import ImpiantoPopup from "@/components/impianti/ImpiantoPopup";
 import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import TuttoSchermoButton from "@/components/TuttoSchermoButton";
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 import {getVectorTileLayer} from "@/functions/vector-tiles";
 
 export default function MappaDistributori({
@@ -27,8 +27,8 @@ export default function MappaDistributori({
     const b = new maplibregl.LngLatBounds();
     coords.forEach((c) => b.extend(c));
 
-    log("bboX: " + JSON.stringify(coords));
-    log("bboX: " + JSON.stringify(distributori));
+    logDebug("bboX: " + JSON.stringify(coords));
+    logDebug("bboX: " + JSON.stringify(distributori));
 
     const initState = {
         bounds: b,

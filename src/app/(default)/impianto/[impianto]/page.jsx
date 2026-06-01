@@ -1,11 +1,11 @@
 import ImpiantoScheda from '@/components/impianti/ImpiantoScheda';
 import {getImpianto} from "@/functions/api";
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 import Header from "@/components/Header";
 import {getCookie} from "@/functions/cookies";
 import {getCanonicalUrl, getOpenGraph, getTwitter} from "@/functions/server";
 import {headers} from "next/headers";
-import {notFound} from "next/navigation";
+import {notFound, redirect} from "next/navigation";
 
 export async function generateMetadata({params}) {
 
@@ -13,7 +13,7 @@ export async function generateMetadata({params}) {
 
     const res = await getImpianto({query});
 
-    log(res);
+    logDebug(res);
 
     if (res.status !== 200) {
         notFound();
@@ -28,7 +28,7 @@ export async function generateMetadata({params}) {
 
     const canonicalUrl = getCanonicalUrl(await headerList) + '/impianto/' + impianto.link;
 
-    console.log(impianto);
+//    console.log(impianto);
 
     return {
         title: title,
@@ -50,19 +50,27 @@ export default async function Page({params}) {
 
     const query = await params;
 
+    logDebug("QUERY: " + query);
+
     const res = await getImpianto({query});
 
-    log(res);
+    // log(res);
 
     if (res.status !== 200) {
         notFound();
     }
 
     const impianto = await res.json();
+
+    if (impianto.link !== query.impianto) {
+        console.log(`Link impianto (${impianto.link}) non corrisponde a query (${query.impianto}). Reindirizzamento necessario.`);
+        redirect('/impianto/' + impianto.link);
+    }
+
     const cookie = await getCookie();
 
-    log(impianto);
-    log(cookie);
+    // log(impianto.link);
+    // log(cookie);
 
     return <><Header/>
         <ImpiantoScheda impianto={impianto} cookie={cookie}/>

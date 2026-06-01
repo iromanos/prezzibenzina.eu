@@ -16,7 +16,6 @@ import Display5745053645 from "./ads/Display-5745053645";
 import FooterHome from "./home/FooterHome";
 import {FooterMobile} from "./FooterMobile";
 import {ucwords} from "@/functions/helpers";
-import {Card} from "react-bootstrap";
 import Image from "next/image";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
@@ -133,16 +132,14 @@ export default async function DistributoriPage({params}) {
                     <ElencoDistributori Regione={regione} distributori={distributori}/>
                 </div>
                 <div id={"mappa"} className={'col-md-7 order-0'}>
-                    <LinkCarburanti params={riepilogo.request} carburanti={carburanti}/>
-                    <LinkMarchio params={riepilogo.request} marchi={marchi}/>
+                    <div className={'d-flex gap-3 border-bottom mb-3'}>
+                        <LinkCarburanti params={riepilogo.request} carburanti={carburanti}/>
+                        <LinkMarchio params={riepilogo.request} marchi={marchi}/>
+                    </div>
                     {distributori.length !== 0 ? <Mappa distributori={distributori}/> : <></>}
                     <Display5745053645/>
 
-                    <Card className={'bg-white mb-4'}>
-                        <div className={'card-body'}>
                             <IntroTextVersione2 data={riepilogo} distributori={distributori}/>
-                        </div>
-                    </Card>
                     <Display6977770298/>
 
                 </div>

@@ -1,8 +1,59 @@
-import React from 'react';
+'use client'
+import React, {useState} from 'react';
 import Link from 'next/link';
 import {getRouteLink} from "@/functions/helpers";
+import Button from "react-bootstrap/esm/Button";
+import useCarburante from "@/hooks/useCarburante";
+import Modal from "react-bootstrap/esm/Modal";
+import {getElencoCarburanti} from "@/functions/api";
 
 export function LinkCarburanti({params, carburanti}){
+
+    const {carburante, setCarburante} = useCarburante();
+
+    const [modal, setModal] = useState(false);
+
+    const elencoCarburanti = getElencoCarburanti();
+
+    return <>
+        {modal &&
+
+            <Modal show={modal} onHide={() => setModal(false)} centered>
+                <Modal.Header closeButton><Modal.Title>Seleziona carburante</Modal.Title></Modal.Header>
+                <Modal.Body className={'d-flex flex-wrap gap-2'}>
+                    {elencoCarburanti.map((c) => (
+                        <Button
+                            key={c.id}
+                            size={'sm'}
+                            variant={c.id === carburante.id ? 'primary' : 'outline-dark'}
+                            className="mb-2 text-uppercase"
+                            onClick={() => {
+                                setModal(false);
+                                setCarburante(c.tipo);
+                                const link = getRouteLink(params.regione, c.tipo, params.marchio, params.provincia, params.comune);
+                                console.log(link);
+                                window.location = link.link;
+                            }}
+                        >{c.icon} {c.tipo}</Button>
+                    ))}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setModal(false)}>Annulla</Button>
+                </Modal.Footer>
+            </Modal>
+
+        }
+        <section className="mb-4">
+            <h2 className="h6 mb-3 text-uppercase">Carburante</h2>
+            <Button
+                onClick={() => setModal(true)}
+                className={'text-uppercase'} variant={'primary'} size={'sm'}>
+                {carburante.icon} {carburante.tipo}</Button></section>
+    </>;
+
+
+
+
     return                 <section className="mb-4">
         <h2 className="h6 mb-3 text-uppercase">Carburante</h2>
         <div className="d-flex flex-wrap gap-1" role="group">

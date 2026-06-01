@@ -1,6 +1,6 @@
 import React from "react";
 import DistributoriEsteriPage from "@/components/stati/DistributoriEsteriPage";
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 
 
 export default async function Page({params}) {
@@ -9,7 +9,7 @@ export default async function Page({params}) {
 
     request.stato = "svizzera";
 
-    log(request);
+    logDebug(request);
 
     return <>
         <DistributoriEsteriPage params={request}/></>;

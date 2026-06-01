@@ -1,6 +1,6 @@
 import Supercluster from 'supercluster';
 import {useMemo, useRef} from 'react';
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 
 
 function getClusterOptions(count, zoom) {
@@ -23,12 +23,12 @@ export function useCluster(points, zoom, bounds) {
 
         if (!points || points.length === 0) return null;
         const {radius, maxZoom} = getClusterOptions(points.length, zoom);
-        log("points: " + points.length);
-        log("Radius: " + radius);
-        log("maxzoom: " + maxZoom);
-        log("zoom: " + zoom);
+        logDebug("points: " + points.length);
+        logDebug("Radius: " + radius);
+        logDebug("maxzoom: " + maxZoom);
+        logDebug("zoom: " + zoom);
 
-        log(points === previousPointsRef.current);
+        logDebug(points === previousPointsRef.current);
 
         previousPointsRef.current = points;
 
@@ -44,8 +44,8 @@ export function useCluster(points, zoom, bounds) {
 
     const clusters = useMemo(() => {
 
-        log("CLUSTERINDEX: " + clusterIndex);
-        log("BOUNDS: " + bounds);
+        logDebug("CLUSTERINDEX: " + clusterIndex);
+        logDebug("BOUNDS: " + bounds);
 
         if (!clusterIndex || !bounds) return [];
         return clusterIndex.getClusters(bounds, zoom);

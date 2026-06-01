@@ -2,7 +2,7 @@
 
 import MappaWrapper from "@/components/MappaWrapper";
 import React, {useEffect, useRef, useState} from "react";
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 import MapIcon from "@mui/icons-material/Map";
 
 import Button from 'react-bootstrap/Button';
@@ -18,7 +18,7 @@ export default function Mappa({distributori, title = true, height = '75vh'}) {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
-                    log("LOAD MAP")
+                    logDebug("LOAD MAP")
                     setIsVisible(true);
                     observer.disconnect(); // disattiva dopo il primo trigger
                 }

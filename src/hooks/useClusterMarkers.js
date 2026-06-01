@@ -1,5 +1,5 @@
 import {useMemo} from 'react';
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 
 function distanzaKm(lat1, lng1, lat2, lng2) {
     const R = 6371;
@@ -57,10 +57,10 @@ function getSogliaKmPerZoom(zoom) {
 
 export default function useClusterMarkers(impianti, tipoCarburante = 'benzina', zoom = 14) {
 
-    log("Zoom: " + zoom);
+    logDebug("Zoom: " + zoom);
 
     const sogliaKm = getSogliaKmPerZoom(zoom);
-    log(sogliaKm);
+    logDebug(sogliaKm);
     return useMemo(() => {
         const gruppi = raggruppaImpianti(impianti, sogliaKm);
 

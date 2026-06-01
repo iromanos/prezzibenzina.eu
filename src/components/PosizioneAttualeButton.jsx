@@ -1,5 +1,5 @@
 import {usePosizioneAttuale} from '@/hooks/usePosizioneAttuale';
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
 
 export default function PosizioneAttualeButton({onPosizione}) {
@@ -7,7 +7,7 @@ export default function PosizioneAttualeButton({onPosizione}) {
 
     const handleClick = () => {
 
-        log(posizione);
+        logDebug(posizione);
 
         if (posizione) onPosizione(posizione);
     };

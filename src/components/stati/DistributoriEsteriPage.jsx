@@ -7,7 +7,7 @@ import Mappa from "@/components/Mappa";
 import MapIcon from '@mui/icons-material/Map';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import {notFound} from "next/navigation";
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 import {IntroTextEstero} from "@/components/IntroTextEstero";
 
 export default async function DistributoriEsteriPage({params}) {
@@ -49,12 +49,12 @@ export default async function DistributoriEsteriPage({params}) {
         impianto.latitudine = parseFloat(record.properties.latitudine);
         impianto.longitudine = parseFloat(record.properties.longitudine);
 
-        log(impianto);
+        logDebug(impianto);
 
         return impianto;
     })
 
-    log(distributori);
+    logDebug(distributori);
 
 
     const date = new Date(riepilogo.dataAggiornamento);

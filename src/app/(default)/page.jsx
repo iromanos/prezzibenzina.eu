@@ -105,7 +105,7 @@ export default function Home() {
                         },
                     ].map((step, i) => (
                         <div className="col-md-4 mb-4" key={i}>
-                            <div className="p-4 border rounded shadow-sm h-100 bg-light hover-shadow">
+                            <div className="p-4 border rounded shadow-sm h-100 bg-white hover-shadow">
                                 <div className="mb-2 display-3">{step.icon}</div>
                                 <h5 className="fw-bold">{step.title}</h5>
                                 <p>{step.text}</p>

@@ -2,7 +2,7 @@
 
 
 import React from "react";
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 import Button from "react-bootstrap/Button";
 import MapIcon from '@mui/icons-material/Map';
 import DirectionsIcon from '@mui/icons-material/Directions';
@@ -48,7 +48,7 @@ export default function ImpiantoCardClient({
     };
 
     const confrontaVicini = () => {
-        log('compare:open');
+        logDebug('compare:open');
         window.dispatchEvent(new CustomEvent('compare:open', {
             detail: {
                 lat: impianto.latitudine,

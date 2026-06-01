@@ -1,13 +1,13 @@
 import Link from "next/link";
 import React from 'react';
-import {getRouteLink, log} from "@/functions/helpers";
+import {getRouteLink, logDebug} from "@/functions/helpers";
 
 
 export function LinkMarchio({marchi, params}){
 
     marchi.unshift( { marchio:  'Tutti', key: ''});
 
-    log(params);
+    logDebug(params);
 
     if(params.marchio === undefined) params.marchio = '';
 
@@ -38,8 +38,8 @@ export default function FiltroMarchio({marchi, selezionato}) {
     if (selezionato === null || selezionato === undefined) selezionato = '';
 
     marchi.unshift( { marchio:  'Tutti', key: ''});
-    log(marchi);
-    log(selezionato);
+    logDebug(marchi);
+    logDebug(selezionato);
     return (
         <section className="mb-4">
             <h2 className="h5 mb-3">Filtra per marchio</h2>

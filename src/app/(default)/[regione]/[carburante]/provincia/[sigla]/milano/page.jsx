@@ -1,6 +1,6 @@
 import DistributoriPage from "@/components/DistributoriPage";
 import React from "react";
-import {generateMicrodataGraph, getLink, log, ucwords} from "@/functions/helpers";
+import {generateMicrodataGraph, getLink, logDebug, ucwords} from "@/functions/helpers";
 import {getCarburanti, getDistributoriRegione, getMarchi, getSeoRegione} from "@/functions/api";
 import {notFound} from "next/navigation";
 
@@ -44,7 +44,7 @@ export async function getMetadataMilano({params}) {
     const riepilogo = await getSeoRegione(regione, carburante, marchio, sigla, comune);
 
 
-    log(riepilogo);
+    logDebug(riepilogo);
 
     const date = new Date(riepilogo.dataAggiornamento);
 
@@ -79,7 +79,7 @@ export async function getMetadataMilano({params}) {
     const canonicalUrl = getLink(regione, carburante, marchio, sigla, riepilogo.request.comune);
     const imageUrl = '/assets/logo.png';
 
-    log("CANONICAL URL: " + canonicalUrl.link);
+    logDebug("CANONICAL URL: " + canonicalUrl.link);
 
     const microdata = generateMicrodataGraph(distributori);
 

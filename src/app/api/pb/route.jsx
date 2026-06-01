@@ -1,11 +1,11 @@
 import {NextResponse} from 'next/server';
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 
 export async function POST(request) {
 
     const formData = await request.json();
 
-    log(formData);
+    logDebug(formData);
 
     const {type, name, lat, lon, carburante} = formData;
 

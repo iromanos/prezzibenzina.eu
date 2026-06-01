@@ -1,5 +1,5 @@
 import React from 'react';
-import {formatDate, formatEuro, log, ucwords} from "@/functions/helpers";
+import {formatDate, formatEuro, logDebug, ucwords} from "@/functions/helpers";
 
 function capitalize(str) {
     return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';
@@ -9,8 +9,8 @@ function capitalize(str) {
 
 export function IntroTextVersione2({data, distributori, children}) {
 
-    log(data);
-    log(distributori);
+    logDebug(data);
+    logDebug(distributori);
 
     const {request, carburanti, marchi = [], comuni = [], regione, totaleImpianti, dataAggiornamento} = data;
 
@@ -106,7 +106,7 @@ export function IntroTextVersione2({data, distributori, children}) {
 
 export function IntroText({ data, children }) {
 
-    log(data);
+    logDebug(data);
 
     const { request, carburanti, marchi = [], comuni = [], regione, totaleImpianti, dataAggiornamento } = data;
 

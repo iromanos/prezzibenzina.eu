@@ -7,7 +7,7 @@ import ImpiantoMarker from "@/components/impianti/ImpiantoMarker";
 import ImpiantoPopup from "@/components/impianti/ImpiantoPopup";
 import {isMobile} from "react-device-detect";
 import ShareButton from "@/components/ShareButton";
-import {log, ucwords} from "@/functions/helpers";
+import {logDebug, ucwords} from "@/functions/helpers";
 import ImpiantoDescrizione from "@/components/impianti/ImpiantoDescrizione";
 import {getElencoCarburanti} from "@/functions/api";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -20,17 +20,18 @@ import Button from "react-bootstrap/Button";
 import {useRouter} from 'next/navigation';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import StarIcon from '@mui/icons-material/Star';
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 import Link from "next/link";
 import MapIcon from "@mui/icons-material/Map";
-import NearMeIcon from '@mui/icons-material/NearMe';
 import Image from "next/image";
 
 export default function ImpiantoScheda({impianto, cookie}) {
     const [showPopup, setShowPopup] = useState(false);
     const styleUrl = getVectorTileLayer();//  'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';
-    const URI_IMAGE = process.env.NEXT_PUBLIC_API_ENDPOINT;
+    const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
     const router = useRouter();
+
 
     const {preferiti, gestisciClickCuore, ModalComponent, ModalResult} = usePreferitiGlobal();
 
@@ -39,7 +40,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
     };
 
     const confrontaVicini = () => {
-        log('compare:open');
+        logDebug('compare:open');
         window.dispatchEvent(new CustomEvent('compare:open', {
             detail: {
                 lat: impianto.latitudine,
@@ -66,10 +67,10 @@ export default function ImpiantoScheda({impianto, cookie}) {
     const prezzo = () => {
         const carburanti = getElencoCarburanti();
 
-        log(carburanti);
+        logDebug(carburanti);
         const fuel = carburanti.find(c => c.tipo === cookie.carburante);
-        log(fuel);
-        log(prezzi);
+        logDebug(fuel);
+        logDebug(prezzi);
 
         const prezzo = prezzi.find(p => p.fuel_id === fuel.fuel_id);
         try {
@@ -100,6 +101,43 @@ export default function ImpiantoScheda({impianto, cookie}) {
     }
 
 
+    const recordOrdinati = [...prezzi].sort((a, b) => {
+        if (a.fuel_id === b.fuel_id) {
+            return b.is_self - a.is_self;
+        }
+        return a.fuel_id - b.fuel_id;
+    })
+
+
+    const BoxPrezzo = ({className}) => {
+        return <div className={className}>
+            <div className="card shadow border-0 rounded-3 mb-4 bg-white">
+                <div className="card-body p-4">
+
+                    <div className="d-flex justify-content-between align-items-center">
+                        <h5 className="text-primary fw-bold text-uppercase tracking-wider m-0">
+                            {cookie.carburante}
+                        </h5>
+                        {/*<Image src={URI_IMAGE + impianto.image} alt={impianto.bandiera} width={48} height={48}/>*/}
+                    </div>
+
+                    <div className="d-flex align-items-baseline">
+                        <span className="h1 display-1 fw-bolder text-dark lh-1">{impianto.prezzo}</span>
+                        <span className="fs-4 text-secondary ms-2 fw-normal">€/L</span>
+                    </div>
+
+                    <div className="d-flex align-items-center text-muted small">
+                                <span className="bg-success rounded-circle d-inline-block me-2"
+                                      style={{width: '8px', height: '8px'}}></span>
+                        <span>Live Data - Aggiornato oggi</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>;
+
+    }
+
     return (
         <div className="container py-4">
 
@@ -112,8 +150,6 @@ export default function ImpiantoScheda({impianto, cookie}) {
                 impianto={impianto}
             />
 
-
-
             <div className={'row'}>
                 <div className={'col-lg-7 mb-4'}>
                     <div className="d-flex align-items-center gap-3 mb-3">
@@ -123,7 +159,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
                             <small className="text-muted">{impianto.gestore}</small>
                         </div>
                     </div>
-
+                    <BoxPrezzo className={'d-lg-none'}/>
                     <ImpiantoDescrizione impianto={impianto}/>
                     <Display5745053645/>
 
@@ -131,40 +167,31 @@ export default function ImpiantoScheda({impianto, cookie}) {
                     <p>{indirizzo}{impianto.comune ? `, ${ucwords(impianto.comune)}` : null} {provincia ? `(${provincia})` : null}</p>
                     <div className={'mb-2'}>
                         <h2 className={'h5'}>Carburanti disponibili</h2>
-                        <table className="table table-bordered align-middle">
-                            <thead className="table-light">
+                        <table className="table table-bordered align-middle table-light">
+                            <thead className="h6 text-uppercase">
                             <tr>
                                 <th scope="col">Tipo</th>
-                                <th scope="col" className={'text-end'}>Prezzo €/L</th>
+                                <th scope="col" width={50}>SELF</th>
+                                <th scope="col" className={'text-end'} width={140}>Prezzo €/L</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {prezzi.map((f, i) => (
+                            {recordOrdinati.map((f, i) => (
                                 <tr key={i} className="">
-                                    <td>{f.desc_carburante} {f.is_self ? "(self)" : null}</td>
-                                    <td className="fw-bold text-end">{f.prezzo.toFixed(3)}</td>
+                                    <td className={'bg-white'}>{f.desc_carburante} {f.is_self ? "(self)" : null}</td>
+                                    <td className={'text-center text-warning bg-white'}>{f.is_self ?
+                                        <StarIcon/> : null}</td>
+                                    <td className="fw-bold text-end bg-white">{f.prezzo.toFixed(3)}</td>
                                 </tr>
                             ))}
                             </tbody>
                         </table>
                         <Display5745053645/>
-
                     </div>
-                    <div className="d-flex gap-2 flex-wrap">
-                        <Button size={'sm'} variant={'outline-primary'} id={'confronta'}
-                                onClick={() => confrontaVicini()}>
-                            <NearMeIcon/> Confronta Vicini
-                        </Button>
-                        <Link className="btn btn-primary btn-sm"
-                           href={`https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`}
-                           target="_blank" rel="noopener">
-                            <MapIcon/> Vai con Google Maps
-                        </Link>
-                    </div>
-
-
                 </div>
                 <div className={'col-lg-5 mb-4'}>
+                    <BoxPrezzo className={'d-none d-lg-block'}/>
+
                     <div id={'mappa'} className="mb-3 rounded border">
                         <Map
                             mapLib={maplibregl}
@@ -173,16 +200,14 @@ export default function ImpiantoScheda({impianto, cookie}) {
                                 latitude: latitudine,
                                 zoom: 14,
                             }}
-                            style={{width: '100%', height: '240px'}}
+                            style={{width: '100%', height: '360px'}}
                             mapStyle={styleUrl}
                             attributionControl={false}
-
                             dragPan={!isMobile}             // ❌ disabilita pan con un dito
                             scrollZoom={!isMobile}          // ❌ disabilita zoom con scroll
                             doubleClickZoom={!isMobile}     // ❌ disabilita zoom con doppio tap
                             touchZoomRotate={true}      // ✅ abilita pinch-to-zoom e rotazione con due dita
                             interactive={true}          // ✅ mantiene la mappa attiva
-
                         >
 
                             <ImpiantoMarker d={impianto}/>
@@ -207,6 +232,12 @@ export default function ImpiantoScheda({impianto, cookie}) {
                             }}
                             size={'sm'}> {isPreferito() ? <><FavoriteIcon/> Rimuovi dai preferiti</> : <>
                             <FavoriteBorderIcon/> Aggiungi ai preferiti</>} </Button>
+                        <Link className="btn btn-primary btn-sm"
+                              href={`https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`}
+                              target="_blank" rel="noopener">
+                            <MapIcon/> Vai
+                        </Link>
+
                         <ShareButton impianto={impianto}/>
                     </div>
 

@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {getElencoCarburanti} from "@/functions/api";
+import {getElencoCarburanti, postCookie} from "@/functions/api";
 
 export default function useCarburante(defaultValue = '') {
     const [carburante, setCarburanteState] = useState(defaultValue);
@@ -18,6 +18,9 @@ export default function useCarburante(defaultValue = '') {
         localStorage.setItem('carburante', tipo);
         const record = elencoCarburanti.find(u => u.tipo === tipo) || elencoCarburanti[0];
         setCarburanteState(record);
+
+        postCookie({carburante: tipo});
+
     };
 
     return {carburante, setCarburante};

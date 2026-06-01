@@ -5,7 +5,7 @@ import {useRouter} from "next/navigation";
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import SearchIcon from "@mui/icons-material/Search";
 import NominatimAutocomplete from "@/components/NominatimAutocomplete";
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 import useCarburante from "@/hooks/useCarburante";
 import {getElencoCarburanti, getNominatimReverse, getRouteByPosition} from "@/functions/api";
 import {usePosizioneAttuale} from "@/hooks/usePosizioneAttuale";
@@ -40,11 +40,11 @@ export default function SearchForm() {
             const res = await getRouteByPosition(payload);
             const data = await res.json();
 
-            log(data);
+            logDebug(data);
             router.push(data.route);
 
         } catch (err) {
-            log(err);
+            logDebug(err);
             window.location.href = `/mappa`;
         }
     };
@@ -53,14 +53,14 @@ export default function SearchForm() {
         if (posizioneAttuale === null) return;
         getNominatimReverse(posizioneAttuale)
             .then((r) => {
-                    log(r);
+                logDebug(r);
                     setLocation(r.display_name);
                     setPlace(r);
                 }
             );
     };
 
-    log(carburante);
+    logDebug(carburante);
 
     return (
         <>
@@ -93,8 +93,8 @@ export default function SearchForm() {
                 <NominatimAutocomplete
                     initialValue={location}
                     onSelect={(place) => {
-                        log('Selezionato:');
-                        log(place);
+                        logDebug('Selezionato:');
+                        logDebug(place);
                         setPlace(place);
                     }}
                 />

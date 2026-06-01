@@ -10,7 +10,9 @@ import {getCanonicalUrl} from "@/functions/server";
 //TODO: quando cambia il filtro aggionna url senza fare il refresh continuo di tutta la pagina
 //TODO: pagina dedicata alla svizzera
 //TODO: gestione utenti
+//TODO: dopo la ricerca posizionarsi sulla destinazione ed aggiungere un tasto per le indicazioni
 
+//TODO: (MOBILE) quando si effettua la ricerca, eliminare la mappa e inserire solo il campo di ricerca a tutto schermo (stile GMaps)
 export async function generateMetadata({params, searchParams}) {
 
     const queryParams = await searchParams;

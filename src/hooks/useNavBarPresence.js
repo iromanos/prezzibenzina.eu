@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 
 export default function useNavBarPresence() {
     const [hasNavBar, setHasNavBar] = useState(false);
@@ -13,7 +13,7 @@ export default function useNavBarPresence() {
             const difference = screenHeight - viewportHeight - 88;
             setHasNavBar(difference > 40); // soglia empirica
             setNavBarHeight(difference);
-            log("DIFFERENCE: " + difference);
+            logDebug("DIFFERENCE: " + difference);
         };
 
         detectNavBar();

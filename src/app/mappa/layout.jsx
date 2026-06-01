@@ -1,9 +1,9 @@
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 
 export default function MappaLayout({children}) {
 
 
-    log("LAYOUT MAPPA ATTIVO");
+    logDebug("LAYOUT MAPPA ATTIVO");
 
     return <>{children}</>;
 }

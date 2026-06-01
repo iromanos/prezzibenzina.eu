@@ -1,6 +1,6 @@
 import axios from "axios";
 import {NextResponse} from "next/server";
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 import {deprecatedPropType} from "@mui/material";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import PropaneIcon from "@mui/icons-material/Propane";
@@ -18,6 +18,11 @@ const Carburanti = {
     'metano': '3-x',
     'gpl': '4-x',
 };
+
+
+export async function postCookie(data) {
+    const response = await axios.post('/api/set-cookie', data);
+}
 
 export async function fetchImpiantiByRoute(data, tipo_impianto, servizi) {
     const coords = data.features[0].geometry.coordinates;
@@ -106,8 +111,8 @@ export function getElencoStati() {
 export async function getNominatimReverse(position) {
     const uri = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + position.lat + "&lon=" + position.lon;
     const response = await fetch(uri);
-    log(uri);
-    log(response);
+    logDebug(uri);
+    logDebug(response);
 
     return response.json();
 }
@@ -169,7 +174,7 @@ export function getElencoCarburanti() {
 export async function getImpianto({query}) {
     let request = URI + `impianto/${query.impianto}`;
 
-    log(request);
+    logDebug(request);
 
     return await fetch(request, {
         headers: {
@@ -193,9 +198,9 @@ export async function getSiteMap({tipo, regione, provincia}) {
         }
     }
 
-    log(tipo);
-    log(regione);
-    log(request);
+    logDebug(tipo);
+    logDebug(regione);
+    logDebug(request);
 
     const res = await fetch(request);
 
@@ -243,7 +248,7 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     });
 
     const data = await res.json();
-    log(data);
+    logDebug(data);
 
     const response = NextResponse.json(data);
     response.headers.set('Last-Modified', new Date(data.lastUpdate).toUTCString());
@@ -311,7 +316,7 @@ export async function getSeoRegione(regione, carburante, marchio, provincia, com
     if(marchio) {
         request += `marchio=${marchio}&`;
     }
-    log(request);
+    logDebug(request);
 
     try {
         const res = await axios.get(request);
@@ -351,7 +356,7 @@ export async function getImpiantiByDistance({
         'stato': stato
     };
 
-    log(body);
+    logDebug(body);
 
     return await fetch(request, {
         method: 'POST',
@@ -371,11 +376,11 @@ export async function getImpiantiByBounds(bounds, carburante, sort = 'price', li
 
     const fuel = carburanti[carburante];
 
-    log(bounds);
+    logDebug(bounds);
 
     let request = URI + `impianti/stream`;
 
-    log(request);
+    logDebug(request);
 
     return await fetch(request, {
         method: 'POST',
@@ -402,11 +407,11 @@ export async function getClustersByBounds(bounds, carburante, sort = 'price', li
 
     const fuel = carburanti[carburante];
 
-    log(bounds);
+    logDebug(bounds);
 
     let request = URI + `impianti/stream`;
 
-    log(request);
+    logDebug(request);
 
     return await fetch(request, {
         method: 'POST',

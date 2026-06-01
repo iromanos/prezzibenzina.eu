@@ -1,6 +1,6 @@
 import {Autocomplete, TextField} from '@mui/material';
 import {useEffect, useState} from 'react';
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 import PlaceIcon from '@mui/icons-material/Place';
@@ -42,7 +42,7 @@ export default function NominatimAutocomplete({onSelect, initialValue}) {
             if (inputValue.length < 2) return;
 
             const request = NOMINATIM_ENDPOINT + encodeURIComponent(inputValue);
-            log(request);
+            logDebug(request);
             fetch(request, {
                 signal: controller.signal,
                 headers: {'Accept-Language': 'it'}
@@ -50,7 +50,7 @@ export default function NominatimAutocomplete({onSelect, initialValue}) {
                 .then(res => res.json())
                 .then(data => {
 
-                    log(data);
+                    logDebug(data);
 
                     const options = data.map((item, index) => ({
                         id: index,

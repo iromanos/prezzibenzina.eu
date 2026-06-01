@@ -7,6 +7,7 @@ import Display5745053645 from "../../../components/ads/Display-5745053645";
 import {FooterMobile} from "@/components/FooterMobile";
 import FooterHome from "../../../components/home/FooterHome";
 
+//TODO: inserire il form di ricerca nella sezione hero
 
 export async function generateMetadata() {
 

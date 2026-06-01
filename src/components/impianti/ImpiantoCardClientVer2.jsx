@@ -2,7 +2,7 @@
 
 
 import React from "react";
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 
 export default function ImpiantoCardClientVer2({impianto, apriMappa = true}) {
 
@@ -30,7 +30,7 @@ export default function ImpiantoCardClientVer2({impianto, apriMappa = true}) {
     };
 
     const confrontaVicini = () => {
-        log('compare:open');
+        logDebug('compare:open');
         window.dispatchEvent(new CustomEvent('compare:open', {
             detail: {
                 lat: impianto.latitudine,

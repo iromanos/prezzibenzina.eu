@@ -1,5 +1,5 @@
 import NominatimAutocomplete from "@/components/NominatimAutocomplete";
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 
 
 export default function RicercaInMappa() {
@@ -8,7 +8,7 @@ export default function RicercaInMappa() {
                 style={{width: '90%', maxWidth: '400px'}}>
         <NominatimAutocomplete
             onSelect={(place) => {
-                log('Selezionato:' + place);
+                logDebug('Selezionato:' + place);
             }}
         />
     </div>

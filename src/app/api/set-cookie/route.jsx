@@ -1,18 +1,18 @@
 // app/api/set-cookie/route.ts
 import {NextResponse} from 'next/server';
 import {cookies} from 'next/headers';
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 
 export async function POST(request) {
 
     const formData = await request.json();
 
-    log("FORMDATA: " + JSON.stringify(formData));
+    logDebug("FORMDATA: " + JSON.stringify(formData));
 
     const cookieStore = await cookies();
     let ckCarburante = cookieStore.get('carburante')?.value;
 
-    log(ckCarburante);
+    logDebug(ckCarburante);
 
     const response = NextResponse.json({ok: true});
 

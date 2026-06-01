@@ -42,7 +42,7 @@ export default function ImpiantoDescrizione({impianto}) {
             <p>
                 Puoi <a href="#mappa">visualizzare la posizione sulla mappa</a>, <a href={mapsUrl} target="_blank"
                                                                                     rel="noopener">avviare la
-                navigazione</a>, oppure <a href="#confronta">confrontare i prezzi con altri impianti vicini</a>.
+                navigazione</a>.
             </p>
             <p>
                 PrezziBenzina.eu ti aiuta a pianificare il rifornimento in modo intelligente, con dati sempre aggiornati

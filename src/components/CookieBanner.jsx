@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import {defaultConsent, useCookieConsent} from './CookieConsentContext';
 import CookieIcon from '@mui/icons-material/Cookie';
-import {log} from "@/functions/helpers";
+import {logDebug} from "@/functions/helpers";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import useMobile from "@/hooks/useMobile";
@@ -17,8 +17,8 @@ export default function CookieBanner({forMobile = false}) {
 
     const [show, setShow] = useState(false);
 
-    log(initialized);
-    log(consent);
+    logDebug(initialized);
+    logDebug(consent);
 
     const updateGoogleConsent = (status) => {
         if (typeof window.gtag !== 'undefined') {

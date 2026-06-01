@@ -1,10 +1,10 @@
-import {capitalize, formatDate, log, ucwords} from "@/functions/helpers";
+import {capitalize, formatDate, logDebug, ucwords} from "@/functions/helpers";
 import React from "react";
 
 export function IntroTextEstero({data, distributori, children}) {
 
-    log(data);
-    log(distributori);
+    logDebug(data);
+    logDebug(distributori);
 
     const {request, carburanti, marchi = [], comuni = [], regione, totaleImpianti, dataAggiornamento} = data;
     const scope = request.regione
