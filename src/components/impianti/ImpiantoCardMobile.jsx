@@ -5,7 +5,8 @@ import Image from "next/image";
 
 //TODO: indicare il risparmio teorico sui 50litri
 //TODO: indicare se il prezzo è discesa rispetto agli ultimi sette giorni
-
+import DirectionsIcon from '@mui/icons-material/Directions';
+import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 
 export default function ImpiantoCardMobile({impianto, cardClient = true, onClickPreferiti = null}) {
 
@@ -43,9 +44,12 @@ export default function ImpiantoCardMobile({impianto, cardClient = true, onClick
 
                     </div>
                 </a>
-                <p className="mb-1 text-muted small">
+                <p className="text-muted small mb-0">
                     {indirizzo}{comune != null ? ', ' + comune : null} {provincia != null ? `(${provincia})` : null}
-                    {tipo_impianto != null ? ` - ${tipo_impianto}` : null}
+                </p>
+                <p className="text-muted small mb-0">
+                    <DirectionsIcon/> {impianto.distance_km.toFixed(3)} km
+                    - <LocalGasStationIcon/> {tipo_impianto != null ? `${tipo_impianto}` : null}
                 </p>
                 {cardClient &&
                     <div className="d-flex flex-wrap gap-2 mt-2 small align-items-center">

@@ -105,7 +105,7 @@ export default function NominatimAutocomplete({onSelect, initialValue}) {
                 const {ref, endAdornment} = params.InputProps;
                 return (
                     <div ref={ref}
-                         className={'d-flex align-items-center border-dark-subtle border rounded bg-white form-control position-relative'}
+                         className={'d-flex align-items-center border-0 rounded-0 bg-white form-control position-relative'}
                     >
                         <input
                             placeholder={"Indirizzo, città o codice postale"}

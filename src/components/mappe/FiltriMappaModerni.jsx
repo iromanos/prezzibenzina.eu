@@ -86,7 +86,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
 
                 <>
                     <div className={'col-12'}>
-                        <div className={'mb-2'}>
+                        <div className={'mb-2 border border-dark-subtle rounded overflow-hidden'}>
                             <NominatimAutocomplete
                                 initialValue={place !== null ? place?.label : ''}
                                 onSelect={(place) => {

@@ -7,6 +7,7 @@ import {logDebug} from "@/functions/helpers";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import useMobile from "@/hooks/useMobile";
+import useInteraction from "@/hooks/useInteraction";
 
 export default function CookieBanner({forMobile = false}) {
     const {consent, updateConsent, initialized} = useCookieConsent();
@@ -14,11 +15,12 @@ export default function CookieBanner({forMobile = false}) {
 
     const {isMobile} = useMobile();
 
-
     const [show, setShow] = useState(false);
 
     logDebug(initialized);
     logDebug(consent);
+
+    const {active} = useInteraction();
 
     const updateGoogleConsent = (status) => {
         if (typeof window.gtag !== 'undefined') {
@@ -32,11 +34,11 @@ export default function CookieBanner({forMobile = false}) {
     };
 
     useEffect(() => {
+        if (active === false) return;
         if (!initialized) return;
         if (consent.technical === false) {
             setShow(true);
         }
-
         if (consent.marketing) {
             updateGoogleConsent('granted');
         }
@@ -44,10 +46,9 @@ export default function CookieBanner({forMobile = false}) {
             updateGoogleConsent('denied');
         }
 
-    }, [consent, initialized]);
+    }, [active, consent, initialized]);
 
     if (!initialized) return null;
-
 
     const handleAcceptAll = () => {
         updateConsent({
@@ -61,7 +62,6 @@ export default function CookieBanner({forMobile = false}) {
     const handleRejectAll = () => {
         updateConsent(defaultConsent);
     };
-
 
     const handleSave = (e) => {
         e.preventDefault();

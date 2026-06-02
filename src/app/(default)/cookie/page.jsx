@@ -1,5 +1,3 @@
-// app/lombardia/benzina/cookie/page.jsx
-
 import React from 'react';
 import CookieIcon from '@mui/icons-material/Cookie';
 import SettingsIcon from '@mui/icons-material/Settings';

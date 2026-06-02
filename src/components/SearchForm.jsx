@@ -94,7 +94,7 @@ export default function SearchForm() {
 
                 <div className="mb-3">
 
-                    <div className="input-group">
+                    <div className="input-group rounded-start overflow-hidden">
                         <NominatimAutocomplete
                             color={'#FFFFFF'}
                             initialValue={location}
@@ -104,7 +104,7 @@ export default function SearchForm() {
                                 setPlace(place);
                             }}
                         />
-                        <Button className={''} variant={'primary'} type="submit"><SearchIcon/></Button>
+                        <Button className={''} variant={'light'} type="submit"><SearchIcon/></Button>
                     </div>
                 </div>
 

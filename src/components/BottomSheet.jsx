@@ -6,6 +6,9 @@ import InFeed4656802013 from "@/components/ads/InFeed-4656802013";
 import Image from "next/image";
 import Link from "next/link";
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
+import SortIcon from '@mui/icons-material/Sort';
+import Button from 'react-bootstrap/Button';
+
 
 const BottomSheet = forwardRef(({
                                     onChangeStep,
@@ -24,6 +27,7 @@ const BottomSheet = forwardRef(({
 
     const {gestisciClickCuore} = usePreferitiGlobal();
 
+    const [order, setOrder] = useState('Prezzo');
 
     useEffect(() => {
         if (isMobile) {
@@ -87,6 +91,16 @@ const BottomSheet = forwardRef(({
 
     if (isMobile === null) return null;
 
+    const recordOrdinati = () => {
+        const record = distributori.sort((a, b) => {
+            if (order === 'Distanza') {
+                return a.properties.distance_km - b.properties.distance_km;
+            }
+            return a.properties.prezzo - b.properties.prezzo;
+        });
+
+        return record;
+    };
 
     return (
         <div
@@ -121,7 +135,6 @@ const BottomSheet = forwardRef(({
                 style={{
                     height: isMobile ? '100vh' : '100vh',
                     width: '100%',
-                    // width: isMobile ? '100%' : `${SIDEBAR_WIDTH}px`,
                     position: 'absolute',
                     top: isMobile ? `-${HEADER_HEIGHT}px` : 0,
                     right: 0,
@@ -136,7 +149,7 @@ const BottomSheet = forwardRef(({
                         <div className=" mx-auto bg-dark bg-opacity-25 rounded-pill"
                              style={{width: '40px', height: '5px'}}/>
                     )}
-                    <div className="d-flex align-items-end justify-content-between">
+                    <div className="d-flex align-items-baseline justify-content-between gap-2">
                         <Link className={'nav-link text-primary'} href={'/'}>
                             {client === 'pb' ?
                                 <Image
@@ -149,11 +162,21 @@ const BottomSheet = forwardRef(({
                                 /> :
                                 <HomeIcon/>}
                         </Link>
-                        <span className="m-0 text-dark ">
+                        <Button
+                            className={'ms-auto'}
+                            onClick={() => {
+                                if (order === "Prezzo") {
+                                    setOrder("Distanza")
+                                } else setOrder("Prezzo");
+                            }}
+
+                            variant={'light'} size={'sm'}>{order} <SortIcon/></Button>
+                        <span className="m-0 small">
                             Distributori ({distributori.length})
                         </span>
                     </div>
                 </div>
+
 
                 <div
                     className="overflow-y-auto flex-grow-1"
@@ -163,13 +186,13 @@ const BottomSheet = forwardRef(({
                     }}
                 >
                     <div className="">
-                        {distributori.length === 0 &&
+                        {recordOrdinati().length === 0 &&
                             <div className={'p-3'}>
                                 Nessun distribuitore presente in questa zona. Prova a fare lo zoom sulla mappa o a
                                 spostare la posizione.
                             </div>
                         }
-                        {distributori.map((d, i) => {
+                        {recordOrdinati().map((d, i) => {
                             const isAdStep = (i + 1) % 2 === 0;
 
                             return <div key={i}>

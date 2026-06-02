@@ -1,4 +1,4 @@
-import {getElencoCarburanti, getImpiantiByDistance, getMarchi} from "@/functions/api";
+import {getElencoCarburanti, getMarchi} from "@/functions/api";
 import MappaClient from "@/components/mappe/MappaClient";
 import {capitalize} from "@/functions/helpers";
 import {cookies, headers} from "next/headers";
@@ -10,8 +10,6 @@ import {getCanonicalUrl} from "@/functions/server";
 //TODO: quando cambia il filtro aggionna url senza fare il refresh continuo di tutta la pagina
 //TODO: pagina dedicata alla svizzera
 //TODO: gestione utenti
-//TODO: dopo la ricerca posizionarsi sulla destinazione ed aggiungere un tasto per le indicazioni
-//TODO: ordinamento per distanza / prezzo
 //TODO: (MOBILE) quando si effettua la ricerca, eliminare la mappa e inserire solo il campo di ricerca a tutto schermo (stile GMaps)
 export async function generateMetadata({params, searchParams}) {
 
@@ -122,13 +120,13 @@ export default async function Mappa({searchParams}) {
 
     console.log("POSIZIONE: ", posizione);
 
-    let distributori = [];
+    const distributori = [];
 
     let zoom = queryParams.zoom;
 
     if (!zoom) zoom = 5;
 
-
+    /*
     if (posizione.lat !== null && posizione.lng !== null && zoom > 9.5) {
 
         const response = await getImpiantiByDistance(
@@ -143,7 +141,7 @@ export default async function Mappa({searchParams}) {
             });
         distributori = await response.json();
         console.log("DISTRIBUTORI: " + distributori.length);
-    }
+    }*/
 
 
     const headersList = await headers();

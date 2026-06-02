@@ -244,8 +244,6 @@ const MappaRisultati = forwardRef(({
         if (mapRef.current === null) return;
         if (showRoute === true) return;
 
-//        if (destinazioneFinale !== null) return;
-
         const riquadroAttuale = calcolaBounds();
 
         const center = mapRef.current.getCenter();
@@ -262,10 +260,6 @@ const MappaRisultati = forwardRef(({
         setBounds(toEnvelopeArray(riquadroAttuale));
         setZoom(zoom);
 
-        console.log("ZOOM:", zoom);
-
-        // log("HAS MOVED ENOUGH: " + hasMovedEnough);
-//        setFadeOutMarker(true);
         try {
 
             let record = [];
@@ -276,6 +270,8 @@ const MappaRisultati = forwardRef(({
                 } else {
                     const response = await getImpiantiByDistance(
                         {
+                            lat: posizioneAttuale.lat,
+                            lng: posizioneAttuale.lon,
                             bounds: riquadroAttuale,
                             carburante: filter.carburante,
                             sort: 'price',

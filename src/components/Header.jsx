@@ -7,12 +7,19 @@ import DehazeIcon from '@mui/icons-material/Dehaze';
 import CloseIcon from '@mui/icons-material/Close';
 import Button from "react-bootstrap/Button";
 import Image from "next/image";
+import {useRouter} from "next/navigation";
 
 export default function Header() {
 
     useEffect(() => {
         import('bootstrap/dist/js/bootstrap.bundle.min');
     }, []);
+
+    const router = useRouter();
+
+    const handleNavigation = (href) => {
+        router.push(href);
+    };
 
     return (
         <header className="bg-primary sticky-top">
@@ -74,14 +81,34 @@ export default function Header() {
 
                 <div className="container">
                     <ul className="nav flex-column ">
-                        <li className="nav-item"><Link title={"Preferiti"} href="/preferiti"
-                                                       className="nav-link text-white">Preferiti</Link></li>
-                        <li className="nav-item"><Link title={"Ricerca"} href="/ricerca"
-                                                       className="nav-link text-white ">Ricerca</Link></li>
-                        <li className="nav-item"><Link title={"Mappa"} href="/mappa"
-                                                       className="nav-link text-white ">Mappa</Link></li>
-                        <li className="nav-item"><Link title={"Contatti"} href="/contatti"
-                                                       className="nav-link text-white ">Contatti</Link></li>
+                        <li className="nav-item"><Button
+                            variant={'link'}
+                            data-bs-dismiss="offcanvas"
+                            onClick={() => handleNavigation("/preferiti")}
+                            title={"Preferiti"}
+                            className="nav-link text-white">Preferiti</Button></li>
+                        <li className="nav-item"><Button
+
+                            variant={'link'}
+                            data-bs-dismiss="offcanvas"
+                            onClick={() => handleNavigation("/ricerca")}
+
+
+                            title={"Ricerca"}
+                            className="nav-link text-white ">Ricerca</Button></li>
+                        <li className="nav-item">
+                            <Button title={"Mappa"}
+                                    variant={'link'}
+                                    data-bs-dismiss="offcanvas"
+                                    onClick={() => handleNavigation("/mappa")}
+                                    className="nav-link text-white ">Mappa</Button></li>
+
+                        <li className="nav-item"><Button
+                            variant={'link'}
+                            data-bs-dismiss="offcanvas"
+                            onClick={() => handleNavigation("/contatti")}
+                            title={"Contatti"}
+                            className="nav-link text-white ">Contatti</Button></li>
                     </ul>
                     <div className="text-center">
                         <Image width={320} height={320} src="/assets/logo-transparent.png" alt="Logo PrezziBenzina.eu"
