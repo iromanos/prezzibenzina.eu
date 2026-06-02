@@ -8,6 +8,7 @@ import {
     getClustersByBounds,
     getDrivingCar,
     getImpiantiByDistance,
+    getMediaByBounds,
     getPreferiti
 } from "@/functions/api";
 import {useDebouncedCallback} from '@/hooks/useDebouncedCallback';
@@ -33,6 +34,7 @@ const MappaRisultati = forwardRef(({
                                        posizione,
                                        distributoriIniziali = [],
                                        onFetchDistributori,
+                                       onPrezzoMedio,
                                        rightWidth = 0,
                                        footerHeight = 0,
                                        sheetHeight = 0,
@@ -90,7 +92,6 @@ const MappaRisultati = forwardRef(({
 
     const [isLoading, setIsLoading] = useState(false);
 
-
     const layerStyle = {
         id: 'point',
         type: 'line',
@@ -104,7 +105,6 @@ const MappaRisultati = forwardRef(({
             'line-blur': 0.5
         }
     };
-
 
     const handleMapClick = (event) => {
         setPopupInfo(null);
@@ -149,7 +149,6 @@ const MappaRisultati = forwardRef(({
     useEffect(() => {
         // log('MappaRisultati: MOUNTED');
     }, []);
-
 
     const [loading, setLoading] = useState(false);
 
@@ -262,22 +261,27 @@ const MappaRisultati = forwardRef(({
 
         try {
 
+            const payload = {
+                lat: posizioneAttuale.lat,
+                lng: posizioneAttuale.lon,
+                bounds: riquadroAttuale,
+                carburante: filter.carburante,
+                sort: 'price',
+                limit: filter.limite,
+                brand: filter.brand?.nome
+            };
+
+            const responsePrezzoMedio = await getMediaByBounds(payload);
+            const prezzoMedio = await responsePrezzoMedio.json();// setPrezzoMedio(responsePrezzoMedio.prezzoMedio);
+            onPrezzoMedio?.(prezzoMedio.prezzoMedio);
+
             let record = [];
             if (zoom > 9.5) {
                 if (filter.bookmark) {
                     const dati = await getPreferiti(preferiti);
                     record = dati.impianti;
                 } else {
-                    const response = await getImpiantiByDistance(
-                        {
-                            lat: posizioneAttuale.lat,
-                            lng: posizioneAttuale.lon,
-                            bounds: riquadroAttuale,
-                            carburante: filter.carburante,
-                            sort: 'price',
-                            limit: filter.limite,
-                            brand: filter.brand?.nome
-                        });
+                    const response = await getImpiantiByDistance(payload);
 
                     record = await response.json();
                     if (response.status !== 200) {

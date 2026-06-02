@@ -27,6 +27,8 @@ export default function MappaClient({
     const rightRef = useRef(null);
 
     const [distributori, setDistributori] = useState(distributoriIniziali);
+    const [prezzoMedio, setPrezzoMedio] = useState(0);
+
     const {navBarHeight} = useNavBarPresence();
 
     const [step, setStep] = useState(0);
@@ -92,12 +94,15 @@ export default function MappaClient({
                         footerHeight={footerHeight}
                         sheetHeight={sheetHeight}
                         distributoriIniziali={distributoriIniziali}
+                        onPrezzoMedio={(prezzo) => {
+                            setPrezzoMedio(prezzo);
+                        }}
                         onFetchDistributori={(data) => {
                             setDistributori(data);
                         }}/>
                 </div>
                 <BottomSheet
-
+                    prezzoMedio={prezzoMedio}
                     ref={footerRef}
 
                     onWidthChange={(w) => {

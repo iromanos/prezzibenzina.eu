@@ -259,7 +259,6 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
 //    return data;
 }
 
-
 export async function getSeoRegioneEstera(stato, regione, carburante) {
     let fuel = null;
     if (carburante === 'benzina') fuel = '1-x';
@@ -328,6 +327,45 @@ export async function getSeoRegione(regione, carburante, marchio, provincia, com
     }
 }
 
+export async function getMediaByBounds({
+                                           lat,
+                                           lng,
+                                           distance,
+                                           carburante,
+                                           sort,
+                                           limit = 100,
+                                           brand = null,
+                                           bounds = null,
+                                           stato = null
+                                       }) {
+    const fuel = Carburanti[carburante];
+
+    let request = URI + "impianti/media";
+
+    const body = {
+        'lat': lat,
+        'lng': lng,
+        // 'distance': distance,
+        'fuel': fuel,
+        'bounds': bounds,
+        'sort': sort,
+        'limit': limit,
+        'brand': brand,
+        // 'stato': stato
+    };
+
+    return await fetch(request, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Internal-Secret': '0CD6ED9B-9DAC-4E30-962E-EB16F03F6207'
+        },
+        body: JSON.stringify(body)
+    });
+}
+
+
 export async function getImpiantiByDistance({
                                                 lat,
                                                 lng,
@@ -355,8 +393,6 @@ export async function getImpiantiByDistance({
         'brand': brand,
         'stato': stato
     };
-
-    logDebug(body);
 
     return await fetch(request, {
         method: 'POST',

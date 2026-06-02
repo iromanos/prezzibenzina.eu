@@ -16,6 +16,7 @@ const BottomSheet = forwardRef(({
                                     onHeightChange,
                                     onSheetHeightChange,
                                     distributori = [],
+                                    prezzoMedio = 0,
                                     client = 'pb'
                                 }, ref) => {
     const [step, setStep] = useState(0);
@@ -142,11 +143,14 @@ const BottomSheet = forwardRef(({
             >
                 {/* HEADER - Area Cliccabile */}
                 <div
-                    onClick={nextStep}
                     className={`p-3 border-bottom flex-shrink-0 ${isMobile ? 'cursor-pointer' : ''}`}
                 >
                     {isMobile && (
-                        <div className=" mx-auto bg-dark bg-opacity-25 rounded-pill"
+                        <div
+
+                            onClick={nextStep}
+
+                            className=" mx-auto bg-dark bg-opacity-25 rounded-pill mb-2"
                              style={{width: '40px', height: '5px'}}/>
                     )}
                     <div className="d-flex align-items-baseline justify-content-between gap-2">
@@ -185,6 +189,12 @@ const BottomSheet = forwardRef(({
                         pointerEvents: (isMobile && step === 0) ? 'none' : 'auto',
                     }}
                 >
+                    {prezzoMedio !== 0 &&
+                        <div className={'p-3 border-bottom'}>
+                            <span className={'small text-muted'}>Prezzo medio nella zona</span><p
+                            className={'display-4 m-0'}>{prezzoMedio.toFixed(3)}
+                            <span className={'fw-normal fs-5'}>€/L</span></p>
+                        </div>}
                     <div className="">
                         {recordOrdinati().length === 0 &&
                             <div className={'p-3'}>
