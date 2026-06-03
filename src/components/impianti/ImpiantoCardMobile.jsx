@@ -3,7 +3,6 @@ import ImpiantoCardClient from "@/components/impianti/ImpiantoCardClient";
 import Bandiera from "@/components/Bandiera";
 import Image from "next/image";
 
-//TODO: indicare il risparmio teorico sui 50litri
 //TODO: indicare se il prezzo è discesa rispetto agli ultimi sette giorni
 import DirectionsIcon from '@mui/icons-material/Directions';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
@@ -59,7 +58,7 @@ export default function ImpiantoCardMobile({impianto, cardClient = true, onClick
                             vicini={false} isMobile={true} impianto={impianto}/>
                         <div
                             className={'bg-success rounded-2 text-white py-1 px-2 ms-auto' + (isBest ? ' shadow' : '')}>
-                            <strong className={'fs-4'}>{prezzo} <span style={{
+                            <strong className={'fs-4'}>{prezzo.toFixed(3)} <span style={{
                                 fontSize: '.8rem'
                             }}>€/L</span></strong></div>
 

@@ -5,9 +5,6 @@ import {cookies, headers} from "next/headers";
 import {notFound} from "next/navigation";
 import {getCanonicalUrl} from "@/functions/server";
 
-//TODO: quando cambia la posizione aggiorna il titolo della pagina
-//TODO: quando cambia la posizione aggiorna il campo di ricerca con l'indirizzo
-//TODO: quando cambia il filtro aggionna url senza fare il refresh continuo di tutta la pagina
 //TODO: pagina dedicata alla svizzera
 //TODO: gestione utenti
 //TODO: (MOBILE) quando si effettua la ricerca, eliminare la mappa e inserire solo il campo di ricerca a tutto schermo (stile GMaps)

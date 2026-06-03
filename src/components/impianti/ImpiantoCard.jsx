@@ -34,24 +34,26 @@ export default function ImpiantoCard({impianto, cardClient = true, onClickPrefer
                     <Image src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
                     <div className={'col'}>
                         <h5 className="mb-0 text-uppercase">{nome_impianto}</h5>
-                        <small className="text-muted">{gestore}</small>
+                        {gestore ?
+                            <small className="text-muted">{gestore}</small> :
+                            <small className={'text-muted'}>{indirizzo}</small>}
                     </div>
                     <div className={'col-1 text-end'}>
                         <Bandiera sigla={impianto.stato}/></div>
-
                 </div>
                 </a>
+                {impianto.stato !== "CH" &&
                 <p className="mb-1 text-muted">
                     {indirizzo}{comune != null ? ', ' + comune : null} {provincia != null ? `(${provincia})` : null}
                     {tipo_impianto != null ? ` - ${tipo_impianto}` : null}
-                </p>
+                </p>}
                 {cardClient &&
                     <div className="d-flex flex-wrap gap-2 mt-2 small align-items-center">
                         <ImpiantoCardClient
                             onClickPreferiti={onClickPreferiti}
                             vicini={false} isMobile={true} impianto={impianto}/>
                         <div className={'bg-success rounded-2 text-white py-1 px-2 ms-auto'}>
-                            <strong className={'fs-4'}>{prezzo} <span style={{
+                            <strong className={'fs-4'}>{prezzo.toFixed(3)} <span style={{
                                 fontSize: '.8rem'
                             }}>€/L</span></strong></div>
 

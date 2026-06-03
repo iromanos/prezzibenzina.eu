@@ -7,7 +7,7 @@ import useCarburante from "@/hooks/useCarburante";
 import Modal from "react-bootstrap/esm/Modal";
 import {getElencoCarburanti} from "@/functions/api";
 
-export function LinkCarburanti({params, carburanti}){
+export function LinkCarburanti({params, carburanti, onCarburanteChange = null}) {
 
     const {carburante, setCarburante} = useCarburante();
 
@@ -30,6 +30,12 @@ export function LinkCarburanti({params, carburanti}){
                             onClick={() => {
                                 setModal(false);
                                 setCarburante(c.tipo);
+
+                                if (onCarburanteChange !== null) {
+                                    onCarburanteChange(c.tipo);
+                                    return;
+                                }
+
                                 const link = getRouteLink(params.regione, c.tipo, params.marchio, params.provincia, params.comune);
                                 console.log(link);
                                 window.location = link.link;

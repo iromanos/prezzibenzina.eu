@@ -2,13 +2,16 @@ import Header from "@/components/Header";
 import {getCarburanti, getImpiantiByDistance, getMarchi, getSeoRegioneEstera} from "@/functions/api";
 import React from "react";
 import ElencoDistributori from "@/components/ElencoDistributori";
-import LinkComuni from "@/components/LinkComuni";
 import Mappa from "@/components/Mappa";
 import MapIcon from '@mui/icons-material/Map';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import {notFound} from "next/navigation";
-import {logDebug} from "@/functions/helpers";
+import {logDebug, ucwords} from "@/functions/helpers";
 import {IntroTextEstero} from "@/components/IntroTextEstero";
+import {FooterMobile} from "@/components/FooterMobile";
+import FooterHome from "@/components/home/FooterHome";
+import DistributoriEsteriClient from "@/components/stati/DistributoriEsteriClient";
+import Display6977770298 from "@/components/ads/Display-6977770298";
 
 export default async function DistributoriEsteriPage({params}) {
 
@@ -35,12 +38,10 @@ export default async function DistributoriEsteriPage({params}) {
         }
     }
 
-    const carburanti = Object.keys(elencoCarburanti).map(nome => {
-        return `${nome}`;
-    });
 
     const response = await getImpiantiByDistance({stato: stato, carburante: carburante, limit: 10});
 
+    console.log(response);
 
     const records = await response.json();
 
@@ -65,8 +66,19 @@ export default async function DistributoriEsteriPage({params}) {
         month: 'long',
         day: 'numeric',
     }).format(date);
-    const comuni = riepilogo.comuni;
 
+    const request = riepilogo.request;
+
+    const scope = request.regione
+        ? {livello: 'regione', valore: request.regione}
+        : {livello: 'stato', valore: request.stato};
+
+    const localita =
+        scope.livello === 'comune'
+            ? `a ${ucwords(scope.valore)}`
+            : scope.livello === 'provincia'
+                ? `in provincia di ${scope.valore.toUpperCase()}`
+                : `in ${ucwords(scope.valore)}`;
     /*
     const marchi = riepilogo.marchi;
     */
@@ -75,46 +87,52 @@ export default async function DistributoriEsteriPage({params}) {
 
         <div className="container py-5">
 
-            {/*<Breadcrumb*/}
-            {/*    riepilogo={riepilogo}*/}
-            {/*    regione={regione}*/}
-            {/*    carburante={carburante}*/}
-            {/*    provincia={sigla}*/}
-            {/*    comune={riepilogo.request.comune}*/}
-            {/*    marchio={marchio}/>*/}
+            <h1>Prezzi {carburante} {marchio ? ` ${marchio}` : ''} {localita}</h1>
+            <p className="lead text-muted">
+                Scopri i <strong>prezzi</strong> aggiornati della <strong>{carburante}</strong> {marchio ?
+                <strong>{marchio}</strong> : ''} {localita} e pianifica il tuo rifornimento in modo intelligente.
+            </p>
+            <ul className={'list-unstyled'}>
+                <li>✅ Dati aggiornati: {formatted}</li>
+                <li>✅ Prezzi ufficiali MIMIT</li>
+                <li>✅ Rifornimento veloce e sicuro</li>
+            </ul>
+            <div className={'d-flex gap-2 mb-4'}>
+                <a title={"Elenco distributori"} href={"#distributori"}
+                   className={'btn btn-primary '}><FormatListBulletedIcon/> Elenco
+                    distributori</a>
+                <a title={"Mappa"} href={"#mappa"} className={'btn btn-outline-primary '}><MapIcon/> Mappa</a>
+            </div>
 
-            <IntroTextEstero data={riepilogo} distributori={distributori}>
-                <ul className={'list-unstyled'}>
-                    <li>✅ Dati aggiornati: {formatted}</li>
-                    <li>✅ Prezzi ufficiali MIMIT</li>
-                    <li>✅ Rifornimento veloce e sicuro</li>
-                </ul>
-                <div className={'d-flex gap-2 mb-4'}>
-                    <a title={"Elenco distributori"} href={"#distributori"}
-                       className={'btn btn-primary'}><FormatListBulletedIcon/> Elenco
-                        distributori</a>
-                    <a title={"Mappa"} href={"#mappa"} className={'btn btn-outline-primary'}><MapIcon/> Mappa</a>
-                </div>
-                {comuni.length > 1 ? <LinkComuni
-                    riepilogo={riepilogo}
-                    comuni={comuni}/> : <></>}
-            </IntroTextEstero>
+
 
             <div className={'row'}>
-                <div id="distributori" className={'col-md-5 order-1'}>
+                <div id="distributori" className={'col-md-4 order-1'}>
                     <ElencoDistributori Regione={regione} distributori={distributori}/>
-                    {/*<ComparaVicini carburante={carburante}/>*/}
                 </div>
-                <div id={"mappa"} className={'col-md-7 order-0'}>
-                    {/*<LinkCarburanti params={riepilogo.request} carburanti={carburanti}/>*/}
-                    {/*<LinkMarchio params={riepilogo.request} marchi={marchi}/>*/}
+                <div id={"mappa"} className={'col-md-8 order-0'}>
+
+                    <DistributoriEsteriClient riepilogo={riepilogo}/>
+
                     {distributori.length !== 0 ? <Mappa distributori={distributori}/> : <></>}
+                    <div className={'mb-4'}>
+                        <Display6977770298/>
+                    </div>
+
+                    <IntroTextEstero data={riepilogo} distributori={distributori}>
+                    </IntroTextEstero>
+                    <div className={'mb-4'}>
+                        <Display6977770298/>
+                    </div>
                 </div>
             </div>
 
 
         </div>
 
+        <FooterMobile>
+            <FooterHome/>
+        </FooterMobile>
 
     </>;
 

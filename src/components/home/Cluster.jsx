@@ -361,18 +361,6 @@ export function HeatMapLayer({distributori}) {
         type: "FeatureCollection",
         features: distributori.map(d => {
             const currentPrice = parseFloat(d.properties.prezzo);
-
-            /*
-            let scarto = 0;
-
-            if (currentPrice <= avgPrice) {
-                // Se è sotto la media, calcoliamo un valore da -1 a 0
-                scarto = (currentPrice - avgPrice) / (avgPrice - minPrice);
-            } else {
-                // Se è sopra la media, calcoliamo un valore da 0 a +1
-                scarto = (currentPrice - avgPrice) / (maxPrice - avgPrice);
-            }
-            */
             return {
                 type: "Feature",
                 geometry: {
@@ -470,9 +458,9 @@ export function HeatMapLayer({distributori}) {
             'text-ignore-placement': false
         },
         paint: {
-            'text-color': '#215129BF', // Un grigio scuro/antracite molto elegante e leggibile sul gradiente
+            'text-color': '#000000', // Un grigio scuro/antracite molto elegante e leggibile sul gradiente
             'text-halo-color': '#ffffff', // Un'ombreggiatura bianca intorno alle lettere per leggerlo anche sul rosso/verde
-            'text-halo-width': 1.5
+            'text-halo-width': 2
         }
     };
 

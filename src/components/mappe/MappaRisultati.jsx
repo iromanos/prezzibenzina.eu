@@ -455,9 +455,14 @@ const MappaRisultati = forwardRef(({
         if (posizioneAttuale === null) return;
         console.log(posizioneAttuale);
         console.log(initialFilters.position);
-        if (initialFilters.position.lat !== -1) return;
+        if (initialFilters.position.lat === -1) return;
 
         console.log("IMPOSTO POSIZIONE INIZIALE DA GEO");
+
+        mapRef.current.flyTo({
+            center: [initialFilters.position.lng, initialFilters.position.lat], zoom: initialFilters.position.zoom,
+            // padding: padding
+        });
 
     }, [posizioneAttuale]);
 
