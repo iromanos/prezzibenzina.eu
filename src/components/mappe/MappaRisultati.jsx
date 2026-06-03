@@ -518,6 +518,14 @@ const MappaRisultati = forwardRef(({
         });
     }, [route]);
 
+    const [impiantoMigliore, setImpiantoMigliore] = useState(null);
+
+
+    useMemo(() => {
+        const impianto = distributori[0]?.properties;
+        setImpiantoMigliore(impianto || null);
+    }, [distributori]);
+
     // log('MappaRisultati: BUILD');
     return (
         <>
@@ -553,6 +561,7 @@ const MappaRisultati = forwardRef(({
                             setDestinazioneFinale(place);
                             setFadeOutMarker(true);
                             setRoute(null);
+                            setShowRoute(false);
 
                             if (place !== null) {
                                 const bbox = [
@@ -563,12 +572,16 @@ const MappaRisultati = forwardRef(({
                                 ];
                                 mapRef.current?.fitBounds(bbox);
                             }
+                            if (place === null) {
+
+                            }
 
                             const currentFilter = {
                                 ...filter, ...{place: place}
                             };
+                            setFilter(currentFilter);
 
-                            console.log("FILTER CHANGED: ", currentFilter);
+
                         }}
                         onChange={(state) => {
                             const currentFilter = {
@@ -602,9 +615,7 @@ const MappaRisultati = forwardRef(({
                             const currentFilter = {
                                 ...filter, ...{place: null}
                             };
-                            console.log("FILTER CHANGED: ", currentFilter);
                             setFilter(currentFilter);
-
                             setIsLoading(true);
                             setShowRoute(false);
                             handlePosizione(pos);
@@ -701,7 +712,11 @@ const MappaRisultati = forwardRef(({
 
                         const impianto = d.properties;
                         if (impianto.latitudine === undefined) return null;
+
+                        const isBest = impianto.id_impianto === impiantoMigliore?.id_impianto || false;
+
                         return <ImpiantoMarker
+                            isBest={isBest}
                             fadeOut={fadeOutMarker}
                             onClick={e => {
                                 e.originalEvent.stopPropagation();

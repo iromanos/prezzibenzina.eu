@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useMemo, useState} from 'react';
 import {motion} from 'framer-motion';
 import HomeIcon from '@mui/icons-material/Home';
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
@@ -9,6 +9,7 @@ import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 import SortIcon from '@mui/icons-material/Sort';
 import Button from 'react-bootstrap/Button';
 
+import CampaignIcon from '@mui/icons-material/Campaign';
 
 const BottomSheet = forwardRef(({
                                     onChangeStep,
@@ -29,6 +30,9 @@ const BottomSheet = forwardRef(({
     const {gestisciClickCuore} = usePreferitiGlobal();
 
     const [order, setOrder] = useState('Prezzo');
+
+    const [risparmio, setRisparmio] = useState(0);
+    const litri = 50;
 
     useEffect(() => {
         if (isMobile) {
@@ -90,7 +94,6 @@ const BottomSheet = forwardRef(({
         }
     };
 
-    if (isMobile === null) return null;
 
     const recordOrdinati = () => {
         const record = distributori.sort((a, b) => {
@@ -102,6 +105,20 @@ const BottomSheet = forwardRef(({
 
         return record;
     };
+
+    const [impiantoMigliore, setImpiantoMigliore] = useState(null);
+
+    useMemo(() => {
+
+        const impianto = distributori[0]?.properties;
+        if (impianto !== undefined) setRisparmio(prezzoMedio * litri - impianto.prezzo * litri);
+
+        setImpiantoMigliore(impianto || null);
+    }, [distributori]);
+
+
+    if (isMobile === null) return null;
+
 
     return (
         <div
@@ -190,12 +207,32 @@ const BottomSheet = forwardRef(({
                     }}
                 >
                     {prezzoMedio !== 0 &&
-                        <div className={'p-3 border-bottom'}>
+                        <div className={'p-3 '}>
                             <span className={'small text-muted'}>Prezzo medio nella zona</span><p
                             className={'display-4 m-0'}>{prezzoMedio.toFixed(3)}
                             <span className={'fw-normal fs-5'}>€/L</span></p>
                         </div>}
                     <div className="">
+
+                        {impiantoMigliore !== null &&
+                            <div className={'bg-success-subtle rounded-3 shadow-sm position-relative'}>
+                                <div
+                                    className="bg-success text-white text-center py-2 fw-bold small text-uppercase rounded-top-3"
+                                    style={{letterSpacing: '0.5px'}}>
+                                    <CampaignIcon/> Risparmio: € {risparmio.toFixed(2)} su un pieno di 50L
+                                </div>
+                                <div className={'border border-success border-3 rounded-bottom-3 border-top-0'}>
+                                    <ImpiantoCardMobile
+                                        isBest={true}
+                                        onClickPreferiti={() => {
+                                            gestisciClickCuore(impiantoMigliore);
+                                        }}
+
+                                        impianto={impiantoMigliore}/>
+                                </div>
+                            </div>
+                        }
+
                         {recordOrdinati().length === 0 &&
                             <div className={'p-3'}>
                                 Nessun distribuitore presente in questa zona. Prova a fare lo zoom sulla mappa o a
@@ -204,7 +241,7 @@ const BottomSheet = forwardRef(({
                         }
                         {recordOrdinati().map((d, i) => {
                             const isAdStep = (i + 1) % 2 === 0;
-
+                            if (impiantoMigliore !== null && d.properties.id_impianto === impiantoMigliore.id_impianto) return null;
                             return <div key={i}>
                                 <ImpiantoCardMobile
                                     onClickPreferiti={() => {

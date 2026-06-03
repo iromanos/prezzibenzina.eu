@@ -21,7 +21,7 @@ export default function PosizioneAttualeButton({onPosizione}) {
                 width: 56,
                 height: 56
             }}
-            className="btn btn-primary shadow-sm
+            className="btn btn-primary shadow
                     d-flex align-items-center justify-content-center
                     rounded-circle
                     "
@@ -34,7 +34,7 @@ export function IndicazioniButton({onClick}) {
     return <Button
         onClick={onClick}
         variant={'light'}
-        className={'shadow-sm align-items-center justify-content-center rounded-circle text-primary border-dark-subtle'}
+        className={'shadow align-items-center justify-content-center rounded-circle text-primary border-dark-subtle'}
         style={{
             width: 56, height: 56
         }}

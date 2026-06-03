@@ -146,7 +146,7 @@ export default async function Mappa({searchParams}) {
 
     const headersList = await headers();
 
-    const referer = headersList.get('X-WEFUEL-REFERER');
+    const referer = headersList.get('X-WEFUEL-REFERER') || 'pb';
 
     console.log("REFERER", referer);
     console.log("QUERY PARAMS: ", queryParams);

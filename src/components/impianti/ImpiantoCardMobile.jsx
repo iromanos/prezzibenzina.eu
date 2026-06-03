@@ -8,7 +8,7 @@ import Image from "next/image";
 import DirectionsIcon from '@mui/icons-material/Directions';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 
-export default function ImpiantoCardMobile({impianto, cardClient = true, onClickPreferiti = null}) {
+export default function ImpiantoCardMobile({impianto, cardClient = true, onClickPreferiti = null, isBest = false}) {
 
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
 
@@ -30,7 +30,8 @@ export default function ImpiantoCardMobile({impianto, cardClient = true, onClick
     const schedaUrl = `/impianto/${link}`;
 
     return (
-        <div className="border-bottom p-3" key={id_impianto}>
+        <div className={isBest ? 'p-3' : 'p-3 border-bottom'} style={isBest ? {margin: '-3px'} : null}
+             key={id_impianto}>
             <div className="">
                 <a href={schedaUrl} className={'text-decoration-none text-dark'}>
                     <div className="d-flex align-items-start gap-3 mb-2">
@@ -56,7 +57,8 @@ export default function ImpiantoCardMobile({impianto, cardClient = true, onClick
                         <ImpiantoCardClient
                             onClickPreferiti={onClickPreferiti}
                             vicini={false} isMobile={true} impianto={impianto}/>
-                        <div className={'bg-success rounded-2 text-white py-1 px-2 ms-auto'}>
+                        <div
+                            className={'bg-success rounded-2 text-white py-1 px-2 ms-auto' + (isBest ? ' shadow' : '')}>
                             <strong className={'fs-4'}>{prezzo} <span style={{
                                 fontSize: '.8rem'
                             }}>€/L</span></strong></div>

@@ -1,0 +1,31 @@
+/* Cambia il colore del badge e del pin in VERDE */
+.marker-cheapest .marker-badge {
+  background-color: var(--bs-success); /* Verde Bootstrap success */
+  transform: scale(1.2); /* Lo rende leggermente più grande */
+  transition: transform 0.2s ease;
+  border-color: #FFFFFF !important;
+}
+
+/* Effetto Pulsante (Glow) */
+.pulse-glow {
+  top: -7;
+  left: -19;
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background-color: var(--bs-success);
+  border-radius: 50%;
+  z-index: -1;
+  animation: marker-pulse 2s infinite ease-out;
+}
+
+@keyframes marker-pulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}

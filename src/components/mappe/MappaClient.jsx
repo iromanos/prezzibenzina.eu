@@ -1,12 +1,20 @@
 'use client'
 
 import MappaRisultati from "@/components/mappe/MappaRisultati";
-import {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useFilters} from "@/hooks/useFilters";
 import useNavBarPresence from "@/hooks/useNavBarPresence";
-import BottomSheet from "@/components/BottomSheet";
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 import useUltimaPosizione from "@/hooks/useUltimaPosizione";
+import {GoogleMapsBottomSheet} from "../GoogleMapsBottomSheet";
+import Link from "next/link";
+import Image from "next/image";
+import HomeIcon from "@mui/icons-material/Home";
+import Button from "react-bootstrap/esm/Button";
+import SortIcon from "@mui/icons-material/Sort";
+import CampaignIcon from "@mui/icons-material/Campaign";
+import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
+import InFeed4656802013 from "@/components/ads/InFeed-4656802013";
 
 export default function MappaClient({
                                         posizione,
@@ -64,7 +72,7 @@ export default function MappaClient({
 
     useEffect(() => {
         const handleFocus = e => {
-            setShowList(false);
+            // setShowList(false);
         };
 
         window.addEventListener('map:focus', handleFocus);
@@ -77,14 +85,13 @@ export default function MappaClient({
 
     return (
         <>
-            <div className="position-relative full-height-dvh">
+            <div className="position-relative w-100 vh-100 bg-light overflow-hidden">
                 <div className={"position-absolute top-0 start-0 w-100 h-100"}>
                     <MappaRisultati
                         cooperativeGestures={false}
                         onMapClick={() => {
                             setStep(0);
                             setShowList(true);
-                            footerRef.current.setStep(0);
                         }}
                         showPositionButton={showButton}
                         showFilter={showList}
@@ -101,27 +108,135 @@ export default function MappaClient({
                             setDistributori(data);
                         }}/>
                 </div>
-                <BottomSheet
-                    prezzoMedio={prezzoMedio}
-                    ref={footerRef}
 
-                    onWidthChange={(w) => {
-                        setRightWidth(w);
-                    }}
-                    onHeightChange={(height) => {
+                <GoogleMapsBottomSheet
+                    onResize={(width, height) => {
+                        setRightWidth(width);
                         setFooterHeight(height);
                     }}
-                    onChangeStep={(step) => {
-                        setStep(step);
-                        setShowList(step !== 2)
-                    }}
-                    onSheetHeightChange={(h) => {
-                        setSheetHeight(h);
-                    }}
-                    distributori={distributori}/>
+                >
+                    <SheetContent
+                        distributori={distributori}
+                        prezzoMedio={prezzoMedio}
+                        client={client}/>
+                </GoogleMapsBottomSheet>
             </div>
             {ModalComponent}
             {ModalResult}
         </>);
+
+}
+
+
+function SheetContent({
+                          client,
+                          prezzoMedio = 0,
+                          distributori = [],
+                      }) {
+    const [risparmio, setRisparmio] = useState(0);
+    const litri = 50;
+
+    const [order, setOrder] = useState('Prezzo');
+
+    const [impiantoMigliore, setImpiantoMigliore] = useState(null);
+
+    const recordOrdinati = () => {
+        const record = distributori.sort((a, b) => {
+            if (order === 'Distanza') {
+                return a.properties.distance_km - b.properties.distance_km;
+            }
+            return a.properties.prezzo - b.properties.prezzo;
+        });
+
+        return record;
+    };
+
+    useMemo(() => {
+
+        const impianto = distributori[0]?.properties;
+        if (impianto !== undefined) setRisparmio(prezzoMedio * litri - impianto.prezzo * litri);
+
+        setImpiantoMigliore(impianto || null);
+    }, [distributori]);
+
+
+    return <div className={''}>
+        <div className="d-flex align-items-baseline justify-content-between gap-2 p-3 border-bottom">
+            <Link className={'nav-link text-primary'} href={'/'}>
+                {client === 'pb' ?
+                    <Image
+                        width={1024}
+                        height={374}
+                        style={{
+                            width: 'auto',
+                            height: '40px'
+                        }} src="/assets/svg/logo-mappa.svg" alt="PrezziBenzina.eu"
+                    /> :
+                    <HomeIcon/>}
+            </Link>
+            <Button
+                className={'ms-auto'}
+                onClick={() => {
+                    if (order === "Prezzo") {
+                        setOrder("Distanza")
+                    } else setOrder("Prezzo");
+                }}
+
+                variant={'light'} size={'sm'}>{order} <SortIcon/></Button>
+            <span className="m-0 small">
+                            Distributori ({distributori.length})
+                        </span>
+        </div>
+
+
+        <div className={''}>
+
+            {prezzoMedio !== 0 &&
+                <div className={'px-3 pb-2 border-bottom'}>
+                    <span className={'small text-muted'}>Prezzo medio nella zona</span><p
+                    className={'display-4 m-0'}>{prezzoMedio.toFixed(3)}
+                    <span className={'fw-normal fs-5'}>€/L</span></p>
+                </div>}
+
+            {impiantoMigliore !== null &&
+                <div className={'bg-success-subtle rounded-3 shadow-sm position-relative m-3'}>
+                    <div className="bg-success text-white text-center py-2 fw-bold small text-uppercase rounded-top-3"
+                         style={{letterSpacing: '0.5px'}}>
+                        <CampaignIcon/> Risparmio: € {risparmio.toFixed(2)} su un pieno di 50L
+                    </div>
+                    <div className={'border border-success border-3 rounded-bottom-3 border-top-0'}>
+                        <ImpiantoCardMobile
+                            isBest={true}
+                            onClickPreferiti={() => {
+                                gestisciClickCuore(impiantoMigliore);
+                            }}
+
+                            impianto={impiantoMigliore}/>
+                    </div>
+                </div>
+            }
+
+            {recordOrdinati().length === 0 &&
+                <div className={'p-3'}>
+                    Nessun distribuitore presente in questa zona. Prova a fare lo zoom sulla mappa o a
+                    spostare la posizione.
+                </div>
+            }
+            {recordOrdinati().map((d, i) => {
+                const isAdStep = (i + 1) % 2 === 0;
+                if (impiantoMigliore !== null && d.properties.id_impianto === impiantoMigliore.id_impianto) return null;
+                return <div key={i}>
+                    <ImpiantoCardMobile
+                        onClickPreferiti={() => {
+                            gestisciClickCuore(d.properties);
+                        }}
+
+                        key={i} impianto={d.properties} cardClient={true}/>
+                    {isAdStep ? <div className={'border-bottom'}><InFeed4656802013/></div> : null}
+                </div>
+
+            })}
+        </div>
+    </div>;
 
 }
