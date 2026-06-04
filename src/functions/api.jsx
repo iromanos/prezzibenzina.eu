@@ -349,7 +349,7 @@ export async function getMediaByBounds({
         'fuel': fuel,
         'bounds': bounds,
         'sort': sort,
-        'limit': limit,
+        'limit': 2000,
         'brand': brand,
         // 'stato': stato
     };

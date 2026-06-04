@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import '../../styles/map.scss';
 
-export default function ImpiantoMarker({d, onClick, fadeOut = false, isBest = false}) {
+export default function ImpiantoMarker({d, onClick, fadeOut = false, isBest = false, isEco = true}) {
 
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
 
@@ -16,14 +16,16 @@ export default function ImpiantoMarker({d, onClick, fadeOut = false, isBest = fa
         return () => clearTimeout(timeout);
     }, []);
 
-    const color = getMarkerColor(d);
-    function getMarkerColor(d) {
-        // if (d.color === 0) return 'bg-success';
-        // if (d.color === -1) return 'bg-danger';
-
+    function getMarkerColor() {
         if (isBest) return 'bg-success';
+        if (isEco) return 'bg-success-subtle';
+        return 'bg-danger-subtle';
+    }
 
-        return 'bg-light-subtle';
+    function getBorderColor() {
+        if (isBest) return 'border-white';
+        if (isEco) return 'border-success';
+        return 'border-danger';
     }
 
     return (
@@ -37,19 +39,21 @@ export default function ImpiantoMarker({d, onClick, fadeOut = false, isBest = fa
         >
             <div className={isBest ? 'marker-cheapest' : ''}>
             <div
-                className={` ${color} 
+                className={` 
+                ${getMarkerColor()}                 
+                ${getBorderColor()}
                 position-relative
                 text-center marker-badge
                 pt-1
                 shadow-lg
                 text-dark
-                border border-1 border-dark-subtle 
+                border border-2  
                 rounded px-1 cluster-marker ${fadeOut ? 'exit' : ''}  ${animate ? 'animate-in' : ''}`}
                  style={{
                      color: 'white',
                  }}
             >
-                <Image className={'d-block mx-auto'} alt={d.bandiera} width={32} height={32}
+                <Image className={'d-block mx-auto bg-white rounded-circle'} alt={d.bandiera} width={32} height={32}
                      src={URI_IMAGE + d.image}/>
                 <small className={isBest ? 'text-white' : null}>{d.prezzo ? d.prezzo.toFixed(3) : null}</small>
                 {isBest && <div className="pulse-glow"></div>}

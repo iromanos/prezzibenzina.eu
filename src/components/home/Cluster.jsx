@@ -1,6 +1,5 @@
 import {useEffect, useMemo, useState} from "react";
 import {Layer, Marker, Source} from "react-map-gl/maplibre";
-import * as turf from '@turf/turf';
 
 export default function Cluster({clusters = [], onClusterClick, fadeOut}) {
 
@@ -130,224 +129,36 @@ function MarkerCluster({cluster, fadeOut = false, onClick}) {
 
 }
 
-
-export function HexagonLayer({distributori}) {
-
-    // --- CONFIGURAZIONE LAYER ESAGONI ---
-    const hexagonLayer = {
-        id: 'gas-hexagons',
-        type: 'fill',
-        paint: {
-            // Coloriamo l'esagono in base alla proprietà "avgPrice" calcolata da Turf
-            'fill-color': [
-                'case',
-                ['==', ['get', 'avgPrice'], 0], 'rgba(0,0,0,0)', // Esagono vuoto = trasparente
-                [
-                    'interpolate', ['linear'], ['get', 'avgPrice'],
-                    1.600, '#2e7559', // Verde scuro (Molto economico)
-                    1.680, '#5cb85c', // Verde chiaro
-                    1.730, '#f0ad4e', // Giallo/Arancione (Media)
-                    1.790, '#d9534f'  // Rosso (Caro)
-                ]
-            ],
-            // Opacità dell'esagono: solido da lontano, sfuma quando ci si avvicina per mostrare i pin sotto
-            'fill-opacity': [
-                'interpolate', ['linear'], ['zoom'],
-                6, 0.75,
-                11, 0.6,
-                12.5, 0 // Sparisce completamente a zoom 12.5
-            ],
-            'fill-outline-color': 'rgba(255, 255, 255, 0.2)' // Un bordo sottilissimo per separare gli esagoni
-        }
-    };
-
-// Layer di testo opzionale: mostra il prezzo medio al centro dell'esagono (solo da zoom medio)
-    const hexagonTextLayer = {
-        id: 'gas-hexagons-labels',
-        type: 'symbol',
-        layout: {
-            'text-field': [
-                'case',
-                ['==', ['get', 'avgPrice'], 0], '',
-                ['slice', ['to-string', ['get', 'avgPrice']], 0, 5]
-            ],
-            'text-size': 11,
-            'text-allow-overlap': false
-        },
-        paint: {
-            'text-color': '#ffffff',
-            'text-opacity': [
-                'interpolate', ['linear'], ['zoom'],
-                8, 0,   // Invisibile da lontanissimo (troppo affollato)
-                9.5, 1, // Visibile quando ci si avvicina un po'
-                12, 0   // Sparisce insieme agli esagoni
-            ]
-        }
-    };
-
-    // Generiamo la griglia di esagoni in base ai punti
-    const hexGridGeoJSON = useMemo(() => {
-
-        const distributoriList = distributori;
-
-        if (!distributoriList || distributoriList.length === 0) return null;
-
-        // 1. Convertiamo i distributori in una FeatureCollection di punti Turf
-        const points = turf.featureCollection(
-            distributoriList
-                .filter(d => parseFloat(d.properties.prezzo) > 1.40)
-                .map(d => turf.point([parseFloat(d.geometry.coordinates[0]), parseFloat(d.geometry.coordinates[1])], {price: parseFloat(d.properties.prezzo)}))
-        );
-
-        // 2. Troviamo i confini (bounding box) dei tuoi dati per non calcolare l'esagono sul mare o all'estero
-        const bbox = turf.bbox(points);
-
-        // 3. Creiamo la griglia di esagoni.
-        // "cellSide" è la dimensione del lato dell'esagono in chilometri.
-        // 10km o 15km è perfetto per la vista Nord-Italia (zoom 6.5)
-        const cellSide = 5;
-        const options = {units: 'kilometers'};
-        const hexGrid = turf.hexGrid(bbox, cellSide, options);
-
-        // 4. Per ogni esagono nella griglia, cerchiamo i punti che cadono al suo interno e facciamo la media
-        hexGrid.features.forEach(hexagon => {
-            const pointsInHex = turf.pointsWithinPolygon(points, hexagon);
-
-            if (pointsInHex.features.length > 0) {
-                const prices = pointsInHex.features.map(f => f.properties.price);
-                const sum = prices.reduce((a, b) => a + b, 0);
-                const avg = sum / prices.length;
-
-                hexagon.properties.avgPrice = avg;
-                hexagon.properties.count = prices.length;
-            } else {
-                hexagon.properties.avgPrice = 0;
-                hexagon.properties.count = 0;
-            }
-        });
-
-        return hexGrid;
-    }, [distributori]);
-
-    if (!hexGridGeoJSON) return <div>Generazione mosaico prezzi...</div>;
-
-
-    return <Source id="hex-grid-source" type="geojson" data={hexGridGeoJSON}>
-        <Layer {...hexagonLayer} />
-        <Layer {...hexagonTextLayer} />
-    </Source>;
-}
-
-export function ClusterLayer({distributori}) {
-
-    if (distributori === undefined) return;
-
-
-    const validPrices = distributori
-        .map(d => parseFloat(d.properties.prezzo))
-        .filter(p => p > 1.40);
-
-    const minPrice = Math.min(...validPrices);
-    const maxPrice = Math.max(...validPrices);
-    const avgPrice = validPrices.reduce((a, b) => a + b, 0) / validPrices.length;
-
-
-    const greenPrice = minPrice + avgPrice / 2;
-
-    const geojsonData = {
-        type: "FeatureCollection",
-        features: distributori.map(d => {
-            const currentPrice = parseFloat(d.properties.prezzo);
-            return {
-                type: "Feature",
-                geometry: {
-                    type: "Point",
-                    coordinates: d.geometry.coordinates // Attenzione: MapLibre vuole sempre [Longitudine, Latitudine]
-                },
-                properties: {
-                    price: currentPrice, // Il valore usato nel layer per il calcolo del peso
-                }
-            }
-        })
-    };
-
-    const clusterCircleLayer = {
-        id: 'price-clusters-circles',
-        type: 'circle',
-        filter: ['has', 'point_count'], // Mostra questo layer solo se è un cluster
-        paint: {
-            // Il colore cambia in base alla media matematica del prezzo interno
-            'circle-color': [
-                'let', 'avgPrice', ['/', ['get', 'sumPrice'], ['get', 'count']],
-                [
-                    'step', ['var', 'avgPrice'],
-                    '#198754', avgPrice, // VERDE se sotto 1.700
-                    // '#f0ad4e', avgPrice, // GIALLO tra 1.700 e 1.760
-                    '#dc3545'         // ROSSO se sopra 1.760
-                ]
-            ],
-            // Dimensione del cerchio fissa o leggermente più grande se contiene molte stazioni
-            'circle-radius': [
-                'step', ['get', 'point_count'],
-                25, 10,  // Raggio 25px se ha meno di 10 stazioni
-                40, 50,  // Raggio 32px se ne ha tra 10 e 50
-                48       // Raggio 40px se è un mega-cluster
-            ],
-            'circle-stroke-width': 2,
-            'circle-stroke-color': '#ffffff',
-            'circle-opacity': 0.8
-        }
-    };
-
-    const clusterTextLayer = {
-        id: 'price-clusters-labels',
-        type: 'symbol',
-        filter: ['has', 'point_count'],
-        layout: {
-            // Uniamo il prezzo medio e il numero di distributori
-            'text-field': [
-                'let', 'avgPrice', ['/', ['get', 'sumPrice'], ['get', 'count']],
-                [
-                    'concat',
-                    ['slice', ['to-string', ['var', 'avgPrice']], 0, 5], // Il prezzo (es. "1.724")
-                    '\n',                                               // Andiamo a capo per non allargare troppo il cerchio
-                    '(', ['to-string', ['get', 'point_count']], ')'     // Il numero di pompe (es. "(12)")
-                ]
-            ],
-            'text-size': 12,
-            'text-line-height': 1.2,
-            'text-allow-overlap': false
-        },
-        paint: {
-            'text-color': '#ffffff'
-        }
-    };
-
-    return <Source
-        id="gas-stations"
-        type="geojson"
-        data={geojsonData}
-        cluster={true}
-        clusterMaxZoom={12} // Oltre lo zoom 12 il cluster si rompe nei pin singoli
-        clusterRadius={60}  // Il raggio (in pixel) per cui i punti si fondono (aumentalo se vuoi bolle più grandi e isolate)
-        clusterProperties={{
-            // Calcoliamo la media del prezzo nel cluster: accumuliamo la somma e contiamo i punti
-            sumPrice: ['+', ['get', 'price']],
-            count: ['+', 1]
-        }}
-    >
-        <Layer {...clusterCircleLayer} />
-        <Layer {...clusterTextLayer} />
-
-    </Source>;
-}
-
-
-export function HeatMapLayer({distributori}) {
+export function HeatMapLayer({distributori, map}) {
 
 
     if (distributori === undefined) return;
 
+    if (map === null) return;
+
+    // Crea un piccolo rettangolo bianco con bordi arrotondati da usare come sfondo
+    const createBoxImage = (map) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 120;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+
+        // Disegna il rettangolo arrotondato
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#adb5bd';
+        ctx.lineWidth = 1.5;
+
+        // Semplice disegno di un rettangolo con bordi arrotondati
+        ctx.beginPath();
+        ctx.roundRect(2, 2, 116, 60, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        // Aggiungi l'immagine allo stile della mappa
+        if (!map.hasImage('box-sfondo')) {
+            map.addImage('box-sfondo', ctx.getImageData(0, 0, 120, 64));
+        }
+    };
 
     const validPrices = distributori
         .map(d => parseFloat(d.properties.prezzo))
@@ -464,14 +275,61 @@ export function HeatMapLayer({distributori}) {
         }
     };
 
-    return <><Source
 
+    const boxLayer = {
+        id: 'layer-prezzi-box',
+        type: 'symbol',
+        filter: ['has', 'point_count'],
+        // source: 'tuo-source-dati',
+        layout: {
+            // 1. Configura l'icona di sfondo
+            'icon-image': 'box-sfondo',
+            'icon-size': 0.7, // Ridimensionala a piacimento
+            'icon-allow-overlap': false,
 
-        id="gas-stations-source"
-        type="geojson"
-        data={geojsonData}>
-        <Layer {...uniformGradientLayer} />
-    </Source>
+            // 2. Configura il testo che andrà SOPRA l'icona
+            'text-field': [
+                'let',
+                // 1. Definiamo la variabile 'avgPrice'
+                'avgPrice', [
+                    'number-format',
+                    ['/', ['get', 'sumPrice'], ['get', 'count']],
+                    {'min-fraction-digits': 3, 'max-fraction-digits': 3} // Arrotonda a 3 decimali (es. 1.660)
+                ],
+
+                // 2. Argomento finale del 'let': qui formatti il testo usando la variabile appena creata
+                [
+                    'format',
+                    ['concat', ['var', 'avgPrice'], ' €/L'], // <--- Usiamo ['var', 'avgPrice'] invece di sumPrice
+                    {'font-scale': 1.1, 'text-font': ['literal', ['Open Sans Bold']]},
+
+                    '\n', {}, // Salto riga
+
+                    // Usiamo 'count' (visto che lo hai usato sopra per fare la media, è più coerente)
+                    ['concat', ['to-string', ['get', 'count']], ' dist.'],
+                    {'font-scale': 0.8}
+                ]
+            ],
+            'text-font': ['Open Sans Regular'],
+            'text-size': 12,
+            'text-justify': 'center',
+            'text-anchor': 'center', // Centra il testo perfettamente sull'icona
+            'text-allow-overlap': false
+        },
+        paint: {
+            'text-color': '#222222'
+        }
+    };
+
+    createBoxImage(map);
+
+    return <>
+        <Source
+            id="gas-stations-source"
+            type="geojson"
+            data={geojsonData}>
+            <Layer {...uniformGradientLayer} />
+        </Source>
 
         <Source
             id="gas-stations-price"
@@ -479,12 +337,12 @@ export function HeatMapLayer({distributori}) {
             data={geojsonData}
             cluster={true}
             clusterMaxZoom={13}
-            clusterRadius={80}
+            clusterRadius={160}
             clusterProperties={{
                 sumPrice: ['+', ['get', 'price']],
                 count: ['+', 1]
             }}>
-            <Layer {...averagePriceLabelsLayer} />
+            <Layer {...boxLayer} />
 
         </Source>
 

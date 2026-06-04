@@ -4,8 +4,8 @@ import Bandiera from "@/components/Bandiera";
 import Image from "next/image";
 
 //TODO: indicare se il prezzo è discesa rispetto agli ultimi sette giorni
-import DirectionsIcon from '@mui/icons-material/Directions';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
 
 export default function ImpiantoCardMobile({impianto, cardClient = true, onClickPreferiti = null, isBest = false}) {
 
@@ -37,20 +37,28 @@ export default function ImpiantoCardMobile({impianto, cardClient = true, onClick
                         <Image src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
                         <div className={'col'}>
                             <h6 className="mb-0 text-uppercase">{nome_impianto}</h6>
-                            <small className="text-muted">{gestore}</small>
+                            {impianto.stato === "CH" &&
+                                <><p className="text-muted small mb-0">
+                                    {indirizzo}{comune != null ? ', ' + comune : null} {provincia != null ? `(${provincia})` : null}
+                                </p>
+                                    <span
+                                        className={'small text-muted align-items-center d-flex gap-1'}><DirectionsCarFilledIcon/> {impianto.distance_km.toFixed(3)} km</span></>
+                            }
+                            {impianto.stato === "IT" && <small className="text-muted">{gestore}</small>}
                         </div>
                         <div className={'col-1 text-end'}>
                             <Bandiera sigla={impianto.stato}/></div>
 
                     </div>
                 </a>
-                <p className="text-muted small mb-0">
+                {impianto.stato === "IT" &&
+                    <><p className="text-muted small mb-0">
                     {indirizzo}{comune != null ? ', ' + comune : null} {provincia != null ? `(${provincia})` : null}
                 </p>
-                <p className="text-muted small mb-0">
-                    <DirectionsIcon/> {impianto.distance_km.toFixed(3)} km
+                        <p className="text-muted small mb-0 align-items-center d-flex gap-1">
+                            <DirectionsCarFilledIcon/> {impianto.distance_km.toFixed(3)} km
                     - <LocalGasStationIcon/> {tipo_impianto != null ? `${tipo_impianto}` : null}
-                </p>
+                        </p></>}
                 {cardClient &&
                     <div className="d-flex flex-wrap gap-2 mt-2 small align-items-center">
                         <ImpiantoCardClient

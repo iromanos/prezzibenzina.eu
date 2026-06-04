@@ -58,6 +58,9 @@ const MappaRisultati = forwardRef(({
         }
     }));
 
+
+    const [prezzoMedio, setPrezzoMedio] = useState(0);
+
     const hookUltimaPosizione = useUltimaPosizione();
 
     const ultimoRiquadroRef = useRef(null);
@@ -274,6 +277,8 @@ const MappaRisultati = forwardRef(({
             const responsePrezzoMedio = await getMediaByBounds(payload);
             const prezzoMedio = await responsePrezzoMedio.json();// setPrezzoMedio(responsePrezzoMedio.prezzoMedio);
             onPrezzoMedio?.(prezzoMedio.prezzoMedio);
+
+            setPrezzoMedio(prezzoMedio.prezzoMedio);
 
             let record = [];
             if (zoom > 9.5) {
@@ -710,7 +715,7 @@ const MappaRisultati = forwardRef(({
 
 
                         {route === null &&
-                            <HeatMapLayer distributori={clusteredPoints}/>
+                            <HeatMapLayer distributori={clusteredPoints} map={mapRef.current}/>
                         }
 
                     {distributori.map((d) => {
@@ -721,6 +726,7 @@ const MappaRisultati = forwardRef(({
                         const isBest = impianto.id_impianto === impiantoMigliore?.id_impianto || false;
 
                         return <ImpiantoMarker
+                            isEco={impianto.prezzo < prezzoMedio || prezzoMedio === 0}
                             isBest={isBest}
                             fadeOut={fadeOutMarker}
                             onClick={e => {
