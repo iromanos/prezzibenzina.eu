@@ -18,7 +18,7 @@ import InFeed4656802013 from "@/components/ads/InFeed-4656802013";
 
 export default function MappaClient({
                                         posizione,
-                                        distributoriIniziali,
+                                        distributoriIniziali = [],
                                         initialFilters,
                                         zoomIniziale = 13,
                                         client = "pb"
@@ -85,7 +85,13 @@ export default function MappaClient({
 
     return (
         <>
-            <div className="position-relative w-100 vh-100 bg-light overflow-hidden">
+            <div
+
+                style={{
+                    height: '100svh'
+                }}
+
+                className="position-relative w-100 bg-light overflow-hidden">
                 <div className={"position-absolute top-0 start-0 w-100 h-100"}>
                     <MappaRisultati
                         cooperativeGestures={false}
@@ -110,6 +116,7 @@ export default function MappaClient({
                 </div>
 
                 <GoogleMapsBottomSheet
+
                     onResize={(width, height) => {
                         setRightWidth(width);
                         setFooterHeight(height);
@@ -194,17 +201,17 @@ function SheetContent({
             {prezzoMedio !== 0 &&
                 <div className={'px-3 pb-2 border-bottom'}>
                     <span className={'small text-muted'}>Prezzo medio nella zona</span><p
-                    className={'display-4 m-0'}>{prezzoMedio.toFixed(3)}
+                    className={'h1 m-0 fw-bold'}>{prezzoMedio.toFixed(3)}
                     <span className={'fw-normal fs-5'}>€/L</span></p>
                 </div>}
 
             {impiantoMigliore !== null &&
-                <div className={'bg-success-subtle rounded-3 shadow-sm position-relative m-3'}>
-                    <div className="bg-success text-white text-center py-2 fw-bold small text-uppercase rounded-top-3"
+                <div className={'bg-success-subtle shadow-sm position-relative'}>
+                    <div className="bg-success text-white text-center py-2 fw-bold small text-uppercase"
                          style={{letterSpacing: '0.5px'}}>
                         <CampaignIcon/> Risparmio: € {risparmio.toFixed(2)} su un pieno di 50L
                     </div>
-                    <div className={'border border-success border-3 rounded-bottom-3 border-top-0'}>
+                    <div className={'border border-success border-0 border-top-0 pb-1'}>
                         <ImpiantoCardMobile
                             isBest={true}
                             onClickPreferiti={() => {
@@ -212,6 +219,7 @@ function SheetContent({
                             }}
 
                             impianto={impiantoMigliore}/>
+                        <InFeed4656802013/>
                     </div>
                 </div>
             }
@@ -223,8 +231,8 @@ function SheetContent({
                 </div>
             }
             {recordOrdinati().map((d, i) => {
-                const isAdStep = (i + 1) % 2 === 0;
                 if (impiantoMigliore !== null && d.properties.id_impianto === impiantoMigliore.id_impianto) return null;
+                const isAdStep = (i + 1) % 2 === 0;
                 return <div key={i}>
                     <ImpiantoCardMobile
                         onClickPreferiti={() => {
@@ -232,7 +240,7 @@ function SheetContent({
                         }}
 
                         key={i} impianto={d.properties} cardClient={true}/>
-                    {isAdStep ? <div className={'border-bottom'}><InFeed4656802013/></div> : null}
+                    {isAdStep ? <div className={'border-bottom py-3'}><InFeed4656802013/></div> : null}
                 </div>
 
             })}
