@@ -81,6 +81,14 @@ export default function MappaClient({
 
     // console.log("VIEW STATE: ", viewState);
 
+    const handleSnapChange = (size) => {
+        console.log("La bottom sheet ora è in stato:", size);
+        setShowList(true);
+        if (size === 'MAXIMIZED') {
+            setShowList(false);
+        }
+    };
+
     if (viewState === null) return;
 
     return (
@@ -117,10 +125,12 @@ export default function MappaClient({
 
                 <GoogleMapsBottomSheet
 
-                    onResize={(width, height) => {
-                        setRightWidth(width);
-                        setFooterHeight(height);
-                    }}
+                    onSnapChange={handleSnapChange}
+
+                    // onResize={(width, height) => {
+                    //     setRightWidth(width);
+                    //     setFooterHeight(height);
+                    // }}
                 >
                     <SheetContent
                         distributori={distributori}
