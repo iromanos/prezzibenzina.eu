@@ -1,20 +1,26 @@
-import {GoogleMapsBottomSheet} from "../../components/GoogleMapsBottomSheet";
+'use client'
+import {BottomSheet} from "@/components/GoogleMapsBottomSheet";
+import {useState} from "react";
 
 export default async function Demo() {
+
+    const [isSheetOpen, setIsSheetOpen] = useState(true);
+
     return (
         <>
 
             <div
-                className="position-relative w-100 vh-100 bg-light overflow-hidden"
-                style={{touchAction: 'none'}}
+                className="position-relative w-100 bg-light overflow-hidden"
+                style={{touchAction: 'none', height: '100svh'}}
             >
                 {/* Mappa di sfondo finta */}
                 <div
-                    className="position-absolute inset-0 d-flex align-items-center justify-content-center text-muted bg-secondary bg-opacity-25 h-100 w-100">
-                    <h5>[Mappa di Background Google Maps]</h5>
+                    className="position-absolute
+                    inset-0 d-flex align-items-center
+                    justify-content-center text-muted bg-secondary bg-opacity-25 h-100 w-100">
+                    <h5>Mappa</h5>
                 </div>
-
-                <GoogleMapsBottomSheet/>
+                <BottomSheet isOpen={isSheetOpen} onClose={() => setIsSheetOpen(false)}/>
             </div>
         </>
     )
