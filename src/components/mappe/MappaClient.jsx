@@ -124,7 +124,18 @@ export default function MappaClient({
                 </div>
 
                 <BottomSheet
-
+                    onIsMobile={(value) => {
+                        if (value) {
+                            setFooterHeight(110);
+                            setRightWidth(0);
+                        } else {
+                            setFooterHeight(0);
+                            setRightWidth(440);
+                        }
+                    }}
+                    onExpanded={(value) => {
+                        setShowList(!value);
+                    }}
                     // onSnapChange={handleSnapChange}
 
                     // onResize={(width, height) => {
@@ -178,7 +189,7 @@ function SheetContent({
 
 
     return <div className={''}>
-        <div className="d-flex align-items-baseline justify-content-between gap-2 px-3 pb-3 border-bottom">
+        <div className="d-flex align-items-baseline justify-content-between gap-2 p-3 border-bottom">
             <Link className={'nav-link text-primary'} href={'/'}>
                 {client === 'pb' ?
                     <Image

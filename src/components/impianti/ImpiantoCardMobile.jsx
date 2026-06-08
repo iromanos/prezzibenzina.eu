@@ -30,7 +30,6 @@ export default function ImpiantoCardMobile({impianto, cardClient = true, onClick
 
     return (
         <div className={isBest ? 'p-3' : 'p-3 border-bottom'}
-            // style={isBest ? {margin: '-3px'} : null}
              key={id_impianto}>
             <div className="">
                 <a href={schedaUrl} className={'text-decoration-none text-dark'}>
