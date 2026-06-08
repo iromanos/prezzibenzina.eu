@@ -1,8 +1,8 @@
 'use client'
-import {BottomSheet} from "@/components/GoogleMapsBottomSheet";
 import {useState} from "react";
+import BottomSheet from "../../components/BottomSheet";
 
-export default async function Demo() {
+export default function Demo() {
 
     const [isSheetOpen, setIsSheetOpen] = useState(true);
 

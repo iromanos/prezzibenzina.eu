@@ -6,7 +6,6 @@ import {useFilters} from "@/hooks/useFilters";
 import useNavBarPresence from "@/hooks/useNavBarPresence";
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 import useUltimaPosizione from "@/hooks/useUltimaPosizione";
-import {GoogleMapsBottomSheet} from "../GoogleMapsBottomSheet";
 import Link from "next/link";
 import Image from "next/image";
 import HomeIcon from "@mui/icons-material/Home";
@@ -15,6 +14,7 @@ import SortIcon from "@mui/icons-material/Sort";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 import InFeed4656802013 from "@/components/ads/InFeed-4656802013";
+import BottomSheet from "@/components/BottomSheet";
 
 export default function MappaClient({
                                         posizione,
@@ -123,9 +123,9 @@ export default function MappaClient({
                         }}/>
                 </div>
 
-                <GoogleMapsBottomSheet
+                <BottomSheet
 
-                    onSnapChange={handleSnapChange}
+                    // onSnapChange={handleSnapChange}
 
                     // onResize={(width, height) => {
                     //     setRightWidth(width);
@@ -136,7 +136,7 @@ export default function MappaClient({
                         distributori={distributori}
                         prezzoMedio={prezzoMedio}
                         client={client}/>
-                </GoogleMapsBottomSheet>
+                </BottomSheet>
             </div>
             {ModalComponent}
             {ModalResult}
@@ -178,7 +178,7 @@ function SheetContent({
 
 
     return <div className={''}>
-        <div className="d-flex align-items-baseline justify-content-between gap-2 p-3 border-bottom">
+        <div className="d-flex align-items-baseline justify-content-between gap-2 px-3 pb-3 border-bottom">
             <Link className={'nav-link text-primary'} href={'/'}>
                 {client === 'pb' ?
                     <Image
@@ -186,7 +186,7 @@ function SheetContent({
                         height={374}
                         style={{
                             width: 'auto',
-                            height: '40px'
+                            height: '32px'
                         }} src="/assets/svg/logo-mappa.svg" alt="PrezziBenzina.eu"
                     /> :
                     <HomeIcon/>}
@@ -221,7 +221,9 @@ function SheetContent({
                          style={{letterSpacing: '0.5px'}}>
                         <CampaignIcon/> Risparmio: € {risparmio.toFixed(2)} su un pieno di 50L
                     </div>
-                    <div className={'border border-success border-0 border-top-0 pb-1'}>
+                    <div
+                        className={'border border-success border-0 border-top-0 pb-1'}
+                    >
                         <ImpiantoCardMobile
                             isBest={true}
                             onClickPreferiti={() => {

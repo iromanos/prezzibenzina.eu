@@ -1,6 +1,5 @@
 'use client'
 import React, {useEffect, useRef, useState} from 'react';
-import {AnimatePresence, motion} from "motion/react";
 
 export const GoogleMapsBottomSheet = ({children, isOpen, onClose, onSnapChange}) => {
     const contentRef = useRef(null);
@@ -211,55 +210,3 @@ export const GoogleMapsBottomSheet = ({children, isOpen, onClose, onSnapChange})
 };
 
 
-export function BottomSheet({isOpen, onClose, children}) {
-    return (
-        <AnimatePresence>
-            {isOpen && (
-                <>
-                    {/* OVERLAY (Sfondo scuro) */}
-                    <motion.div
-                        className="fixed-top w-100 h-100 bg-dark"
-                        style={{
-                            opacity: 0,
-                            zIndex: 1040,
-                            cursor: "pointer"
-                        }}
-                        initial={{opacity: 0}}
-                        animate={{opacity: 0.5}} // Opacità al 50% stile backdrop di Bootstrap
-                        exit={{opacity: 0}}
-                        onClick={onClose}
-                    />
-
-                    {/* BOTTOM SHEET */}
-                    <motion.div
-                        className="fixed-bottom bg-white rounded-top-4 p-4 shadow-lg mx-auto"
-                        style={{
-                            zIndex: 1050,
-                            maxHeight: "85vh",
-                            overflowY: "auto",
-                            // Opzionale: limita la larghezza sui grandi schermi per non farla sformare
-                            maxWidth: "500px",
-                            borderTopLeftRadius: "1.5rem",
-                            borderTopRightRadius: "1.5rem"
-                        }}
-                        initial={{y: "100%"}}
-                        animate={{y: 0}}
-                        exit={{y: "100%"}}
-                        transition={{type: "spring", damping: 25, stiffness: 200}}
-                    >
-                        {/* Maniglia superiore per il look "mobile" */}
-                        <div
-                            className="bg-secondary bg-opacity-25 rounded-pill mx-auto mb-3"
-                            style={{width: "50px", height: "5px"}}
-                        />
-
-                        {/* Contenuto interno */}
-                        <div className="container-fluid p-0">
-                            {children}
-                        </div>
-                    </motion.div>
-                </>
-            )}
-        </AnimatePresence>
-    );
-}
