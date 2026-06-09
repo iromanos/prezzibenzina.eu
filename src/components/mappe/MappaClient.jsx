@@ -14,7 +14,7 @@ import SortIcon from "@mui/icons-material/Sort";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 import InFeed4656802013 from "@/components/ads/InFeed-4656802013";
-import BottomSheet from "@/components/BottomSheet";
+import {BottomSheetSimple} from "@/components/BottomSheet";
 
 export default function MappaClient({
                                         posizione,
@@ -122,7 +122,7 @@ export default function MappaClient({
                         }}
                     /></div>
 
-                <BottomSheet
+                <BottomSheetSimple
                     minHeight={100}
                     onIsMobile={(value) => {
                         if (value) {
@@ -147,7 +147,7 @@ export default function MappaClient({
                         distributori={distributori}
                         prezzoMedio={prezzoMedio}
                         client={client}/>
-                </BottomSheet>
+                </BottomSheetSimple>
             </div>
             {ModalComponent}
             {ModalResult}
