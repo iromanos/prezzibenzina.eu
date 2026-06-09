@@ -4,14 +4,13 @@ import {animate, AnimatePresence, useDragControls, useMotionValue} from "motion/
 import {motion} from "framer-motion";
 import {useEffect, useRef, useState} from "react";
 
-export default function BottomSheet({isOpen = true, onExpanded, onIsMobile, children}) {
+export default function BottomSheet({isOpen = true, onExpanded, onIsMobile, children, minHeight = 110}) {
     const [isMounted, setIsMounted] = useState(false);
     const [windowHeight, setWindowHeight] = useState(800);
     const [isMobile, setIsMobile] = useState(true);
     const [isExpanded, setIsExpanded] = useState(false);
 
     const y = useMotionValue(800);
-    const minHeight = 110;
     const [overflowY, setOverflowY] = useState("hidden");
     const dragControls = useDragControls();
 
@@ -150,6 +149,7 @@ export default function BottomSheet({isOpen = true, onExpanded, onIsMobile, chil
                         position: "fixed",
                         top: 0,
                         ...(isMobile ? mobileStyles : desktopStyles),
+                        overscrollBehaviorY: "contain",
                     }}
                     className="bg-white shadow-lg "
                     exit={isMobile ? {y: windowHeight} : {x: "100%"}} // Su desktop esce lateralmente a destra
@@ -194,7 +194,8 @@ export default function BottomSheet({isOpen = true, onExpanded, onIsMobile, chil
                         style={{
                             height: isMobile ? "calc(100% - 36px)" : "calc(100%)",
                             overflowY: overflowY,
-                            touchAction: isMobile ? (!isExpanded ? "none" : "auto") : "auto"
+                            touchAction: isMobile ? (!isExpanded ? "none" : "auto") : "auto",
+                            overscrollBehaviorY: "contain",
                         }}
                         onPointerDownCapture={(e) => {
                             if (isMobile) {

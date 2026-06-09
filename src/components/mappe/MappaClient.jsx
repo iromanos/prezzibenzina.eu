@@ -105,7 +105,6 @@ export default function MappaClient({
                         cooperativeGestures={false}
                         onMapClick={() => {
                             setStep(0);
-                            setShowList(true);
                         }}
                         showPositionButton={showButton}
                         showFilter={showList}
@@ -120,13 +119,14 @@ export default function MappaClient({
                         }}
                         onFetchDistributori={(data) => {
                             setDistributori(data);
-                        }}/>
-                </div>
+                        }}
+                    /></div>
 
                 <BottomSheet
+                    minHeight={100}
                     onIsMobile={(value) => {
                         if (value) {
-                            setFooterHeight(110);
+                            setFooterHeight(100);
                             setRightWidth(0);
                         } else {
                             setFooterHeight(0);
