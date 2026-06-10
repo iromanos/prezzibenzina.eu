@@ -1,7 +1,7 @@
 export default function Descrizione() {
     return <section className="">
         <div className="">
-            <h2 className="mb-3 fw-bold">PrezziBenzina.eu: il tuo alleato per risparmiare</h2>
+            <h2 className="mb-3 fw-bold h6 text-uppercase">PrezziBenzina.eu: il tuo alleato per risparmiare</h2>
             <p>
                 <strong>PrezziBenzina.eu</strong> ti aiuta a trovare i distributori più convenienti nella tua
                 zona.</p>

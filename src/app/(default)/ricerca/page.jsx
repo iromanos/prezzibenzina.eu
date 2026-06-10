@@ -6,6 +6,7 @@ import {headers} from "next/headers";
 import Display5745053645 from "../../../components/ads/Display-5745053645";
 import {FooterMobile} from "@/components/FooterMobile";
 import FooterHome from "../../../components/home/FooterHome";
+import BoxComune from "@/components/home/BoxComune";
 
 export async function generateMetadata() {
 
@@ -37,10 +38,11 @@ export async function generateMetadata() {
     };
 
 }
+
 export default function Ricerca() {
     return (
         <>
-            <Header />
+            <Header/>
 
             <section className=" bg-primary text-white py-3 text-center mb-3">
                 <div className="container">
@@ -50,42 +52,67 @@ export default function Ricerca() {
                 </div>
             </section>
 
+            <div className="container my-5">
+                <div className="text-center mb-4">
+                    <h2 className="fw-bold text-uppercase h5">Prezzo della benzina nei capoluoghi</h2>
+                    <p className="text-muted">Seleziona la tua città per vedere i distributori più convenienti</p>
+                </div>
 
-            <div className={"container"}>
+                <div className="row g-4">
+                    <BoxComune comune={'Milano'} fuel={'1-x'}/>
+                    <BoxComune comune={'Roma'} fuel={'1-x'}/>
+                    <BoxComune comune={'Napoli'} fuel={'1-x'}/>
+                    <BoxComune comune={'Bologna'} fuel={'1-x'}/>
+                </div>
+            </div>
 
 
-                <section className="my-5">
-                    <h2 className="h4">Trova distributori di carburante vicino a te</h2>
-                    <p>
-                        Con <strong>PrezziBenzina.eu</strong> puoi cercare in modo semplice e veloce i distributori di
-                        carburante più convenienti nella tua zona. Grazie alla nostra piattaforma aggiornata
-                        quotidianamente, hai accesso a informazioni affidabili su prezzi di <em>benzina, diesel, GPL,
-                        metano ed elettrico</em>.
-                    </p>
-                    <p>
-                        Inserisci un indirizzo, una città o usa la tua posizione per visualizzare sulla mappa gli
-                        impianti più vicini.
-                    </p>
-                    <p>
-                        Puoi filtrare per tipo di carburante, distanza e marchio, così da trovare
-                        esattamente ciò che ti serve. Il nostro sistema è ottimizzato per smartphone e tablet, ideale
-                        anche per chi è in viaggio.
-                    </p>
-                    <p>
-                        Ogni giorno migliaia di automobilisti usano <strong>PrezziBenzina.eu</strong> per <strong>risparmiare
-                        sul pieno</strong> e scegliere con consapevolezza dove fare rifornimento. Inizia la tua ricerca
-                        ora e scopri quanto puoi risparmiare.
-                    </p>
-                </section>
+            <div className={"container mb-4"}>
+
+                <div className={'d-flex gap-3 flex-wrap'}>
+                    <div className="card bg-white col-lg-5">
+                        <div className={'card-body'}>
+                            <h2 className="h6 text-uppercase">Trova distributori di carburante vicino a te</h2>
+                            <p>
+                                Con <strong>PrezziBenzina.eu</strong> puoi cercare in modo semplice e veloce i
+                                distributori di
+                                carburante più convenienti nella tua zona. Grazie alla nostra piattaforma aggiornata
+                                quotidianamente, hai accesso a informazioni affidabili su prezzi di <em>benzina, diesel,
+                                GPL,
+                                metano ed elettrico</em>.
+                            </p>
+                            <p>
+                                Inserisci un indirizzo, una città o usa la tua posizione per visualizzare sulla mappa
+                                gli
+                                impianti più vicini.
+                            </p>
+                            <p>
+                                Puoi filtrare per tipo di carburante, distanza e marchio, così da trovare
+                                esattamente ciò che ti serve. Il nostro sistema è ottimizzato per smartphone e tablet,
+                                ideale
+                                anche per chi è in viaggio.
+                            </p>
+                            <p>
+                                Ogni giorno migliaia di automobilisti
+                                usano <strong>PrezziBenzina.eu</strong> per <strong>risparmiare
+                                sul pieno</strong> e scegliere con consapevolezza dove fare rifornimento. Inizia la tua
+                                ricerca
+                                ora e scopri quanto puoi risparmiare.
+                            </p></div>
+                    </div>
+                    <div className={'card col border-0'}>
+                        <Display5745053645/>
+                    </div>
+                </div>
             </div>
             <div className={'container'}>
-                <Display5745053645/>
             </div>
             {/* CTA AGGRESSIVA */}
             <section className="bg-danger text-white py-5 text-center mb-3">
                 <div className="container">
                     <h2 className="fw-bold display-6 mb-3">Stai ancora pagando troppo per il carburante?</h2>
-                    <p className="lead mb-4">Ogni minuto che aspetti, potresti spendere di più. Trova subito il distributore migliore.</p>
+                    <p className="lead mb-4">Ogni minuto che aspetti, potresti spendere di più. Trova subito il
+                        distributore migliore.</p>
                     <a href="/mappa" className="btn btn-light"><RocketLaunchIcon/> Cerca ora</a>
                 </div>
             </section>

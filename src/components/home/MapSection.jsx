@@ -66,9 +66,6 @@ export function MapSection() {
                         className="position-relative w-100 h-100"
                     >
                     <Image
-                        // onMouseEnter={() => {
-                        //     setAttivaInterattiva(true);
-                        // }}
                         width={1170}
                         height={616}
                         priority={true}

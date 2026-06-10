@@ -20,6 +20,18 @@ const Carburanti = {
 };
 
 
+export async function getPrezzoMedioByComune(comune, fuel) {
+
+    const response = await axios.post(URI + 'comune/medio', {
+        comune: comune,
+        fuel: fuel,
+    });
+
+    return response.data;
+
+}
+
+
 export async function postCookie(data) {
     const response = await axios.post('/api/set-cookie', data);
 }
@@ -345,13 +357,11 @@ export async function getMediaByBounds({
     const body = {
         'lat': lat,
         'lng': lng,
-        // 'distance': distance,
         'fuel': fuel,
         'bounds': bounds,
         'sort': sort,
         'limit': 2000,
         'brand': brand,
-        // 'stato': stato
     };
 
     return await fetch(request, {

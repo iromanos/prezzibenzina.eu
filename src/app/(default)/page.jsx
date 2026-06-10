@@ -14,6 +14,7 @@ import {MapSection} from "@/components/home/MapSection";
 import SavingsIcon from '@mui/icons-material/Savings';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import PlaceIcon from '@mui/icons-material/Place';
+import BoxComune from "../../components/home/BoxComune";
 
 export async function generateMetadata() {
 
@@ -57,8 +58,8 @@ export default function Home() {
                     </p>
                     <div className={'d-flex gap-3 justify-content-center align-items-center flex-wrap'}>
                         <a title={'Inizia la ricerca'} href="/ricerca" className="btn btn-light shadow-sm">
-                        <SearchIcon/> Inizia la ricerca
-                    </a>
+                            <SearchIcon/> Inizia la ricerca
+                        </a>
                         <a title={'Vai alla mappa di Italia e Svizzera'} href="#mappa"
                            className="btn btn-light shadow-sm">
                             <MapIcon/> Vai alla mappa
@@ -74,10 +75,34 @@ export default function Home() {
                 <Display6977770298/>
             </div>
             <div className={'container mb-4'}>
-                <Descrizione/>
+                <div className={'d-flex gap-4 flex-wrap'}>
+                    <div className={'card col-lg-7 bg-white'}>
+                        <div className={'card-body'}>
+                            <Descrizione/>
+                        </div>
+                    </div>
+                    <div className={'card col bg-white'}>
+                        <div className={'card-body'}>
+                            <Motivi/>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <Motivi/>
+            <div className="container my-5">
+                <div className="text-center mb-4">
+                    <h2 className="fw-bold text-uppercase h5">Prezzo della benzina nei capoluoghi</h2>
+                    <p className="text-muted">Seleziona la tua città per vedere i distributori più convenienti</p>
+                </div>
+
+                <div className="row g-4">
+                    <BoxComune comune={'Milano'} fuel={'1-x'}/>
+                    <BoxComune comune={'Roma'} fuel={'1-x'}/>
+                    <BoxComune comune={'Napoli'} fuel={'1-x'}/>
+                    <BoxComune comune={'Bologna'} fuel={'1-x'}/>
+                </div>
+            </div>
+
 
             <div className={'container mb-4'}>
                 <Display6977770298/>
