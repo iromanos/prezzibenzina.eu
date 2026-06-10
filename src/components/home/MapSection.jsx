@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {getElencoStati} from "@/functions/api";
 import Button from 'react-bootstrap/Button';
 // import MappaRisultati from "@/components/mappe/MappaRisultati";
@@ -10,6 +10,9 @@ import dynamic from 'next/dynamic';
 import Image from "next/image";
 import useUltimaPosizione from "@/hooks/useUltimaPosizione";
 import useInteraction from "@/hooks/useInteraction";
+import InFeed4656802013 from "@/components/ads/InFeed-4656802013";
+import Display6977770298 from "@/components/ads/Display-6977770298";
+import ImpiantoCardMobile from "../impianti/ImpiantoCardMobile";
 
 const MappaRisultati = dynamic(() => import('@/components/mappe/MappaRisultati'), {
     ssr: false,
@@ -18,9 +21,11 @@ const MappaRisultati = dynamic(() => import('@/components/mappe/MappaRisultati')
 export function MapSection() {
     const mapRef = useRef();
 
-    const elencoStati = getElencoStati();
+    const [prezzoMedio, setPrezzoMedio] = useState(null);
 
-    const [attivaInterattiva, setAttivaInterattiva] = useState(false);
+    const [record, setRecord] = useState([]);
+
+    const elencoStati = getElencoStati();
 
     const [stato, setStato] = useState(elencoStati[elencoStati.length - 1]);
     const {preferiti, ModalComponent, ModalResult} = usePreferitiGlobal();
@@ -53,62 +58,99 @@ export function MapSection() {
 
     return (
         <div className="mb-4">
-            <h2 className="text-center fw-bold mb-4">Mappa interattiva: Italia e Svizzera in un colpo d’occhio</h2>
-            <div
-                style={{
-                    height: '616px'
-                }}
-                className="d-flex border rounded overflow-hidden position-relative justify-content-center align-items-center">
-                {active === false &&
+            {/*<h2 className="text-center fw-bold mb-4">Mappa interattiva: Italia e Svizzera in un colpo d’occhio</h2>*/}
+
+            <div className={'row'}>
+
+                <div className={'col-lg-8'}>
                     <div
-                        // onClick={() => setAttivaInterattiva(true)}
-                        style={{cursor: 'pointer'}}
-                        className="position-relative w-100 h-100"
-                    >
-                    <Image
-                        width={1170}
-                        height={616}
-                        priority={true}
-                        src={'/assets/static/staticmap-home.jpg'}
-                        alt={'Mappa impianti'}
-                        fetchPriority="high"
-                    />
+                        style={{
+                            height: 'calc(100vh * 2/3)'
+                        }}
+                        className="d-flex border rounded overflow-hidden position-relative justify-content-center align-items-center">
+                        {active === false &&
+                            <div
+                                style={{cursor: 'pointer'}}
+                                className="position-relative w-100 h-100"
+                            >
+                                <Image
+                                    width={1170}
+                                    height={616}
+                                    priority={true}
+                                    src={'/assets/static/staticmap-home.jpg'}
+                                    alt={'Mappa impianti'}
+                                    fetchPriority="high"
+                                />
 
-                        {/* Un piccolo overlay per far capire che è cliccabile */}
-                        <div className="position-absolute top-50 start-50 translate-middle btn btn-dark opacity-90">
-                            Attiva Mappa Interattiva
-                        </div>
+                                <div
+                                    className="position-absolute top-50 start-50 translate-middle btn btn-dark opacity-90 rounded">
+                                    Attiva Mappa Interattiva
+                                </div>
 
-                    </div>}
-                {active &&
-                <MappaRisultati
+                            </div>}
+                        {active &&
+                            <MappaRisultati
+                                onFetchDistributori={(record) => {
+                                    setRecord(record);
+                                }}
+                                onPrezzoMedio={(prezzo) => {
+                                    setPrezzoMedio(prezzo)
+                                }}
+                                ref={mapRef}
+                                showFullScreen={true}
+                                showLinkHome={false}
+                                showFilter={false}
+                                posizione={viewState}
+                                headerHeight={0}
+                                initialFilters={{carburante: 'benzina', limite: 20, 'position': {lat: -1, lng: -1}}}
+                            />}
+                    </div>
+                    <div className="d-flex justify-content-center gap-2 my-3">
 
-                    ref={mapRef}
-                    showFullScreen={true}
-                    showLinkHome={false}
-                    showFilter={false}
-                    posizione={viewState}
-                    headerHeight={0}
-                    onMapClick={() => {
-                    }}
-                    initialFilters={{carburante: 'benzina', limite: 20, 'position': {lat: -1, lng: -1}}}
-                />}
-            </div>
+                        {elencoStati.map((c, i) => {
+                            return <Button
+                                key={i}
+                                variant={` ${stato !== null && stato.id === c.id ? 'btn-primary' : 'btn-light'} `}
+                                onClick={() => {
+                                    mapRef.current.flyTo({
+                                        center: [c.lng, c.lat], zoom: c.zoom,
+                                    });
+                                    setStato(c)
+                                }}> {c.icon} {c.name}</Button>
+                        })}
+                    </div>
+                    <Display6977770298 className={'mb-3'}/>
+
+                </div>
 
 
-            <div className="d-flex justify-content-center gap-2 mt-3">
+                <div className={'col-lg-4'}>
 
-                {elencoStati.map((c, i) => {
-                    return <Button
-                        key={i}
-                        variant={` ${stato !== null && stato.id === c.id ? 'btn-primary' : 'btn-light'} `}
-                        onClick={() => {
-                            mapRef.current.flyTo({
-                                center: [c.lng, c.lat], zoom: c.zoom,
-                            });
-                            setStato(c)
-                        }}> {c.icon} {c.name}</Button>
-                })}
+                    {prezzoMedio && <p className={'border rounded px-2 text-uppercase'}>Prezzo medio: <span
+                        className={'h6'}>{prezzoMedio.toFixed(3)} €/L</span></p>}
+
+
+                    {record.length === 0 &&
+                        <p>Nessun distribuitore presente in questa zona. Prova a fare lo zoom sulla mappa o a
+                            spostare la posizione.</p>}
+
+                    {record.slice(0, 3).map((d, index) => {
+                        return (
+                            <div key={index}
+                                 className={index === 0 ? 'bg-success-subtle rounded overflow-hidden' : null}>
+                                {index === 0 &&
+                                    <p className={'m-0 text-center bg-success text-white text-uppercase small fw-bold'}>Il
+                                        più conveniente</p>}
+                                <ImpiantoCardMobile
+                                    key={d.properties.id_impianto} impianto={d.properties}/>
+                                {(index + 1) % 2 === 0 &&
+                                    <InFeed4656802013 className={'mb-3'}/>}
+                            </div>
+                        );
+                    })}
+
+
+                </div>
             </div>
             {ModalComponent}
             {ModalResult}

@@ -72,9 +72,6 @@ export default function Home() {
                 <MapSection/>
             </div>
             <div className={'container mb-4'}>
-                <Display6977770298/>
-            </div>
-            <div className={'container mb-4'}>
                 <div className={'d-flex gap-4 flex-wrap'}>
                     <div className={'card col-lg-7 bg-white'}>
                         <div className={'card-body'}>

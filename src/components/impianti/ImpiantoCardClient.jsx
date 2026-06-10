@@ -66,14 +66,8 @@ export default function ImpiantoCardClient({
             className="btn btn-primary btn-sm">
             <MapIcon/>
         </Button>}
-        {/*{vicini &&*/}
-        {/*<button className="btn btn-outline-primary btn-sm"*/}
-        {/*        onClick={confrontaVicini}>*/}
-        {/*    <RadarIcon/> Vicini*/}
-        {/*</button>}*/}
 
-
-        <a href={mapsUrl} target="_blank" rel="noopener"
+        <a href={`/impianto/${impianto.link}`}
            className="btn btn-outline-primary btn-sm"
            aria-label={`Naviga verso ${nome_impianto}`}>
             <DirectionsIcon/> Vai

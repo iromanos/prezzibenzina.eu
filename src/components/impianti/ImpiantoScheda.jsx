@@ -25,6 +25,7 @@ import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 import Link from "next/link";
 import MapIcon from "@mui/icons-material/Map";
 import Image from "next/image";
+import InFeed4656802013 from "../ads/InFeed-4656802013";
 
 export default function ImpiantoScheda({impianto, cookie}) {
     const [showPopup, setShowPopup] = useState(false);
@@ -131,7 +132,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
                                       style={{width: '8px', height: '8px'}}></span>
                         <span>Live Data - Aggiornato oggi</span>
                     </div>
-
+                    <InFeed4656802013 className={'mt-4'}/>
                 </div>
             </div>
         </div>;
@@ -230,8 +231,8 @@ export default function ImpiantoScheda({impianto, cookie}) {
                             onClick={() => {
                                 gestisciClickCuore(impianto);
                             }}
-                            size={'sm'}> {isPreferito() ? <><FavoriteIcon/> Rimuovi dai preferiti</> : <>
-                            <FavoriteBorderIcon/> Aggiungi ai preferiti</>} </Button>
+                            size={'sm'}> {isPreferito() ? <><FavoriteIcon/> Rimuovi</> : <>
+                            <FavoriteBorderIcon/> Aggiungi</>} </Button>
                         <Link className="btn btn-primary btn-sm"
                               href={`https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`}
                               target="_blank" rel="noopener">
