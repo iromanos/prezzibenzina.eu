@@ -18,6 +18,7 @@ import {FooterMobile} from "./FooterMobile";
 import {ucwords} from "@/functions/helpers";
 import Image from "next/image";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import {AdsDesktop} from "@/components/ads/AdsDesktop";
 
 export default async function DistributoriPage({params}) {
 
@@ -86,6 +87,10 @@ export default async function DistributoriPage({params}) {
         <Header/>
 
         <div className="container py-4">
+
+            <AdsDesktop className={'mb-3'}>
+                <Display6977770298/>
+            </AdsDesktop>
 
             <Breadcrumb
                 riepilogo={riepilogo}

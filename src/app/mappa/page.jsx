@@ -5,7 +5,6 @@ import {cookies, headers} from "next/headers";
 import {notFound} from "next/navigation";
 import {getCanonicalUrl} from "@/functions/server";
 
-//TODO: pagina dedicata alla svizzera
 //TODO: gestione utenti
 //TODO: (MOBILE) quando si effettua la ricerca, eliminare la mappa e inserire solo il campo di ricerca a tutto schermo (stile GMaps)
 export async function generateMetadata({params, searchParams}) {

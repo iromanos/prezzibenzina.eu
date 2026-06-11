@@ -12,7 +12,6 @@ import useLimit from "@/hooks/useLimit";
 import NominatimAutocomplete from "@/components/NominatimAutocomplete";
 import {useModalHistory} from "@/hooks/useModalHistory";
 import {useFilters} from "@/hooks/useFilters";
-import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Image from "next/image";
@@ -100,7 +99,7 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
                         <div className={'d-flex gap-2'}>
                             {carburante ?
                                 <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
-                                        onClick={() => setShow('carburante')}><LocalGasStationIcon className={'me-1'}/>
+                                        onClick={() => setShow('carburante')}>
                                     <strong>{carburante.tipo.toUpperCase()}</strong>
                                 </Button> : null}
                             <Button size="sm" variant="light" className={'border border-dark-subtle shadow-sm'}
