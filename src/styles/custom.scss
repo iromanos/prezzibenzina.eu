@@ -1,6 +1,8 @@
 $primary: #0F5398;
-$font-family-base: var(--font-quicksand), sans-serif;
-$headings-font-family: var(--font-montserrat), sans-serif;
+
+$font-family-base: var(--font-base), sans-serif;
+$headings-font-family: var(--font-header), sans-serif;
+
 $body-bg: #f8f9fa;
 $body-color: #212529;
 $line-height-base: 1.8;
@@ -157,4 +159,8 @@ $utilities: map-merge(
 .card-hover:hover {
   transform: translateY(-5px);
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+}
+
+h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+  font-weight: 800;
 }

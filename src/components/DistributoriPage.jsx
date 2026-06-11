@@ -29,6 +29,8 @@ export default async function DistributoriPage({params}) {
     const elencoCarburanti = getCarburanti();
     const elencoMarchi = await getMarchi();
 
+    console.log(elencoMarchi);
+
     if (elencoCarburanti[carburante] === undefined) {
         notFound();
     }
@@ -106,42 +108,57 @@ export default async function DistributoriPage({params}) {
                         intelligente.
                     </p></div>
             </div>
-            <ul className={'list-unstyled'}>
-                <li><CheckBoxIcon className={'text-success'}/> Dati aggiornati: {formatted}</li>
-                <li><CheckBoxIcon className={'text-success'}/> Prezzi ufficiali MIMIT</li>
-                <li><CheckBoxIcon className={'text-success'}/> Rifornimento veloce e sicuro</li>
-            </ul>
-            <div className={'d-flex gap-2 mb-4'}>
-                <a title={"Elenco distributori"} href={"#distributori"}
-                   className={'btn btn-primary'}><FormatListBulletedIcon/> Elenco
-                    distributori</a>
-                <a title={"Mappa"} href={"#mappa"} className={'btn btn-outline-primary'}><MapIcon/> Mappa</a>
-            </div>
 
+            <div className={'row'}>
+                <div className={'col-lg-7'}>
+                    <ul className={'list-unstyled'}>
+                        <li><CheckBoxIcon className={'text-success'}/> Dati aggiornati: {formatted}</li>
+                        <li><CheckBoxIcon className={'text-success'}/> Prezzi ufficiali MIMIT</li>
+                        <li><CheckBoxIcon className={'text-success'}/> Rifornimento veloce e sicuro</li>
+                    </ul>
+                    <div className={'d-flex gap-2 mb-4 d-lg-none'}>
+                        <a title={"Elenco distributori"} href={"#distributori"}
+                           className={'btn btn-primary'}><FormatListBulletedIcon/> Elenco
+                            distributori</a>
+                        <a title={"Mappa"} href={"#mappa"} className={'btn btn-outline-primary'}><MapIcon/> Mappa</a>
+                    </div>
+                </div>
+                <div className={'col-lg-5'}>
+                    <Display6977770298/>
+                </div>
+
+            </div>
             {comuni.length > 1 ? <LinkComuni
                 riepilogo={riepilogo}
                 comuni={comuni}/> : <></>}
 
             <div className={'mb-4'}>
-                <Display6977770298/>
             </div>
 
 
             <div className={'row'}>
-                <div id="distributori" className={'col-md-5 order-1'}>
-                    <ElencoDistributori Regione={regione} distributori={distributori}/>
-                </div>
-                <div id={"mappa"} className={'col-md-7 order-0'}>
-                    <div className={'d-flex gap-3 border-bottom mb-3'}>
-                        <LinkCarburanti params={riepilogo.request} carburanti={carburanti}/>
-                        <LinkMarchio params={riepilogo.request} marchi={marchi}/>
+
+                <div id={"mappa"} className={'col-lg-7 '}>
+                    <div className={'row '}>
+                        <div className={'col-md-4'}>
+                            <LinkCarburanti params={riepilogo.request} carburanti={carburanti}/>
+                        </div>
+                        <div className={'col-md-8'}>
+                            <LinkMarchio params={riepilogo.request} marchi={marchi}/></div>
                     </div>
                     {distributori.length !== 0 ? <Mappa distributori={distributori}/> : <></>}
                     <Display5745053645/>
-
+                    <div className={'card bg-white mb-3'}>
+                        <div className={'card-body'}>
                             <IntroTextVersione2 data={riepilogo} distributori={distributori}/>
-                    <Display6977770298/>
+                        </div>
+                    </div>
+                    <Display6977770298 className={'mb-3'}/>
 
+                </div>
+
+                <div id="distributori" className={'col-lg-5 '}>
+                    <ElencoDistributori Regione={regione} distributori={distributori}/>
                 </div>
             </div>
 

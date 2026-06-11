@@ -1,6 +1,5 @@
 'use client'
 import React, {useState} from 'react';
-import Link from 'next/link';
 import {getRouteLink} from "@/functions/helpers";
 import Button from "react-bootstrap/esm/Button";
 import useCarburante from "@/hooks/useCarburante";
@@ -49,7 +48,7 @@ export function LinkCarburanti({params, carburanti, onCarburanteChange = null}) 
             </Modal>
 
         }
-        <section className="mb-4">
+        <section className="mb-4 border p-2 rounded">
             <h2 className="h6 mb-3 text-uppercase">Carburante</h2>
             {carburante &&
             <Button
@@ -57,26 +56,6 @@ export function LinkCarburanti({params, carburanti, onCarburanteChange = null}) 
                 className={'text-uppercase'} variant={'primary'} size={'sm'}>
                 {carburante.icon} {carburante.tipo}</Button>}</section>
     </>;
-
-
-
-
-    return                 <section className="mb-4">
-        <h2 className="h6 mb-3 text-uppercase">Carburante</h2>
-        <div className="d-flex flex-wrap gap-1" role="group">
-            {carburanti.map((tipo) => {
-
-                    const link = getRouteLink(params.regione, tipo, params.marchio, params.provincia, params.comune);
-
-                return <Link
-                    title={link.title}
-                    className={`btn btn-sm ${params.carburante.toLowerCase() === tipo ? 'btn-primary' : 'btn-outline-primary'}`}
-
-                    key={tipo} href={link.link}>{tipo}</Link>
-            }
-            )}
-        </div></section>
-
 }
 
 

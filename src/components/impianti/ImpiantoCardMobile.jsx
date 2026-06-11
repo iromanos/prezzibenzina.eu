@@ -65,8 +65,8 @@ export default function ImpiantoCardMobile({impianto, cardClient = true, onClick
                             onClickPreferiti={onClickPreferiti}
                             vicini={false} isMobile={true} impianto={impianto}/>
                         <div
-                            className={'bg-success rounded-2 text-white py-1 px-2 ms-auto' + (isBest ? ' shadow' : '')}>
-                            <strong className={'fs-4'}>{prezzo.toFixed(3)} <span style={{
+                            className={'bg-success rounded-2 text-white px-2 ms-auto' + (isBest ? ' shadow' : '')}>
+                            <strong className={'fs-5'}>{prezzo.toFixed(3)} <span style={{
                                 fontSize: '.8rem'
                             }}>€/L</span></strong></div>
 

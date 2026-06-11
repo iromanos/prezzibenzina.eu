@@ -1,5 +1,5 @@
 import '../styles/custom.scss';
-import {Montserrat, Quicksand} from 'next/font/google';
+import {Montserrat} from 'next/font/google';
 import Head from "next/head";
 import {CookieConsentProvider} from "@/components/CookieConsentContext";
 import Analytics from "@/components/Analytics";
@@ -15,14 +15,14 @@ const montserrat = Montserrat({
     weight: "800",
     subsets: ['latin'],
     display: 'swap',
-    variable: '--font-montserrat',
+    variable: '--font-header',
 })
 
-const quicksand = Quicksand({
+const quicksand = Montserrat({
     weight: "400",
     subsets: ['latin'], // <-- Importante
     display: 'swap',
-    variable: '--font-quicksand', // <-- Definisci la variabile CSS
+    variable: '--font-base', // <-- Definisci la variabile CSS
 })
 
 export const metadata = {

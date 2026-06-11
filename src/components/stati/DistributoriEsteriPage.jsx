@@ -118,9 +118,11 @@ export default async function DistributoriEsteriPage({params}) {
                     <div className={'mb-4'}>
                         <Display6977770298/>
                     </div>
-
-                    <IntroTextEstero data={riepilogo} distributori={distributori}>
-                    </IntroTextEstero>
+                    <div className={'card bg-white mb-3'}>
+                        <div className={'card-body'}>
+                            <IntroTextEstero data={riepilogo} distributori={distributori}/>
+                        </div>
+                    </div>
                     <div className={'mb-4'}>
                         <Display6977770298/>
                     </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from 'react';
 import {getRouteLink, logDebug} from "@/functions/helpers";
+import Image from "next/image";
 
 
 export function LinkMarchio({marchi, params}){
@@ -11,7 +12,7 @@ export function LinkMarchio({marchi, params}){
 
     if(params.marchio === undefined) params.marchio = '';
 
-    return <section className="mb-4">
+    return <section className="mb-4 bg-warning-subtle p-2 border-warning border rounded">
         <h2 className="h6 mb-3 text-uppercase">Marchio</h2>
         <div className="d-flex flex-wrap gap-1" role="group">
                 {marchi.map((marchio) => {
@@ -21,9 +22,15 @@ export function LinkMarchio({marchi, params}){
                     return <Link
 
                         title={link.title}
-                        className={`btn btn-sm ${params.marchio === marchio.key ? 'btn-primary' : 'btn-outline-primary'}`}
+                        className={`btn btn-sm ${params.marchio === marchio.key ? 'btn-warning' : 'btn-outline-warning'}`}
 
-                        key={marchio.marchio} href={link.link}>{marchio.marchio}</Link>
+                        key={marchio.marchio} href={link.link}>
+
+                        {marchio.key !== '' && <Image
+                            className={'me-2'}
+                            width={24} height={24}
+                            src={process.env.NEXT_PUBLIC_IMAGE_ENDPOINT + `/impianto/logo/${marchio.key}/128`}
+                            alt={marchio.marchio}/>}{marchio.marchio}</Link>
 
 
 

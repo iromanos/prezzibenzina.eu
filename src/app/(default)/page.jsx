@@ -56,7 +56,7 @@ export default function Home() {
                         Prezzi aggiornati. Mappa interattiva. Distributori in Italia e Svizzera <span
                         className="fi fi-it"></span> <span className="fi fi-ch"></span>
                     </p>
-                    <div className={'d-flex gap-3 justify-content-center align-items-center flex-wrap'}>
+                    <div className={'d-lg-none d-flex gap-3 justify-content-center align-items-center flex-wrap'}>
                         <a title={'Inizia la ricerca'} href="/ricerca" className="btn btn-light shadow-sm">
                             <SearchIcon/> Inizia la ricerca
                         </a>
