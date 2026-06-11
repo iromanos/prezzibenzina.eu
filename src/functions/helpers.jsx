@@ -96,6 +96,10 @@ export function getLink(regione, carburante, marchio, provincia, comune) {
     return path[path.length - 1];
 }
 
+export async function getMetadataEstero({params}) {
+
+}
+
 export async function getMetadata({params}) {
     const {regione, carburante, marchio, sigla, comune} = await params;
 
