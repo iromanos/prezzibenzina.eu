@@ -15,6 +15,7 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import PlaceIcon from '@mui/icons-material/Place';
 import BoxComune from "../../components/home/BoxComune";
+import {AdsDesktop} from "../../components/ads/AdsDesktop";
 
 export async function generateMetadata() {
 
@@ -68,6 +69,9 @@ export default function Home() {
                 </div>
             </div>
 
+            <AdsDesktop className={'container mb-4'}>
+                <Display6977770298/>
+            </AdsDesktop>
             <div id='mappa' className={'container mb-4'}>
                 <MapSection/>
             </div>

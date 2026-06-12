@@ -15,6 +15,9 @@ import CampaignIcon from "@mui/icons-material/Campaign";
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 import InFeed4656802013 from "@/components/ads/InFeed-4656802013";
 import {BottomSheetSimple} from "@/components/BottomSheet";
+import Display6977770298 from "@/components/ads/Display-6977770298";
+import {AdsDesktop} from "@/components/ads/AdsDesktop";
+import {useLaptop} from "@/hooks/useMobile";
 
 export default function MappaClient({
                                         posizione,
@@ -31,6 +34,9 @@ export default function MappaClient({
     const [sheetHeight, setSheetHeight] = useState(0);
     const [footerHeight, setFooterHeight] = useState(58);
     const [rightWidth, setRightWidth] = useState(0);
+
+    const [topPosition, setTopPosition] = useState(0);
+
     const footerRef = useRef(null);
     const rightRef = useRef(null);
 
@@ -89,6 +95,14 @@ export default function MappaClient({
         }
     };
 
+    const {isLaptop} = useLaptop();
+
+    useEffect(() => {
+        if (isLaptop) {
+            setTopPosition(82);
+        } else setTopPosition(0);
+    }, [isLaptop]);
+
     if (viewState === null) return;
 
     return (
@@ -99,9 +113,17 @@ export default function MappaClient({
                     height: '100svh'
                 }}
 
-                className="position-relative w-100 bg-light overflow-hidden">
+                className="position-relative w-100 overflow-hidden">
                 <div className={"position-absolute top-0 start-0 w-100 h-100"}>
+                    {isLaptop && <div className={'border-bottom'} style={{
+                        marginRight: rightWidth
+                    }}>
+                        <AdsDesktop>
+                            <Display6977770298/>
+                        </AdsDesktop>
+                    </div>}
                     <MappaRisultati
+                        topPosition={topPosition}
                         cooperativeGestures={false}
                         onMapClick={() => {
                             setStep(0);

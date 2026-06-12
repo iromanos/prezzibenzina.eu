@@ -16,7 +16,14 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Image from "next/image";
 
-export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, initialFilters, onSelectStato}) {
+export default function FiltriMappaModerni({
+                                               onChange,
+                                               onSearch,
+                                               rightWidth = 0,
+                                               initialFilters,
+                                               onSelectStato,
+                                               topPosition = 0
+                                           }) {
 
     const [show, setShow] = useState(null);
     const [info, setInfo] = useState(false);
@@ -76,6 +83,11 @@ export default function FiltriMappaModerni({onChange, onSearch, rightWidth = 0, 
     return (
         <>
             <div
+
+                style={{
+                    marginTop: topPosition
+                }}
+
                 className="bg-transparent
                 d-flex
                 gap-3

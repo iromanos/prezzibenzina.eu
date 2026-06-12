@@ -22,7 +22,7 @@ export function LinkMarchio({marchi, params}){
                     return <Link
 
                         title={link.title}
-                        className={`btn btn-sm ${params.marchio === marchio.key ? 'btn-warning' : 'btn-outline-warning'}`}
+                        className={`btn btn-sm text-dark ${params.marchio === marchio.key ? 'btn-warning' : 'btn-outline-warning'}`}
 
                         key={marchio.marchio} href={link.link}>
 

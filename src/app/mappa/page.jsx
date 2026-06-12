@@ -4,6 +4,7 @@ import {capitalize} from "@/functions/helpers";
 import {cookies, headers} from "next/headers";
 import {notFound} from "next/navigation";
 import {getCanonicalUrl} from "@/functions/server";
+import {Verticale7119992054} from "../../components/ads/Verticale-7119992054";
 
 //TODO: gestione utenti
 //TODO: (MOBILE) quando si effettua la ricerca, eliminare la mappa e inserire solo il campo di ricerca a tutto schermo (stile GMaps)
@@ -121,10 +122,20 @@ export default async function Mappa({searchParams}) {
     console.log("REFERER", referer);
     console.log("QUERY PARAMS: ", queryParams);
 
-    return <MappaClient
-        client={referer}
-        zoomIniziale={zoom}
-        posizione={posizione}
-        initialFilters={initialFilters}/>;
+    return <>
+        <div className={'d-flex'}>
+            <div className={'col-1 bg-light-subtle border-end d-none d-xl-flex align-items-center'}>
+                <div className={'col'}>
+                    <Verticale7119992054/>
+                </div>
+            </div>
+            <div className={'col'}>
+                <MappaClient
+                    client={referer}
+                    zoomIniziale={zoom}
+                    posizione={posizione}
+                    initialFilters={initialFilters}/></div>
+        </div>
+    </>;
 
 }

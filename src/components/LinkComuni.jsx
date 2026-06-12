@@ -13,14 +13,14 @@ export default function LinkComuni({comuni, riepilogo}) {
 
     return <>
         <section className="mb-4">
-            <h2 className="h6 mb-3 text-uppercase">Città principali</h2>
+            <h2 className="h6 text-uppercase">Città principali</h2>
             <div className="d-flex flex-wrap gap-2">
                 {comuni.map((comune) => {
                     const link = getRouteLink(request.regione, request.carburante, marchio, request.provincia, comune);
 
                     return <Link
                         title={link.title}
-                        key={comune.id} className={'btn btn-sm btn-outline-secondary'}
+                        key={comune.id} className={'small'}
                                  href={link.link}>
                         {comune.description}
                     </Link>;

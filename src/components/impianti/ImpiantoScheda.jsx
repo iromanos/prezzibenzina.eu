@@ -25,7 +25,8 @@ import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 import Link from "next/link";
 import MapIcon from "@mui/icons-material/Map";
 import Image from "next/image";
-import InFeed4656802013 from "../ads/InFeed-4656802013";
+import {AdsDesktop} from "../ads/AdsDesktop";
+import Display6977770298 from "@/components/ads/Display-6977770298";
 
 export default function ImpiantoScheda({impianto, cookie}) {
     const [showPopup, setShowPopup] = useState(false);
@@ -119,7 +120,6 @@ export default function ImpiantoScheda({impianto, cookie}) {
                         <h5 className="text-primary fw-bold text-uppercase tracking-wider m-0">
                             {cookie.carburante}
                         </h5>
-                        {/*<Image src={URI_IMAGE + impianto.image} alt={impianto.bandiera} width={48} height={48}/>*/}
                     </div>
 
                     <div className="d-flex align-items-baseline">
@@ -132,7 +132,6 @@ export default function ImpiantoScheda({impianto, cookie}) {
                                       style={{width: '8px', height: '8px'}}></span>
                         <span>Live Data - Aggiornato oggi</span>
                     </div>
-                    <InFeed4656802013 className={'mt-4'}/>
                 </div>
             </div>
         </div>;
@@ -141,6 +140,10 @@ export default function ImpiantoScheda({impianto, cookie}) {
 
     return (
         <div className="container py-4">
+
+            <AdsDesktop className={'mb-3'}>
+                <Display6977770298/>
+            </AdsDesktop>
 
             <Breadcrumb
                 stato={impianto.stato}
@@ -162,7 +165,6 @@ export default function ImpiantoScheda({impianto, cookie}) {
                     </div>
                     <BoxPrezzo className={'d-lg-none'}/>
                     <ImpiantoDescrizione impianto={impianto}/>
-                    <Display5745053645/>
 
                     <h2 className={'h5'}>Indirizzo</h2>
                     <p>{indirizzo}{impianto.comune ? `, ${ucwords(impianto.comune)}` : null} {provincia ? `(${provincia})` : null}</p>

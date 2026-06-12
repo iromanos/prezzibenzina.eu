@@ -3,7 +3,7 @@ import DistributoriEsteriPage from "@/components/stati/DistributoriEsteriPage";
 import {getMetadataEstero, logDebug} from "@/functions/helpers";
 import Footer from "@/components/Footer";
 
-
+//TODO: inserire i metadata
 export async function generateMetadata({params}) {
     return getMetadataEstero({params});
 }

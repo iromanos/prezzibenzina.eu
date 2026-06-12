@@ -105,6 +105,8 @@ export default function CookieBanner({forMobile = false}) {
         ><CookieIcon className={'text-primary'}/></Button>;
     }
 
+    if (forMobile !== isMobile) return <></>;
+
     return <Modal
         size={'lg'} centered show={show}>
         <Modal.Header>

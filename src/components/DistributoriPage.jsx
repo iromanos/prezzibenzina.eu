@@ -145,10 +145,10 @@ export default async function DistributoriPage({params}) {
 
                 <div id={"mappa"} className={'col-lg-7 '}>
                     <div className={'row '}>
-                        <div className={'col-md-4'}>
+                        <div className={'col-auto'}>
                             <LinkCarburanti params={riepilogo.request} carburanti={carburanti}/>
                         </div>
-                        <div className={'col-md-8'}>
+                        <div className={'col'}>
                             <LinkMarchio params={riepilogo.request} marchi={marchi}/></div>
                     </div>
                     {distributori.length !== 0 ? <Mappa distributori={distributori}/> : <></>}

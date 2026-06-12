@@ -9,7 +9,6 @@ import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 import dynamic from 'next/dynamic';
 import Image from "next/image";
 import useUltimaPosizione from "@/hooks/useUltimaPosizione";
-import useInteraction from "@/hooks/useInteraction";
 import InFeed4656802013 from "@/components/ads/InFeed-4656802013";
 import Display6977770298 from "@/components/ads/Display-6977770298";
 import ImpiantoCardMobile from "../impianti/ImpiantoCardMobile";
@@ -34,15 +33,21 @@ export function MapSection() {
 
     const [viewState, setViewState] = useState(null);
 
+    const posizioneDefault = {
+        lng: 9.1896346,
+        lat: 45.4641943,
+        zoom: 12
+    }
+
 
     useEffect(() => {
         if (hookUltimaPosizione.posizione === null) return;
 
         if (hookUltimaPosizione.posizione === false) {
             setViewState({
-                latitude: stato.lat,
-                longitude: stato.lng,
-                zoom: stato.zoom,
+                latitude: posizioneDefault.lat,
+                longitude: posizioneDefault.lng,
+                zoom: posizioneDefault.zoom,
             });
             return;
         }
@@ -54,7 +59,7 @@ export function MapSection() {
         });
     }, [hookUltimaPosizione.posizione]);
 
-    const {active} = useInteraction();
+    const active = true; // useInteraction();
 
     return (
         <div className="mb-4">

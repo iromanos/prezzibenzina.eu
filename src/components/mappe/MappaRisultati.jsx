@@ -48,7 +48,8 @@ const MappaRisultati = forwardRef(({
                                        showFullScreen = false,
                                        onMapClick,
                                        cooperativeGestures = true,
-                                       headerHeight = 120
+                                       headerHeight = 120,
+                                       topPosition = 0
                                    }, ref) => {
 
     useImperativeHandle(ref, () => ({
@@ -129,7 +130,7 @@ const MappaRisultati = forwardRef(({
     useEffect(() => {
         const handleFocus = e => {
 
-            const isMobile = window.innerWidth < 768;
+            const isMobile = window.innerWidth <= 768;
 
             setLoadMarker(false);
             const canvas = mapRef.current?.getMap()?.getCanvas();
@@ -544,6 +545,7 @@ const MappaRisultati = forwardRef(({
             )}
             {showFilter ?
                     <FiltriMappaModerni
+                        topPosition={topPosition}
                         initialFilters={filter}
                         rightWidth={rightWidth}
                         onSelectStato={(c) => {

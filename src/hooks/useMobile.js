@@ -9,7 +9,7 @@ export default function useMobile() {
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
-            const mobile = width < 768;
+            const mobile = width <= 768;
             setIsMobile(mobile);
         };
 
@@ -20,5 +20,25 @@ export default function useMobile() {
 
 
     return {isMobile};
+
+}
+
+export function useLaptop() {
+    const [isLaptop, setIsLaptop] = useState(null);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const width = window.innerWidth;
+            const mobile = width > 768 && width <= 1024;
+            setIsLaptop(mobile);
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []); // Aggiunto onWidthChange alle dipendenze
+
+
+    return {isLaptop};
 
 }
