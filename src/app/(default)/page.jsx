@@ -41,8 +41,6 @@ export async function generateMetadata() {
     };
 }
 
-//TODO: inserire sotto la mappa, elenco dei principali comuni italiani
-
 export default function Home() {
     return (
         <>

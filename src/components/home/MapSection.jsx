@@ -31,26 +31,14 @@ export function MapSection() {
 
     const hookUltimaPosizione = useUltimaPosizione();
 
+
     const [viewState, setViewState] = useState(null);
-
-    const posizioneDefault = {
-        lng: 9.1896346,
-        lat: 45.4641943,
-        zoom: 12
-    }
-
 
     useEffect(() => {
         if (hookUltimaPosizione.posizione === null) return;
 
-        if (hookUltimaPosizione.posizione === false) {
-            setViewState({
-                latitude: posizioneDefault.lat,
-                longitude: posizioneDefault.lng,
-                zoom: posizioneDefault.zoom,
-            });
-            return;
-        }
+        if (hookUltimaPosizione.posizione === false) return;
+
         console.log('AGGIORNA VIEW STATE CON ULTIMA POSIZIONE: ', hookUltimaPosizione.posizione);
         setViewState({
             latitude: hookUltimaPosizione.posizione.center.lat,
@@ -60,6 +48,9 @@ export function MapSection() {
     }, [hookUltimaPosizione.posizione]);
 
     const active = true; // useInteraction();
+
+
+    console.log(`VIEWSTATE: ${viewState}`);
 
     return (
         <div className="mb-4">
@@ -93,7 +84,7 @@ export function MapSection() {
                                 </div>
 
                             </div>}
-                        {active &&
+                        {viewState &&
                             <MappaRisultati
                                 onFetchDistributori={(record) => {
                                     setRecord(record);

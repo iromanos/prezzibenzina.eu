@@ -29,6 +29,7 @@ import {getVectorTileLayer} from "@/functions/vector-tiles";
 import TuttoSchermoButton from "@/components/TuttoSchermoButton";
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 import useUltimaPosizione from "@/hooks/useUltimaPosizione";
+import {logDebug} from "@/functions/helpers";
 
 const MappaRisultati = forwardRef(({
                                        posizione,
@@ -49,8 +50,12 @@ const MappaRisultati = forwardRef(({
                                        onMapClick,
                                        cooperativeGestures = true,
                                        headerHeight = 120,
-                                       topPosition = 0
+                                       topPosition = 0,
+                                       zoomLimit = 9.5,
+                                       stato = null
                                    }, ref) => {
+
+    console.log(`posizione: ${posizione}`);
 
     useImperativeHandle(ref, () => ({
         flyTo: (options) => {
@@ -80,7 +85,7 @@ const MappaRisultati = forwardRef(({
     const {carburante} = useCarburante(initialFilters.carburante);
     const {limit} = useLimit();
     const [filter, setFilter] = useState(initialFilters);
-    const [zoom, setZoom] = useState(posizione.zoom);
+    const [zoom, setZoom] = useState(posizione?.zoom);
     const [bounds, setBounds] = useState(null);
     const [fadeOutMarker, setFadeOutMarker] = useState(false);
 
@@ -248,6 +253,14 @@ const MappaRisultati = forwardRef(({
         if (showRoute === true) return;
 
         const riquadroAttuale = calcolaBounds();
+        const ultimoRiquadro = ultimoRiquadroRef.current;
+        /*
+        if (isReadOnly) {
+            await fetchImpianti(riquadroAttuale, filter, ultimoRiquadro);
+            bboxUnion(ultimoRiquadro, riquadroAttuale);
+            return;
+        }*/
+
 
         const center = mapRef.current.getCenter();
         const zoom = mapRef.current.getZoom();
@@ -255,9 +268,12 @@ const MappaRisultati = forwardRef(({
         hookUltimaPosizione.aggiornaPosizione({center, zoom});
 
 
+        //console.log(center);
+        //console.log(zoom);
+
+
         onMoveEnd?.(center.lat, center.lng, zoom);
 
-        const ultimoRiquadro = ultimoRiquadroRef.current;
 
         const hasMovedEnough = ultimoRiquadro != null ? !isContained(riquadroAttuale, ultimoRiquadro) : true;
         setBounds(toEnvelopeArray(riquadroAttuale));
@@ -266,6 +282,7 @@ const MappaRisultati = forwardRef(({
         try {
 
             const payload = {
+                stato: stato,
                 lat: posizioneAttuale.lat,
                 lng: posizioneAttuale.lon,
                 bounds: riquadroAttuale,
@@ -282,7 +299,7 @@ const MappaRisultati = forwardRef(({
             setPrezzoMedio(prezzoMedio.prezzoMedio);
 
             let record = [];
-            if (zoom > 9.5) {
+            if (zoom >= zoomLimit) {
                 if (filter.bookmark) {
                     const dati = await getPreferiti(preferiti);
                     record = dati.impianti;
@@ -459,11 +476,11 @@ const MappaRisultati = forwardRef(({
 
     useEffect(() => {
         if (posizioneAttuale === null) return;
-        console.log(posizioneAttuale);
-        console.log(initialFilters.position);
+        //console.log(posizioneAttuale);
+        //console.log(initialFilters.position);
         if (initialFilters.position.lat === -1) return;
 
-        console.log("IMPOSTO POSIZIONE INIZIALE DA GEO");
+        //console.log("IMPOSTO POSIZIONE INIZIALE DA GEO");
 
         mapRef.current.flyTo({
             center: [initialFilters.position.lng, initialFilters.position.lat], zoom: initialFilters.position.zoom,
@@ -535,6 +552,7 @@ const MappaRisultati = forwardRef(({
     useMemo(() => {
         const impianto = distributori[0]?.properties;
         setImpiantoMigliore(impianto || null);
+
     }, [distributori]);
 
     // log('MappaRisultati: BUILD');
@@ -569,7 +587,7 @@ const MappaRisultati = forwardRef(({
                             });
                         }}
                         onSearch={(place) => {
-                            console.log("DESTINAZIONE", place);
+                            //console.log("DESTINAZIONE", place);
                             setDestinazioneFinale(place);
                             setFadeOutMarker(true);
                             setRoute(null);
@@ -599,7 +617,7 @@ const MappaRisultati = forwardRef(({
                             const currentFilter = {
                                 ...filter, ...state
                             };
-                            console.log("FILTER CHANGED: ", currentFilter);
+                            //console.log("FILTER CHANGED: ", currentFilter);
                             setFilter(currentFilter);
                         }}/>
                 : null}
@@ -636,6 +654,7 @@ const MappaRisultati = forwardRef(({
             </div>
 
             <Map
+                interactive={!isReadOnly}
                 onClick={handleMapClick}
                 ref={mapRef}
                 attributionControl={false}
@@ -651,6 +670,25 @@ const MappaRisultati = forwardRef(({
 
                     const map = mapRef.current;
                     map.setPadding(padding);
+
+                    if (isReadOnly) {
+
+                        const coords = distributori
+                            .filter((d) => Number.isFinite(d.properties.longitudine) && Number.isFinite(d.properties.latitudine))
+                            .map((d) => [d.properties.longitudine, d.properties.latitudine]);
+
+                        const b = new maplibregl.LngLatBounds();
+
+                        coords.forEach((c) => b.extend(c));
+
+                        logDebug("bboX: " + JSON.stringify(coords));
+                        logDebug("bboX: " + JSON.stringify(distributori));
+
+                        map.fitBounds(b);
+
+                        //console.log(initState);
+                    }
+
 
                 }}
                 initialViewState={posizione}

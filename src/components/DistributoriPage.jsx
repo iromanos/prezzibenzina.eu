@@ -19,6 +19,8 @@ import {ucwords} from "@/functions/helpers";
 import Image from "next/image";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import {AdsDesktop} from "@/components/ads/AdsDesktop";
+import * as turf from '@turf/turf';
+
 
 export default async function DistributoriPage({params}) {
 
@@ -48,7 +50,23 @@ export default async function DistributoriPage({params}) {
 
     const response = await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
 
-    const distributori = await response.json();
+    const record = await response.json();
+
+    const distributori = record.map(record => {
+        record.stato = "IT";
+        record.distance_km = null;
+        return {
+            geometry: {
+                coordinates: [
+                    record.latitudine,
+                    record.longitudine
+                ]
+            },
+            properties: record
+        };
+    })
+
+    console.log(distributori);
 
     const riepilogo = await getSeoRegione(regione, carburante, marchio, sigla, comune);
 
@@ -82,6 +100,16 @@ export default async function DistributoriPage({params}) {
                 ? `in provincia di ${request.provincia_descrizione}`
                 : `in ${ucwords(scope.valore)}`;
 
+    const coords = distributori
+        .filter((d) => Number.isFinite(d.properties.longitudine) && Number.isFinite(d.properties.latitudine))
+        .map((d) => [d.properties.longitudine, d.properties.latitudine]);
+
+
+    const centerFeature = turf.center(turf.points(coords));
+    const centerCoordinates = centerFeature.geometry.coordinates; // [Lng, Lat]
+
+
+    console.log(centerCoordinates);
 
     return <>
         <Header/>
@@ -146,12 +174,22 @@ export default async function DistributoriPage({params}) {
                 <div id={"mappa"} className={'col-lg-7 '}>
                     <div className={'row '}>
                         <div className={'col-auto'}>
-                            <LinkCarburanti params={riepilogo.request} carburanti={carburanti}/>
+                            <div className={'mb-4 border p-2 rounded'}>
+                                <LinkCarburanti params={riepilogo.request} carburanti={carburanti}/></div>
                         </div>
                         <div className={'col'}>
                             <LinkMarchio params={riepilogo.request} marchi={marchi}/></div>
                     </div>
-                    {distributori.length !== 0 ? <Mappa distributori={distributori}/> : <></>}
+                    {distributori.length !== 0 ? <Mappa
+                        carburante={carburante}
+                        posizione={{
+                            longitude: centerCoordinates[0],
+                            latitude: centerCoordinates[1],
+                            zoom: 9,
+                            fitBoundsOptions: {padding: 20}
+                        }}
+
+                        distributori={distributori}/> : <></>}
                     <Display5745053645/>
                     <div className={'card bg-white mb-3'}>
                         <div className={'card-body'}>

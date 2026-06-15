@@ -39,13 +39,13 @@ export default function Header() {
                 {/* Desktop menu */}
                     <ul className="nav d-none d-lg-flex">
                         <li className="nav-item"><Link title={"Preferiti"} href="/preferiti"
-                                                       className="nav-link text-white">Preferiti</Link></li>
+                                                       className="btn btn-primary">Preferiti</Link></li>
                         <li className="nav-item"><Link title={"Ricerca"} href="/ricerca"
-                                                       className="nav-link text-white">Ricerca</Link></li>
+                                                       className="btn btn-primary">Ricerca</Link></li>
                         <li className="nav-item"><Link title={"Mappa"} href="/mappa"
-                                                       className="nav-link text-white">Mappa</Link></li>
+                                                       className="btn btn-primary">Mappa</Link></li>
                         <li className="nav-item"><Link title={"Contatti"} href="/contatti"
-                                                       className="nav-link text-white">Contatti</Link></li>
+                                                       className="btn btn-primary">Contatti</Link></li>
                 </ul>
 
                 {/* CTA desktop */}

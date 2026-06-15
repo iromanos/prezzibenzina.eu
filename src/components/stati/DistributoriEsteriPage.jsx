@@ -1,21 +1,47 @@
 import Header from "@/components/Header";
-import {getCarburanti, getImpiantiByDistance, getMarchi, getSeoRegioneEstera} from "@/functions/api";
+import {getCarburanti, getElencoStati, getImpiantiByDistance, getMarchi, getSeoRegioneEstera} from "@/functions/api";
 import React from "react";
 import ElencoDistributori from "@/components/ElencoDistributori";
 import Mappa from "@/components/Mappa";
 import MapIcon from '@mui/icons-material/Map';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import {notFound} from "next/navigation";
-import {logDebug, ucwords} from "@/functions/helpers";
+import {notFound, redirect} from "next/navigation";
+import {ucwords} from "@/functions/helpers";
 import {IntroTextEstero} from "@/components/IntroTextEstero";
 import {FooterMobile} from "@/components/FooterMobile";
 import FooterHome from "@/components/home/FooterHome";
 import DistributoriEsteriClient from "@/components/stati/DistributoriEsteriClient";
 import Display6977770298 from "@/components/ads/Display-6977770298";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import {AdsDesktop} from "@/components/ads/AdsDesktop";
 
 export default async function DistributoriEsteriPage({params}) {
 
     const {stato, regione, carburante, marchio} = await params;
+
+    const elencoCarburanti = getCarburanti();
+    const elencoMarchi = await getMarchi();
+
+    const elencoStati = getElencoStati();
+
+    const queryStati = elencoStati.filter(s => s.key === stato);
+
+    if (queryStati.length === 0) {
+        notFound();
+    }
+    const recordStato = queryStati[0];
+
+    console.log(elencoCarburanti);
+
+    if (elencoCarburanti[carburante] === undefined) {
+        redirect(`/${recordStato.key}/benzina`);
+    }
+
+    if (marchio !== undefined) {
+        if (elencoMarchi.filter(m => m.id === marchio).length === 0) {
+            notFound();
+        }
+    }
 
     const responseSEO = await getSeoRegioneEstera(stato, regione, carburante);
 
@@ -25,38 +51,21 @@ export default async function DistributoriEsteriPage({params}) {
 
     const riepilogo = await responseSEO.json();
 
-    const elencoCarburanti = getCarburanti();
-    const elencoMarchi = await getMarchi();
 
-    if (elencoCarburanti[carburante] === undefined) {
-        notFound();
-    }
-
-    if (marchio !== undefined) {
-        if (elencoMarchi.filter(m => m.id === marchio).length === 0) {
-            notFound();
-        }
-    }
-
-
-    const response = await getImpiantiByDistance({stato: stato, carburante: carburante, limit: 10});
+    const response = await getImpiantiByDistance({stato: recordStato.key, carburante: carburante, limit: 10});
 
     console.log(response);
 
     const records = await response.json();
 
     const distributori = records.map(record => {
-        const impianto = record.properties;
-        impianto.latitudine = parseFloat(record.properties.latitudine);
-        impianto.longitudine = parseFloat(record.properties.longitudine);
-
-        logDebug(impianto);
-
-        return impianto;
+        record.properties.distance_km = null;
+        record.properties.longitudine = parseFloat(record.properties.longitudine);
+        record.properties.latitudine = parseFloat(record.properties.latitudine);
+        return record;
     })
 
-    logDebug(distributori);
-
+    console.log(distributori);
 
     const date = new Date(riepilogo.dataAggiornamento);
 
@@ -84,26 +93,17 @@ export default async function DistributoriEsteriPage({params}) {
     */
     return <>
         <Header/>
+        <div className="container py-4">
 
-        <div className="container py-5">
+            <AdsDesktop className={'mb-3'}>
+                <Display6977770298/>
+            </AdsDesktop>
 
             <h1>Prezzi {carburante} {marchio ? ` ${marchio}` : ''} {localita}</h1>
             <p className="lead text-muted">
                 Scopri i <strong>prezzi</strong> aggiornati della <strong>{carburante}</strong> {marchio ?
                 <strong>{marchio}</strong> : ''} {localita} e pianifica il tuo rifornimento in modo intelligente.
             </p>
-            <ul className={'list-unstyled'}>
-                <li>✅ Dati aggiornati: {formatted}</li>
-                <li>✅ Prezzi ufficiali MIMIT</li>
-                <li>✅ Rifornimento veloce e sicuro</li>
-            </ul>
-            <div className={'d-flex gap-2 mb-4'}>
-                <a title={"Elenco distributori"} href={"#distributori"}
-                   className={'btn btn-primary '}><FormatListBulletedIcon/> Elenco
-                    distributori</a>
-                <a title={"Mappa"} href={"#mappa"} className={'btn btn-outline-primary '}><MapIcon/> Mappa</a>
-            </div>
-
 
 
             <div className={'row'}>
@@ -112,9 +112,29 @@ export default async function DistributoriEsteriPage({params}) {
                 </div>
                 <div id={"mappa"} className={'col-md-8 order-0'}>
 
-                    <DistributoriEsteriClient riepilogo={riepilogo}/>
+                    <ul className={'list-unstyled'}>
+                        <li><CheckBoxIcon className={'text-success'}/> Dati aggiornati: {formatted}</li>
+                        <li><CheckBoxIcon className={'text-success'}/> Prezzi ufficiali MIMIT</li>
+                        <li><CheckBoxIcon className={'text-success'}/> Rifornimento veloce e sicuro</li>
+                    </ul>
+                    <div className={'d-flex gap-2 mb-4 border-bottom pb-4'}>
+                        <a title={"Elenco distributori"} href={"#distributori"}
+                           className={'btn btn-primary '}><FormatListBulletedIcon/> Elenco
+                            distributori</a>
+                        <a title={"Mappa"} href={"#mappa"} className={'btn btn-outline-primary '}><MapIcon/> Mappa</a>
+                        <div className={'ms-auto'}><DistributoriEsteriClient riepilogo={riepilogo}/></div>
+                    </div>
 
-                    {distributori.length !== 0 ? <Mappa distributori={distributori}/> : <></>}
+                    {distributori.length !== 0 ?
+                        <Mappa
+                            stato={recordStato.key}
+                            carburante={carburante}
+                            posizione={{
+                                zoom: recordStato.zoom,
+                                latitude: recordStato.lat,
+                                longitude: recordStato.lng
+                            }} distributori={distributori}/> :
+                        <></>}
                     <div className={'mb-4'}>
                         <Display6977770298/>
                     </div>

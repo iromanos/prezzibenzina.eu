@@ -22,7 +22,6 @@ export default function ImpiantoCard({impianto, cardClient = true, onClickPrefer
         link
     } = impianto;
 
-
     const schedaUrl = `/impianto/${link}`;
 
     return (
@@ -52,6 +51,7 @@ export default function ImpiantoCard({impianto, cardClient = true, onClickPrefer
                         <ImpiantoCardClient
                             onClickPreferiti={onClickPreferiti}
                             vicini={false} isMobile={true} impianto={impianto}/>
+
                         <div className={'bg-success rounded-2 text-white px-2 ms-auto'}>
                             <strong className={'fs-3'}>{prezzo.toFixed(3)} <span style={{
                                 fontSize: '.8rem'

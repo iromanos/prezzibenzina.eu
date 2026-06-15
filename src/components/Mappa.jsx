@@ -1,62 +1,51 @@
 'use client'
 
-import MappaWrapper from "@/components/MappaWrapper";
-import React, {useEffect, useRef, useState} from "react";
-import {logDebug} from "@/functions/helpers";
+import React, {useRef, useState} from "react";
 import MapIcon from "@mui/icons-material/Map";
 
 import Button from 'react-bootstrap/Button';
+import MappaRisultati from "./mappe/MappaRisultati";
 
-export default function Mappa({distributori, title = true, height = '75vh'}) {
+export default function Mappa({
+                                  distributori,
+                                  posizione,
+                                  title = true,
+                                  carburante,
+                                  limit = 10,
+                                  stato = null,
+                                  bounds = null
+                              }) {
 
     const containerRef = useRef(null);
-    const [isVisible, setIsVisible] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
 
     const [state, setState] = useState();
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    logDebug("LOAD MAP")
-                    setIsVisible(true);
-                    observer.disconnect(); // disattiva dopo il primo trigger
-                }
-            },
-            {
-                root: null,
-                rootMargin: '0px 0px 180px 0px',
-                threshold: 0.1,
-            }
-        );
-
-        if (containerRef.current) {
-            observer.observe(containerRef.current);
-        }
-
-        return () => observer.disconnect();
-    }, []);
-
-
-
     return <section className={"mb-4"}>
         {title ? <h2 className="h6 mb-3 text-uppercase">Mappa dei distributori</h2> : null}
-        <div ref={containerRef} className={'border rounded position-relative mb-4 vh-75'}
-            // style={{height: height}}
-        >
-            {isVisible ? <><MappaWrapper
-                onMapLoad={(center, zoom) => {
-                    setState({
-                        center: center, zoom: zoom
-                    })
-                }}
-                distributori={distributori}/>
+        <div ref={containerRef} className={'border rounded position-relative mb-4 vh-75'}>
+            {isVisible ? <><MappaRisultati
+                cooperativeGestures={false}
+                showPositionButton={false}
+                isReadOnly={true}
+                stato={stato}
+                zoomLimit={posizione.zoom}
+                posizione={posizione}
+                distributoriIniziali={distributori}
+                showFullScreen={true}
+                showLinkHome={false}
+                showFilter={false}
+                headerHeight={0}
+                initialFilters={
+                    {carburante: carburante, limite: limit, 'position': {lat: -1, lng: -1}}
+                }
+            />
             </> : <></>}</div>
 
 
         <Button onClick={event => {
-            if (state) {
-                const uri = `lat=${state.center.lat}&lng=${state.center.lng}&zoom=${state.zoom}`;
+            if (posizione) {
+                const uri = `lat=${posizione.latitude}&lng=${posizione.longitude}&zoom=${posizione.zoom}`;
                 window.location.href = `/mappa?${uri}`;
             }
         }} variant={'success'}><MapIcon/> Mostra tutti gli impianti</Button>

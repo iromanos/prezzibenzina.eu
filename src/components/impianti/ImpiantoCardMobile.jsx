@@ -41,8 +41,11 @@ export default function ImpiantoCardMobile({impianto, cardClient = true, onClick
                                 <><p className="text-muted small mb-0">
                                     {indirizzo}{comune != null ? ', ' + comune : null} {provincia != null ? `(${provincia})` : null}
                                 </p>
+
+                                    {impianto.distance_km !== null &&
+
                                     <span
-                                        className={'small text-muted align-items-center d-flex gap-1'}><DirectionsCarFilledIcon/> {impianto.distance_km.toFixed(3)} km</span></>
+                                        className={'small text-muted align-items-center d-flex gap-1'}><DirectionsCarFilledIcon/> {impianto.distance_km.toFixed(3)} km</span>}</>
                             }
                             {impianto.stato === "IT" && <small className="text-muted">{gestore}</small>}
                         </div>
@@ -56,8 +59,9 @@ export default function ImpiantoCardMobile({impianto, cardClient = true, onClick
                     {indirizzo}{comune != null ? ', ' + comune : null} {provincia != null ? `(${provincia})` : null}
                 </p>
                         <p className="text-muted small mb-0 align-items-center d-flex gap-1">
-                            <DirectionsCarFilledIcon/> {impianto.distance_km.toFixed(3)} km
-                    - <LocalGasStationIcon/> {tipo_impianto != null ? `${tipo_impianto}` : null}
+                            {impianto.distance_km !== null && <>
+                                <DirectionsCarFilledIcon/> {impianto.distance_km.toFixed(3)} km
+                                - </>}<LocalGasStationIcon/> {tipo_impianto != null ? `${tipo_impianto}` : null}
                         </p></>}
                 {cardClient &&
                     <div className="d-flex flex-wrap gap-2 mt-2 small align-items-center">

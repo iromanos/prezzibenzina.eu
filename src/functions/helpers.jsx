@@ -1,4 +1,4 @@
-import {getCarburanti, getDistributoriRegione, getMarchi, getSeoRegione} from "@/functions/api";
+import {getCarburanti, getDistributoriRegione, getImpiantiByDistance, getMarchi, getSeoRegione} from "@/functions/api";
 import {notFound} from "next/navigation";
 import slugify from 'slugify';
 
@@ -97,6 +97,73 @@ export function getLink(regione, carburante, marchio, provincia, comune) {
 }
 
 export async function getMetadataEstero({params}) {
+    const {carburante} = await params;
+    const carburanti = getCarburanti();
+
+    if (carburanti[carburante] === undefined) {
+        notFound();
+    }
+
+    const stato = params.stato;
+
+    const response = await getImpiantiByDistance({stato: stato, carburante: carburante, limit: 25});
+
+    const distributori = await response.json();
+    const descrizioneCarburante = carburante ? ucwords(carburante) : 'carburante';
+
+    const localizzazione = ' in ' + ucwords(stato);
+
+    const titolo = `Prezzi ${descrizioneCarburante} ${localizzazione} | Distributori attivi`;
+    const descrizione = `Consulta i prezzi aggiornati di ${carburante} ${localizzazione}. 
+                Trova i distributori più convenienti e naviga per città e tipo di carburante.`;
+
+    const canonicalUrl = {
+        'link': stato + '/' + carburante
+    };
+    const imageUrl = '/assets/logo.png';
+
+    logDebug("CANONICAL URL: " + canonicalUrl.link);
+
+    const microdata = generateMicrodataGraph(distributori);
+
+    return {
+        other: {
+            'application/ld+json': JSON.stringify(microdata),
+        },
+        title: titolo,
+        description: descrizione,
+        alternates: {
+            canonical: canonicalUrl.link,
+            languages: {
+                'it': canonicalUrl.link,
+                'x-default': canonicalUrl.link,
+            },
+        },
+        openGraph: {
+            title: titolo,
+            description: descrizione,
+            url: canonicalUrl.link,
+            siteName: 'PrezziBenzina.eu',
+
+            images: [
+                {
+                    url: imageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: titolo,
+                },
+            ],
+            locale: 'it_IT',
+            type: 'website',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: titolo,
+            description: descrizione,
+            images: [imageUrl],
+        },
+    };
+
 
 }
 

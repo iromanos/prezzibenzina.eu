@@ -96,16 +96,18 @@ export function getElencoStati() {
         icon: <span className="fi fi-it"/>,
         lat: 42.5043,
         lng: 12.5726,
-        zoom: 5
+        zoom: 5,
+        key: 'italia'
     });
 
     r.push({
         id: 'ch',
         name: 'Svizzera',
         icon: <span className="fi fi-ch"/>,
-        lat: 46.9481,
-        lng: 7.4474,
-        zoom: 7
+        lat: 46.74050975478198,
+        lng: 8.178787663331718,
+        zoom: 6.80,
+        key: 'svizzera'
     });
 
     r.push({
@@ -114,7 +116,8 @@ export function getElencoStati() {
         icon: <PublicIcon/>,
         lat: 42.5043,
         lng: 12.5726,
-        zoom: 4.8
+        zoom: 4.8,
+        key: 'tutti'
     });
 
     return r;

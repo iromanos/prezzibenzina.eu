@@ -6,7 +6,7 @@ import useCarburante from "@/hooks/useCarburante";
 import Modal from "react-bootstrap/esm/Modal";
 import {getElencoCarburanti} from "@/functions/api";
 
-export function LinkCarburanti({params, carburanti, onCarburanteChange = null}) {
+export function LinkCarburanti({params, carburanti, onCarburanteChange = null, showTitle = true, size = 'sm'}) {
 
     const {carburante, setCarburante} = useCarburante();
 
@@ -48,12 +48,14 @@ export function LinkCarburanti({params, carburanti, onCarburanteChange = null}) 
             </Modal>
 
         }
-        <section className="mb-4 border p-2 rounded">
-            <h2 className="h6 mb-3 text-uppercase">Carburante</h2>
+        <section
+            // className="mb-4 border p-2 rounded"
+        >
+            {showTitle && <h2 className="h6 mb-3 text-uppercase">Carburante</h2>}
             {carburante &&
             <Button
                 onClick={() => setModal(true)}
-                className={'text-uppercase'} variant={'primary'} size={'sm'}>
+                className={'text-uppercase'} variant={'primary'} size={size}>
                 {carburante.icon} {carburante.tipo}</Button>}</section>
     </>;
 }

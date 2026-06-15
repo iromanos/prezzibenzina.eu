@@ -123,7 +123,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
                     </div>
 
                     <div className="d-flex align-items-baseline">
-                        <span className="h1 display-1 fw-bolder text-dark lh-1">{impianto.prezzo}</span>
+                        <span className="h1 display-1 fw-bolder text-dark lh-1">{impianto.prezzo.toFixed(3)}</span>
                         <span className="fs-4 text-secondary ms-2 fw-normal">€/L</span>
                     </div>
 
