@@ -1,10 +1,22 @@
 'use client'
-import {useState} from "react";
-import BottomSheet from "../../components/BottomSheet";
+import {useEffect, useState} from "react";
+
+import {BottomSheet, useBottomSheet} from "@plainsheet/react";
 
 export default function Demo() {
 
     const [isSheetOpen, setIsSheetOpen] = useState(true);
+    const bottomSheet = useBottomSheet({
+        shouldCloseOnOutsideClick: false,
+    });
+
+    useEffect(() => {
+        bottomSheet.open();
+    }, []);
+
+    useEffect(() => {
+        bottomSheet.open();
+    }, [bottomSheet.isOpen]);
 
     return (
         <>
@@ -20,7 +32,12 @@ export default function Demo() {
                     justify-content-center text-muted bg-secondary bg-opacity-25 h-100 w-100">
                     <h5>Mappa</h5>
                 </div>
-                <BottomSheet isOpen={isSheetOpen} onClose={() => setIsSheetOpen(false)}/>
+                <BottomSheet
+
+
+                    {...bottomSheet.props} >
+                    &nbsp; Hello from Bottom Sheet 🦭
+                </BottomSheet>
             </div>
         </>
     )

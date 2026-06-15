@@ -164,3 +164,17 @@ $utilities: map-merge(
 h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
   font-weight: 800;
 }
+
+
+/* Sostituisci la classe con quella effettiva del foglio/overlay se differisce */
+.plain-sheet-backdrop,
+div[class*="plain-sheet-overlay"] {
+  pointer-events: none; /* Rende lo sfondo trasparente ai clic */
+  background-color: transparent !important; /* Rimuove l'oscuramento se desiderato */
+}
+
+/* IMPORTANTE: Riattiva i clic all'interno del contenuto del bottom sheet */
+.plain-sheet-container,
+.plain-sheet-content {
+  pointer-events: auto;
+}
