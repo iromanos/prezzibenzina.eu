@@ -1,41 +1,82 @@
-import Link from "next/link";
-import React from 'react';
+'use client'
+import React, {useEffect, useState} from 'react';
 import {getRouteLink, logDebug} from "@/functions/helpers";
 import Image from "next/image";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/esm/Modal";
 
 
 export function LinkMarchio({marchi, params}){
 
-    marchi.unshift( { marchio:  'Tutti', key: ''});
 
     logDebug(params);
 
-    if(params.marchio === undefined) params.marchio = '';
+    const [modal, setModal] = useState(false);
 
-    return <section className="mb-4 bg-warning-subtle p-2 border-warning border rounded">
-        <h2 className="h6 mb-3 text-uppercase">Marchio</h2>
-        <div className="d-flex flex-wrap gap-1" role="group">
+
+    if (params.marchio === undefined) params.marchio = 'Tutti';
+
+    const [marchioSelezionato, setMarchioSelezionato] = useState(marchi[0]);
+
+    useEffect(() => {
+        const qry = marchi.filter(m => m.key === params.marchio);
+        if (qry.length !== 0) {
+            setMarchioSelezionato(qry[0]);
+        }
+    }, []);
+
+    return <>
+        {modal &&
+
+            <Modal show={modal} onHide={() => setModal(false)} centered>
+                <Modal.Header closeButton><Modal.Title>Seleziona il marchio</Modal.Title></Modal.Header>
+                <Modal.Body className={'d-flex flex-wrap gap-2'}>
                 {marchi.map((marchio) => {
 
                     const link = getRouteLink(params.regione, params.carburante, marchio.marchio, params.provincia, params.comune);
-
-                    return <Link
-
+                    return <Button
+                        size={'sm'}
+                        variant={params.marchio === marchio.key ? 'primary' : 'outline-primary'}
                         title={link.title}
-                        className={`btn btn-sm text-dark ${params.marchio === marchio.key ? 'btn-warning' : 'btn-outline-warning'}`}
-
-                        key={marchio.marchio} href={link.link}>
+                        onClick={() => {
+                            setModal(false);
+                            window.location = link.link;
+                        }}
+                        key={marchio.marchio}>
 
                         {marchio.key !== '' && <Image
                             className={'me-2'}
                             width={24} height={24}
                             src={process.env.NEXT_PUBLIC_IMAGE_ENDPOINT + `/impianto/logo/${marchio.key}/128`}
-                            alt={marchio.marchio}/>}{marchio.marchio}</Link>
+                            alt={marchio.marchio}/>}{marchio.marchio}</Button>
 
 
 
                 })}
-            </div></section>;
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setModal(false)}>Annulla</Button>
+                </Modal.Footer>
+            </Modal>}
+
+        <section className="mb-4 bg-warning-subtle p-2 border-warning border rounded">
+            <h2 className="h6 text-uppercase">Marchio</h2>
+            <div className="d-flex flex-wrap gap-1" role="group">
+
+                <Button onClick={() => {
+                    setModal(true);
+                }} size={'sm'} variant={'warning'} className={'text-uppercase'}>
+                    {marchioSelezionato.key !== '' && <Image
+                        className={'me-2'}
+                        width={24} height={24}
+                        src={process.env.NEXT_PUBLIC_IMAGE_ENDPOINT + `/impianto/logo/${marchioSelezionato.key}/128`}
+                        alt={marchioSelezionato.marchio}/>}
+                    {marchioSelezionato.marchio}</Button>
+
+
+            </div>
+        </section>
+    </>;
 
 }
 

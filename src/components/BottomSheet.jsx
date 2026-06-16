@@ -4,7 +4,14 @@ import {animate, AnimatePresence, useDragControls, useMotionValue} from "motion/
 import {motion} from "framer-motion";
 import {useEffect, useRef, useState} from "react";
 
-export function BottomSheetSimple({isOpen = true, onExpanded, onIsMobile, children, minHeight = 110}) {
+export function BottomSheetSimple({
+                                      isOpen = true,
+                                      onExpanded,
+                                      onIsMobile,
+                                      children,
+                                      minHeight = 110,
+                                      expanded = false
+                                  }) {
     const [isMounted, setIsMounted] = useState(false);
     const [windowHeight, setWindowHeight] = useState(800);
     const [isMobile, setIsMobile] = useState(true);
@@ -17,6 +24,21 @@ export function BottomSheetSimple({isOpen = true, onExpanded, onIsMobile, childr
     const contentRef = useRef(null);
 
     const [isScrollTop, setIsScrollTop] = useState(true);
+
+    useEffect(() => {
+        console.log(expanded);
+        let point = snapPoints[0];
+        if (expanded) {
+            point = snapPoints[1];
+        }
+        animate(y, point, {
+            type: "spring",
+            damping: 30,
+            stiffness: 250,
+        });
+
+        setIsExpanded(expanded);
+    }, [expanded]);
 
     useEffect(() => {
         if (isExpanded) {

@@ -13,13 +13,14 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import {notFound} from "next/navigation";
 import Display6977770298 from "@/components/ads/Display-6977770298";
 import Display5745053645 from "./ads/Display-5745053645";
-import FooterHome from "./home/FooterHome";
+import {FooterDistributori} from "./home/FooterHome";
 import {FooterMobile} from "./FooterMobile";
 import {ucwords} from "@/functions/helpers";
 import Image from "next/image";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import {AdsDesktop} from "@/components/ads/AdsDesktop";
 import * as turf from '@turf/turf';
+import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 
 
 export default async function DistributoriPage({params}) {
@@ -32,7 +33,8 @@ export default async function DistributoriPage({params}) {
     const elencoCarburanti = getCarburanti();
     const elencoMarchi = await getMarchi();
 
-    console.log(elencoMarchi);
+
+    console.log("MARCHI", elencoMarchi);
 
     if (elencoCarburanti[carburante] === undefined) {
         notFound();
@@ -72,6 +74,7 @@ export default async function DistributoriPage({params}) {
 
     const comuni = riepilogo.comuni;
     const marchi = riepilogo.marchi;
+    marchi.unshift({marchio: 'Tutti', key: null});
 
     const date = new Date(riepilogo.dataAggiornamento);
 
@@ -110,6 +113,22 @@ export default async function DistributoriPage({params}) {
 
 
     console.log(centerCoordinates);
+
+    function DistributoreMigliore() {
+        if (distributori.length !== 0) {
+
+            const d = distributori[0];
+
+            return <div
+                className={'bg-success-subtle rounded overflow-hidden'}>
+                <p className={'m-0 text-center bg-success text-white text-uppercase small fw-bold'}>Il
+                    più conveniente</p>
+                <ImpiantoCardMobile
+                    key={d.properties.id_impianto} impianto={d.properties}/>
+            </div>
+        }
+        return <></>;
+    }
 
     return <>
         <Header/>
@@ -150,11 +169,14 @@ export default async function DistributoriPage({params}) {
                         <li><CheckBoxIcon className={'text-success'}/> Rifornimento veloce e sicuro</li>
                     </ul>
                     <div className={'d-flex gap-2 mb-4 d-lg-none'}>
+                        <a title={"Mappa"} href={"#mappa"} className={'btn btn-outline-primary'}><MapIcon/> Mappa</a>
                         <a title={"Elenco distributori"} href={"#distributori"}
                            className={'btn btn-primary'}><FormatListBulletedIcon/> Elenco
                             distributori</a>
-                        <a title={"Mappa"} href={"#mappa"} className={'btn btn-outline-primary'}><MapIcon/> Mappa</a>
                     </div>
+                </div>
+                <div className={'col d-lg-none mb-4'}>
+                    <DistributoreMigliore/>
                 </div>
                 <div className={'col-lg-5'}>
                     <Display6977770298/>
@@ -175,7 +197,7 @@ export default async function DistributoriPage({params}) {
                     <div className={'row '}>
                         <div className={'col-auto'}>
                             <div className={'mb-4 border p-2 rounded'}>
-                                <LinkCarburanti params={riepilogo.request} carburanti={carburanti}/></div>
+                                <LinkCarburanti params={riepilogo.request} carburanti={carburanti} size={'sm'}/></div>
                         </div>
                         <div className={'col'}>
                             <LinkMarchio params={riepilogo.request} marchi={marchi}/></div>
@@ -186,7 +208,7 @@ export default async function DistributoriPage({params}) {
                             longitude: centerCoordinates[0],
                             latitude: centerCoordinates[1],
                             zoom: 9,
-                            fitBoundsOptions: {padding: 20}
+                            fitBoundsOptions: {padding: 0}
                         }}
 
                         distributori={distributori}/> : <></>}
@@ -209,7 +231,7 @@ export default async function DistributoriPage({params}) {
         </div>
 
         <FooterMobile>
-            <FooterHome/>
+            <FooterDistributori/>
         </FooterMobile>
     </>;
 

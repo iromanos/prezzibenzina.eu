@@ -20,12 +20,15 @@ export default function Analytics({trackId}) {
 
     if (!allowTracking) return null;
 
-    if (process.env.NODE_ENV === 'development') return <>
-        <div className={'opacity-25  bg-success text-center text-white ' +
-            'position-fixed m-4 start-0 bottom-0 z-3 p-3 rounded-2'}>
-            GA4 ID: {trackId} - Tracking is disabled in development mode.
-        </div>
-    </>;
+    if (process.env.NODE_ENV === 'development') {
+        return <></>;
+        return <>
+            <div className={'opacity-25  bg-success text-center text-white ' +
+                'position-fixed m-4 start-0 bottom-0 z-3 p-3 rounded-2'}>
+                GA4 ID: {trackId} - Tracking is disabled in development mode.
+            </div>
+        </>;
+    }
 
 
     return (

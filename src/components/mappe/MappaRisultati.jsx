@@ -1,7 +1,7 @@
 'use client';
 
 import Map, {Layer, Marker, Popup, Source} from 'react-map-gl/maplibre';
-import {forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
+import {forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {
     fetchImpiantiByRoute,
@@ -30,6 +30,7 @@ import TuttoSchermoButton from "@/components/TuttoSchermoButton";
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 import useUltimaPosizione from "@/hooks/useUltimaPosizione";
 import {logDebug} from "@/functions/helpers";
+import useMobile from "@/hooks/useMobile";
 
 const MappaRisultati = forwardRef(({
                                        posizione,
@@ -55,8 +56,6 @@ const MappaRisultati = forwardRef(({
                                        stato = null
                                    }, ref) => {
 
-    console.log(`posizione: ${posizione}`);
-
     useImperativeHandle(ref, () => ({
         flyTo: (options) => {
             const map = mapRef.current;
@@ -64,6 +63,8 @@ const MappaRisultati = forwardRef(({
         }
     }));
 
+
+    const [dist, setDist] = useState(40);
 
     const [prezzoMedio, setPrezzoMedio] = useState(0);
 
@@ -101,6 +102,9 @@ const MappaRisultati = forwardRef(({
 
     const [isLoading, setIsLoading] = useState(false);
 
+
+    const {isMobile} = useMobile();
+
     const layerStyle = {
         id: 'point',
         type: 'line',
@@ -114,6 +118,19 @@ const MappaRisultati = forwardRef(({
             'line-blur': 0.5
         }
     };
+    /*
+    useEffect(() => {
+        if (mapRef.current !== null) {
+            mapRef.current.setInteractive(false);
+        }
+    }, [isReadOnly]);
+    */
+
+    useCallback(() => {
+        if (isMobile === false) {
+            setDist(120);
+        }
+    }, [isMobile])
 
     const handleMapClick = (event) => {
         setPopupInfo(null);
@@ -154,10 +171,6 @@ const MappaRisultati = forwardRef(({
         window.addEventListener('map:focus', handleFocus);
         return () => window.removeEventListener('map:focus', handleFocus);
     }, [rightWidth, footerHeight]);
-
-    useEffect(() => {
-        // log('MappaRisultati: MOUNTED');
-    }, []);
 
     const [loading, setLoading] = useState(false);
 
@@ -555,7 +568,6 @@ const MappaRisultati = forwardRef(({
 
     }, [distributori]);
 
-    // log('MappaRisultati: BUILD');
     return (
         <>
             {loading && (
@@ -572,7 +584,7 @@ const MappaRisultati = forwardRef(({
                             setDestinazioneFinale(null);
                             setRoute(null);
 
-                            const dist = 120;
+                            //const dist = 120;
                             const padding = {
                                 top: headerHeight + dist,
                                 bottom: footerHeight + dist,
@@ -617,7 +629,6 @@ const MappaRisultati = forwardRef(({
                             const currentFilter = {
                                 ...filter, ...state
                             };
-                            //console.log("FILTER CHANGED: ", currentFilter);
                             setFilter(currentFilter);
                         }}/>
                 : null}
@@ -654,13 +665,21 @@ const MappaRisultati = forwardRef(({
             </div>
 
             <Map
+
+                dragPan={!isReadOnly}
+                dragRotate={!isReadOnly}
+                scrollZoom={!isReadOnly}
+                touchZoomRotate={!isReadOnly}
+                doubleClickZoom={!isReadOnly}
+                boxZoom={!isReadOnly}
+                keyboard={!isReadOnly}
+
                 interactive={!isReadOnly}
                 onClick={handleMapClick}
                 ref={mapRef}
                 attributionControl={false}
                 onLoad={() => {
                     debouncedBoundsChange();
-                    const dist = 120;
                     const padding = {
                         top: headerHeight + dist,
                         bottom: footerHeight + dist,
@@ -685,8 +704,6 @@ const MappaRisultati = forwardRef(({
                         logDebug("bboX: " + JSON.stringify(distributori));
 
                         map.fitBounds(b);
-
-                        //console.log(initState);
                     }
 
 

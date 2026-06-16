@@ -51,7 +51,7 @@ export function LinkCarburanti({params, carburanti, onCarburanteChange = null, s
         <section
             // className="mb-4 border p-2 rounded"
         >
-            {showTitle && <h2 className="h6 mb-3 text-uppercase">Carburante</h2>}
+            {showTitle && <h2 className="h6 text-uppercase">Carburante</h2>}
             {carburante &&
             <Button
                 onClick={() => setModal(true)}

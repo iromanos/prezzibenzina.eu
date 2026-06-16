@@ -1,13 +1,18 @@
 'use client'
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import {BottomSheet, useBottomSheet} from "@plainsheet/react";
+import {SheetContent} from "@/components/mappe/MappaClient";
 
 export default function Demo() {
 
     const [isSheetOpen, setIsSheetOpen] = useState(true);
     const bottomSheet = useBottomSheet({
         shouldCloseOnOutsideClick: false,
+        shouldShowBackdrop: false,
+        width: '100%',
+        containerBorderRadius: '20px',
+        defaultPosition: 'closed'
     });
 
     useEffect(() => {
@@ -15,7 +20,10 @@ export default function Demo() {
     }, []);
 
     useEffect(() => {
-        bottomSheet.open();
+        if (bottomSheet.isOpen === false) {
+            bottomSheet.setIsOpen(true);
+            bottomSheet.moveTo(0.4);
+        }
     }, [bottomSheet.isOpen]);
 
     return (
@@ -33,10 +41,11 @@ export default function Demo() {
                     <h5>Mappa</h5>
                 </div>
                 <BottomSheet
-
-
                     {...bottomSheet.props} >
-                    &nbsp; Hello from Bottom Sheet 🦭
+                    <SheetContent
+                        distributori={[]}
+                        prezzoMedio={1.255}
+                    />
                 </BottomSheet>
             </div>
         </>

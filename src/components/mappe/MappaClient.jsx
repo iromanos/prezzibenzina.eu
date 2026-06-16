@@ -1,9 +1,7 @@
 'use client'
 
 import MappaRisultati from "@/components/mappe/MappaRisultati";
-import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {useFilters} from "@/hooks/useFilters";
-import useNavBarPresence from "@/hooks/useNavBarPresence";
+import React, {useEffect, useMemo, useState} from 'react';
 import {usePreferitiGlobal} from "@/context/PreferitiProvider";
 import useUltimaPosizione from "@/hooks/useUltimaPosizione";
 import Link from "next/link";
@@ -27,9 +25,6 @@ export default function MappaClient({
                                         client = "pb"
                                     }) {
 
-    const [animEnd, setAnimEnd] = useState(true);
-
-    const {filters, setFilters} = useFilters(initialFilters);
     const [showList, setShowList] = useState(true);
     const [sheetHeight, setSheetHeight] = useState(0);
     const [footerHeight, setFooterHeight] = useState(58);
@@ -37,20 +32,13 @@ export default function MappaClient({
 
     const [topPosition, setTopPosition] = useState(0);
 
-    const footerRef = useRef(null);
-    const rightRef = useRef(null);
-
     const [distributori, setDistributori] = useState(distributoriIniziali);
     const [prezzoMedio, setPrezzoMedio] = useState(0);
 
-    const {navBarHeight} = useNavBarPresence();
-
-    const [step, setStep] = useState(0);
+    const [open, setOpen] = useState(false);
     const [showButton, setShowButton] = useState(true);
 
     const hookUltimaPosizione = useUltimaPosizione();
-
-    // console.log("ULTIMA POSIZIONE: ", hookUltimaPosizione.posizione);
 
     const [viewState, setViewState] = useState(null);
 
@@ -123,10 +111,11 @@ export default function MappaClient({
                         </AdsDesktop>
                     </div>}
                     <MappaRisultati
+                        isReadOnly={!showList}
                         topPosition={topPosition}
                         cooperativeGestures={false}
                         onMapClick={() => {
-                            setStep(0);
+//                            setStep(0);
                         }}
                         showPositionButton={showButton}
                         showFilter={showList}
@@ -145,6 +134,7 @@ export default function MappaClient({
                     /></div>
 
                 <BottomSheetSimple
+                    expanded={open}
                     minHeight={100}
                     onIsMobile={(value) => {
                         if (value) {
@@ -157,15 +147,13 @@ export default function MappaClient({
                     }}
                     onExpanded={(value) => {
                         setShowList(!value);
+                        setOpen(value);
                     }}
-                    // onSnapChange={handleSnapChange}
-
-                    // onResize={(width, height) => {
-                    //     setRightWidth(width);
-                    //     setFooterHeight(height);
-                    // }}
                 >
                     <SheetContent
+                        onClickApri={() => {
+                            setOpen(!open);
+                        }}
                         distributori={distributori}
                         prezzoMedio={prezzoMedio}
                         client={client}/>
@@ -178,10 +166,10 @@ export default function MappaClient({
 }
 
 
-function SheetContent({
+export function SheetContent({
                           client,
                           prezzoMedio = 0,
-                          distributori = [],
+                                 distributori = [], onClickApri = null
                       }) {
     const [risparmio, setRisparmio] = useState(0);
     const litri = 50;
@@ -232,10 +220,15 @@ function SheetContent({
                     } else setOrder("Prezzo");
                 }}
 
-                variant={'light'} size={'sm'}>{order} <SortIcon/></Button>
-            <span className="m-0 small">
+                variant={'light'} size={'sm'}>{order} <SortIcon fontSize={'small'}/></Button>
+            <Button
+                onClick={onClickApri}
+                size={'sm'}
+                variant={'light'}
+            >
+            <span className="m-0">
                             Distributori ({distributori.length})
-                        </span>
+            </span></Button>
         </div>
 
 
