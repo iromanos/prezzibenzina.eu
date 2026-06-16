@@ -3,6 +3,7 @@
 import {animate, AnimatePresence, useDragControls, useMotionValue} from "motion/react";
 import {motion} from "framer-motion";
 import {useEffect, useRef, useState} from "react";
+import useMobile from "@/hooks/useMobile";
 
 export function BottomSheetSimple({
                                       isOpen = true,
@@ -13,9 +14,10 @@ export function BottomSheetSimple({
                                       expanded = false
                                   }) {
     const [isMounted, setIsMounted] = useState(false);
-    const [windowHeight, setWindowHeight] = useState(800);
-    const [isMobile, setIsMobile] = useState(true);
-    const [isExpanded, setIsExpanded] = useState(false);
+    // const [windowHeight, setWindowHeight] = useState(800);
+    const {isMobile, windowHeight} = useMobile();
+
+    const [isExpanded, setIsExpanded] = useState(true);
 
     const y = useMotionValue(800);
     const [overflowY, setOverflowY] = useState("hidden");
@@ -26,18 +28,19 @@ export function BottomSheetSimple({
     const [isScrollTop, setIsScrollTop] = useState(true);
 
     useEffect(() => {
-        console.log(expanded);
-        let point = snapPoints[0];
-        if (expanded) {
-            point = snapPoints[1];
+        if (isMobile) {
+            console.log(expanded);
+            let point = snapPoints[0];
+            if (expanded) {
+                point = snapPoints[1];
+            }
+            animate(y, point, {
+                type: "spring",
+                damping: 30,
+                stiffness: 250,
+            });
+            setIsExpanded(expanded);
         }
-        animate(y, point, {
-            type: "spring",
-            damping: 30,
-            stiffness: 250,
-        });
-
-        setIsExpanded(expanded);
     }, [expanded]);
 
     useEffect(() => {
@@ -49,25 +52,14 @@ export function BottomSheetSimple({
                 contentRef.current.scrollTop = 0;
             }
         }
-        onExpanded?.(isExpanded);
+        if (isMobile) onExpanded?.(isExpanded);
     }, [isExpanded]);
+
 
     useEffect(() => {
         setIsMounted(true);
-
-        const handleResize = () => {
-            if (typeof window !== "undefined") {
-                console.log(window.innerWidth);
-                setWindowHeight(window.innerHeight);
-                const mobile = window.innerWidth <= 768;
-                setIsMobile(mobile);
-            }
-        };
-
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
     }, []);
+
 
     const snapPoints = [
         windowHeight - minHeight,   // Snap 0: 110px visibili dal fondo (Solo Mobile)
@@ -126,6 +118,9 @@ export function BottomSheetSimple({
     const startYRef = useRef(0);
 
     if (!isMounted) return null;
+
+    console.log("ismobile", isMobile);
+    console.log("isopen", isOpen);
 
     // STILI RESPONSIVE DETERMINANTI
     const desktopStyles = {

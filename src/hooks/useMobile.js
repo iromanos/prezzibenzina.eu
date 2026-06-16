@@ -5,11 +5,14 @@ import {useEffect, useState} from "react";
 
 export default function useMobile() {
     const [isMobile, setIsMobile] = useState(null);
+    const [windowHeight, setWindowHeight] = useState(800);
+
 
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
             const mobile = width <= 768;
+            setWindowHeight(window.innerHeight);
             setIsMobile(mobile);
         };
 
@@ -19,7 +22,7 @@ export default function useMobile() {
     }, []); // Aggiunto onWidthChange alle dipendenze
 
 
-    return {isMobile};
+    return {isMobile, windowHeight};
 
 }
 

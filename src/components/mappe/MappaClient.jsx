@@ -147,7 +147,7 @@ export default function MappaClient({
                     }}
                     onExpanded={(value) => {
                         setShowList(!value);
-                        setOpen(value);
+//                        setOpen(value);
                     }}
                 >
                     <SheetContent
