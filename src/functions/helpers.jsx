@@ -197,8 +197,21 @@ export async function getMetadata({params}) {
 
     const descrizioneMarchio = marchio ? `${ucwords(marchio)} - ` : '';
 
-    const titolo = `${descrizioneMarchio}Prezzi ${descrizioneCarburante} ${localizzazione} | Distributori attivi`;
-    const descrizione = `Consulta i prezzi aggiornati di ${carburante} ${localizzazione}${descrizioneMarchio}. Trova i distributori più convenienti e naviga per città e tipo di carburante.`;
+    const titolo = `${descrizioneMarchio}Prezzi ${descrizioneCarburante} ${localizzazione} : scopri i distributori più economici oggi`;
+
+    const stats = riepilogo.carburanti[carburante] || {};
+    const prezzoMinimo = stats.min;
+
+    const date = new Date(riepilogo.dataAggiornamento);
+
+    const dateFormatted = new Intl.DateTimeFormat('it-IT', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    }).format(date);
+
+    const descrizione = `Prezzi ${carburante} ${localizzazione}${descrizioneMarchio} aggiornati al ${dateFormatted}. 
+        Trova il distributore più conveniente tra ${riepilogo.totaleImpianti} impianti, a partire da ${prezzoMinimo} €/L.`;
 
     const canonicalUrl = getLink(regione, carburante, marchio, sigla, riepilogo.request.comune);
     const imageUrl = '/assets/logo.png';

@@ -13,7 +13,7 @@ export default function ElencoDistributori({distributori}){
     console.log(`DISTRIBUTORE: ${distributori[0]}`);
 
     return <section className={'mb-4'}>
-        <h2 className="h6 mb-3 text-uppercase">Elenco distributori</h2>
+        <h2 className="h6 mb-3 text-uppercase">Elenco distributori più economici</h2>
         {distributori.length === 0 ? (
             <p className="text-muted">Nessun distributore trovato nella regione.</p>
         ) : (

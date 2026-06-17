@@ -6,7 +6,6 @@ import {LinkCarburanti} from "@/components/FiltroCarburante";
 import {LinkMarchio} from "@/components/FiltroMarchio";
 import Breadcrumb from "@/components/Breadcrumb";
 import LinkComuni from "@/components/LinkComuni";
-import {IntroTextVersione2} from "@/components/IntroText";
 import Mappa from "@/components/Mappa";
 import MapIcon from '@mui/icons-material/Map';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
@@ -21,6 +20,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import {AdsDesktop} from "@/components/ads/AdsDesktop";
 import * as turf from '@turf/turf';
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
+import GuidaCarburantiAutomobilista from "@/components/GuidaCarburantiAutomobilista";
 
 
 export default async function DistributoriPage({params}) {
@@ -94,7 +94,6 @@ export default async function DistributoriPage({params}) {
             ? {livello: 'provincia', valore: request.provincia}
             : {livello: 'regione', valore: request.regione || regione};
 
-    console.log(riepilogo);
 
     const localita =
         scope.livello === 'comune'
@@ -102,6 +101,8 @@ export default async function DistributoriPage({params}) {
             : scope.livello === 'provincia'
                 ? `in provincia di ${request.provincia_descrizione}`
                 : `in ${ucwords(scope.valore)}`;
+
+    riepilogo.localita = localita;
 
     const coords = distributori
         .filter((d) => Number.isFinite(d.properties.longitudine) && Number.isFinite(d.properties.latitudine))
@@ -112,7 +113,7 @@ export default async function DistributoriPage({params}) {
     const centerCoordinates = centerFeature.geometry.coordinates; // [Lng, Lat]
 
 
-    console.log(centerCoordinates);
+    console.log("RIEPILOGO", riepilogo);
 
     function DistributoreMigliore() {
         if (distributori.length !== 0) {
@@ -187,22 +188,21 @@ export default async function DistributoriPage({params}) {
                 riepilogo={riepilogo}
                 comuni={comuni}/> : <></>}
 
-            <div className={'mb-4'}>
-            </div>
-
-
             <div className={'row'}>
 
                 <div id={"mappa"} className={'col-lg-7 '}>
-                    <div className={'row '}>
+                    <h2 className={'h6 text-uppercase'}>Filtra per carburante o marchio</h2>
+                    <div className={'row mb-4'}>
                         <div className={'col-auto'}>
-                            <div className={'mb-4 border p-2 rounded'}>
-                                <LinkCarburanti params={riepilogo.request} carburanti={carburanti} size={'sm'}/></div>
+                            <LinkCarburanti
+                                showTitle={false}
+                                params={riepilogo.request} carburanti={carburanti} size={'sm'}/>
                         </div>
                         <div className={'col'}>
                             <LinkMarchio params={riepilogo.request} marchi={marchi}/></div>
                     </div>
                     {distributori.length !== 0 ? <Mappa
+                        titolo={`Mappa dei distributori ${localita}`}
                         carburante={carburante}
                         posizione={{
                             longitude: centerCoordinates[0],
@@ -213,11 +213,7 @@ export default async function DistributoriPage({params}) {
 
                         distributori={distributori}/> : <></>}
                     <Display5745053645/>
-                    <div className={'card bg-white mb-3'}>
-                        <div className={'card-body'}>
-                            <IntroTextVersione2 data={riepilogo} distributori={distributori}/>
-                        </div>
-                    </div>
+                    <GuidaCarburantiAutomobilista riepilogo={riepilogo} distributori={distributori}/>
                     <Display6977770298 className={'mb-3'}/>
 
                 </div>

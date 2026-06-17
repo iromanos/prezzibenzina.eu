@@ -59,13 +59,12 @@ export function LinkMarchio({marchi, params}){
                 </Modal.Footer>
             </Modal>}
 
-        <section className="mb-4 bg-warning-subtle p-2 border-warning border rounded">
-            <h2 className="h6 text-uppercase">Marchio</h2>
-            <div className="d-flex flex-wrap gap-1" role="group">
+        <section className="">
+            {/*<span className="h6 text-uppercase">Marchio</span>*/}
 
                 <Button onClick={() => {
                     setModal(true);
-                }} size={'sm'} variant={'warning'} className={'text-uppercase'}>
+                }} size={'sm'} variant={'primary'} className={'text-uppercase'}>
                     {marchioSelezionato.key !== '' && <Image
                         className={'me-2'}
                         width={24} height={24}
@@ -74,7 +73,6 @@ export function LinkMarchio({marchi, params}){
                     {marchioSelezionato.marchio}</Button>
 
 
-            </div>
         </section>
     </>;
 

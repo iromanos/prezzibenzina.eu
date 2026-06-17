@@ -70,11 +70,11 @@ export async function getMetadataMilano({params}) {
     const titolo = `${descrizioneMarchio}${ucwords(descrizioneCarburante)} ${localizzazione}: scopri i distributori più economici oggi`;
 
     const stats = riepilogo.carburanti[carburante] || {};
-
     const prezzoMinimo = stats.min;
 
     const descrizione = `Consulta i prezzi di ${carburante} ${localizzazione}${descrizioneMarchio} in tempo reale. 
-    Trova i distributori più conveniente tra ${riepilogo.totaleImpianti} impianti, a partire da ${prezzoMinimo} €/L. Dati ufficiali MIMIT aggiornati al ${dateFormatted}`;
+        Trova i distributori più conveniente tra ${riepilogo.totaleImpianti} impianti, a partire da ${prezzoMinimo} €/L. 
+        Dati ufficiali MIMIT aggiornati al ${dateFormatted}`;
 
     const canonicalUrl = getLink(regione, carburante, marchio, sigla, riepilogo.request.comune);
     const imageUrl = '/assets/logo.png';

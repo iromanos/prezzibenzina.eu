@@ -13,7 +13,8 @@ export default function Mappa({
                                   carburante,
                                   limit = 10,
                                   stato = null,
-                                  bounds = null
+                                  bounds = null,
+                                  titolo = "Mappa dei distributori"
                               }) {
 
     const containerRef = useRef(null);
@@ -22,7 +23,7 @@ export default function Mappa({
     const [state, setState] = useState();
 
     return <section className={"mb-4"}>
-        {title ? <h2 className="h6 mb-3 text-uppercase">Mappa dei distributori</h2> : null}
+        {title ? <h2 className="h6 mb-3 text-uppercase">{titolo}</h2> : null}
         <div ref={containerRef} className={'border rounded position-relative mb-4 vh-75'}>
             {isVisible ? <><MappaRisultati
                 cooperativeGestures={false}
