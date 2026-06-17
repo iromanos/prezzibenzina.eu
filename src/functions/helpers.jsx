@@ -197,7 +197,7 @@ export async function getMetadata({params}) {
 
     const descrizioneMarchio = marchio ? `${ucwords(marchio)} - ` : '';
 
-    const titolo = `${descrizioneMarchio}Prezzi ${descrizioneCarburante} ${localizzazione} : scopri i distributori più economici oggi`;
+    const titolo = `${descrizioneMarchio}Prezzi ${descrizioneCarburante} ${localizzazione} : i distributori più economici oggi`;
 
     const stats = riepilogo.carburanti[carburante] || {};
     const prezzoMinimo = stats.min;

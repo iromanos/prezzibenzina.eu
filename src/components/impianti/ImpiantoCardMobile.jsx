@@ -70,9 +70,9 @@ export default function ImpiantoCardMobile({impianto, cardClient = true, onClick
                             vicini={false} isMobile={true} impianto={impianto}/>
                         <div
                             className={'bg-success rounded-2 text-white px-2 ms-auto' + (isBest ? ' shadow' : '')}>
-                            <strong className={'fs-5'}>{prezzo.toFixed(3)} <span style={{
+                            <span className={'fs-5 fw-bold'}>{prezzo.toFixed(3)} <span style={{
                                 fontSize: '.8rem'
-                            }}>€/L</span></strong></div>
+                            }}>€/L</span></span></div>
 
                     </div>}
             </div>

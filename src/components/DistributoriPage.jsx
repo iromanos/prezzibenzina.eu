@@ -113,6 +113,9 @@ export default async function DistributoriPage({params}) {
     const centerCoordinates = centerFeature.geometry.coordinates; // [Lng, Lat]
 
 
+    const titoloPagina = `Prezzi ${carburante} ${localita}: i distributori più economici oggi`;
+
+
     console.log("RIEPILOGO", riepilogo);
 
     function DistributoreMigliore() {
@@ -213,7 +216,8 @@ export default async function DistributoriPage({params}) {
 
                         distributori={distributori}/> : <></>}
                     <Display5745053645/>
-                    <GuidaCarburantiAutomobilista riepilogo={riepilogo} distributori={distributori}/>
+                    <GuidaCarburantiAutomobilista riepilogo={riepilogo} distributori={distributori}
+                                                  titoloPagina={titoloPagina}/>
                     <Display6977770298 className={'mb-3'}/>
 
                 </div>

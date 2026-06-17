@@ -4,7 +4,7 @@ import {capitalize} from "@/functions/helpers";
 import {cookies, headers} from "next/headers";
 import {notFound} from "next/navigation";
 import {getCanonicalUrl} from "@/functions/server";
-import {Verticale7119992054} from "../../components/ads/Verticale-7119992054";
+import {Verticale7119992054} from "@/components/ads/Verticale-7119992054";
 
 //TODO: gestione utenti
 //TODO: (MOBILE) quando si effettua la ricerca, eliminare la mappa e inserire solo il campo di ricerca a tutto schermo (stile GMaps)
