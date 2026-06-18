@@ -28,6 +28,9 @@ import Image from "next/image";
 import {AdsDesktop} from "../ads/AdsDesktop";
 import Display6977770298 from "@/components/ads/Display-6977770298";
 
+//TODO: inserire la media dei prezzi del comune / provincia ed indicare il risparmio
+
+
 export default function ImpiantoScheda({impianto, cookie}) {
     const [showPopup, setShowPopup] = useState(false);
     const styleUrl = getVectorTileLayer();//  'https://tiles.stadiamaps.com/styles/outdoors.json?api_key=9441d3ae-fe96-489a-8511-2b1a3a433d29';

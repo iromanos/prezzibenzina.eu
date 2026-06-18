@@ -22,6 +22,8 @@ import * as turf from '@turf/turf';
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 import GuidaCarburantiAutomobilista from "@/components/GuidaCarburantiAutomobilista";
 
+//TODO: nella versione Desktop, inserire i link ai marchi
+//TODO: visualizzare grafico con la media dei prezzi dell'ultimo mese
 
 export default async function DistributoriPage({params}) {
 
