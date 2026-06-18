@@ -20,7 +20,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import {AdsDesktop} from "@/components/ads/AdsDesktop";
 import * as turf from '@turf/turf';
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
-import GuidaCarburantiAutomobilista from "@/components/GuidaCarburantiAutomobilista";
+import {GuidaCarburantiAutomobilistaVER3} from "@/components/GuidaCarburantiAutomobilista";
 
 //TODO: nella versione Desktop, inserire i link ai marchi
 //TODO: visualizzare grafico con la media dei prezzi dell'ultimo mese
@@ -210,7 +210,8 @@ export default async function DistributoriPage({params}) {
 
                         distributori={distributori}/> : <></>}
                     <Display5745053645/>
-                    <GuidaCarburantiAutomobilista riepilogo={riepilogo} distributori={distributori}
+
+                    <GuidaCarburantiAutomobilistaVER3 riepilogo={riepilogo} distributori={distributori}
                                                   titoloPagina={titoloPagina}/>
                     <Display6977770298 className={'mb-3'}/>
 
