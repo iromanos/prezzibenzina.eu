@@ -14,7 +14,7 @@ import Display6977770298 from "@/components/ads/Display-6977770298";
 import Display5745053645 from "./ads/Display-5745053645";
 import {FooterDistributori} from "./home/FooterHome";
 import {FooterMobile} from "./FooterMobile";
-import {ucwords} from "@/functions/helpers";
+import {logDebug, ucwords} from "@/functions/helpers";
 import Image from "next/image";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import {AdsDesktop} from "@/components/ads/AdsDesktop";
@@ -32,9 +32,6 @@ export default async function DistributoriPage({params}) {
 
     const elencoCarburanti = getCarburanti();
     const elencoMarchi = await getMarchi();
-
-
-    console.log("MARCHI", elencoMarchi);
 
     if (elencoCarburanti[carburante] === undefined) {
         notFound();
@@ -68,8 +65,6 @@ export default async function DistributoriPage({params}) {
         };
     })
 
-    console.log(distributori);
-
     const riepilogo = await getSeoRegione(regione, carburante, marchio, sigla, comune);
 
     const comuni = riepilogo.comuni;
@@ -84,9 +79,7 @@ export default async function DistributoriPage({params}) {
         day: 'numeric',
     }).format(date);
 
-
     const {request} = riepilogo;
-
 
     const scope = request.comune
         ? {livello: 'comune', valore: request.comune.description}
@@ -115,8 +108,7 @@ export default async function DistributoriPage({params}) {
 
     const titoloPagina = `Prezzi ${carburante} ${localita}: i distributori più economici oggi`;
 
-
-    console.log("RIEPILOGO", riepilogo);
+    logDebug("RIEPILOGO", riepilogo);
 
     function DistributoreMigliore() {
         if (distributori.length !== 0) {
@@ -183,7 +175,7 @@ export default async function DistributoriPage({params}) {
                     <DistributoreMigliore/>
                 </div>
                 <div className={'col-lg-5'}>
-                    <Display6977770298/>
+                    <Display6977770298 className={'mb-4'}/>
                 </div>
 
             </div>

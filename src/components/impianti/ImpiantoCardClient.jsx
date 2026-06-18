@@ -70,7 +70,7 @@ export default function ImpiantoCardClient({
         <a href={`/impianto/${impianto.link}`}
            className="btn btn-outline-primary btn-sm"
            aria-label={`Naviga verso ${nome_impianto}`}>
-            <DirectionsIcon/> Vai
+            <DirectionsIcon/>
         </a>
 
         <Button

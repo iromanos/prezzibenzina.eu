@@ -1,5 +1,4 @@
 import React from 'react';
-import CircleIcon from '@mui/icons-material/Circle';
 import Display6977770298 from "./ads/Display-6977770298";
 
 const GuidaCarburantiAutomobilista = ({riepilogo, distributori, titoloPagina}) => {
@@ -71,7 +70,7 @@ const GuidaCarburantiAutomobilista = ({riepilogo, distributori, titoloPagina}) =
     }
 
     return (
-        <div className="container py-2">
+        <div className="py-2">
 
             <h2 className={'h4'}>{titoloPagina}</h2>
             <p className="text-muted small mb-4">
@@ -80,33 +79,33 @@ const GuidaCarburantiAutomobilista = ({riepilogo, distributori, titoloPagina}) =
 
             {/* Tabella riassuntiva dei costi (Inizia la gerarchia da H2) */}
             <section className="mb-4">
-                <h2 className="h5 text-primary mb-3">📊 Quadro generale dei prezzi {dati.localita}</h2>
+                <h2 className="h5 text-primary mb-3 fw-normal">📊 Quadro generale dei prezzi {dati.localita}</h2>
                 <div className="table-responsive">
-                    <table className="table table-striped table-bordered align-middle">
-                        <thead className="table-light">
+                    <table className="table table-striped table-bordered align-middle ">
+                        <thead className="table-light text-uppercase">
                         <tr>
-                            <th scope="col">Parametro</th>
-                            <th scope="col">Prezzo</th>
-                            <th scope="col">Impatto sul Pieno (50L)</th>
+                            {/*<th scope="col"><span className={'fw-normal small'}>Parametro</span></th>*/}
+                            <th scope="col"><span className={'fw-normal small'}>Prezzo</span></th>
+                            <th scope="col"><span className={'fw-normal small'}>Impatto sul Pieno (50L)</span></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td><span className="me-2"><CircleIcon className={'text-success'}
-                                                                   fontSize={'small'}/></span> Minimo Assoluto
-                            </td>
+                            {/*<td><span className="me-2"><CircleIcon className={'text-success'}*/}
+                            {/*                                       fontSize={'small'}/></span> Minimo*/}
+                            {/*</td>*/}
                             <td><strong className="text-success">{dati.minPrezzo} €</strong></td>
                             <td className="text-muted">Il massimo risparmio possibile</td>
                         </tr>
                         <tr>
-                            <td><span className="me-2"><CircleIcon fontSize={'small'}/></span> Media Territoriale</td>
+                            {/*<td><span className="me-2"><CircleIcon fontSize={'small'}/></span> Media</td>*/}
                             <td><strong>{dati.mediaPrezzo} €</strong></td>
                             <td className="text-muted">La tariffa di riferimento della zona</td>
                         </tr>
                         <tr>
-                            <td><span className="me-2"><CircleIcon className={'text-danger'}
-                                                                   fontSize={'small'}/></span> Massimo Rilevato
-                            </td>
+                            {/*<td><span className="me-2"><CircleIcon className={'text-danger'}*/}
+                            {/*                                       fontSize={'small'}/></span> Massimo*/}
+                            {/*</td>*/}
                             <td><strong className="text-danger">{dati.maxPrezzo} €</strong></td>
                             <td className="text-muted">Da evitare se vuoi risparmiare</td>
                         </tr>
@@ -134,7 +133,7 @@ const GuidaCarburantiAutomobilista = ({riepilogo, distributori, titoloPagina}) =
             <main className="">
 
                 <section className="mb-4">
-                    <h2 className="h4 text-secondary mb-3">1. La mappa dei carburanti {dati.localita}</h2>
+                    <h2 className="h5 text-uppercase">1. La mappa dei carburanti {dati.localita}</h2>
                     <p className="mb-3">
                         Guidare quotidianamente nel territorio di <strong>{dati.comune}</strong>, all'interno del
                         contesto provinciale di <strong>{dati.provincia}</strong>, mette ogni automobilista di fronte a
@@ -157,7 +156,7 @@ const GuidaCarburantiAutomobilista = ({riepilogo, distributori, titoloPagina}) =
 
                 <hr className="my-4 text-muted"/>
                 <section className="mb-4">
-                    <h2 className="h4 text-secondary mb-3">2. Capire la forbice dei prezzi per non sbagliare</h2>
+                    <h2 className="h5 text-uppercase">2. Capire la forbice dei prezzi per non sbagliare</h2>
                     <p className="mb-3">
                         L'elemento che salta subito all'occhio analizzando le cifre macroeconomiche locali è
                         l'estensione della forbice dei prezzi, un indicatore chiaro di quanto il mercato libero possa
@@ -185,7 +184,7 @@ const GuidaCarburantiAutomobilista = ({riepilogo, distributori, titoloPagina}) =
                 <hr className="my-4 text-muted"/>
 
                 <section className="mb-4">
-                    <h2 className="h4 text-secondary mb-3">3. Analisi della concorrenza e dei marchi presenti</h2>
+                    <h2 className="h5 text-uppercase">3. Analisi della concorrenza e dei marchi presenti</h2>
                     <p className="mb-3">
                         La spiegazione di questa marcata asimmetria tariffaria risiede principalmente nella struttura
                         della concorrenza locale e nella varietà dei marchi commerciali che si spartiscono il
@@ -223,7 +222,7 @@ const GuidaCarburantiAutomobilista = ({riepilogo, distributori, titoloPagina}) =
                 <hr className="my-4 text-muted"/>
 
                 <section className="mb-4">
-                    <h2 className="h4 text-secondary mb-3">4. L'importance della modalità: Self-Service vs Servito</h2>
+                    <h2 className="h5 text-uppercase">4. L'importance della modalità: Self-Service vs Servito</h2>
                     <p className="mb-3">
                         Un altro fattore strutturale che influisce pesantemente sul prezzo finale esposto è la modalità
                         di erogazione scelta dall'utente al momento della sosta. La transizione della rete distributiva
@@ -247,7 +246,7 @@ const GuidaCarburantiAutomobilista = ({riepilogo, distributori, titoloPagina}) =
 
                 {/* Card Bootstrap per l'elenco dei pilastri (Strutturato con H2 -> H3) */}
                 <section className="card bg-white p-4 my-4">
-                    <h2 className="h4 text-dark mb-3">🎯 Strategie Avanzate di Risparmio</h2>
+                    <h2 className="h6 text-uppercase">🎯 Strategie Avanzate di Risparmio</h2>
                     <p className="text-muted small mb-3">Metti in pratica questi tre pilastri fondamentali ogni volta
                         che sei alla guida:</p>
 

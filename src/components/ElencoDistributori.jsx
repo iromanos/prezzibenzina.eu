@@ -30,7 +30,7 @@ export default function ElencoDistributori({distributori}){
                             <ImpiantoCardMobile
                                 key={d.properties.id_impianto} impianto={d.properties}/>
                             {(index + 1) % 3 === 0 &&
-                                <InFeed4656802013 className={'mb-3'}/>}
+                                <InFeed4656802013 className={'my-3'}/>}
                         </div>
                     );
                 })}

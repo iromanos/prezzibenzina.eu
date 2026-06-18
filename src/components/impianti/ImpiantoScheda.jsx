@@ -69,13 +69,19 @@ export default function ImpiantoScheda({impianto, cookie}) {
     const prezzo = () => {
         const carburanti = getElencoCarburanti();
 
-        logDebug(carburanti);
+        // logDebug(carburanti);
         const fuel = carburanti.find(c => c.tipo === cookie.carburante);
-        logDebug(fuel);
+        // logDebug(fuel);
         logDebug(prezzi);
 
-        const prezzo = prezzi.find(p => p.fuel_id === fuel.fuel_id);
+        let qry = prezzi
+            .filter(p => p.fuel_id === fuel.fuel_id);
+
+        if (fuel.fuel_id === 1 || fuel.fuel_id === 2) {
+            qry = qry.filter(p => p.is_self === 1);
+        }
         try {
+            const prezzo = qry[0];
             if (prezzo === undefined) {
                 if (prezzi.length !== 0) {
                     return prezzi[0].prezzo;
@@ -201,7 +207,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
                             initialViewState={{
                                 longitude: longitudine,
                                 latitude: latitudine,
-                                zoom: 14,
+                                zoom: 11,
                             }}
                             style={{width: '100%', height: '360px'}}
                             mapStyle={styleUrl}

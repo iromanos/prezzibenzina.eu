@@ -195,7 +195,6 @@ export async function getImpianto({query}) {
         headers: {
             Accept: 'application/json',
         },
-        //next: {revalidate: 3600},
     });
 
 }
@@ -253,7 +252,7 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     if (marchio) {
         request += "?marchio=" + marchio;
     }
-    // log(request);
+    logDebug(request);
 
     const res = await fetch(request, {
         headers: {
@@ -263,7 +262,7 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     });
 
     const data = await res.json();
-    logDebug(data);
+//    logDebug(data);
 
     const response = NextResponse.json(data);
     response.headers.set('Last-Modified', new Date(data.lastUpdate).toUTCString());

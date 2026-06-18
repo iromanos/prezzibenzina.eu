@@ -1,6 +1,5 @@
 import ImpiantoScheda from '@/components/impianti/ImpiantoScheda';
 import {getImpianto} from "@/functions/api";
-import {logDebug} from "@/functions/helpers";
 import Header from "@/components/Header";
 import {getCookie} from "@/functions/cookies";
 import {getCanonicalUrl, getOpenGraph, getTwitter} from "@/functions/server";
@@ -12,8 +11,6 @@ export async function generateMetadata({params}) {
     const query = await params;
 
     const res = await getImpianto({query});
-
-    logDebug(res);
 
     if (res.status !== 200) {
         notFound();
@@ -27,8 +24,6 @@ export async function generateMetadata({params}) {
     const headerList = headers();
 
     const canonicalUrl = getCanonicalUrl(await headerList) + '/impianto/' + impianto.link;
-
-//    console.log(impianto);
 
     return {
         title: title,
@@ -50,11 +45,7 @@ export default async function Page({params}) {
 
     const query = await params;
 
-    logDebug("QUERY: " + query);
-
     const res = await getImpianto({query});
-
-    // log(res);
 
     if (res.status !== 200) {
         notFound();
@@ -69,12 +60,6 @@ export default async function Page({params}) {
 
     const cookie = await getCookie();
 
-    // log(impianto.link);
-    // log(cookie);
-
     return <><Header/>
-        <ImpiantoScheda impianto={impianto} cookie={cookie}/>
-
-
-    </>;
+        <ImpiantoScheda impianto={impianto} cookie={cookie}/></>;
 }

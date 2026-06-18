@@ -216,7 +216,7 @@ export async function getMetadata({params}) {
     const canonicalUrl = getLink(regione, carburante, marchio, sigla, riepilogo.request.comune);
     const imageUrl = '/assets/logo.png';
 
-    logDebug("CANONICAL URL: " + canonicalUrl.link);
+    // logDebug("CANONICAL URL: " + canonicalUrl.link);
 
     const microdata = generateMicrodataGraph(distributori);
 
@@ -293,7 +293,7 @@ export function slugify(text) {
 
 export function generateMicrodataGraph(impianti) {
 
-    logDebug(impianti);
+    // logDebug(impianti);
     const graph = impianti.map((impianto) => {
         const {
             nome_impianto,
@@ -340,6 +340,6 @@ export function generateMicrodataGraph(impianti) {
 
 export function logDebug(message) {
     if (process.env.NODE_ENV === 'development') {
-//        console.log(message);
+        console.log(message);
     }
 }
