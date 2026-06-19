@@ -255,15 +255,16 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     if (marchio) {
         request += "?marchio=" + marchio;
     }
-    logDebug(request);
-
+    console.log("🚀 Tentativo di fetch verso Laravel...", request);
     const res = await fetch(request, {
         headers: {
             Accept: 'application/json',
         },
-        //next: {revalidate: 3600},
     });
 
+
+    return res.json();
+    /*
     const data = await res.json();
 //    logDebug(data);
 
@@ -272,7 +273,7 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     response.headers.set('Cache-Control', 'no-cache');
 
     return response;
-
+    */
 //    return data;
 }
 

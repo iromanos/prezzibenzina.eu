@@ -14,7 +14,7 @@ import Display6977770298 from "@/components/ads/Display-6977770298";
 import Display5745053645 from "./ads/Display-5745053645";
 import {FooterDistributori} from "./home/FooterHome";
 import {FooterMobile} from "./FooterMobile";
-import {logDebug, ucwords} from "@/functions/helpers";
+import {ucwords} from "@/functions/helpers";
 import Image from "next/image";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import {AdsDesktop} from "@/components/ads/AdsDesktop";
@@ -34,7 +34,17 @@ export default async function DistributoriPage({params}) {
     const {regione, carburante, marchio, sigla, comune} = await params;
 
     const elencoCarburanti = getCarburanti();
-    const elencoMarchi = await getMarchi();
+
+
+    const [resMarchi, resDistributori, resSeoRegione] = await Promise.all(
+        [
+            getMarchi(),
+            getDistributoriRegione(regione, carburante, marchio, sigla, comune),
+            getSeoRegione(regione, carburante, marchio, sigla, comune)
+        ]
+    );
+
+    const elencoMarchi = await resMarchi;
 
     if (elencoCarburanti[carburante] === undefined) {
         notFound();
@@ -50,9 +60,9 @@ export default async function DistributoriPage({params}) {
         return `${nome}`;
     });
 
-    const response = await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
+//    const response = await resDistributori; // await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
 
-    const record = await response.json();
+    const record = await resDistributori;
 
     const distributori = record.map(record => {
         record.stato = "IT";
@@ -68,7 +78,7 @@ export default async function DistributoriPage({params}) {
         };
     })
 
-    const riepilogo = await getSeoRegione(regione, carburante, marchio, sigla, comune);
+    const riepilogo = await resSeoRegione; // getSeoRegione(regione, carburante, marchio, sigla, comune);
 
     const comuni = riepilogo.comuni;
     const marchi = riepilogo.marchi;
@@ -111,7 +121,7 @@ export default async function DistributoriPage({params}) {
 
     const titoloPagina = `Prezzi ${carburante} ${localita}: i distributori più economici oggi`;
 
-    logDebug("RIEPILOGO", riepilogo);
+    // logDebug("RIEPILOGO", riepilogo);
 
     function DistributoreMigliore() {
         if (distributori.length !== 0) {

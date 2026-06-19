@@ -183,10 +183,17 @@ export async function getMetadata({params}) {
         }
     }
 
-    const response = await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
-    const riepilogo = await getSeoRegione(regione, carburante, marchio, sigla, comune);
+    const [resDistributori, resSeoRegione] = await Promise.all(
+        [
+            getDistributoriRegione(regione, carburante, marchio, sigla, comune),
+            getSeoRegione(regione, carburante, marchio, sigla, comune)
+        ]
+    );
 
-    const distributori = await response.json();
+    const response = await resDistributori;
+    const riepilogo = await resSeoRegione;
+
+    const distributori = response;
     const descrizioneCarburante = carburante ? ucwords(carburante) : 'carburante';
 
     const localizzazione = comune
