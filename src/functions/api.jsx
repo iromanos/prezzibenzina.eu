@@ -6,8 +6,8 @@ import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import PropaneIcon from "@mui/icons-material/Propane";
 import BubbleChartIcon from "@mui/icons-material/BubbleChart";
 import EvStationIcon from "@mui/icons-material/EvStation";
-import {notFound} from "next/navigation";
 import PublicIcon from "@mui/icons-material/Public";
+import {cache} from "react";
 
 export const URI = process.env.NEXT_PUBLIC_API_ENDPOINT + '/pb/';
 
@@ -144,15 +144,7 @@ export function getCarburanti() {
 }
 
 export async function getMarchi() {
-    const response = await fetch(INTERNAL_URI + 'marchi', {
-        method: 'GET',
-        headers: {
-            Accept: 'application/json',
-            Host: 'www.wefuel.it'
-        },
-    });
-
-    return response.json();
+    return cacheFetch(INTERNAL_URI + 'marchi');
 }
 
 export function getElencoCarburanti() {
@@ -234,6 +226,15 @@ export async function getSiteMap({tipo, regione, provincia}) {
     );
 }
 
+const cacheFetch = cache(async (url) => {
+
+    console.log("🚀 Tentativo di fetch verso Laravel...", url);
+    const res = await fetch(url, {
+        headers: {Accept: 'application/json'},
+    });
+    return res.json();
+});
+
 export async function getDistributoriRegione(regione, carburante, marchio, provincia, comune) {
 
     let fuel = '';
@@ -255,26 +256,8 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     if (marchio) {
         request += "?marchio=" + marchio;
     }
-    console.log("🚀 Tentativo di fetch verso Laravel...", request);
-    const res = await fetch(request, {
-        headers: {
-            Accept: 'application/json',
-        },
-    });
 
-
-    return res.json();
-    /*
-    const data = await res.json();
-//    logDebug(data);
-
-    const response = NextResponse.json(data);
-    response.headers.set('Last-Modified', new Date(data.lastUpdate).toUTCString());
-    response.headers.set('Cache-Control', 'no-cache');
-
-    return response;
-    */
-//    return data;
+    return cacheFetch(request);
 }
 
 export async function getSeoRegioneEstera(stato, regione, carburante) {
@@ -334,18 +317,8 @@ export async function getSeoRegione(regione, carburante, marchio, provincia, com
         request += `marchio=${marchio}&`;
     }
 
-    try {
-        const res = await fetch(request, {
-            headers: {
-                Accept: 'application/json',
-            }
-        });
-        return res.json();
-    } catch (error) {
-        if (error.response.status === 404) {
-            notFound();
-        }
-    }
+    return cacheFetch(request);
+
 }
 
 export async function getMediaByBounds({
