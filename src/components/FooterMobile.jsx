@@ -10,7 +10,7 @@ export function FooterMobile({children, added}) {
 
     const {isMobile} = useMobile();
 
-    console.log("IS MOBILE", isMobile);
+    // console.log("IS MOBILE", isMobile);
 
     if (isMobile !== true) return;
 

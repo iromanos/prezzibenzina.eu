@@ -38,7 +38,7 @@ export default function MappaDistributori({
 
     useEffect(() => {
         const handleFocus = e => {
-            console.log(e);
+            // console.log(e);
             const canvas = mapRef.current?.getMap()?.getCanvas();
             canvas?.scrollIntoView({behavior: 'smooth', block: 'start'});
 

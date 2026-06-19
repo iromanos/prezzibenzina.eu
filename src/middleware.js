@@ -2,7 +2,7 @@ import {NextResponse} from 'next/server';
 
 export function middleware(request) {
     const {pathname, search} = request.nextUrl;
-
+    // const startTime = performance.now();
     // Verifica se il percorso contiene lettere maiuscole
     // Escludiamo i file statici (immagini, _next, favicon) per evitare loop o problemi
     if (
@@ -21,19 +21,20 @@ export function middleware(request) {
         return NextResponse.redirect(url, 301);
     }
 
-    return NextResponse.next();
+    const response = NextResponse.next();
+    /*
+    const endTime = performance.now();
+    const duration = (endTime - startTime).toFixed(3);
+
+    response.headers.set('Server-Timing', `next-ssr;dur=${duration};desc="Next.js App Router"`);
+    */
+    return response;
+
 }
 
 // Opzionale: Configura il matcher per dire al middleware di ignorare i file statici a monte
 export const config = {
     matcher: [
-        /*
-         * Corrisponde a tutte le rotte tranne:
-         * 1. api (rotte API)
-         * 2. _next/static (file statici)
-         * 3. _next/image (ottimizzazione immagini)
-         * 4. favicon.ico, sitemap.xml, robots.txt (file di sistema)
-         */
         '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
     ],
 };

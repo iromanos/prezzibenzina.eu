@@ -74,7 +74,7 @@ export default function NominatimAutocomplete({onSelect, initialValue}) {
         setInputValue(initialValue);
     }, [initialValue])
 
-    console.log("INITIAL VALUE", initialValue);
+    // console.log("INITIAL VALUE", initialValue);
 
     return (
         <Autocomplete

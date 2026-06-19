@@ -8,7 +8,7 @@ export default function BoxComune({comune, fuel}) {
 
     useEffect(() => {
         getPrezzoMedioByComune(comune, fuel).then(res => {
-            console.log("PREZZO MEDIO: ", res);
+            // console.log("PREZZO MEDIO: ", res);
             setRecord(res);
         });
     }, [])

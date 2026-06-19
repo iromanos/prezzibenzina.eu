@@ -29,7 +29,7 @@ export function BottomSheetSimple({
 
     useEffect(() => {
         if (isMobile) {
-            console.log(expanded);
+            // console.log(expanded);
             let point = snapPoints[0];
             if (expanded) {
                 point = snapPoints[1];
@@ -119,8 +119,8 @@ export function BottomSheetSimple({
 
     if (!isMounted) return null;
 
-    console.log("ismobile", isMobile);
-    console.log("isopen", isOpen);
+    // console.log("ismobile", isMobile);
+    // console.log("isopen", isOpen);
 
     // STILI RESPONSIVE DETERMINANTI
     const desktopStyles = {

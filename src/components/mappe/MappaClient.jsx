@@ -76,7 +76,7 @@ export default function MappaClient({
     // console.log("VIEW STATE: ", viewState);
 
     const handleSnapChange = (size) => {
-        console.log("La bottom sheet ora è in stato:", size);
+        // console.log("La bottom sheet ora è in stato:", size);
         setShowList(true);
         if (size === 'MAXIMIZED') {
             setShowList(false);

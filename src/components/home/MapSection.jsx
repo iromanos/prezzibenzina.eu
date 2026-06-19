@@ -39,7 +39,7 @@ export function MapSection() {
 
         if (hookUltimaPosizione.posizione === false) return;
 
-        console.log('AGGIORNA VIEW STATE CON ULTIMA POSIZIONE: ', hookUltimaPosizione.posizione);
+        // console.log('AGGIORNA VIEW STATE CON ULTIMA POSIZIONE: ', hookUltimaPosizione.posizione);
         setViewState({
             latitude: hookUltimaPosizione.posizione.center.lat,
             longitude: hookUltimaPosizione.posizione.center.lng,
@@ -50,7 +50,7 @@ export function MapSection() {
     const active = true; // useInteraction();
 
 
-    console.log(`VIEWSTATE: ${viewState}`);
+    // console.log(`VIEWSTATE: ${viewState}`);
 
     return (
         <div className="mb-4">

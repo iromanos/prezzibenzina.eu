@@ -12,7 +12,7 @@ export default function AdSense() {
     const allowAds = consent?.marketing === true;
 
 
-    console.log(consent);
+    //console.log(consent);
 
     if (!allowAds) return null;
 

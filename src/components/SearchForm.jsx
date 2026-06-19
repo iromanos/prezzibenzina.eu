@@ -35,7 +35,7 @@ export default function SearchForm() {
             const payload = place;
             payload['carburante'] = carburante.tipo;
 
-            console.log(payload);
+            // console.log(payload);
 
             const res = await getRouteByPosition(payload);
             const data = await res.json();

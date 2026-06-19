@@ -27,6 +27,7 @@ import {GuidaCarburantiAutomobilistaVER3} from "@/components/GuidaCarburantiAuto
 
 export default async function DistributoriPage({params}) {
 
+    const start = performance.now();
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
 
 
@@ -127,6 +128,13 @@ export default async function DistributoriPage({params}) {
         }
         return <></>;
     }
+
+
+    const end = performance.now();
+    const serverDuration = (end - start).toFixed(2);
+
+    // Questo lo vedrai nel terminale del server
+    console.log(`[Server Render] Tempo di generazione pagina: ${serverDuration}ms`);
 
     return <>
         <Header/>

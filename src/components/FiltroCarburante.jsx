@@ -36,7 +36,7 @@ export function LinkCarburanti({params, carburanti, onCarburanteChange = null, s
                                 }
 
                                 const link = getRouteLink(params.regione, c.tipo, params.marchio, params.provincia, params.comune);
-                                console.log(link);
+                                // console.log(link);
                                 window.location = link.link;
                             }}
                         >{c.icon} {c.tipo}</Button>

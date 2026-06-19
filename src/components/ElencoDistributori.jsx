@@ -10,7 +10,7 @@ export default function ElencoDistributori({distributori}){
 
     const {ModalComponent, ModalResult} = usePreferitiGlobal();
 
-    console.log(`DISTRIBUTORE: ${distributori[0]}`);
+    // console.log(`DISTRIBUTORE: ${distributori[0]}`);
 
     return <section className={'mb-4'}>
         <h2 className="h6 mb-3 text-uppercase">Elenco distributori più economici</h2>

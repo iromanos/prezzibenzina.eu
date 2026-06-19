@@ -101,7 +101,7 @@ export default function FiltriMappaModerni({
                             <NominatimAutocomplete
                                 initialValue={place !== null ? place?.label : ''}
                                 onSelect={(place) => {
-                                    console.log(place);
+                                    // console.log(place);
                                     setPlace(place);
                                     onSearch?.(place);
                                 }}

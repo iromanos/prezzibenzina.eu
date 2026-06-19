@@ -31,7 +31,7 @@ export default async function DistributoriEsteriPage({params}) {
     }
     const recordStato = queryStati[0];
 
-    console.log(elencoCarburanti);
+    // console.log(elencoCarburanti);
 
     if (elencoCarburanti[carburante] === undefined) {
         redirect(`/${recordStato.key}/benzina`);
@@ -54,7 +54,7 @@ export default async function DistributoriEsteriPage({params}) {
 
     const response = await getImpiantiByDistance({stato: recordStato.key, carburante: carburante, limit: 10});
 
-    console.log(response);
+    // console.log(response);
 
     const records = await response.json();
 
@@ -65,7 +65,7 @@ export default async function DistributoriEsteriPage({params}) {
         return record;
     })
 
-    console.log(distributori);
+    // console.log(distributori);
 
     const date = new Date(riepilogo.dataAggiornamento);
 

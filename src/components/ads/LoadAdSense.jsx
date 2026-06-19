@@ -30,7 +30,7 @@ export default function LoadAdSense() {
         window.dataLayer = [];
         window.gtag = function () {
             window.dataLayer.push(arguments);
-            console.log(arguments);
+            // console.log(arguments);
         };
 
         window.gtag('consent', 'default', {
@@ -50,7 +50,7 @@ export default function LoadAdSense() {
                 window.dataLayer = window.dataLayer || [];
                 window.gtag = function () {
                     window.dataLayer.push(arguments);
-                    console.log(arguments);
+                    // console.log(arguments);
                 };
 
                 window.gtag('consent', 'default', {
