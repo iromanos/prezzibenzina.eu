@@ -11,6 +11,8 @@ import PublicIcon from "@mui/icons-material/Public";
 
 export const URI = process.env.NEXT_PUBLIC_API_ENDPOINT + '/pb/';
 
+export const INTERNAL_URI = process.env.INTERNAL_API_URL + '/pb/';
+
 @deprecatedPropType()
 const Carburanti = {
     'benzina': '1-x',
@@ -142,10 +144,11 @@ export function getCarburanti() {
 }
 
 export async function getMarchi() {
-    const response = await fetch(URI + 'marchi', {
+    const response = await fetch(INTERNAL_URI + 'marchi', {
         method: 'GET',
         headers: {
             Accept: 'application/json',
+            Host: 'www.wefuel.it'
         },
     });
 
@@ -239,14 +242,14 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     if (carburante === 'metano') fuel = '3-x';
     if (carburante === 'gpl') fuel = '4-x';
 
-    let request = URI + "prezzi/r/" + regione + "/" + fuel;
+    let request = INTERNAL_URI + "prezzi/r/" + regione + "/" + fuel;
 
     if (provincia) {
-        request = URI + "prezzi/p/" + provincia + "/" + fuel;
+        request = INTERNAL_URI + "prezzi/p/" + provincia + "/" + fuel;
     }
 
     if (comune) {
-        request = URI + "prezzi/c/" + comune + "/" + fuel;
+        request = INTERNAL_URI + "prezzi/c/" + comune + "/" + fuel;
     }
 
     if (marchio) {
@@ -312,7 +315,7 @@ export async function getSeoRegione(regione, carburante, marchio, provincia, com
     if (carburante === 'gpl') fuel = '4-x';
 
 
-    let request = URI + `seo/regione/${regione}?`;
+    let request = INTERNAL_URI + `seo/regione/${regione}?`;
 
     if (fuel) {
         request += `fuel=${fuel}&`;
@@ -329,11 +332,14 @@ export async function getSeoRegione(regione, carburante, marchio, provincia, com
     if(marchio) {
         request += `marchio=${marchio}&`;
     }
-    logDebug(request);
 
     try {
-        const res = await axios.get(request);
-        return res.data;
+        const res = await fetch(request, {
+            headers: {
+                Accept: 'application/json',
+            }
+        });
+        return res.json();
     } catch (error) {
         if (error.response.status === 404) {
             notFound();
