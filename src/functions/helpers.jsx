@@ -221,9 +221,19 @@ export async function getMetadata({params}) {
         Trova il distributore più conveniente tra ${riepilogo.totaleImpianti} impianti, a partire da ${prezzoMinimo} €/L.`;
 
     const canonicalUrl = getLink(regione, carburante, marchio, sigla, riepilogo.request.comune);
-    const imageUrl = '/assets/logo.png';
 
-    // logDebug("CANONICAL URL: " + canonicalUrl.link);
+    let fuel = '';
+    if (carburante === 'benzina') fuel = '1-x';
+    if (carburante === 'diesel') fuel = '2-x';
+    if (carburante === 'metano') fuel = '3-x';
+    if (carburante === 'gpl') fuel = '4-x';
+
+
+    const imageUrl = comune
+        ? process.env.NEXT_PUBLIC_API_ENDPOINT + `/pb/images/og/${comune}-${fuel}-1200-630`
+        : sigla
+            ? process.env.NEXT_PUBLIC_API_ENDPOINT + `/pb/images/og/${sigla}-${fuel}-1200-630`
+            : process.env.NEXT_PUBLIC_API_ENDPOINT + `/pb/images/og/${regione}-${fuel}-1200-630`;
 
     const microdata = generateMicrodataGraph(distributori);
 
