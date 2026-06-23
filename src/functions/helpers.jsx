@@ -235,12 +235,11 @@ export async function getMetadata({params}) {
             ? process.env.NEXT_PUBLIC_API_ENDPOINT + `/pb/images/og/${sigla}-${fuel}-1200-630`
             : process.env.NEXT_PUBLIC_API_ENDPOINT + `/pb/images/og/${regione}-${fuel}-1200-630`;
 
-    const microdata = generateMicrodataGraph(distributori);
 
     return {
-        other: {
-            'application/ld+json': JSON.stringify(microdata),
-        },
+        // other: {
+        //     'application/ld+json': JSON.stringify(microdata),
+        // },
         title: titolo,
         description: descrizione,
         alternates: {
@@ -310,6 +309,9 @@ export function slugify(text) {
 
 export function generateMicrodataGraph(impianti) {
 
+
+    const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
+
     // logDebug(impianti);
     const graph = impianti.map((impianto) => {
         const {
@@ -324,12 +326,14 @@ export function generateMicrodataGraph(impianti) {
             prezzoMinimo,
             impianto_scheda,
             link,
+            image,
         } = impianto
 
         return {
-            '@type': 'FuelStation',
+            '@type': 'GasStation',
             '@id': `https://www.prezzibenzina.eu/impianto/${link}`,
             name: nome_impianto || impianto_scheda?.name || gestore,
+            image: URI_IMAGE + image,
             brand: bandiera,
             address: {
                 '@type': 'PostalAddress',

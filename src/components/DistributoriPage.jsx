@@ -14,7 +14,7 @@ import Display6977770298 from "@/components/ads/Display-6977770298";
 import Display5745053645 from "./ads/Display-5745053645";
 import {FooterDistributori} from "./home/FooterHome";
 import {FooterMobile} from "./FooterMobile";
-import {ucwords} from "@/functions/helpers";
+import {generateMicrodataGraph, ucwords} from "@/functions/helpers";
 import Image from "next/image";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import {AdsDesktop} from "@/components/ads/AdsDesktop";
@@ -60,8 +60,6 @@ export default async function DistributoriPage({params}) {
         return `${nome}`;
     });
 
-//    const response = await resDistributori; // await getDistributoriRegione(regione, carburante, marchio, sigla, comune);
-
     const record = await resDistributori;
 
     const distributori = record.map(record => {
@@ -77,6 +75,9 @@ export default async function DistributoriPage({params}) {
             properties: record
         };
     })
+
+    const microdata = generateMicrodataGraph(record);
+
 
     const riepilogo = await resSeoRegione; // getSeoRegione(regione, carburante, marchio, sigla, comune);
 
@@ -147,6 +148,11 @@ export default async function DistributoriPage({params}) {
     console.log(`[Server Render] Tempo di generazione pagina: ${serverDuration}ms`);
 
     return <>
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{__html: JSON.stringify(microdata)}}
+        />
+
         <Header/>
 
         <div className="container py-4">
