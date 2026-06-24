@@ -126,9 +126,9 @@ export default function ImpiantoScheda({impianto, cookie}) {
                 <div className="card-body p-4">
 
                     <div className="d-flex justify-content-between align-items-center">
-                        <h5 className="text-primary fw-bold text-uppercase tracking-wider m-0">
+                        <span className="h5 text-primary fw-bold text-uppercase tracking-wider m-0">
                             {cookie.carburante}
-                        </h5>
+                        </span>
                     </div>
 
                     <div className="d-flex align-items-baseline">
@@ -172,8 +172,8 @@ export default function ImpiantoScheda({impianto, cookie}) {
                             <small className="text-muted">{impianto.gestore}</small>
                         </div>
                     </div>
-                    <BoxPrezzo className={'d-lg-none'}/>
-                    <ImpiantoDescrizione impianto={impianto}/>
+                    {/*<BoxPrezzo className={'d-lg-none'}/>*/}
+                    <ImpiantoDescrizione impianto={impianto} carburante={cookie.carburante}/>
 
                     <h2 className={'h5'}>Indirizzo</h2>
                     <p>{indirizzo}{impianto.comune ? `, ${ucwords(impianto.comune)}` : null} {provincia ? `(${provincia})` : null}</p>

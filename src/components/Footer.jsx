@@ -13,9 +13,9 @@ export default function Footer() {
                             width={120}
                             height={120}
                             src="/assets/logo-transparent-120.png" alt="Logo PrezziBenzina.eu" className="mb-2"/></a>
-                        <p className="small mb-0">
-                            PrezziBenzina.eu ti aiuta a trovare i distributori più convenienti nella tua zona. Risparmia ogni giorno.
-                        </p>
+                        {/*<p className="small mb-0">*/}
+                        {/*    PrezziBenzina.eu ti aiuta a trovare i distributori più convenienti nella tua zona. Risparmia ogni giorno.*/}
+                        {/*</p>*/}
                     </div>
 
                     {/* Link utili */}

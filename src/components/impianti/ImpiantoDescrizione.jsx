@@ -1,6 +1,6 @@
 import {ucwords} from "@/functions/helpers";
 
-export default function ImpiantoDescrizione({impianto}) {
+export default function ImpiantoDescrizione({impianto, carburante}) {
     if (!impianto) return null;
 
     const {
@@ -20,6 +20,8 @@ export default function ImpiantoDescrizione({impianto}) {
     const localita = `${ucwords(comune)} (${provincia})`;
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`;
 
+    const testoCarburante = carburante === 'benzina' ? 'della benzina' : ` del ${carburante}`;
+
     return (
         <section className="mt-4">
             <h2 className="h5">Descrizione dell'impianto</h2>
@@ -36,7 +38,7 @@ export default function ImpiantoDescrizione({impianto}) {
             </p>
             {impianto.prezzo !== 0 ?
             <p>
-                Il prezzo attuale del carburante è di <strong>{prezzoStr} €/L</strong>, aggiornato in tempo reale.
+                Il prezzo attuale {testoCarburante} è di <strong>{prezzoStr} €/L</strong>, aggiornato in tempo reale.
                 Questo lo rende una scelta interessante per chi cerca convenienza e trasparenza.
             </p> : null}
             <p>
@@ -44,10 +46,10 @@ export default function ImpiantoDescrizione({impianto}) {
                                                                                     rel="noopener">avviare la
                 navigazione</a>.
             </p>
-            <p>
-                PrezziBenzina.eu ti aiuta a pianificare il rifornimento in modo intelligente, con dati sempre aggiornati
-                e strumenti utili per risparmiare.
-            </p>
+            {/*<p>*/}
+            {/*    PrezziBenzina.eu ti aiuta a pianificare il rifornimento in modo intelligente, con dati sempre aggiornati*/}
+            {/*    e strumenti utili per risparmiare.*/}
+            {/*</p>*/}
         </section>
     );
 }
