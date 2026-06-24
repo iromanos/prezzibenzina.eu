@@ -45,7 +45,7 @@ export default async function RootLayout({children}) {
         trackId = "G-VNEDGKF1LT";
     }
 
-    console.log("REFERER: " + referer);
+    // console.log("REFERER: " + referer);
 
     return (
         <html lang="it" className={`${montserrat.variable} ${quicksand.variable}`}>

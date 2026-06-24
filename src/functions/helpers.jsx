@@ -1,4 +1,4 @@
-import {getCarburanti, getDistributoriRegione, getImpiantiByDistance, getMarchi, getSeoRegione} from "@/functions/api";
+import {getCarburanti, getImpiantiByDistance, getMarchi, getSeoRegione} from "@/functions/api";
 import {notFound} from "next/navigation";
 import slugify from 'slugify';
 
@@ -124,12 +124,9 @@ export async function getMetadataEstero({params}) {
 
     logDebug("CANONICAL URL: " + canonicalUrl.link);
 
-    const microdata = generateMicrodataGraph(distributori);
+    // const microdata = generateMicrodataGraph(distributori);
 
     return {
-        other: {
-            'application/ld+json': JSON.stringify(microdata),
-        },
         title: titolo,
         description: descrizione,
         alternates: {
@@ -183,17 +180,14 @@ export async function getMetadata({params}) {
         }
     }
 
-    const [resDistributori, resSeoRegione] = await Promise.all(
+    const [resSeoRegione] = await Promise.all(
         [
-            getDistributoriRegione(regione, carburante, marchio, sigla, comune),
             getSeoRegione(regione, carburante, marchio, sigla, comune)
         ]
     );
 
-    const response = await resDistributori;
     const riepilogo = await resSeoRegione;
 
-    const distributori = response;
     const descrizioneCarburante = carburante ? ucwords(carburante) : 'carburante';
 
     const localizzazione = comune
@@ -307,7 +301,7 @@ export function slugify(text) {
         .replace(/[\s\W-]+/g, '-') // sostituisce spazi e simboli con -
 }*/
 
-export function generateMicrodataGraph(impianti) {
+export function generateMicrodataGraph(impianti, url, localita, carburante) {
 
 
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
@@ -353,9 +347,61 @@ export function generateMicrodataGraph(impianti) {
         }
     })
 
+    const distributoreMigliore = impianti[0];
+    const nomeMigliore = distributoreMigliore.nome_impianto || distributoreMigliore.impianto_scheda?.name || distributoreMigliore.gestore;
+
+    const pompeBianche = impianti.filter(i => i.bandiera === 'Pompe Bianche');
+
+    let faqPompeBianche = `Attualmente non ci sono pompe bianche indipendenti registrate ${localita}, ma i prezzi più bassi della zona sono comunque garantiti dalle stazioni in modalità self-service`;
+
+    if (pompeBianche.length !== 0) {
+
+        const nomePB = pompeBianche[0].nome_impianto || pompeBianche[0].impianto_scheda?.name || pompeBianche[0].gestore;
+
+        faqPompeBianche =
+            `Sì, ${localita} sono presenti distributori indipendenti (pompe bianche) ad esempio ${nomePB} in ${pompeBianche[0].indirizzo} a ${pompeBianche[0].comune} (${pompeBianche[0].provincia}), ` +
+            'che spesso offrono tariffe altamente competitive rispetto ai grandi marchi.';
+    }
+
+    // 2. Il blocco delle FAQ
+    const faqData = {
+        "@type": "FAQPage",
+        "@id": `https://www.prezzibenzina.eu${url.link}#faq`,
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": `Qual è il distributore ${carburante} più economico oggi ${localita}?`,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": `In base agli ultimi aggiornamenti, il distributore più economico ${localita} è ${nomeMigliore} in ${distributoreMigliore.indirizzo} a ${distributoreMigliore.comune} (${distributoreMigliore.provincia})`
+                }
+            },
+            {
+                "@type": "Question",
+                "name": `Ci sono pompe bianche o distributori no-logo ${localita}?`,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": faqPompeBianche
+                }
+            },
+
+            {
+                "@type": "Question",
+                "name": `Ogni quanto vengono aggiornati i prezzi dei carburanti su questa pagina?`,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": `I prezzi ${carburante} ${localita} vengono aggiornati quotidianamente. I dati provengono direttamente dalle comunicazioni ufficiali che i gestori dei distributori inviano all'Osservaprezzi del Ministero (MIMIT).`
+                }
+            },
+        ]
+    };
+
     return {
         '@context': 'https://schema.org',
-        '@graph': graph,
+        '@graph': [
+            ...graph,
+            faqData
+        ]
     }
 }
 

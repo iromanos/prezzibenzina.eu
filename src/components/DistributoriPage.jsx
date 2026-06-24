@@ -14,7 +14,7 @@ import Display6977770298 from "@/components/ads/Display-6977770298";
 import Display5745053645 from "./ads/Display-5745053645";
 import {FooterDistributori} from "./home/FooterHome";
 import {FooterMobile} from "./FooterMobile";
-import {generateMicrodataGraph, ucwords} from "@/functions/helpers";
+import {generateMicrodataGraph, getLink, ucwords} from "@/functions/helpers";
 import Image from "next/image";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import {AdsDesktop} from "@/components/ads/AdsDesktop";
@@ -76,10 +76,13 @@ export default async function DistributoriPage({params}) {
         };
     })
 
-    const microdata = generateMicrodataGraph(record);
+
+    const riepilogo = await resSeoRegione;
 
 
-    const riepilogo = await resSeoRegione; // getSeoRegione(regione, carburante, marchio, sigla, comune);
+    const canonicalUrl = getLink(regione, carburante, marchio, sigla, riepilogo.request.comune);
+
+    // console.log("CANONICAL", canonicalUrl);
 
     const comuni = riepilogo.comuni;
     const marchi = riepilogo.marchi;
@@ -110,6 +113,10 @@ export default async function DistributoriPage({params}) {
                 : `in ${ucwords(scope.valore)}`;
 
     riepilogo.localita = localita;
+
+    const microdata = generateMicrodataGraph(record, canonicalUrl, localita, carburante);
+
+    //console.log( JSON.stringify( microdata));
 
     const coords = distributori
         .filter((d) => Number.isFinite(d.properties.longitudine) && Number.isFinite(d.properties.latitudine))
