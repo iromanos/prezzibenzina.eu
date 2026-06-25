@@ -67,9 +67,13 @@ const GuidaCarburantiAutomobilistaVER3 = ({riepilogo, distributori, titoloPagina
         // =================================================================
         // ALGORITMO DI HASH DJB2 (Garantisce l'univocità del testo)
         // =================================================================
+
+        const idComune = infoRichiesta.comune?.id || "";
+        const stringaUnivoca = `${localita}-${totaleImpianti}-${tipoCarburante}-${idComune}-${mediaPrezzo}`;
+
         let hash = 5381;
-        for (let i = 0; i < localita.length; i++) {
-            hash = ((hash << 5) + hash) + localita.charCodeAt(i);
+        for (let i = 0; i < stringaUnivoca.length; i++) {
+            hash = ((hash << 5) + hash) + stringaUnivoca.charCodeAt(i);
         }
         const localitaHash = Math.abs(hash);
 
