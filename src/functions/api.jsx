@@ -186,11 +186,7 @@ export async function getImpianto({query}) {
 
     logDebug(request);
 
-    return await fetch(request, {
-        headers: {
-            Accept: 'application/json',
-        },
-    });
+    return await cacheFetch(request);
 
 }
 

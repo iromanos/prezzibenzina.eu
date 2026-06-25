@@ -5,18 +5,18 @@ import {getCookie} from "@/functions/cookies";
 import {getCanonicalUrl, getOpenGraph, getTwitter} from "@/functions/server";
 import {headers} from "next/headers";
 import {notFound, redirect} from "next/navigation";
+import {logDebug} from "@/functions/helpers";
 
 export async function generateMetadata({params}) {
 
     const query = await params;
 
-    const res = await getImpianto({query});
+    const impianto = await getImpianto({query});
 
-    if (res.status !== 200) {
+    if (impianto === null) {
         notFound();
     }
 
-    const impianto = await res.json();
     const imageUrl = '/assets/logo-og.png';
 
     const title = `${impianto.nome_impianto} – ${impianto.comune} | PrezziBenzina.eu`;
@@ -45,13 +45,11 @@ export default async function Page({params}) {
 
     const query = await params;
 
-    const res = await getImpianto({query});
+    const impianto = await getImpianto({query});
 
-    if (res.status !== 200) {
+    if (impianto === null) {
         notFound();
     }
-
-    const impianto = await res.json();
 
     if (impianto.link !== query.impianto) {
         console.log(`Link impianto (${impianto.link}) non corrisponde a query (${query.impianto}). Reindirizzamento necessario.`);
@@ -59,6 +57,8 @@ export default async function Page({params}) {
     }
 
     const cookie = await getCookie();
+
+    logDebug(impianto);
 
     return <><Header/>
         <ImpiantoScheda impianto={impianto} cookie={cookie}/></>;

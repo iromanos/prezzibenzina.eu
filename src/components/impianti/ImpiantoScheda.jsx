@@ -200,6 +200,16 @@ export default function ImpiantoScheda({impianto, cookie}) {
                         </table>
                         <Display5745053645/>
                     </div>
+
+                    {impianto.servizi && impianto.servizi.services.length !== 0 && <>
+                        <h2 className={'h5'}>Servizi disponibili</h2>
+                        <p>In questa stazione di servizio sono attivi i seguenti servizi per la clientela:</p>
+                        <ul>
+                            {impianto.servizi.services.map(s => {
+                                return <li key={s.id}>{s.description}</li>
+                            })}</ul>
+                    </>}
+
                 </div>
                 <div className={'col-lg-5 mb-4'}>
                     <BoxPrezzo className={'d-none d-lg-block'}/>
