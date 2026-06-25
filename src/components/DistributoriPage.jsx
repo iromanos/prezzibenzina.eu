@@ -120,11 +120,11 @@ export default async function DistributoriPage({params}) {
 
     const coords = distributori
         .filter((d) => Number.isFinite(d.properties.longitudine) && Number.isFinite(d.properties.latitudine))
-        .map((d) => [d.properties.longitudine, d.properties.latitudine]);
+        .map((d) => [d.properties.longitudine, d.properties.latitudine]) || null;
 
 
-    const centerFeature = turf.center(turf.points(coords));
-    const centerCoordinates = centerFeature.geometry.coordinates; // [Lng, Lat]
+    const centerFeature = distributori.length !== 0 ? turf.center(turf.points(coords)) : null;
+    const centerCoordinates = centerFeature !== null ? centerFeature.geometry.coordinates : null;
 
 
     const titoloPagina = `Prezzi ${carburante} ${localita}: i distributori più economici oggi`;
@@ -240,17 +240,24 @@ export default async function DistributoriPage({params}) {
                         }}
 
                         distributori={distributori}/> : <></>}
+                    {distributori.length !== 0 && <>
                     <Display5745053645/>
 
                     <GuidaCarburantiAutomobilistaVER3 riepilogo={riepilogo} distributori={distributori}
                                                   titoloPagina={titoloPagina}/>
+                    </>}
+                    {distributori.length === 0 && <>
+                        <div className={'bg-danger-subtle border border-danger rounded p-3 mb-3'}>
+                            Non sono presenti distributori in questa zona
+                        </div>
+
+                    </>}
                     <Display6977770298 className={'mb-3'}/>
-
                 </div>
-
+                {distributori.length !== 0 &&
                 <div id="distributori" className={'col-lg-5 '}>
                     <ElencoDistributori Regione={regione} distributori={distributori}/>
-                </div>
+                </div>}
             </div>
 
 

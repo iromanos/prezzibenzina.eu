@@ -229,11 +229,14 @@ export async function getMetadata({params}) {
             ? process.env.NEXT_PUBLIC_API_ENDPOINT + `/pb/images/og/${sigla}-${fuel}-1200-630`
             : process.env.NEXT_PUBLIC_API_ENDPOINT + `/pb/images/og/${regione}-${fuel}-1200-630`;
 
+    const robots = riepilogo.totaleImpianti === 0 ? {
+        index: false,
+        follow: true, // true se vuoi che i motori di ricerca seguano comunque i link nella pagina
+    } : undefined;
+
 
     return {
-        // other: {
-        //     'application/ld+json': JSON.stringify(microdata),
-        // },
+        robots: robots,
         title: titolo,
         description: descrizione,
         alternates: {
@@ -303,6 +306,10 @@ export function slugify(text) {
 
 export function generateMicrodataGraph(impianti, url, localita, carburante) {
 
+    if (impianti.length === 0) {
+        return null;
+    }
+
 
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
 
@@ -346,6 +353,7 @@ export function generateMicrodataGraph(impianti, url, localita, carburante) {
             url: `https://www.prezzibenzina.eu/impianto/${link}`,
         }
     })
+
 
     const distributoreMigliore = impianti[0];
     const nomeMigliore = distributoreMigliore.nome_impianto || distributoreMigliore.impianto_scheda?.name || distributoreMigliore.gestore;
