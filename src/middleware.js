@@ -1,8 +1,13 @@
 import {NextResponse} from 'next/server';
 
-export function middleware(request) {
+export async function middleware(request) {
     const {pathname, search} = request.nextUrl;
     const startTime = Date.now()
+
+    const requestHeaders = new Headers(request.headers)
+
+    // Iniettiamo il pathname corrente in un header personalizzato chiamato x-url
+    requestHeaders.set('x-url', request.nextUrl.pathname + request.nextUrl.search)
 
     // Verifica se il percorso contiene lettere maiuscole
     // Escludiamo i file statici (immagini, _next, favicon) per evitare loop o problemi
@@ -22,14 +27,18 @@ export function middleware(request) {
         return NextResponse.redirect(url, 301);
     }
 
-    const response = NextResponse.next();
+    const response = await NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    });
 
     const duration = Date.now() - startTime
 
     // Filtra per loggare solo le richieste di pagine HTML (escludi asset statici se vuoi pulizia)
-    if (!request.nextUrl.pathname.includes('/_next/')) {
-        console.log(`[LOG] ${request.method} ${request.nextUrl.pathname} - ${duration}ms`);
-    }
+    // if (!request.nextUrl.pathname.includes('/_next/')) {
+    //console.log(`[LOG] ${request.method} ${request.nextUrl.pathname} - ${duration}ms`);
+    // }
     return response;
 
 }

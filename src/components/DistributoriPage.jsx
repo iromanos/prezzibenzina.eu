@@ -21,7 +21,7 @@ import {AdsDesktop} from "@/components/ads/AdsDesktop";
 import * as turf from '@turf/turf';
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 import {GuidaCarburantiAutomobilistaVER3} from "@/components/GuidaCarburantiAutomobilista";
-
+import {headers} from 'next/headers';
 //TODO: nella versione Desktop, inserire i link ai marchi
 //TODO: visualizzare grafico con la media dei prezzi dell'ultimo mese
 
@@ -29,7 +29,9 @@ export default async function DistributoriPage({params}) {
 
     const start = performance.now();
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
-
+    // 1. Recuperiamo gli headers della richiesta
+    const headersList = await headers();
+    const pathname = headersList.get('x-url') || headersList.get('x-matched-path') || '';
 
     const {regione, carburante, marchio, sigla, comune} = await params;
 
@@ -152,7 +154,7 @@ export default async function DistributoriPage({params}) {
     const serverDuration = (end - start).toFixed(2);
 
     // Questo lo vedrai nel terminale del server
-    console.log(`[Server Render] Tempo di generazione pagina: ${serverDuration}ms`);
+    console.log(`[Server Render] ${pathname}: ${serverDuration}ms`);
 
     return <>
         <script
