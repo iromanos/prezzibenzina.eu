@@ -71,6 +71,8 @@ export default async function Page({params}) {
     logDebug(impianto);
 
     // console.log(impianto.servizi);
+    const end = performance.now();
+    const serverDuration = (end - start).toFixed(2);
     console.log(`[Server Render] Tempo di generazione pagina: ${serverDuration}ms`);
 
     return <><Header/>
