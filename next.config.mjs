@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    logging: {
+        fetches: {
+            fullUrl: true,
+        },
+    },
     devIndicators: false,
     experimental: {
         optimizeCss: true, // Abilita l'inlining del CSS critico

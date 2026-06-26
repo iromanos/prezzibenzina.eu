@@ -2,7 +2,8 @@ import {NextResponse} from 'next/server';
 
 export function middleware(request) {
     const {pathname, search} = request.nextUrl;
-    // const startTime = performance.now();
+    const startTime = Date.now()
+
     // Verifica se il percorso contiene lettere maiuscole
     // Escludiamo i file statici (immagini, _next, favicon) per evitare loop o problemi
     if (
@@ -22,12 +23,13 @@ export function middleware(request) {
     }
 
     const response = NextResponse.next();
-    /*
-    const endTime = performance.now();
-    const duration = (endTime - startTime).toFixed(3);
 
-    response.headers.set('Server-Timing', `next-ssr;dur=${duration};desc="Next.js App Router"`);
-    */
+    const duration = Date.now() - startTime
+
+    // Filtra per loggare solo le richieste di pagine HTML (escludi asset statici se vuoi pulizia)
+    if (!request.nextUrl.pathname.includes('/_next/')) {
+        console.log(`[LOG] ${request.method} ${request.nextUrl.pathname} - ${duration}ms`);
+    }
     return response;
 
 }

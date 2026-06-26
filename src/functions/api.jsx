@@ -223,8 +223,6 @@ export async function getSiteMap({tipo, regione, provincia}) {
 }
 
 const cacheFetch = cache(async (url) => {
-
-    console.log("🚀 Tentativo di fetch verso Laravel...", url);
     const res = await fetch(url, {
         headers: {Accept: 'application/json'},
     });
