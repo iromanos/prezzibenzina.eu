@@ -43,7 +43,7 @@ export default async function Mappa({searchParams}) {
 
     const queryParams = await searchParams;
 
-    console.log(queryParams);
+    // console.log(queryParams);
 
     const initialFilters = {};
 
@@ -109,7 +109,7 @@ export default async function Mappa({searchParams}) {
     if (posizione.lat === undefined) posizione.lat = 0;
     if (posizione.lng === undefined) posizione.lng = 0;
 
-    console.log("POSIZIONE: ", posizione);
+    // console.log("POSIZIONE: ", posizione);
 
     let zoom = queryParams.zoom;
 
@@ -119,8 +119,8 @@ export default async function Mappa({searchParams}) {
 
     const referer = headersList.get('X-WEFUEL-REFERER') || 'pb';
 
-    console.log("REFERER", referer);
-    console.log("QUERY PARAMS: ", queryParams);
+    // console.log("REFERER", referer);
+    // console.log("QUERY PARAMS: ", queryParams);
 
     return <>
         <div className={'d-flex'}>

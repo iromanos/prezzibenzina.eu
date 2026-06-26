@@ -50,6 +50,9 @@ export async function generateMetadata({params}) {
 
 export default async function Page({params}) {
 
+    const start = performance.now();
+
+
     const query = await params;
 
     const impianto = await getImpianto({query});
@@ -59,7 +62,7 @@ export default async function Page({params}) {
     }
 
     if (impianto.link !== query.impianto) {
-        console.log(`Link impianto (${impianto.link}) non corrisponde a query (${query.impianto}). Reindirizzamento necessario.`);
+        // console.log(`Link impianto (${impianto.link}) non corrisponde a query (${query.impianto}). Reindirizzamento necessario.`);
         redirect('/impianto/' + impianto.link);
     }
 
@@ -67,7 +70,8 @@ export default async function Page({params}) {
 
     logDebug(impianto);
 
-    console.log(impianto.servizi);
+    // console.log(impianto.servizi);
+    console.log(`[Server Render] Tempo di generazione pagina: ${serverDuration}ms`);
 
     return <><Header/>
         <ImpiantoScheda impianto={impianto} cookie={cookie}/></>;

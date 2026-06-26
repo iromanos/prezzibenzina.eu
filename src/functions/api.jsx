@@ -41,7 +41,7 @@ export async function postCookie(data) {
 export async function fetchImpiantiByRoute(data, tipo_impianto, servizi) {
     const coords = data.features[0].geometry.coordinates;
 
-    console.log('IMPIANTI REQUEST');
+    // console.log('IMPIANTI REQUEST');
 
     const response = await axios.post(process.env.NEXT_PUBLIC_API_ENDPOINT + '/api/route/poi', {
         steps: coords,

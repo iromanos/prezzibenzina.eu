@@ -76,7 +76,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
         const fuel = carburanti.find(c => c.tipo === cookie.carburante);
         logDebug(prezzi);
 
-        console.log("PREZZI", prezzi);
+        // console.log("PREZZI", prezzi);
 
         let qry = prezzi
             .filter(p => p.fuel_id === fuel.fuel_id);
