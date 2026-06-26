@@ -51,6 +51,8 @@ export async function generateMetadata({params}) {
 export default async function Page({params}) {
 
     const start = performance.now();
+    const headersList = await headers();
+    const pathname = headersList.get('x-url') || headersList.get('x-matched-path') || '';
 
 
     const query = await params;
@@ -73,7 +75,9 @@ export default async function Page({params}) {
     // console.log(impianto.servizi);
     const end = performance.now();
     const serverDuration = (end - start).toFixed(2);
-    console.log(`[Server Render] Tempo di generazione pagina: ${serverDuration}ms`);
+
+    const timestamp = new Date().toLocaleString('it-IT', {timeZone: 'Europe/Rome'});
+    console.log(`[${timestamp}] [Server Render] ${pathname}: ${serverDuration}ms`);
 
     return <><Header/>
         <ImpiantoScheda impianto={impianto} cookie={cookie}/></>;

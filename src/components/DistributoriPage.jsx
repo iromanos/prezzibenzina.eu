@@ -28,10 +28,10 @@ import {headers} from 'next/headers';
 export default async function DistributoriPage({params}) {
 
     const start = performance.now();
-    const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
-    // 1. Recuperiamo gli headers della richiesta
     const headersList = await headers();
     const pathname = headersList.get('x-url') || headersList.get('x-matched-path') || '';
+
+    const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
 
     const {regione, carburante, marchio, sigla, comune} = await params;
 
@@ -153,8 +153,8 @@ export default async function DistributoriPage({params}) {
     const end = performance.now();
     const serverDuration = (end - start).toFixed(2);
 
-    // Questo lo vedrai nel terminale del server
-    console.log(`[Server Render] ${pathname}: ${serverDuration}ms`);
+    const timestamp = new Date().toLocaleString('it-IT', {timeZone: 'Europe/Rome'});
+    console.log(`[${timestamp}] [Server Render] ${pathname}: ${serverDuration}ms`);
 
     return <>
         <script
