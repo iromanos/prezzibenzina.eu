@@ -1,5 +1,3 @@
-//TODO: sitemap dei capoluoghi di provincia
-
 import {NextResponse} from "next/server";
 import {URI} from "@/functions/api";
 
