@@ -129,7 +129,7 @@ export default function SearchForm() {
             </form>
 
             <div className="mt-4 py-4">
-        <h6 className="mb-3">Suggerimenti rapidi:</h6>
+                <label className="mb-3 h6">Suggerimenti rapidi:</label>
                 <div className="d-flex flex-wrap gap-2 justify-content-center">
             {[
                 {label: 'Benzina a Milano', query: '/lombardia/benzina/provincia/mi/milano'},

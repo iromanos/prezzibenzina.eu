@@ -20,7 +20,7 @@ export default function ImpiantoDescrizione({impianto, carburante}) {
     const localita = `${ucwords(comune)} (${provincia})`;
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitudine},${longitudine}`;
 
-    const testoCarburante = carburante === 'benzina' ? 'della benzina' : ` del ${carburante}`;
+    const testoCarburante = carburante === 'benzina' ? <>della <strong>benzina</strong></> : <>del <strong>{carburante}</strong></>;
 
     return (
         <section className="mt-4">
@@ -33,7 +33,8 @@ export default function ImpiantoDescrizione({impianto, carburante}) {
                 in <strong>{indirizzo}</strong>{comune !== '' ? <> a <strong>{localita}</strong></> : null}. Si tratta
                 di
                 un
-                impianto <strong>{tipo_impianto}</strong> con bandiera <strong>{bandiera}</strong>, facilmente
+                impianto <strong>{tipo_impianto.toLowerCase()}</strong> con bandiera <strong>{bandiera}</strong>,
+                facilmente
                 raggiungibile per chi transita nella zona.
             </p>
             {impianto.prezzo !== 0 ?
@@ -46,10 +47,6 @@ export default function ImpiantoDescrizione({impianto, carburante}) {
                                                                                     rel="noopener">avviare la
                 navigazione</a>.
             </p>
-            {/*<p>*/}
-            {/*    PrezziBenzina.eu ti aiuta a pianificare il rifornimento in modo intelligente, con dati sempre aggiornati*/}
-            {/*    e strumenti utili per risparmiare.*/}
-            {/*</p>*/}
         </section>
     );
 }

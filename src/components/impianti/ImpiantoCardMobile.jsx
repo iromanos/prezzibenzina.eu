@@ -36,7 +36,7 @@ export default function ImpiantoCardMobile({impianto, cardClient = true, onClick
                     <div className="d-flex align-items-start gap-3 mb-2">
                         <Image src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
                         <div className={'col'}>
-                            <h3 className="mb-0 text-uppercase h6">{nome_impianto}</h3>
+                            <p className="mb-0 text-uppercase h6">{nome_impianto}</p>
                             {impianto.stato === "CH" &&
                                 <><p className="text-muted small mb-0">
                                     {indirizzo}{comune != null ? ', ' + comune : null} {provincia != null ? `(${provincia})` : null}

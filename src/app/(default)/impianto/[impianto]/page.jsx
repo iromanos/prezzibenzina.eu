@@ -5,7 +5,7 @@ import {getCookie} from "@/functions/cookies";
 import {getCanonicalUrl, getOpenGraph, getTwitter} from "@/functions/server";
 import {headers} from "next/headers";
 import {notFound, redirect} from "next/navigation";
-import {logDebug} from "@/functions/helpers";
+import {logDebug, ucwords} from "@/functions/helpers";
 
 export async function generateMetadata({params}) {
 
@@ -19,8 +19,15 @@ export async function generateMetadata({params}) {
 
     const imageUrl = '/assets/logo-og.png';
 
-    const title = `${impianto.nome_impianto} – ${impianto.comune} | PrezziBenzina.eu`;
-    const description = `Prezzi aggiornati per ${impianto.nome_impianto} a ${impianto.comune}. Consulta mappa, orari, carburanti e confronta con i vicini.`;
+
+    let nomeImpianto = impianto.nome_impianto.toLowerCase() + ' - ' + impianto.gestore;
+
+    nomeImpianto = nomeImpianto.replace(impianto.comune.toLowerCase(), '');
+
+    nomeImpianto = ucwords(nomeImpianto);
+
+    const title = `${nomeImpianto} – ${impianto.comune} | PrezziBenzina.eu`;
+    const description = `Prezzi aggiornati per il distributore ${nomeImpianto} a ${impianto.comune}. Consulta mappa, orari, carburanti e confronta con i vicini.`;
     const headerList = headers();
 
     const canonicalUrl = getCanonicalUrl(await headerList) + '/impianto/' + impianto.link;
@@ -59,6 +66,8 @@ export default async function Page({params}) {
     const cookie = await getCookie();
 
     logDebug(impianto);
+
+    console.log(impianto.servizi);
 
     return <><Header/>
         <ImpiantoScheda impianto={impianto} cookie={cookie}/></>;

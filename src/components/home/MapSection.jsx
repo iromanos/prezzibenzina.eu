@@ -129,7 +129,8 @@ export function MapSection() {
                     {record.length === 0 &&
                         <p>Nessun distribuitore presente in questa zona. Prova a fare lo zoom sulla mappa o a
                             spostare la posizione.</p>}
-
+                    {record.length !== 0 &&
+                        <><h2 className={'text-uppercase h5'}>Distributori</h2>
                     {record.slice(0, 3).map((d, index) => {
                         return (
                             <div key={index}
@@ -143,7 +144,8 @@ export function MapSection() {
                                     <InFeed4656802013 className={'mb-3'}/>}
                             </div>
                         );
-                    })}
+                    })}</>
+                    }
 
 
                 </div>

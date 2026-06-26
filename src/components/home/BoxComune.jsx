@@ -18,7 +18,7 @@ export default function BoxComune({comune, fuel}) {
              style={{transition: "transform 0.2s"}}>
             <div className="card-body d-flex flex-column justify-content-between p-3">
                 <div className={'mb-1'}>
-                    <h5 className="fw-bold mb-1 text-dark">{comune}</h5>
+                    <span className="fw-bold mb-1 text-dark h5"><strong>{comune}</strong></span>
                     <small className="text-muted d-block">Aggiornato oggi</small>
                     <div className="display-6 text-success">{record?.medio.toFixed(3)}<small
                         className={'fs-5'}>€/L</small></div>

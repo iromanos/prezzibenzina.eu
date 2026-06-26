@@ -74,8 +74,9 @@ export default function ImpiantoScheda({impianto, cookie}) {
 
         // logDebug(carburanti);
         const fuel = carburanti.find(c => c.tipo === cookie.carburante);
-        // logDebug(fuel);
         logDebug(prezzi);
+
+        console.log("PREZZI", prezzi);
 
         let qry = prezzi
             .filter(p => p.fuel_id === fuel.fuel_id);
@@ -87,18 +88,20 @@ export default function ImpiantoScheda({impianto, cookie}) {
             const prezzo = qry[0];
             if (prezzo === undefined) {
                 if (prezzi.length !== 0) {
-                    return prezzi[0].prezzo;
-                }
+                    return prezzi[0];
+                } else return null;
             }
-            return prezzo.prezzo;
+            return prezzo;
         } catch (e) {
 
         }
-        return 0;
+        return null;
     }
 
-    impianto.prezzo = prezzo();
+    const carburante = prezzo();
 
+    impianto.prezzo = carburante !== null ? carburante.prezzo : 0;
+    const descrizioneCarburante = carburante !== null ? carburante.desc_carburante : '';
     const comune = () => {
         if (impianto.comune === "") return null;
         return {
@@ -119,7 +122,6 @@ export default function ImpiantoScheda({impianto, cookie}) {
         return a.fuel_id - b.fuel_id;
     })
 
-
     const BoxPrezzo = ({className}) => {
         return <div className={className}>
             <div className="card shadow border-0 rounded-3 mb-4 bg-white">
@@ -127,7 +129,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
 
                     <div className="d-flex justify-content-between align-items-center">
                         <span className="h5 text-primary fw-bold text-uppercase tracking-wider m-0">
-                            {cookie.carburante}
+                            {descrizioneCarburante}
                         </span>
                     </div>
 
@@ -145,6 +147,128 @@ export default function ImpiantoScheda({impianto, cookie}) {
             </div>
         </div>;
 
+    }
+
+    function DescrizioneImpianto({data, nomeImpianto, comune}) {
+        const {services} = data;
+
+        // Se non ci sono servizi, restituisce un testo di fallback standard
+        if (!services || services.length === 0) {
+            return (
+                <div className="seo-description-box my-3 p-4 bg-light rounded border">
+                    <p className="text-muted lh-base fs-6 mb-0">
+                        La stazione di servizio <strong>{nomeImpianto}</strong> si trova a <strong>{comune}</strong> ed
+                        è pronta a offrirti carburante di qualità per il tuo veicolo. Passa a trovarci per scoprire le
+                        tariffe aggiornate di benzina, diesel e GPL e fare rifornimento in totale comodità sul
+                        territorio comunale.
+                    </p>
+                </div>
+            );
+        }
+
+        const listaServizi = services.map(s => s.description);
+
+        const haCamper = listaServizi.includes('Sosta Camper/Tir') || listaServizi.includes('Scarico per camper');
+        const haAuto = listaServizi.includes('Autolavaggio') || listaServizi.includes('Officina') || listaServizi.includes('Gommista');
+        const haRistoro = listaServizi.includes('Food&Beverage') || listaServizi.includes('Wi-Fi');
+        const haElettrico = listaServizi.includes('Colonnina ricarica elettrica');
+
+        // PARAGRAFO 1: Introduzione e contesto locale
+        const paragrafo1 = <>Il distributore <strong>{nomeImpianto}</strong> a <strong>{comune}</strong> non è una
+            semplice stazione di rifornimento carburante, ma un vero e proprio punto di riferimento per gli
+            automobilisti della zona. Presso questo impianto potrai usufruire di numerosi comfort studiati appositamente
+            per ottimizzare la tua sosta e viaggiare in totale sicurezza.</>;
+
+        // PARAGRAFO 2: Dinamico sui servizi dell'impianto con tag strong
+        const renderParagrafo2 = () => {
+            let elementi = [];
+
+            if (haRistoro) {
+                elementi.push(
+                    <span key="ristoro">
+          Per una pausa rigenerante, la struttura offre un'area {listaServizi.includes('Food&Beverage') ?
+                        <strong>Food & Beverage</strong> : 'ristoro'}
+                        {listaServizi.includes('Wi-Fi') ? <> dotata di
+                            connessione <strong>Wi-Fi</strong> gratuita</> : ''}, ideale per rilassarsi prima di rimettersi in viaggio.{' '}
+        </span>
+                );
+            }
+
+            if (haAuto) {
+                // Creiamo la stringa con i tag strong per i servizi auto presenti
+                const serviziAutoPresenti = [];
+                if (listaServizi.includes('Autolavaggio')) serviziAutoPresenti.push(<strong
+                    key="lav">autolavaggio</strong>);
+                if (listaServizi.includes('Officina')) serviziAutoPresenti.push(<strong key="off">officina</strong>);
+                if (listaServizi.includes('Gommista')) serviziAutoPresenti.push(<strong key="gom">gommista</strong>);
+
+                elementi.push(
+                    <span key="auto">
+          Chi desidera prendersi cura del proprio veicolo troverà servizi dedicati tra cui{' '}
+                        {serviziAutoPresenti.reduce((prev, curr, i) => [prev, i === serviziAutoPresenti.length - 1 ? ' e ' : ', ', curr])}.{' '}
+        </span>
+                );
+            }
+
+            if (haCamper) {
+                elementi.push(
+                    <span key="camper">
+          L'impianto è perfettamente attrezzato anche per i viaggiatori itineranti, offrendo spazi per la <strong>sosta di camper o TIR</strong> e comodi sistemi di <strong>scarico per camper</strong> dedicati.{' '}
+        </span>
+                );
+            }
+
+            if (haElettrico) {
+                elementi.push(
+                    <span key="elettrico">
+          In ottica di mobilità sostenibile, è presente una moderna <strong>colonnina per la ricarica elettrica</strong> veloce.{' '}
+        </span>
+                );
+            }
+
+            if (elementi.length === 0) {
+                return "La stazione mette a disposizione una selezione di servizi accessori pensati per soddisfare ogni esigenza logistica ed estendere l'assistenza oltre il semplice rifornimento.";
+            }
+
+            return elementi;
+        };
+
+        // PARAGRAFO 3: Chiusura su accessibilità e pagamenti con tag strong
+        const paragrafo3 = <>La stazione garantisce infine la massima accessibilità a tutti i clienti grazie ai <strong>servizi
+            per disabili</strong> e alla presenza di un'<strong>area bambini</strong>. Per quanto riguarda le modalità
+            di pagamento, è possibile effettuare transazioni rapide e sicure tramite <strong>Bancomat</strong> e carte
+            direttamente alla colonnina self-service o presso la cassa presidiata.</>;
+
+        return (
+            <div className="seo-description-box my-3 p-4 bg-light rounded border">
+                {/* Primo Paragrafo */}
+                <p className="lh-base mb-3 fs-6">
+                    {paragrafo1}
+                </p>
+
+                {/* Secondo Paragrafo (Dinamico) */}
+                <p className="lh-base mb-3 fs-6">
+                    {renderParagrafo2()}
+                </p>
+
+                {/* Terzo Paragrafo */}
+                <p className="lh-base mb-3 fs-6">
+                    {paragrafo3}
+                </p>
+
+                {/* Badge visivi dei servizi */}
+                <div className="d-flex flex-wrap gap-2 mt-3">
+                    {services.map((service) => (
+                        <span
+                            key={service.id}
+                            className="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1.5 fw-normal"
+                        >
+            {service.description}
+          </span>
+                    ))}
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -172,12 +296,15 @@ export default function ImpiantoScheda({impianto, cookie}) {
                             <small className="text-muted">{impianto.gestore}</small>
                         </div>
                     </div>
-                    {/*<BoxPrezzo className={'d-lg-none'}/>*/}
-                    <ImpiantoDescrizione impianto={impianto} carburante={cookie.carburante}/>
+
+                    <ImpiantoDescrizione impianto={impianto} carburante={descrizioneCarburante.toLowerCase()}/>
 
                     <h2 className={'h5'}>Indirizzo</h2>
                     <p>{indirizzo}{impianto.comune ? `, ${ucwords(impianto.comune)}` : null} {provincia ? `(${provincia})` : null}</p>
+
+
                     <div className={'mb-2'}>
+                        {carburante && <>
                         <h2 className={'h5'}>Carburanti disponibili</h2>
                         <table className="table table-bordered align-middle table-light">
                             <thead className="h6 text-uppercase">
@@ -198,8 +325,11 @@ export default function ImpiantoScheda({impianto, cookie}) {
                             ))}
                             </tbody>
                         </table>
+                        </>}
                         <Display5745053645/>
                     </div>
+
+                    <DescrizioneImpianto nomeImpianto={nome_impianto} comune={impianto.comune} data={impianto.servizi}/>
 
                     {impianto.servizi && impianto.servizi.services.length !== 0 && <>
                         <h2 className={'h5'}>Servizi disponibili</h2>
@@ -212,7 +342,8 @@ export default function ImpiantoScheda({impianto, cookie}) {
 
                 </div>
                 <div className={'col-lg-5 mb-4'}>
-                    <BoxPrezzo className={'d-none d-lg-block'}/>
+                    {carburante &&
+                        <BoxPrezzo className={'d-none d-lg-block'}/>}
 
                     <div id={'mappa'} className="mb-3 rounded border">
                         <Map

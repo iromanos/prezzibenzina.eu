@@ -90,7 +90,7 @@ export default function Home() {
 
             <div className="container my-5">
                 <div className="text-center mb-4">
-                    <h2 className="fw-bold text-uppercase h5">Prezzo della benzina nei capoluoghi</h2>
+                    <h3 className="fw-bold text-uppercase h5">Prezzo della benzina nei capoluoghi</h3>
                     <p className="text-muted">Seleziona la tua città per vedere i distributori più convenienti</p>
                 </div>
 
@@ -131,7 +131,7 @@ export default function Home() {
                         <div className="col-md-4 mb-4" key={i}>
                             <div className="p-4 border rounded shadow-sm h-100 bg-white hover-shadow">
                                 <div className="mb-2 display-3">{step.icon}</div>
-                                <h5 className="fw-bold">{step.title}</h5>
+                                <h3 className="fw-bold">{step.title}</h3>
                                 <p>{step.text}</p>
                             </div>
                         </div>
