@@ -4,14 +4,13 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import Header from "@/components/Header";
-import {getCanonicalUrl} from "@/functions/server";
-import {headers} from "next/headers";
+
+export const dynamic = 'force-static';
 
 export async function generateMetadata() {
 
-    const headerList = await headers();
 
-    const canonicalUrl = getCanonicalUrl(headerList) + '/contatti';
+    const canonicalUrl = process.env.NEXT_PUBLIC_BASE_URL + '/contatti';
 
 
     return {
