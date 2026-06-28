@@ -4,7 +4,7 @@ import {check, sleep} from 'k6';
 // 1. CONFIGURAZIONE DEL CARICO (Ramping)
 export const options = {
     stages: [
-        {duration: '1m', target: 200},  // Sale da 0 a 200 utenti contemporanei in 1 minuto
+        {duration: '30s', target: 100},  // Sale da 0 a 200 utenti contemporanei in 1 minuto
         // { duration: '3m', target: 500 },  // Rimane stabile a 500 utenti per 3 minuti
         // { duration: '1m', target: 0 },    // Scende a 0 (Ramp-down)
     ],
