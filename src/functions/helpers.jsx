@@ -229,11 +229,10 @@ export async function getMetadata({params}) {
             ? process.env.NEXT_PUBLIC_API_ENDPOINT + `/pb/images/og/${sigla}-${fuel}-1200-630`
             : process.env.NEXT_PUBLIC_API_ENDPOINT + `/pb/images/og/${regione}-${fuel}-1200-630`;
 
-    const robots = riepilogo.totaleImpianti === 0 ? {
+    const robots = riepilogo.totaleImpianti === 0 || riepilogo.request.index === 0 ? {
         index: false,
-        follow: true, // true se vuoi che i motori di ricerca seguano comunque i link nella pagina
+        follow: true,
     } : undefined;
-
 
     return {
         robots: robots,
