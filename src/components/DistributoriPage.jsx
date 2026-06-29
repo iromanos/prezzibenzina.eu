@@ -21,15 +21,14 @@ import {AdsDesktop} from "@/components/ads/AdsDesktop";
 import * as turf from '@turf/turf';
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 import {GuidaCarburantiAutomobilistaVER3} from "@/components/GuidaCarburantiAutomobilista";
-import {headers} from 'next/headers';
 //TODO: nella versione Desktop, inserire i link ai marchi
 //TODO: visualizzare grafico con la media dei prezzi dell'ultimo mese
 
 export default async function DistributoriPage({params}) {
 
-    const start = performance.now();
-    const headersList = await headers();
-    const pathname = headersList.get('x-url') || headersList.get('x-matched-path') || '';
+    // const start = performance.now();
+    // const headersList = await headers();
+    // const pathname = headersList.get('x-url') || headersList.get('x-matched-path') || '';
 
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
 
@@ -148,13 +147,6 @@ export default async function DistributoriPage({params}) {
         }
         return <></>;
     }
-
-
-    const end = performance.now();
-    const serverDuration = (end - start).toFixed(2);
-
-    const timestamp = new Date().toLocaleString('it-IT', {timeZone: 'Europe/Rome'});
-    console.log(`[${timestamp}] [Server Render] ${pathname}: ${serverDuration}ms`);
 
     return <>
         <script

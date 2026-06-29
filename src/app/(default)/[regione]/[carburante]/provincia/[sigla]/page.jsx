@@ -3,6 +3,7 @@ import React from "react";
 import {getMetadata} from "@/functions/helpers";
 
 // export const revalidate = 43200;
+export const revalidate = 300;
 
 export async function generateMetadata({params}) {
     return getMetadata({params});

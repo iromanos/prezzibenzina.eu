@@ -150,6 +150,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
     }
 
     function DescrizioneImpianto({data, nomeImpianto, comune}) {
+
         const {services} = data;
 
         // Se non ci sono servizi, restituisce un testo di fallback standard
@@ -328,9 +329,10 @@ export default function ImpiantoScheda({impianto, cookie}) {
                         </>}
                         <Display5745053645/>
                     </div>
-
-                    <DescrizioneImpianto nomeImpianto={nome_impianto} comune={impianto.comune} data={impianto.servizi}/>
-
+                    {impianto.servizi &&
+                        <DescrizioneImpianto nomeImpianto={nome_impianto} comune={impianto.comune}
+                                             data={impianto.servizi}/>
+                    }
                     {impianto.servizi && impianto.servizi.services.length !== 0 && <>
                         <h2 className={'h5'}>Servizi disponibili</h2>
                         <p>In questa stazione di servizio sono attivi i seguenti servizi per la clientela:</p>

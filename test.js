@@ -19,9 +19,19 @@ export const options = {
 // 2. SOLO URL SANI (Tutti devono rispondere 200 OK)
 const URLS = [
     'https://www.prezzibenzina.eu/contatti',
-    // 'https://www.prezzibenzina.eu/lombardia/benzina/provincia/mi/milano',
-    // 'https://www.prezzibenzina.eu/lazio/diesel/provincia/rm/roma',
-    // 'https://www.prezzibenzina.eu/toscana/benzina/provincia/fi/firenze',
+    'https://www.prezzibenzina.eu/lombardia/benzina/provincia/mi/milano',
+    'https://www.prezzibenzina.eu/lazio/diesel/provincia/rm/roma',
+    'https://www.prezzibenzina.eu/toscana/benzina/provincia/fi/firenze',
+    'https://www.prezzibenzina.eu/campania/benzina/provincia/na/napoli',
+    'https://www.prezzibenzina.eu/emilia-romagna/benzina/provincia/bo/bologna',
+    'https://www.prezzibenzina.eu/impianto/51617-egi-2go-srl',
+    'https://www.prezzibenzina.eu/impianto/61154-servizi-gestioni-italia-srl',
+    'https://www.prezzibenzina.eu/impianto/27071-servizi-gestioni-italia-srl',
+    'https://www.prezzibenzina.eu/impianto/49381-mohamed-ashraf',
+    'https://www.prezzibenzina.eu/impianto/6448-servizi-gestioni-italia-srl',
+    'https://www.prezzibenzina.eu/impianto/24668-ip-services-srl',
+    'https://www.prezzibenzina.eu/impianto/35560-tdm-srl',
+    'https://www.prezzibenzina.eu/impianto/34772-europam-spa',
     // Incolla qui altri URL "buoni" dei tuoi capoluoghi
 ];
 

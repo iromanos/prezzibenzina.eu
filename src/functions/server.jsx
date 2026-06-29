@@ -15,11 +15,11 @@ export function getTwitter(title, description, imageUrl) {
     };
 }
 
-export function getOpenGraph(headersList, title, description, imageUrl) {
+export function getOpenGraph(url, title, description, imageUrl) {
     return {
         title: title,
         description: description,
-        url: getCanonicalUrl(headersList),
+        url: url,
         siteName: 'PrezziBenzina.eu',
         images: [
             {

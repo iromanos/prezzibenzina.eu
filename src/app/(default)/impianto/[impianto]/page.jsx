@@ -2,10 +2,12 @@ import ImpiantoScheda from '@/components/impianti/ImpiantoScheda';
 import {getImpianto} from "@/functions/api";
 import Header from "@/components/Header";
 import {getCookie} from "@/functions/cookies";
-import {getCanonicalUrl, getOpenGraph, getTwitter} from "@/functions/server";
-import {headers} from "next/headers";
+import {getOpenGraph, getTwitter} from "@/functions/server";
+// import {headers} from "next/headers";
 import {notFound, redirect} from "next/navigation";
 import {logDebug, ucwords} from "@/functions/helpers";
+
+export const revalidate = 300;
 
 export async function generateMetadata({params}) {
 
@@ -28,9 +30,8 @@ export async function generateMetadata({params}) {
 
     const title = `${nomeImpianto} – ${impianto.comune} | PrezziBenzina.eu`;
     const description = `Prezzi aggiornati per il distributore ${nomeImpianto} a ${impianto.comune}. Consulta mappa, orari, carburanti e confronta con i vicini.`;
-    const headerList = headers();
 
-    const canonicalUrl = getCanonicalUrl(await headerList) + '/impianto/' + impianto.link;
+    const canonicalUrl = process.env.NEXT_PUBLIC_BASE_URL + '/impianto/' + impianto.link;
 
     return {
         title: title,
@@ -42,7 +43,7 @@ export async function generateMetadata({params}) {
                 'x-default': canonicalUrl,
             },
         },
-        openGraph: getOpenGraph(await headerList, title, description, imageUrl),
+        openGraph: getOpenGraph(canonicalUrl, title, description, imageUrl),
         twitter: getTwitter(title, description, imageUrl),
 
     };
@@ -50,9 +51,9 @@ export async function generateMetadata({params}) {
 
 export default async function Page({params}) {
 
-    const start = performance.now();
-    const headersList = await headers();
-    const pathname = headersList.get('x-url') || headersList.get('x-matched-path') || '';
+    // const start = performance.now();
+    // const headersList = await headers();
+    // const pathname = headersList.get('x-url') || headersList.get('x-matched-path') || '';
 
 
     const query = await params;
@@ -73,11 +74,11 @@ export default async function Page({params}) {
     logDebug(impianto);
 
     // console.log(impianto.servizi);
-    const end = performance.now();
-    const serverDuration = (end - start).toFixed(2);
+    // const end = performance.now();
+    // const serverDuration = (end - start).toFixed(2);
 
     const timestamp = new Date().toLocaleString('it-IT', {timeZone: 'Europe/Rome'});
-    console.log(`[${timestamp}] [Server Render] ${pathname}: ${serverDuration}ms`);
+    // console.log(`[${timestamp}] [Server Render] ${pathname}: ${serverDuration}ms`);
 
     return <><Header/>
         <ImpiantoScheda impianto={impianto} cookie={cookie}/></>;

@@ -225,6 +225,7 @@ export async function getSiteMap({tipo, regione, provincia}) {
 const cacheFetch = cache(async (url) => {
     const res = await fetch(url, {
         headers: {Accept: 'application/json'},
+        next: {revalidate: 300}
     });
     return res.json();
 });

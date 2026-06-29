@@ -15,7 +15,7 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import PlaceIcon from '@mui/icons-material/Place';
 import BoxComune from "../../components/home/BoxComune";
-import {AdsDesktop} from "../../components/ads/AdsDesktop";
+import {AdsDesktop} from "@/components/ads/AdsDesktop";
 
 export async function generateMetadata() {
 
@@ -36,7 +36,7 @@ export async function generateMetadata() {
                 'x-default': canonicalUrl,
             },
         },
-        openGraph: getOpenGraph(headerList, title, description, imageUrl),
+        openGraph: getOpenGraph(canonicalUrl, title, description, imageUrl),
         twitter: getTwitter(title, description, imageUrl),
     };
 }
