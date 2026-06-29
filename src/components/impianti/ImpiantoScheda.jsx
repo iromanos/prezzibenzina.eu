@@ -27,6 +27,7 @@ import MapIcon from "@mui/icons-material/Map";
 import Image from "next/image";
 import {AdsDesktop} from "../ads/AdsDesktop";
 import Display6977770298 from "@/components/ads/Display-6977770298";
+import StoricoPrezzi from "./StoricoPrezzi";
 
 //TODO: inserire la media dei prezzi del comune / provincia ed indicare il risparmio
 
@@ -347,6 +348,24 @@ export default function ImpiantoScheda({impianto, cookie}) {
                     {carburante &&
                         <BoxPrezzo className={'d-none d-lg-block'}/>}
 
+
+                    {/* CARD CONTENITORE DENTRO LA TUA PAGINA */}
+                    <div className="card shadow-sm mb-4">
+                        <div className="card-body">
+
+                            <div className="d-flex justify-content-between align-items-center mb-3">
+                                <h2 className="h6 card-title text-secondary mb-0 fw-normal">
+                                    Andamento Storico Prezzi
+                                </h2>
+                                <span className="badge bg-light text-dark border">Aggiornato oggi</span>
+                            </div>
+
+                            <StoricoPrezzi impiantoId={impianto.id_impianto}/>
+
+                        </div>
+                    </div>
+                    <Display5745053645/>
+
                     <div id={'mappa'} className="mb-3 rounded border">
                         <Map
                             mapLib={maplibregl}
@@ -395,6 +414,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
 
                         <ShareButton impianto={impianto}/>
                     </div>
+
 
                     <Display5745053645/>
 
