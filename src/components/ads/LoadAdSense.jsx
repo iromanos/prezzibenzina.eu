@@ -1,6 +1,7 @@
 'use client';
 import {useEffect, useState} from 'react';
 import Script from 'next/script';
+import useInteraction from "@/hooks/useInteraction";
 
 export default function LoadAdSense() {
     const [loadAds, setLoadAds] = useState(false);
@@ -69,32 +70,12 @@ export default function LoadAdSense() {
 
 export function AdSenseDev({slotAdSense, style}) {
 
-
     if (process.env.NODE_ENV !== 'development') return <></>;
 
-
-    const [show, setShow] = useState(false);
-
-    const events = [
-        'scroll', 'mousemove', 'touchstart'
-    ];
-
-    useEffect(() => {
-        const handleInteraction = () => {
-            setShow(true);
-            events.forEach(event => window.removeEventListener(event, handleInteraction));
-        };
-
-        events.forEach(event => window.addEventListener(event, handleInteraction, {passive: true}));
-
-        return () => {
-            events.forEach(event => window.removeEventListener(event, handleInteraction));
-        };
-
-    }, []);
+    const {active} = useInteraction();
 
     let ads = <span></span>;
-    if (show) {
+    if (active) {
         ads = <span>Slot {slotAdSense}</span>;
     }
 

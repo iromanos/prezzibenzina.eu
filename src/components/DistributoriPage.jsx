@@ -199,7 +199,7 @@ export default async function DistributoriPage({params}) {
                     </div>
                 </div>
                 <div className={'col d-lg-none mb-4'}>
-                    <DistributoreMigliore/>
+                    {/*<DistributoreMigliore/>*/}
                 </div>
                 <div className={'col-lg-5'}>
                     <Display6977770298 className={'mb-4'}/>
@@ -221,9 +221,11 @@ export default async function DistributoriPage({params}) {
                                 params={riepilogo.request} carburanti={carburanti} size={'sm'}/>
                         </div>
                         <div className={'col'}>
-                            <LinkMarchio params={riepilogo.request} marchi={marchi}/></div>
+                            <LinkMarchio params={riepilogo.request} marchi={marchi}/>
+                        </div>
                     </div>
-                    {distributori.length !== 0 ? <Mappa
+                    {distributori.length !== 0 ?
+                        <Mappa
                         titolo={`Mappa dei distributori ${localita}`}
                         carburante={carburante}
                         posizione={{
@@ -233,7 +235,9 @@ export default async function DistributoriPage({params}) {
                             fitBoundsOptions: {padding: 0}
                         }}
 
-                        distributori={distributori}/> : <></>}
+                        distributori={distributori}/>
+
+                        : <></>}
                     {distributori.length !== 0 && <>
                     <Display5745053645/>
 

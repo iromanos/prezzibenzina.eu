@@ -5,6 +5,7 @@ import MapIcon from "@mui/icons-material/Map";
 
 import Button from 'react-bootstrap/Button';
 import MappaRisultati from "./mappe/MappaRisultati";
+import useInteraction from "@/hooks/useInteraction";
 
 export default function Mappa({
                                   distributori,
@@ -17,6 +18,8 @@ export default function Mappa({
                                   titolo = "Mappa dei distributori"
                               }) {
 
+    const {active} = useInteraction();
+
     const containerRef = useRef(null);
     const [isVisible, setIsVisible] = useState(true);
 
@@ -25,7 +28,7 @@ export default function Mappa({
     return <section className={"mb-4"}>
         {title ? <h2 className="h6 mb-3 text-uppercase">{titolo}</h2> : null}
         <div ref={containerRef} className={'border rounded position-relative mb-4 vh-75'}>
-            {isVisible ? <><MappaRisultati
+            {active ? <><MappaRisultati
                 cooperativeGestures={false}
                 showPositionButton={false}
                 isReadOnly={true}

@@ -16,7 +16,6 @@ const nextConfig = {
             new URL('https://www.wefuel.it/impianto/**')
         ],
     },
-    assetPrefix: '/mappa-static',
     sassOptions: {
         quietDeps: true, // silenzia warning da dipendenze
     },
