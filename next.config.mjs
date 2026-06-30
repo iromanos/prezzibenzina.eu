@@ -23,6 +23,16 @@ const nextConfig = {
     async redirects() {
         return [
             {
+                source: '/lombardia/:carburante/provincia/mi/milano',
+                destination: '/lombardia/milano/prezzo-:carburante',
+                permanent: true,
+            },
+            {
+                source: '/lombardia/:carburante/provincia/mi/milano/marchio/:marchio',
+                destination: '/lombardia/milano/prezzo-:carburante-:marchio',
+                permanent: true,
+            },
+            {
                 source: '/:segment*/gasolio/:rest*',
                 destination: '/:segment*/diesel/:rest*',
                 permanent: true,

@@ -51,7 +51,11 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
     }
 
     if (marchio && marchio !== "Tutti") {
-        path.push(`/marchio/${slugify(marchio.toLowerCase())}`);
+        if (!comune || (comune && comune.link === '')) {
+            path.push(`/marchio/${slugify(marchio.toLowerCase())}`);
+        } else {
+            path.push('-' + slugify(marchio.toLowerCase()));
+        }
     }
 
     return {
@@ -67,32 +71,50 @@ export function getLink(regione, carburante, marchio, provincia, comune) {
     path.push({label: 'Home', link: '/'});
 
     if (regione) {
-        path.push({
-            label: ucwords(regione),
-            link: `/${regione}/${carburante}`,
-        });
+        if (!comune || (comune && comune.link === '')) {
+            path.push({
+                label: ucwords(regione),
+                link: `/${regione}/${carburante}`,
+            });
+        }
     }
 
     if (provincia) {
-        path.push({
-            label: provincia.toUpperCase(),
-            link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}`,
-        });
+        if (!comune || (comune && comune.link === '')) {
+            path.push({
+                label: provincia.toUpperCase(),
+                link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}`,
+            });
+        }
     }
 
     if (comune) {
-        path.push({
-            label: ucwords(comune.description),
-            link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}`,
-        });
+        if (comune.link === '') {
+            path.push({
+                label: ucwords(comune.description),
+                link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}`,
+            });
+        } else {
+            path.push({
+                label: ucwords(comune.description),
+                link: comune.link + '/prezzo-' + carburante,
+            });
+        }
     }
 
     if (marchio) {
         if (comune) {
-            path.push({
-                label: capitalize(marchio),
-                link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}/marchio/${marchio}`,
-            });
+            if (comune.link === '') {
+                path.push({
+                    label: capitalize(marchio),
+                    link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}/marchio/${marchio}`,
+                });
+            } else {
+                path.push({
+                    label: capitalize(marchio),
+                    link: comune.link + '/prezzo-' + carburante + '-' + marchio,
+                });
+            }
         } else if (provincia) {
             path.push({
                 label: provincia.toUpperCase(),
@@ -227,6 +249,8 @@ export async function getMetadata({params}) {
         Trova il distributore più conveniente tra ${riepilogo.totaleImpianti} impianti, a partire da ${prezzoMinimo} €/L.`;
 
     const canonicalUrl = getLink(regione, carburante, marchio, sigla, riepilogo.request.comune);
+
+    console.log("CANONICAL", canonicalUrl);
 
     let fuel = '';
     if (carburante === 'benzina') fuel = '1-x';

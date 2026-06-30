@@ -55,7 +55,7 @@ export default function Breadcrumb({stato, regione, carburante, provincia, comun
         }
         if (comune) {
 
-            if (impianto === undefined || impianto.impiantoComune.link === '') {
+            if (comune.link === '') {
                 path.push({
                     label: ucwords(comune.description),
                     link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}`,
@@ -63,15 +63,22 @@ export default function Breadcrumb({stato, regione, carburante, provincia, comun
             } else {
                 path.push({
                     label: ucwords(comune.description),
-                    link: impianto.impiantoComune.link + '/prezzo-' + carburante
+                    link: comune.link + '/prezzo-' + carburante
                 });
             }
 
             if (riepilogo.marchio) {
-                path.push({
-                    label: capitalize(riepilogo.marchio.nome),
-                    link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}/marchio/${riepilogo.marchio.id}`,
-                });
+                if (comune.link === '') {
+                    path.push({
+                        label: capitalize(riepilogo.marchio.nome),
+                        link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}/marchio/${riepilogo.marchio.id}`,
+                    });
+                } else {
+                    path.push({
+                        label: capitalize(riepilogo.marchio.nome),
+                        link: `-${riepilogo.marchio.id}`,
+                    });
+                }
             }
         }
 
