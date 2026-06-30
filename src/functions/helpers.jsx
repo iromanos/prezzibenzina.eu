@@ -19,23 +19,35 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
                 ? `in provincia di ${ucwords(scope.valore)}`
                 : `in ${ucwords(scope.valore)}`;
 
-    let title = "Prezzi " + carburante;
+    const descrizioneCarburante = carburante ? carburante === 'benzina' ? ` della ${carburante}` : ` del ${carburante}` : ' del carburante';
+
+
+    let title = "Prezzo" + descrizioneCarburante;
     if (marchio && marchio !== "Tutti") {
         title += " " + marchio;
     }
     title += " " + localita;
 
     if (regione) {
-        path.push(`/${regione}/${carburante.toLowerCase()}`);
+        if (!comune || (comune && comune.link === '')) {
+            path.push(`/${regione}/${carburante.toLowerCase()}`);
+        }
     }
 
     if (provincia) {
-        path.push(`/provincia/${provincia}`);
+        if (!comune || (comune && comune.link === '')) {
+            path.push(`/provincia/${provincia}`);
+        }
     }
 
     if (comune) {
-        if (!provincia) path.push(`/provincia/${comune.provincia.toLowerCase()}`);
-        path.push(`/${comune.id}`);
+        if (comune.link === '') {
+            if (!provincia) path.push(`/provincia/${comune.provincia.toLowerCase()}`);
+            path.push(`/${comune.id}`);
+        } else {
+            path.push(`${comune.link}`);
+            path.push(`/prezzo-${carburante.toLowerCase()}`);
+        }
     }
 
     if (marchio && marchio !== "Tutti") {
@@ -174,7 +186,7 @@ export async function getMetadata({params}) {
         notFound();
     }
 
-    if (marchio !== undefined) {
+    if (marchio !== undefined && marchio !== null) {
         if (elencoMarchi.filter(m => m.id === marchio).length === 0) {
             notFound();
         }
@@ -188,7 +200,7 @@ export async function getMetadata({params}) {
 
     const riepilogo = await resSeoRegione;
 
-    const descrizioneCarburante = carburante ? ucwords(carburante) : 'carburante';
+    const descrizioneCarburante = carburante ? carburante === 'benzina' ? ` della ${carburante}` : ` del ${carburante}` : ' del carburante';
 
     const localizzazione = comune
         ? `a ${ucwords(riepilogo.request.comune.description)} (${sigla?.toUpperCase()})`
@@ -198,7 +210,7 @@ export async function getMetadata({params}) {
 
     const descrizioneMarchio = marchio ? `${ucwords(marchio)} - ` : '';
 
-    const titolo = `${descrizioneMarchio}Prezzi ${descrizioneCarburante} ${localizzazione} : i distributori più economici oggi`;
+    const titolo = `${descrizioneMarchio} Il prezzo ${descrizioneCarburante} ${localizzazione} oggi | PrezziBenzina.eu`;
 
     const stats = riepilogo.carburanti[carburante] || {};
     const prezzoMinimo = stats.min;
@@ -414,6 +426,6 @@ export function generateMicrodataGraph(impianti, url, localita, carburante) {
 
 export function logDebug(message) {
     if (process.env.NODE_ENV === 'development') {
-        console.log(message);
+        /// console.log(message);
     }
 }

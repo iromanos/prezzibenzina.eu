@@ -54,10 +54,18 @@ export default function Breadcrumb({stato, regione, carburante, provincia, comun
             }
         }
         if (comune) {
-            path.push({
-                label: ucwords(comune.description),
-                link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}`,
-            });
+
+            if (impianto === undefined || impianto.impiantoComune.link === '') {
+                path.push({
+                    label: ucwords(comune.description),
+                    link: `/${regione}/${carburante}/provincia/${provincia.toLowerCase()}/${comune.id}`,
+                });
+            } else {
+                path.push({
+                    label: ucwords(comune.description),
+                    link: impianto.impiantoComune.link + '/prezzo-' + carburante
+                });
+            }
 
             if (riepilogo.marchio) {
                 path.push({

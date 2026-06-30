@@ -51,7 +51,7 @@ export default async function DistributoriPage({params}) {
         notFound();
     }
 
-    if (marchio !== undefined) {
+    if (marchio !== undefined && marchio !== null) {
         if (elencoMarchi.filter(m => m.id === marchio).length === 0) {
             notFound();
         }
@@ -108,7 +108,7 @@ export default async function DistributoriPage({params}) {
 
     const localita =
         scope.livello === 'comune'
-            ? `a ${ucwords(scope.valore)} (${request.provincia.toUpperCase()})`
+            ? `a ${ucwords(scope.valore)}` // (${request.provincia.toUpperCase()})
             : scope.livello === 'provincia'
                 ? `in provincia di ${request.provincia_descrizione}`
                 : `in ${ucwords(scope.valore)}`;
@@ -127,8 +127,12 @@ export default async function DistributoriPage({params}) {
     const centerFeature = distributori.length !== 0 ? turf.center(turf.points(coords)) : null;
     const centerCoordinates = centerFeature !== null ? centerFeature.geometry.coordinates : null;
 
+    const descrizioneCarburante = carburante ? carburante === 'benzina' ? ` della ${carburante}` : ` del ${carburante}` : ' del carburante';
 
-    const titoloPagina = `Prezzi ${carburante} ${localita}: i distributori più economici oggi`;
+    const titoloPagina = `Prezzo ${descrizioneCarburante} ${localita} oggi`;
+
+    console.log(riepilogo);
+
 
     // logDebug("RIEPILOGO", riepilogo);
 
@@ -176,9 +180,9 @@ export default async function DistributoriPage({params}) {
                     <Image src={URI_IMAGE + `/impianto/logo/${marchio}/128`} alt={marchio} width={128} height={128}/>
                 }
                 <div>
-                    <h1>Prezzi {carburante} {marchio ? ` ${ucwords(marchio)}` : ''} {localita}</h1>
+                    <h1>Prezzo {descrizioneCarburante} {marchio ? ` ${ucwords(marchio)}` : ''} {localita}</h1>
                     <p className="lead text-muted">
-                        Scopri i <strong>prezzi</strong> aggiornati della <strong>{carburante}</strong> {marchio ?
+                        Scopri i <strong>prezzi</strong> aggiornati <strong>{descrizioneCarburante}</strong> {marchio ?
                         <strong>{ucwords(marchio)}</strong> : ''} {localita} e pianifica il tuo rifornimento in modo
                         intelligente.
                     </p></div>
@@ -199,7 +203,7 @@ export default async function DistributoriPage({params}) {
                     </div>
                 </div>
                 <div className={'col d-lg-none mb-4'}>
-                    {/*<DistributoreMigliore/>*/}
+                    <DistributoreMigliore/>
                 </div>
                 <div className={'col-lg-5'}>
                     <Display6977770298 className={'mb-4'}/>

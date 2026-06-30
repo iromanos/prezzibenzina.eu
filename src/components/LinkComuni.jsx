@@ -16,7 +16,7 @@ export default function LinkComuni({comuni, riepilogo}) {
             <h2 className="h6 text-uppercase">Città principali</h2>
             <div className="d-flex flex-wrap gap-2">
                 {comuni.map((comune) => {
-                    const link = getRouteLink(request.regione, request.carburante, marchio, request.provincia, comune);
+                    const link = getRouteLink(request.regione, request.carburante.toLowerCase(), marchio, request.provincia, comune);
 
                     return <Link
                         title={link.title}

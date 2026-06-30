@@ -78,6 +78,17 @@ export default function StoricoPrezzi({impiantoId}) {
     }
 
     return (
+
+        <div className="card shadow-sm mb-4">
+            <div className="card-body">
+
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h2 className="h6 card-title text-secondary mb-0 fw-normal">
+                        Andamento Storico Prezzi
+                    </h2>
+                    <span className="badge bg-light text-dark border">Aggiornato oggi</span>
+                </div>
+
         <div>
             {/* SELETTORE DI PERIODO (In stile Bootstrap Button Group) */}
             <div className="d-flex justify-content-end mb-3">
@@ -149,6 +160,8 @@ export default function StoricoPrezzi({impiantoId}) {
                         )}
                     </LineChart>
                 </ResponsiveContainer>
+            </div>
+        </div>
             </div>
         </div>
     );

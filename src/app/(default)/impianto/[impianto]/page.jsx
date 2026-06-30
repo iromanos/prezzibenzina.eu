@@ -5,7 +5,7 @@ import {getCookie} from "@/functions/cookies";
 import {getOpenGraph, getTwitter} from "@/functions/server";
 // import {headers} from "next/headers";
 import {notFound, redirect} from "next/navigation";
-import {logDebug, ucwords} from "@/functions/helpers";
+import {ucwords} from "@/functions/helpers";
 
 export const revalidate = 300;
 
@@ -50,12 +50,6 @@ export async function generateMetadata({params}) {
 }
 
 export default async function Page({params}) {
-
-    // const start = performance.now();
-    // const headersList = await headers();
-    // const pathname = headersList.get('x-url') || headersList.get('x-matched-path') || '';
-
-
     const query = await params;
 
     const impianto = await getImpianto({query});
@@ -65,20 +59,12 @@ export default async function Page({params}) {
     }
 
     if (impianto.link !== query.impianto) {
-        // console.log(`Link impianto (${impianto.link}) non corrisponde a query (${query.impianto}). Reindirizzamento necessario.`);
         redirect('/impianto/' + impianto.link);
     }
 
     const cookie = await getCookie();
 
-    logDebug(impianto);
-
-    // console.log(impianto.servizi);
-    // const end = performance.now();
-    // const serverDuration = (end - start).toFixed(2);
-
-    const timestamp = new Date().toLocaleString('it-IT', {timeZone: 'Europe/Rome'});
-    // console.log(`[${timestamp}] [Server Render] ${pathname}: ${serverDuration}ms`);
+    console.log(impianto);
 
     return <><Header/>
         <ImpiantoScheda impianto={impianto} cookie={cookie}/></>;
