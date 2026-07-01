@@ -14,7 +14,7 @@ import Display6977770298 from "@/components/ads/Display-6977770298";
 import Display5745053645 from "./ads/Display-5745053645";
 import {FooterDistributori} from "./home/FooterHome";
 import {FooterMobile} from "./FooterMobile";
-import {generateMicrodataGraph, getLink, ucwords} from "@/functions/helpers";
+import {generateMicrodataGraph, getCanonicalUrl, ucwords} from "@/functions/helpers";
 import Image from "next/image";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import {AdsDesktop} from "@/components/ads/AdsDesktop";
@@ -26,13 +26,9 @@ import {GuidaCarburantiAutomobilistaVER3} from "@/components/GuidaCarburantiAuto
 
 export default async function DistributoriPage({params}) {
 
-    // const start = performance.now();
-    // const headersList = await headers();
-    // const pathname = headersList.get('x-url') || headersList.get('x-matched-path') || '';
-
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
 
-    const {regione, carburante, marchio, sigla, comune} = await params;
+    const {regione, carburante, marchio, sigla, comune, servizio} = await params;
 
     const elencoCarburanti = getCarburanti();
 
@@ -81,7 +77,7 @@ export default async function DistributoriPage({params}) {
     const riepilogo = await resSeoRegione;
 
 
-    const canonicalUrl = getLink(regione, carburante, marchio, sigla, riepilogo.request.comune);
+    const canonicalUrl = getCanonicalUrl(regione, carburante, marchio, sigla, riepilogo.request.comune);
 
     // console.log("CANONICAL", canonicalUrl);
 
@@ -128,8 +124,18 @@ export default async function DistributoriPage({params}) {
     const centerCoordinates = centerFeature !== null ? centerFeature.geometry.coordinates : null;
 
     const descrizioneCarburante = carburante ? carburante === 'benzina' ? ` della ${carburante}` : ` del ${carburante}` : ' del carburante';
+    const descrizioneServizio = servizio ? `con ${servizio.description.toLowerCase()}` : '';
 
-    const titoloPagina = `Prezzo ${descrizioneCarburante} ${localita} oggi`;
+    let titoloPagina = ''; //`Prezzo ${descrizioneCarburante} ${descrizioneServizio} ${localita} oggi`;
+
+    if (marchio && servizio) {
+        titoloPagina = `Distributori ${marchio.toUpperCase()} ${descrizioneServizio} ${localita}: Prezzo ${descrizioneCarburante}`;
+    } else if (servizio) {
+        titoloPagina = `Prezzo ${descrizioneCarburante} nei distributori ${descrizioneServizio} ${localita}`;
+    } else if (marchio) {
+        titoloPagina = `Prezzo ${descrizioneCarburante} nei distributori ${marchio.toUpperCase()} ${localita}`;
+    } else titoloPagina = `Prezzo ${descrizioneCarburante} ${localita}`;
+
 
     console.log(riepilogo);
 
@@ -180,7 +186,7 @@ export default async function DistributoriPage({params}) {
                     <Image src={URI_IMAGE + `/impianto/logo/${marchio}/128`} alt={marchio} width={128} height={128}/>
                 }
                 <div>
-                    <h1>Prezzo {descrizioneCarburante} {marchio ? ` ${ucwords(marchio)}` : ''} {localita}</h1>
+                    <h1 className={'fs-1'}>{titoloPagina}</h1>
                     <p className="lead text-muted">
                         Scopri i <strong>prezzi</strong> aggiornati <strong>{descrizioneCarburante}</strong> {marchio ?
                         <strong>{ucwords(marchio)}</strong> : ''} {localita} e pianifica il tuo rifornimento in modo

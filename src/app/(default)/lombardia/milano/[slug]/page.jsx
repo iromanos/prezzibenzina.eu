@@ -1,18 +1,25 @@
 import DistributoriPage from "@/components/DistributoriPage";
 import {getMetadata} from "@/functions/helpers";
-import {notFound} from "next/navigation";
+import {notFound, permanentRedirect} from "next/navigation";
+import {getElencoCarburanti, getMarchi, getServizi} from "@/functions/api";
 
 // export const revalidate = 300;
 
 export async function generateMetadata({params}) {
-
     const record = await getParams(params);
+
 
     const paramsPromise = Promise.resolve(record);
 
     return getMetadata({params: paramsPromise});
 }
 
+function generaUrlCanonico(record) {
+    let pezzi = [`prezzo-${record.carburante}`];
+    if (record.marchio) pezzi.push(record.marchio);
+    if (record.servizio) pezzi.push(record.servizio.slug);
+    return pezzi.join('-'); // Ritorna sempre es: "prezzo-benzina-q8-autolavaggio"
+}
 
 async function getParams(params) {
     const {slug} = await params;
@@ -21,43 +28,73 @@ async function getParams(params) {
         notFound();
     }
 
-    // Elenco dei carburanti validi per capire dove finisce il carburante e dove inizia il marchio
-    const carburantiValidi = ['benzina', 'diesel', 'gpl', 'metano'];
+    const [resServizi, resMarchi] = await Promise.all(
+        [
+            getServizi(),
+            getMarchi()
+        ]
+    );
 
-    // Troviamo quale carburante è presente nello slug
-    const carburante = carburantiValidi.find(c => slug.includes(`prezzo-${c}`));
+    const carburantiValidi = getElencoCarburanti();
+    const serviziValidi = await resServizi;
+    const marchiValidi = await resMarchi;
 
-    if (!carburante) {
-        notFound(); // Se non trova un carburante valido (es: prezzo-fanta-api-ip), 404
+    console.log("SERVIZI", serviziValidi);
+
+    const carburante = carburantiValidi.find(c => slug.includes(`prezzo-${c.tipo}`));
+    if (!carburante) notFound();
+
+    let stringaRimasta = slug.replace(`prezzo-${carburante.tipo}`, '');
+
+    let marchio = null;
+    let servizio = null;
+    if (stringaRimasta) {
+
+        const servizioTrovato = serviziValidi.find(s => stringaRimasta.includes(s.slug));
+        if (servizioTrovato) {
+            servizio = servizioTrovato;
+            stringaRimasta = stringaRimasta.replace(servizioTrovato.slug, '').replace('--', '-');
+            if (stringaRimasta.endsWith('-')) stringaRimasta = stringaRimasta.slice(0, -1);
+            if (stringaRimasta.startsWith('-')) stringaRimasta = stringaRimasta.substring(1);
+        }
+
+        console.log(stringaRimasta);
+
+        if (stringaRimasta) {
+            const qry = marchiValidi.find(m => stringaRimasta.includes(`${m.id}`));
+            if (qry) marchio = qry.id;
+        }
+
+        if (stringaRimasta && !marchio) {
+            notFound();
+        }
+
     }
-
-    // Sottraiamo "prezzo-[carburante]-" dallo slug originale per isolare il marchio
-    // Es: "prezzo-benzina-api-ip" diventa "api-ip"
-    const stringaRimasta = slug.replace(`prezzo-${carburante}`, '');
-
-    // Se la stringa rimasta inizia con un trattino (es: "-api-ip"), lo puliamo, altrimenti il marchio è null
-    const marchio = stringaRimasta.startsWith('-')
-        ? stringaRimasta.substring(1) // Toglie il primo trattino e tiene "api-ip"
-        : null;
-
-
     const record = {
         regione: 'lombardia',
-        carburante: carburante,
+        carburante: carburante.tipo,
         sigla: 'mi',
         comune: 'milano',
-        marchio: marchio
+        marchio: marchio,
+        servizio: servizio
     }
-
-    console.log(record);
 
     return record;
 }
 
 export default async function Page({params}) {
-
-
     const record = await getParams(params);
+
+    const {slug} = await params;
+
+    const urlCorretto = generaUrlCanonico(record);
+    console.log(slug);
+    console.log(urlCorretto);
+
+    if (slug !== urlCorretto) {
+        console.log("REDIRECT");
+        permanentRedirect(`/lombardia/milano/${urlCorretto}`);
+    }
 
     return <DistributoriPage params={record}/>
 

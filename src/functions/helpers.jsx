@@ -65,7 +65,7 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
 
 }
 
-export function getLink(regione, carburante, marchio, provincia, comune) {
+export function getCanonicalUrl(regione, carburante, marchio, provincia, comune, servizio) {
     const path = [];
 
     path.push({label: 'Home', link: '/'});
@@ -127,6 +127,16 @@ export function getLink(regione, carburante, marchio, provincia, comune) {
             });
         }
     }
+
+    if (servizio) {
+        if (comune && comune.link !== '') {
+            path.push({
+                label: capitalize(servizio.description),
+                link: comune.link + '/prezzo-' + carburante + '-' + marchio + '-' + servizio.slug,
+            });
+        }
+    }
+
     return path[path.length - 1];
 }
 
@@ -199,7 +209,7 @@ export async function getMetadataEstero({params}) {
 }
 
 export async function getMetadata({params}) {
-    const {regione, carburante, marchio, sigla, comune} = await params;
+    const {regione, carburante, marchio, sigla, comune, servizio} = await params;
 
     const carburanti = getCarburanti();
     const elencoMarchi = await getMarchi();
@@ -231,8 +241,9 @@ export async function getMetadata({params}) {
             : `in ${ucwords(regione)}`;
 
     const descrizioneMarchio = marchio ? `${ucwords(marchio)} - ` : '';
+    const descrizioneServizio = servizio ? `nei distributori con ${servizio.description.toLowerCase()}` : '';
 
-    const titolo = `${descrizioneMarchio} Il prezzo ${descrizioneCarburante} ${localizzazione} oggi | PrezziBenzina.eu`;
+    const titolo = `${descrizioneMarchio}Il prezzo ${descrizioneCarburante} ${descrizioneServizio} ${localizzazione} | PrezziBenzina.eu`;
 
     const stats = riepilogo.carburanti[carburante] || {};
     const prezzoMinimo = stats.min;
@@ -248,7 +259,7 @@ export async function getMetadata({params}) {
     const descrizione = `Prezzi ${carburante} ${localizzazione}${descrizioneMarchio} aggiornati al ${dateFormatted}. 
         Trova il distributore più conveniente tra ${riepilogo.totaleImpianti} impianti, a partire da ${prezzoMinimo} €/L.`;
 
-    const canonicalUrl = getLink(regione, carburante, marchio, sigla, riepilogo.request.comune);
+    const canonicalUrl = getCanonicalUrl(regione, carburante, marchio, sigla, riepilogo.request.comune, servizio);
 
     console.log("CANONICAL", canonicalUrl);
 

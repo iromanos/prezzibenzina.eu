@@ -143,6 +143,10 @@ export function getCarburanti() {
     return Carburanti;
 }
 
+export async function getServizi() {
+    return cacheFetch(INTERNAL_URI + 'servizi');
+}
+
 export async function getMarchi() {
     return cacheFetch(INTERNAL_URI + 'marchi');
 }
