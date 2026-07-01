@@ -1,6 +1,6 @@
 'use client'
 import React, {useEffect, useState} from 'react';
-import {getRouteLink, logDebug} from "@/functions/helpers";
+import {getRouteLink} from "@/functions/helpers";
 import Image from "next/image";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/esm/Modal";
@@ -8,11 +8,7 @@ import Modal from "react-bootstrap/esm/Modal";
 
 export function LinkMarchio({marchi, params}){
 
-
-    logDebug(params);
-
     const [modal, setModal] = useState(false);
-
 
     if (params.marchio === undefined) params.marchio = 'Tutti';
 
@@ -79,30 +75,64 @@ export function LinkMarchio({marchi, params}){
 }
 
 
-export default function FiltroMarchio({marchi, selezionato}) {
+export function FiltroMarchio({marchi, selezionato, onCambiaMarchio}) {
 
-    if (selezionato === null || selezionato === undefined) selezionato = '';
+    //if (selezionato === null || selezionato === undefined) selezionato = '';
 
-    marchi.unshift( { marchio:  'Tutti', key: ''});
-    logDebug(marchi);
-    logDebug(selezionato);
     return (
         <section className="mb-4">
-            <h2 className="h5 mb-3">Filtra per marchio</h2>
-            <div className="btn-group flex-wrap" role="group">
-                {marchi.map((marchio) => <React.Fragment key={marchio.key}
-                    ><input
-                        name={'marchio'}
-                        type={'radio'}
-                        value={marchio.key}
-                        id={'id_' + marchio.key}
-                        autoComplete={'off'}
-                        className={`btn-check`}
-                        defaultChecked={marchio.key.toLowerCase() === selezionato}
-                    />
-                    <label className={"btn btn-sm btn-outline-primary"}
-                           htmlFor={'id_' + marchio.key}>{marchio.marchio}</label></React.Fragment>
-                )}
+            <label className="form-label small text-uppercase mb-3">
+                Filtra per marchio
+            </label>
+            <div className="d-flex flex-wrap gap-2">
+                {marchi.map((marchio) => {
+                    // Controlla se questo specifico marchio è quello attualmente selezionato
+                    const isChecked = (selezionato && selezionato.id === marchio.key) || (marchio.key === null && selezionato === undefined);
+
+                    // Condizione per verificare se il logo esiste ed è valido (evita i placeholder vuoti)
+                    const haLogoValido = marchio.key && marchio.key !== 'all' && marchio.key !== '';
+
+                    return (
+                        <span key={marchio.key}>
+                            <input
+                                type="radio"
+                                className="btn-check"
+                                name="brandFilter"
+                                id={`brand${marchio.key}`}
+                                autoComplete="off"
+                                checked={isChecked}
+                                onChange={() => onCambiaMarchio && onCambiaMarchio(marchio.key)}
+                            />
+                            <label
+                                className="btn btn-outline-primary rounded-pill px-3 py-2 d-inline-flex align-items-center"
+                                htmlFor={`brand${marchio.key}`}
+                            >
+                                {/* Mostra l'immagine SOLO se c'è un logo valido */}
+                                {haLogoValido && (
+                                    <div className="me-2 d-inline-flex align-items-center"
+                                         style={{width: 20, height: 20}}>
+                                        <Image
+                                            objectFit='contain'
+                                            width={20}
+                                            height={20}
+                                            src={`${process.env.NEXT_PUBLIC_IMAGE_ENDPOINT}/impianto/logo/${marchio.key}/128`}
+                                            alt={marchio.marchio}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Rimosso text-dark per permettere a Bootstrap di convertire il testo in bianco quando attivo */}
+                                <span className="me-2 fw-medium">{marchio.marchio}</span>
+
+                                {/* Badge fluido: cambia sfondo quando il bottone è selezionato */}
+                                <span
+                                    className={`badge border ${isChecked ? 'bg-white text-primary' : 'bg-light text-dark'}`}>
+                                    {marchio.impianti}
+                                </span>
+                            </label>
+                        </span>
+                    );
+                })}
             </div>
         </section>
     );

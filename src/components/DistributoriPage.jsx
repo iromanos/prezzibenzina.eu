@@ -2,8 +2,7 @@ import Header from "@/components/Header";
 import {getCarburanti, getDistributoriRegione, getMarchi, getSeoRegione} from "@/functions/api";
 import React from "react";
 import ElencoDistributori from "@/components/ElencoDistributori";
-import {LinkCarburanti} from "@/components/FiltroCarburante";
-import {LinkMarchio} from "@/components/FiltroMarchio";
+import {FiltroMarchio} from "@/components/FiltroMarchio";
 import Breadcrumb from "@/components/Breadcrumb";
 import LinkComuni from "@/components/LinkComuni";
 import Mappa from "@/components/Mappa";
@@ -83,7 +82,7 @@ export default async function DistributoriPage({params}) {
 
     const comuni = riepilogo.comuni;
     const marchi = riepilogo.marchi;
-    marchi.unshift({marchio: 'Tutti', key: null});
+    marchi.unshift({marchio: 'Tutti', key: null, impianti: riepilogo.totaleImpianti});
 
     const date = new Date(riepilogo.dataAggiornamento);
 
@@ -223,15 +222,16 @@ export default async function DistributoriPage({params}) {
             <div className={'row'}>
 
                 <div id={"mappa"} className={'col-lg-7 '}>
-                    <h2 className={'h6 text-uppercase'}>Filtra per carburante o marchio</h2>
+                    {/*<h2 className={'h6 text-uppercase'}>Filtra per carburante o marchio</h2>*/}
                     <div className={'row mb-4'}>
-                        <div className={'col-auto'}>
-                            <LinkCarburanti
-                                showTitle={false}
-                                params={riepilogo.request} carburanti={carburanti} size={'sm'}/>
-                        </div>
+                        {/*<LinkCarburanti*/}
+                        {/*    showTitle={false}*/}
+                        {/*    params={riepilogo.request} carburanti={carburanti} size={'sm'}/>*/}
                         <div className={'col'}>
-                            <LinkMarchio params={riepilogo.request} marchi={marchi}/>
+
+
+                            <FiltroMarchio selezionato={riepilogo.marchio} marchi={marchi}/>
+
                         </div>
                     </div>
                     {distributori.length !== 0 ?

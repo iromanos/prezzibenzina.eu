@@ -6,6 +6,12 @@ import useCarburante from "@/hooks/useCarburante";
 import Modal from "react-bootstrap/esm/Modal";
 import {getElencoCarburanti} from "@/functions/api";
 
+
+export function LinkCarburantiLine() {
+
+}
+
+
 export function LinkCarburanti({params, carburanti, onCarburanteChange = null, showTitle = true, size = 'sm'}) {
 
     const {carburante, setCarburante} = useCarburante();

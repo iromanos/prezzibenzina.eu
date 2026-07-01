@@ -39,8 +39,6 @@ async function getParams(params) {
     const serviziValidi = await resServizi;
     const marchiValidi = await resMarchi;
 
-    console.log("SERVIZI", serviziValidi);
-
     const carburante = carburantiValidi.find(c => slug.includes(`prezzo-${c.tipo}`));
     if (!carburante) notFound();
 
@@ -57,8 +55,6 @@ async function getParams(params) {
             if (stringaRimasta.endsWith('-')) stringaRimasta = stringaRimasta.slice(0, -1);
             if (stringaRimasta.startsWith('-')) stringaRimasta = stringaRimasta.substring(1);
         }
-
-        console.log(stringaRimasta);
 
         if (stringaRimasta) {
             const qry = marchiValidi.find(m => stringaRimasta.includes(`${m.id}`));
