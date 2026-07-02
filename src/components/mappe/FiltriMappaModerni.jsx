@@ -207,7 +207,11 @@ export default function FiltriMappaModerni({
                             }}
                         >
                             {m.logo &&
-                                <Image width={32} height={32} src={URI_IMAGE + m.logo} alt={m.nome}/>}
+                                <Image
+
+                                    unoptimized
+
+                                    width={32} height={32} src={URI_IMAGE + m.logo} alt={m.nome}/>}
                             {m.nome}
                         </Button>
                     ))}

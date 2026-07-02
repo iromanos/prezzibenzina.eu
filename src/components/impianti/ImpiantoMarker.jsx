@@ -60,7 +60,10 @@ export default function ImpiantoMarker({
                  }}
             >
                 {isMobile === false &&
-                    <Image className={'d-block mx-auto bg-white rounded-circle mt-1'} alt={d.bandiera} width={32}
+                    <Image
+                        unoptimized
+
+                        className={'d-block mx-auto bg-white rounded-circle mt-1'} alt={d.bandiera} width={32}
                            height={32}
                            src={URI_IMAGE + d.image}/>}
                 <small className={isBest ? 'text-white' : null}>{d.prezzo ? d.prezzo.toFixed(3) : null}</small>

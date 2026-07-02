@@ -85,11 +85,11 @@ export default async function Page({params}) {
     const {slug} = await params;
 
     const urlCorretto = generaUrlCanonico(record);
-    console.log(slug);
-    console.log(urlCorretto);
+    // console.log(slug);
+    // console.log(urlCorretto);
 
     if (slug !== urlCorretto) {
-        console.log("REDIRECT");
+        // console.log("REDIRECT");
         permanentRedirect(`/lombardia/milano/${urlCorretto}`);
     }
 

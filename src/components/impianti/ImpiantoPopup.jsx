@@ -25,7 +25,10 @@ export default function ImpiantoPopup({impianto}) {
         <div className="" key={id_impianto}>
             <div className="">
                 <div className="d-flex align-items-center gap-3 mb-2">
-                    <Image src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
+                    <Image
+                        unoptimized
+
+                        src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
                     <div>
                         <h5 className="mb-0">{nome_impianto}</h5>
                         <small className="text-muted">{gestore}</small>

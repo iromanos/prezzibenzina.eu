@@ -30,7 +30,10 @@ export default function ImpiantoCard({impianto, cardClient = true, onClickPrefer
             <div className="card-body">
                 <a href={schedaUrl} className={'text-decoration-none text-dark'}>
                 <div className="d-flex align-items-start gap-3 mb-2">
-                    <Image src={URI_IMAGE + '/pb' + image} alt={bandiera} width={48} height={48}/>
+                    <Image
+                        unoptimized
+
+                        src={URI_IMAGE + '/pb' + image} alt={bandiera} width={48} height={48}/>
                     <div className={'col'}>
                         <h5 className="mb-0 text-uppercase">{nome_impianto}</h5>
                         {gestore ?

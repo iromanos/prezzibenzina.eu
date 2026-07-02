@@ -8,7 +8,10 @@ export default function ImpiantoRow({d}) {
     return <li key={d.id_impianto}
                className="list-group-item d-flex justify-content-between align-items-center">
         <div>
-            <Image src={URI_IMAGE + d.image} alt={d.bandiera} width={24} height={24}/> - {d.nome_impianto}<br/>
+            <Image
+                unoptimized
+
+                src={URI_IMAGE + d.image} alt={d.bandiera} width={24} height={24}/> - {d.nome_impianto}<br/>
             <span className={'text-muted small'}>{d.indirizzo}, {d.comune} ({d.provincia})</span>
         </div>
         <span className="badge bg-success">{d.prezzo.toFixed(3)} €/L</span>

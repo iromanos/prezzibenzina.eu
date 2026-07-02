@@ -28,7 +28,10 @@ export default function ImpiantoPopupMobile({impianto}) {
         <div className={''} key={id_impianto}>
             <div className="d-flex align-items-start gap-3 mb-2">
                 <div className={'text-center'}>
-                    <Image className={'d-block'} src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
+                    <Image
+                        unoptimized
+
+                        className={'d-block'} src={URI_IMAGE + image} alt={bandiera} width={48} height={48}/>
                     <Bandiera sigla={impianto.stato}/>
                 </div>
                 <div className={'col'}>

@@ -11,9 +11,32 @@ const nextConfig = {
     },
     images: {
         remotePatterns: [
-            new URL('http://localhost:8080/impianto/**'),
-            new URL('http://127.0.0.1:8080/impianto/**'),
-            new URL('https://www.wefuel.it/pb/impianto/**')
+            // Configurazione per il server Locale (localhost)
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+                port: '8080',
+                pathname: '/pb/impianto/**',
+            },
+            // Configurazione per il server Locale (IP 127.0.0.1)
+            {
+                protocol: 'http',
+                hostname: '127.0.0.1',
+                port: '8080',
+                pathname: '/pb/impianto/**',
+            },
+            // Configurazione per l'ambiente di Produzione (Wefuel)
+            {
+                protocol: 'https',
+                hostname: 'www.wefuel.it',
+                port: '', // lascia vuoto per le porte standard http/https
+                pathname: '/pb/impianto/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'www.wefuel.it',
+                pathname: '/**',
+            }
         ],
     },
     sassOptions: {

@@ -72,7 +72,7 @@ export default function FiltroCarburante({selezionato, params}) {
 
     const carburanti = getElencoCarburanti();
 
-    console.log(params);
+    // console.log(params);
 
     return <section className="mb-4">
         <label className="form-label text-uppercase fw-bold">Carburante</label>

@@ -23,7 +23,7 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
 
     const slugCarburante = carburante.toLowerCase();
 
-    console.log(carburante);
+    // console.log(carburante);
 
     let title = "Prezzo" + descrizioneCarburante;
     if (marchio && marchio !== "Tutti") {
@@ -264,7 +264,7 @@ export async function getMetadata({params}) {
 
     const canonicalUrl = getCanonicalUrl(regione, carburante, marchio, sigla, riepilogo.request.comune, servizio);
 
-    console.log("CANONICAL", canonicalUrl);
+    // console.log("CANONICAL", canonicalUrl);
 
     let fuel = '';
     if (carburante === 'benzina') fuel = '1-x';

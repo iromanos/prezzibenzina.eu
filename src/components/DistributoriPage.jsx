@@ -137,10 +137,6 @@ export default async function DistributoriPage({params}) {
 
     riepilogo.request.marchio = riepilogo.marchio;
 
-    console.log(riepilogo);
-
-    // logDebug("RIEPILOGO", riepilogo);
-
     function DistributoreMigliore() {
         if (distributori.length !== 0) {
 
@@ -198,7 +194,10 @@ export default async function DistributoriPage({params}) {
 
             <div className={'d-flex flex-column flex-md-row align-items-md-start align-items-center gap-4 mb-2'}>
                 {marchio &&
-                    <Image src={URI_IMAGE + `/impianto/logo/${marchio}/128`} alt={marchio} width={128} height={128}/>
+                    <Image
+                        unoptimized
+
+                        src={URI_IMAGE + `/impianto/logo/${marchio}/128`} alt={marchio} width={128} height={128}/>
                 }
                 <div>
                     <h1 className={'fs-1'}>{titoloPagina}</h1>

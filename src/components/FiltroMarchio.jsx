@@ -41,6 +41,10 @@ export function LinkMarchio({marchi, params}){
                         key={marchio.marchio}>
 
                         {marchio.key !== '' && <Image
+
+                            unoptimized
+
+
                             className={'me-2'}
                             width={24} height={24}
                             src={process.env.NEXT_PUBLIC_IMAGE_ENDPOINT + `/impianto/logo/${marchio.key}/128`}
@@ -62,6 +66,9 @@ export function LinkMarchio({marchi, params}){
                     setModal(true);
                 }} size={'sm'} variant={'primary'} className={'text-uppercase'}>
                     {marchioSelezionato.key !== '' && <Image
+
+                        unoptimized
+
                         className={'me-2'}
                         width={24} height={24}
                         src={process.env.NEXT_PUBLIC_IMAGE_ENDPOINT + `/impianto/logo/${marchioSelezionato.key}/128`}
@@ -77,7 +84,7 @@ export function LinkMarchio({marchi, params}){
 
 export function FiltroMarchio({marchi, selezionato, params}) {
 
-    console.log(params);
+    // console.log(params);
 
     return (
         <section className="mb-4">
@@ -112,6 +119,8 @@ export function FiltroMarchio({marchi, selezionato, params}) {
                                   style={{height: 20}}>
                                 {haLogoValido && (
                                         <Image
+                                            unoptimized
+
                                             className={'rounded-circle'}
                                             objectFit='contain'
                                             width={20}
