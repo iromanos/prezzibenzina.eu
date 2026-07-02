@@ -3,6 +3,7 @@ import {getMetadata} from "@/functions/helpers";
 import {notFound, permanentRedirect} from "next/navigation";
 import {getElencoCarburanti, getMarchi, getServizi} from "@/functions/api";
 
+
 // export const revalidate = 300;
 
 export async function generateMetadata({params}) {
@@ -18,7 +19,7 @@ function generaUrlCanonico(record) {
     let pezzi = [`prezzo-${record.carburante}`];
     if (record.marchio) pezzi.push(record.marchio);
     if (record.servizio) pezzi.push(record.servizio.slug);
-    return pezzi.join('-'); // Ritorna sempre es: "prezzo-benzina-q8-autolavaggio"
+    return pezzi.join('-');
 }
 
 async function getParams(params) {

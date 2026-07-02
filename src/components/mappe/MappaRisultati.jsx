@@ -53,7 +53,8 @@ const MappaRisultati = forwardRef(({
                                        headerHeight = 120,
                                        topPosition = 0,
                                        zoomLimit = 9.5,
-                                       stato = null
+                                       stato = null,
+                                       maxBounds = null
                                    }, ref) => {
 
     useImperativeHandle(ref, () => ({
@@ -118,13 +119,6 @@ const MappaRisultati = forwardRef(({
             'line-blur': 0.5
         }
     };
-    /*
-    useEffect(() => {
-        if (mapRef.current !== null) {
-            mapRef.current.setInteractive(false);
-        }
-    }, [isReadOnly]);
-    */
 
     useCallback(() => {
         if (isMobile === false) {
@@ -267,23 +261,11 @@ const MappaRisultati = forwardRef(({
 
         const riquadroAttuale = calcolaBounds();
         const ultimoRiquadro = ultimoRiquadroRef.current;
-        /*
-        if (isReadOnly) {
-            await fetchImpianti(riquadroAttuale, filter, ultimoRiquadro);
-            bboxUnion(ultimoRiquadro, riquadroAttuale);
-            return;
-        }*/
-
 
         const center = mapRef.current.getCenter();
         const zoom = mapRef.current.getZoom();
 
         hookUltimaPosizione.aggiornaPosizione({center, zoom});
-
-
-        //console.log(center);
-        //console.log(zoom);
-
 
         onMoveEnd?.(center.lat, center.lng, zoom);
 
@@ -484,6 +466,7 @@ const MappaRisultati = forwardRef(({
     useMemo(() => {
         ultimoRiquadroRef.current = null;
         listImpiantiRef.current = [];
+        if (distributoriIniziali.length !== 0) return;
         debouncedBoundsChange();
     }, [filter]);
 
@@ -665,7 +648,7 @@ const MappaRisultati = forwardRef(({
             </div>
 
             <Map
-
+                maxBounds={maxBounds}
                 dragPan={!isReadOnly}
                 dragRotate={!isReadOnly}
                 scrollZoom={!isReadOnly}
@@ -679,6 +662,7 @@ const MappaRisultati = forwardRef(({
                 ref={mapRef}
                 attributionControl={false}
                 onLoad={() => {
+
                     debouncedBoundsChange();
                     const padding = {
                         top: headerHeight + dist,
@@ -781,7 +765,7 @@ const MappaRisultati = forwardRef(({
                         if (impianto.latitudine === undefined) return null;
 
                         const isBest = impianto.id_impianto === impiantoMigliore?.id_impianto || false;
-
+                        if (isBest) return null;
                         return <ImpiantoMarker
                             isEco={impianto.prezzo < prezzoMedio || prezzoMedio === 0}
                             isBest={isBest}
@@ -795,7 +779,24 @@ const MappaRisultati = forwardRef(({
                                 setPopupInfo(impianto);
                             }}
                             key={impianto.id_impianto} d={impianto}/>;
-                    })}</>
+                    })}
+                        {impiantoMigliore &&
+                            <ImpiantoMarker
+                                isEco={true}
+                                isBest={true}
+                                fadeOut={fadeOutMarker}
+                                onClick={e => {
+                                    e.originalEvent.stopPropagation();
+                                    mapRef.current?.flyTo({
+                                        center: [impiantoMigliore.longitudine, impiantoMigliore.latitudine],
+                                        essential: true
+                                    });
+                                    setPopupInfo(impiantoMigliore);
+                                }}
+                                key={impiantoMigliore.id_impianto} d={impiantoMigliore}/>
+
+                        }
+                    </>
                 }
 
             </Map>

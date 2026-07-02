@@ -13,7 +13,7 @@ const nextConfig = {
         remotePatterns: [
             new URL('http://localhost:8080/impianto/**'),
             new URL('http://127.0.0.1:8080/impianto/**'),
-            new URL('https://www.wefuel.it/impianto/**')
+            new URL('https://www.wefuel.it/pb/impianto/**')
         ],
     },
     sassOptions: {

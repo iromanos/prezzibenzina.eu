@@ -1,0 +1,25 @@
+@media (min-width: 1024px) {
+  .container-principale {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Due colonne uguali */
+    grid-template-areas:
+      "mappa elenco"
+      "descrizione elenco"; /* La descrizione si posiziona sotto la mappa */
+    gap: 0;
+  }
+
+  .sezione-mappa {
+    grid-area: mappa;
+  }
+  .sezione-elenco {
+    grid-area: elenco;
+  }
+  .sezione-descrizione {
+    grid-area: descrizione;
+  }
+}
+
+.sezione-elenco,
+.sezione-mappa {
+  scroll-margin-top: 96px;
+}

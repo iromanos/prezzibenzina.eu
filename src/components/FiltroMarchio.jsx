@@ -75,22 +75,24 @@ export function LinkMarchio({marchi, params}){
 }
 
 
-export function FiltroMarchio({marchi, selezionato, onCambiaMarchio}) {
+export function FiltroMarchio({marchi, selezionato, params}) {
 
-    //if (selezionato === null || selezionato === undefined) selezionato = '';
+    console.log(params);
 
     return (
         <section className="mb-4">
-            <label className="form-label small text-uppercase mb-3">
+            <label className="form-label text-uppercase fw-bold">
                 Filtra per marchio
             </label>
-            <div className="d-flex flex-wrap gap-2">
+            <div className="d-flex flex-wrap column-gap-1 row-gap-2">
                 {marchi.map((marchio) => {
                     // Controlla se questo specifico marchio è quello attualmente selezionato
                     const isChecked = (selezionato && selezionato.id === marchio.key) || (marchio.key === null && selezionato === undefined);
 
                     // Condizione per verificare se il logo esiste ed è valido (evita i placeholder vuoti)
                     const haLogoValido = marchio.key && marchio.key !== 'all' && marchio.key !== '';
+
+                    const link = getRouteLink(params.regione, params.carburante, marchio.key, params.provincia, params.comune);
 
                     return (
                         <span key={marchio.key}>
@@ -104,31 +106,29 @@ export function FiltroMarchio({marchi, selezionato, onCambiaMarchio}) {
                                 onChange={() => onCambiaMarchio && onCambiaMarchio(marchio.key)}
                             />
                             <label
-                                className="btn btn-outline-primary rounded-pill px-3 py-2 d-inline-flex align-items-center"
+                                className={`align-items-center d-inline-flex me-1 border rounded px-1 py-1  ${isChecked ? 'bg-success-subtle border-success-subtle' : ''} `}
                                 htmlFor={`brand${marchio.key}`}
-                            >
-                                {/* Mostra l'immagine SOLO se c'è un logo valido */}
+                            ><div className="d-inline-flex align-items-center me-1"
+                                  style={{height: 20}}>
                                 {haLogoValido && (
-                                    <div className="me-2 d-inline-flex align-items-center"
-                                         style={{width: 20, height: 20}}>
                                         <Image
+                                            className={'rounded-circle'}
                                             objectFit='contain'
                                             width={20}
                                             height={20}
                                             src={`${process.env.NEXT_PUBLIC_IMAGE_ENDPOINT}/impianto/logo/${marchio.key}/128`}
                                             alt={marchio.marchio}
                                         />
-                                    </div>
-                                )}
 
-                                {/* Rimosso text-dark per permettere a Bootstrap di convertire il testo in bianco quando attivo */}
-                                <span className="me-2 fw-medium">{marchio.marchio}</span>
+                                )}</div>
+                                <a href={link.link}
+                                   className={` ${isChecked ? 'text-dark' : 'text-secondary'} link-underline link-underline-opacity-0 `}>
+                                <span className="small">{marchio.marchio}</span>
 
-                                {/* Badge fluido: cambia sfondo quando il bottone è selezionato */}
                                 <span
-                                    className={`badge border ${isChecked ? 'bg-white text-primary' : 'bg-light text-dark'}`}>
-                                    {marchio.impianti}
-                                </span>
+                                    className={` small `}>
+                                    ({marchio.impianti})
+                                </span></a>
                             </label>
                         </span>
                     );

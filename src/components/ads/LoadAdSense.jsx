@@ -80,5 +80,5 @@ export function AdSenseDev({slotAdSense, style}) {
     }
 
     return <div style={style}
-                className={'align-items-center d-flex justify-content-center bg-light-subtle'}>{ads}</div>;
+                className={'align-items-center d-flex justify-content-center bg-light-subtle h-100'}>{ads}</div>;
 }

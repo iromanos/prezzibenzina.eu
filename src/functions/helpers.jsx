@@ -21,6 +21,9 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
 
     const descrizioneCarburante = carburante ? carburante === 'benzina' ? ` della ${carburante}` : ` del ${carburante}` : ' del carburante';
 
+    const slugCarburante = carburante.toLowerCase();
+
+    console.log(carburante);
 
     let title = "Prezzo" + descrizioneCarburante;
     if (marchio && marchio !== "Tutti") {
@@ -30,7 +33,7 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
 
     if (regione) {
         if (!comune || (comune && comune.link === '')) {
-            path.push(`/${regione}/${carburante.toLowerCase()}`);
+            path.push('/' + regione + '/' + slugCarburante);
         }
     }
 
@@ -46,7 +49,7 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
             path.push(`/${comune.id}`);
         } else {
             path.push(`${comune.link}`);
-            path.push(`/prezzo-${carburante.toLowerCase()}`);
+            path.push('/prezzo-' + slugCarburante);
         }
     }
 

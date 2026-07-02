@@ -35,12 +35,12 @@ export default function ImpiantoPopupMobile({impianto}) {
                     <h6 className="text-uppercase mb-0"><a href={schedaUrl}
                                                            className={'text-decoration-none text-dark'}>
                         {nome_impianto}</a></h6>
-                    <small className="text-muted d-block mb-2">{gestore}</small>
-                    {prezzo ? <>
-                        <span className={'bg-success text-white rounded fs-3 px-2 py-1'}>{prezzo.toFixed(3)} <span
-                            style={{
-                            fontSize: '0.8rem',
-                        }}>€/L</span></span></> : null}
+                    <small className="text-muted d-block">{gestore}</small>
+                    {/*{prezzo ? <>*/}
+                    {/*    <span className={'bg-success text-white rounded fs-3 px-2 py-1'}>{prezzo.toFixed(3)} <span*/}
+                    {/*        style={{*/}
+                    {/*        fontSize: '0.8rem',*/}
+                    {/*    }}>€/L</span></span></> : null}*/}
                     </div>
                 </div>
             <span className={'text-muted small'}>

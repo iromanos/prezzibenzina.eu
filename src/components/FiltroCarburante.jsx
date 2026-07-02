@@ -67,13 +67,25 @@ export function LinkCarburanti({params, carburanti, onCarburanteChange = null, s
 }
 
 
-export default function FiltroCarburante({regione, carburanti, selezionato}){
-    return                 <section className="mb-4">
-        <h2 className="h6 mb-3 text-uppercase">Carburante</h2>
-        <div className="btn-group" role="group">
-            {carburanti.map((tipo) => (
+export default function FiltroCarburante({selezionato, params}) {
 
-                <React.Fragment key={tipo}>
+
+    const carburanti = getElencoCarburanti();
+
+    console.log(params);
+
+    return <section className="mb-4">
+        <label className="form-label text-uppercase fw-bold">Carburante</label>
+        <div className="d-flex">
+            {carburanti.map((tipo) => {
+
+                const isChecked = tipo.tipo === selezionato;
+
+                const link = getRouteLink(params.regione, tipo.tipo, params.marchio?.id, params.provincia, params.comune);
+
+                return (
+
+                    <span key={tipo.id}>
                     <input
                         name={'carburante'}
                         type={'radio'}
@@ -83,12 +95,19 @@ export default function FiltroCarburante({regione, carburanti, selezionato}){
                         className={`btn-check`}
                         defaultChecked={tipo === selezionato}
                     />
-                    <label className={"btn btn-sm btn-outline-primary"}
-                           htmlFor={'id_' + tipo}>{tipo}</label>
+                    <label
+                        className={`align-items-center d-inline-flex me-1 border rounded px-1 py-1  ${isChecked ? 'bg-success-subtle border-success-subtle' : ''} `}
+                        htmlFor={'id_' + tipo}>
+                        <a href={link.link}
+                           className={` ${isChecked ? 'text-dark' : 'text-secondary'} link-underline link-underline-opacity-0 small`}>
+                        {tipo.icon} {tipo.tipo}
+                        </a>
+                    </label>
 
-                </React.Fragment>
+                </span>
 
-            ))}
+                )
+            })}
         </div>
     </section>;
 

@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useRef, useState} from "react";
+import React, {useRef} from "react";
 import MapIcon from "@mui/icons-material/Map";
 
 import Button from 'react-bootstrap/Button';
@@ -14,22 +14,23 @@ export default function Mappa({
                                   carburante,
                                   limit = 10,
                                   stato = null,
-                                  bounds = null,
-                                  titolo = "Mappa dei distributori"
+                                  maxBounds = null,
+                                  titolo = "Mappa dei distributori",
+                                  params
                               }) {
 
     const {active} = useInteraction();
 
     const containerRef = useRef(null);
-    const [isVisible, setIsVisible] = useState(true);
 
-    const [state, setState] = useState();
+    console.log(params);
 
     return <section className={"mb-4"}>
         {title ? <h2 className="h6 mb-3 text-uppercase">{titolo}</h2> : null}
-        <div ref={containerRef} className={'border rounded position-relative mb-4 vh-75'}>
+        <div ref={containerRef} className={'border rounded position-relative mb-4 vh-60'}>
             {active ? <><MappaRisultati
-                cooperativeGestures={false}
+                // maxBounds={maxBounds}
+                cooperativeGestures={true}
                 showPositionButton={false}
                 isReadOnly={true}
                 stato={stato}
@@ -41,8 +42,17 @@ export default function Mappa({
                 showFilter={false}
                 headerHeight={0}
                 initialFilters={
-                    {carburante: carburante, limite: limit, 'position': {lat: -1, lng: -1}}
+                    {
+                        brand: params.marchio,
+                        carburante: carburante, limite: limit, 'position': {lat: -1, lng: -1}
+                    }
                 }
+
+                onFetchDistributori={(record) => {
+                    const eventoCustom = new CustomEvent('mappa-aggiornata', {detail: record});
+                    window.dispatchEvent(eventoCustom);
+                }}
+
             />
             </> : <></>}</div>
 

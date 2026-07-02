@@ -6,11 +6,8 @@ import {FiltroMarchio} from "@/components/FiltroMarchio";
 import Breadcrumb from "@/components/Breadcrumb";
 import LinkComuni from "@/components/LinkComuni";
 import Mappa from "@/components/Mappa";
-import MapIcon from '@mui/icons-material/Map';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import {notFound} from "next/navigation";
 import Display6977770298 from "@/components/ads/Display-6977770298";
-import Display5745053645 from "./ads/Display-5745053645";
 import {FooterDistributori} from "./home/FooterHome";
 import {FooterMobile} from "./FooterMobile";
 import {generateMicrodataGraph, getCanonicalUrl, ucwords} from "@/functions/helpers";
@@ -20,8 +17,10 @@ import {AdsDesktop} from "@/components/ads/AdsDesktop";
 import * as turf from '@turf/turf';
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 import {GuidaCarburantiAutomobilistaVER3} from "@/components/GuidaCarburantiAutomobilista";
-//TODO: nella versione Desktop, inserire i link ai marchi
+import FiltroCarburante from "@/components/FiltroCarburante";
 //TODO: visualizzare grafico con la media dei prezzi dell'ultimo mese
+import '../styles/milano.scss';
+
 
 export default async function DistributoriPage({params}) {
 
@@ -136,8 +135,9 @@ export default async function DistributoriPage({params}) {
     } else titoloPagina = `Prezzo ${descrizioneCarburante} ${localita}`;
 
 
-    console.log(riepilogo);
+    riepilogo.request.marchio = riepilogo.marchio;
 
+    console.log(riepilogo);
 
     // logDebug("RIEPILOGO", riepilogo);
 
@@ -155,6 +155,23 @@ export default async function DistributoriPage({params}) {
             </div>
         }
         return <></>;
+    }
+
+    function maxBounds() {
+        const boundsString = riepilogo.request.comune.bounds;
+
+        const data = JSON.parse(boundsString);
+
+        // 2. Destrutturiamo il bbox (che sono stringhe) e le convertiamo in numeri
+        const [latMin, latMax, lngMin, lngMax] = data.bbox.map(Number);
+
+        // 4. Formattiamo i Bounds per MapLibre: [ [LngMin, LatMin], [LngMax, LatMax] ]
+        const maxBounds = [
+            [lngMin, latMin], // Angolo Sud-Ovest
+            [lngMax, latMax]  // Angolo Nord-Est
+        ];
+
+        return maxBounds;
     }
 
     return <>
@@ -179,7 +196,6 @@ export default async function DistributoriPage({params}) {
                 comune={riepilogo.request.comune}
                 marchio={marchio}/>
 
-
             <div className={'d-flex flex-column flex-md-row align-items-md-start align-items-center gap-4 mb-2'}>
                 {marchio &&
                     <Image src={URI_IMAGE + `/impianto/logo/${marchio}/128`} alt={marchio} width={128} height={128}/>
@@ -200,12 +216,6 @@ export default async function DistributoriPage({params}) {
                         <li><CheckBoxIcon className={'text-success'}/> Prezzi ufficiali MIMIT</li>
                         <li><CheckBoxIcon className={'text-success'}/> Rifornimento veloce e sicuro</li>
                     </ul>
-                    <div className={'d-flex gap-2 mb-4 d-lg-none'}>
-                        <a title={"Mappa"} href={"#mappa"} className={'btn btn-outline-primary'}><MapIcon/> Mappa</a>
-                        <a title={"Elenco distributori"} href={"#distributori"}
-                           className={'btn btn-primary'}><FormatListBulletedIcon/> Elenco
-                            distributori</a>
-                    </div>
                 </div>
                 <div className={'col d-lg-none mb-4'}>
                     <DistributoreMigliore/>
@@ -219,55 +229,55 @@ export default async function DistributoriPage({params}) {
                 riepilogo={riepilogo}
                 comuni={comuni}/> : <></>}
 
-            <div className={'row'}>
+            <div className={'row container-principale'}>
 
-                <div id={"mappa"} className={'col-lg-7 '}>
-                    {/*<h2 className={'h6 text-uppercase'}>Filtra per carburante o marchio</h2>*/}
-                    <div className={'row mb-4'}>
-                        {/*<LinkCarburanti*/}
-                        {/*    showTitle={false}*/}
-                        {/*    params={riepilogo.request} carburanti={carburanti} size={'sm'}/>*/}
-                        <div className={'col'}>
+                <div id={"mappa"} className={'sezione-mappa'}>
 
-
-                            <FiltroMarchio selezionato={riepilogo.marchio} marchi={marchi}/>
-
-                        </div>
+                    <div className={'d-lg-block '}>
+                        <FiltroCarburante selezionato={carburante} params={riepilogo.request}/>
                     </div>
+
+                    <div className={'d-lg-block'}>
+                        <FiltroMarchio selezionato={riepilogo.marchio} marchi={marchi} params={riepilogo.request}/>
+                    </div>
+
                     {distributori.length !== 0 ?
                         <Mappa
-                        titolo={`Mappa dei distributori ${localita}`}
-                        carburante={carburante}
-                        posizione={{
-                            longitude: centerCoordinates[0],
-                            latitude: centerCoordinates[1],
-                            zoom: 9,
-                            fitBoundsOptions: {padding: 0}
-                        }}
+                            params={riepilogo}
+                            titolo={`Mappa dei distributori ${localita}`}
+                            carburante={carburante}
 
-                        distributori={distributori}/>
+                            posizione={{
+                                longitude: centerCoordinates[0],
+                                latitude: centerCoordinates[1],
+                                zoom: 9,
+                                fitBoundsOptions: {padding: 10}
+                            }}
+
+                            distributori={distributori}/>
 
                         : <></>}
-                    {distributori.length !== 0 && <>
-                    <Display5745053645/>
 
-                    <GuidaCarburantiAutomobilistaVER3 riepilogo={riepilogo} distributori={distributori}
-                                                  titoloPagina={titoloPagina}/>
-                    </>}
                     {distributori.length === 0 && <>
                         <div className={'bg-danger-subtle border border-danger rounded p-3 mb-3'}>
                             Non sono presenti distributori in questa zona
                         </div>
 
                     </>}
+
                     <Display6977770298 className={'mb-3'}/>
                 </div>
                 {distributori.length !== 0 &&
-                <div id="distributori" className={'col-lg-5 '}>
+                    <div id="distributori" className={'sezione-elenco'}>
                     <ElencoDistributori Regione={regione} distributori={distributori}/>
                 </div>}
-            </div>
+                {distributori.length !== 0 && <div className={'sezione-descrizione'}>
 
+                    <GuidaCarburantiAutomobilistaVER3 riepilogo={riepilogo} distributori={distributori}
+                                                      titoloPagina={titoloPagina}/>
+                </div>}
+
+            </div>
 
         </div>
 

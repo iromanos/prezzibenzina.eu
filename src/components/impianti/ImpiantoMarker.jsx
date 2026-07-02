@@ -4,7 +4,12 @@ import Image from "next/image";
 
 import '../../styles/map.scss';
 
-export default function ImpiantoMarker({d, onClick, fadeOut = false, isBest = false, isEco = true}) {
+export default function ImpiantoMarker({
+                                           d, onClick,
+                                           fadeOut = false,
+                                           isBest = false,
+                                           isEco = true, isMobile = false
+                                       }) {
 
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
 
@@ -40,11 +45,12 @@ export default function ImpiantoMarker({d, onClick, fadeOut = false, isBest = fa
             <div className={isBest ? 'marker-cheapest' : ''}>
             <div
                 className={` 
+                
                 ${getMarkerColor()}                 
                 ${getBorderColor()}
                 position-relative
                 text-center marker-badge
-                pt-1
+                
                 shadow-lg
                 text-dark
                 border border-2  
@@ -53,8 +59,10 @@ export default function ImpiantoMarker({d, onClick, fadeOut = false, isBest = fa
                      color: 'white',
                  }}
             >
-                <Image className={'d-block mx-auto bg-white rounded-circle'} alt={d.bandiera} width={32} height={32}
-                     src={URI_IMAGE + d.image}/>
+                {isMobile === false &&
+                    <Image className={'d-block mx-auto bg-white rounded-circle mt-1'} alt={d.bandiera} width={32}
+                           height={32}
+                           src={URI_IMAGE + d.image}/>}
                 <small className={isBest ? 'text-white' : null}>{d.prezzo ? d.prezzo.toFixed(3) : null}</small>
                 {isBest && <div className="pulse-glow"></div>}
 
