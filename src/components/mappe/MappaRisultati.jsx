@@ -278,8 +278,8 @@ const MappaRisultati = forwardRef(({
 
             const payload = {
                 stato: stato,
-                lat: posizioneAttuale.lat,
-                lng: posizioneAttuale.lon,
+                lat: posizioneAttuale?.lat,
+                lng: posizioneAttuale?.lon,
                 bounds: riquadroAttuale,
                 carburante: filter.carburante,
                 sort: 'price',

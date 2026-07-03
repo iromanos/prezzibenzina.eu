@@ -148,7 +148,7 @@ export async function getServizi() {
 }
 
 export async function getMarchi() {
-    return cacheFetch(INTERNAL_URI + 'marchi');
+    return cacheFetch(URI + 'marchi');
 }
 
 export function getElencoCarburanti() {

@@ -52,7 +52,7 @@ export default function ImpiantoCardMobile({impianto, cardClient = true, onClick
                                     {indirizzo}{comune != null ? ', ' + comune : null} {provincia != null ? `(${provincia})` : null}
                                 </p>
                                     <p className="text-muted small mb-2 align-items-center d-flex gap-1 flex-wrap">
-                                        {impianto.distance_km !== null && <>
+                                        {impianto.distance_km && <>
                                             <DirectionsCarFilledIcon/> {impianto.distance_km.toFixed(3)} km
                                             - </>}
 
