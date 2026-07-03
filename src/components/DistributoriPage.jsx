@@ -1,10 +1,10 @@
 import Header from "@/components/Header";
-import {getCarburanti, getDistributoriRegione, getMarchi, getSeoRegione} from "@/functions/api";
+import {getCarburanti, getDistributoriRegione, getMarchi, getSeoRegione, getServizi} from "@/functions/api";
 import React from "react";
 import ElencoDistributori from "@/components/ElencoDistributori";
-import {FiltroMarchio} from "@/components/FiltroMarchio";
+import {FiltroMarchio, FiltroServizi} from "@/components/FiltroMarchio";
 import Breadcrumb from "@/components/Breadcrumb";
-import LinkComuni from "@/components/LinkComuni";
+import LinkComuni, {LinkProvincie} from "@/components/LinkComuni";
 import Mappa from "@/components/Mappa";
 import {notFound} from "next/navigation";
 import Display6977770298 from "@/components/ads/Display-6977770298";
@@ -22,6 +22,21 @@ import FiltroCarburante from "@/components/FiltroCarburante";
 import '../styles/milano.scss';
 
 
+export async function getPageParams({params, searchParams}) {
+    const [resParams, resSearch] = await Promise.all([
+        params, searchParams
+    ]);
+
+    const serviziValidi = await getServizi();
+    const servizio = serviziValidi.find(s => s.slug === resSearch.servizio);
+
+    const record = {
+        ...resParams, ...{servizio: servizio}
+    };
+
+    return record;
+}
+
 export default async function DistributoriPage({params}) {
 
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
@@ -31,11 +46,12 @@ export default async function DistributoriPage({params}) {
     const elencoCarburanti = getCarburanti();
 
 
-    const [resMarchi, resDistributori, resSeoRegione] = await Promise.all(
+    const [resMarchi, resDistributori, resSeoRegione, resServizi] = await Promise.all(
         [
             getMarchi(),
-            getDistributoriRegione(regione, carburante, marchio, sigla, comune),
-            getSeoRegione(regione, carburante, marchio, sigla, comune)
+            getDistributoriRegione(regione, carburante, marchio, sigla, comune, servizio?.id),
+            getSeoRegione(regione, carburante, marchio, sigla, comune),
+            getServizi(),
         ]
     );
 
@@ -134,8 +150,13 @@ export default async function DistributoriPage({params}) {
         titoloPagina = `Prezzo ${descrizioneCarburante} nei distributori ${marchio.toUpperCase()} ${localita}`;
     } else titoloPagina = `Prezzo ${descrizioneCarburante} ${localita}`;
 
-
+    riepilogo.request.servizio = servizio;
     riepilogo.request.marchio = riepilogo.marchio;
+
+    const elencoServizi = await resServizi;
+
+
+    console.log(riepilogo);
 
     function DistributoreMigliore() {
         if (distributori.length !== 0) {
@@ -224,9 +245,10 @@ export default async function DistributoriPage({params}) {
                 </div>
 
             </div>
-            {comuni.length > 1 ? <LinkComuni
+            <LinkProvincie provincie={riepilogo.elencoProvincie} riepilogo={riepilogo}/>
+            <LinkComuni
                 riepilogo={riepilogo}
-                comuni={comuni}/> : <></>}
+                comuni={comuni}/>
 
             <div className={'row container-principale'}>
 
@@ -239,6 +261,8 @@ export default async function DistributoriPage({params}) {
                     <div className={'d-lg-block'}>
                         <FiltroMarchio selezionato={riepilogo.marchio} marchi={marchi} params={riepilogo.request}/>
                     </div>
+
+                    <FiltroServizi servizi={elencoServizi} params={riepilogo.request}/>
 
                     {distributori.length !== 0 ?
                         <Mappa

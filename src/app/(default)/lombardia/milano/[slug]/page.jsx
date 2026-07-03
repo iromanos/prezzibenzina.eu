@@ -7,7 +7,7 @@ import {getElencoCarburanti, getMarchi, getServizi} from "@/functions/api";
 // export const revalidate = 300;
 
 export async function generateMetadata({params}) {
-    const record = await getParams(params);
+    const record = await getParamsPage(params);
 
 
     const paramsPromise = Promise.resolve(record);
@@ -22,7 +22,7 @@ function generaUrlCanonico(record) {
     return pezzi.join('-');
 }
 
-async function getParams(params) {
+async function getParamsPage(params) {
     const {slug} = await params;
 
     if (!slug.startsWith('prezzo-')) {
@@ -80,7 +80,7 @@ async function getParams(params) {
 }
 
 export default async function Page({params}) {
-    const record = await getParams(params);
+    const record = await getParamsPage(params);
 
     const {slug} = await params;
 

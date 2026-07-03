@@ -234,7 +234,7 @@ const cacheFetch = cache(async (url) => {
     return res.json();
 });
 
-export async function getDistributoriRegione(regione, carburante, marchio, provincia, comune) {
+export async function getDistributoriRegione(regione, carburante, marchio, provincia, comune, servizio) {
 
     let fuel = '';
     if (carburante === 'benzina') fuel = '1-x';
@@ -255,6 +255,13 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
     if (marchio) {
         request += "?marchio=" + marchio;
     }
+
+    if (servizio) {
+        if (marchio) {
+            request += "&servizio=" + servizio;
+        } else request += "?servizio=" + servizio;
+    }
+
 
     return cacheFetch(request);
 }

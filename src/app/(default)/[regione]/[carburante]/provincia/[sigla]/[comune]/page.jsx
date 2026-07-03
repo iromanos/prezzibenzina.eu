@@ -1,17 +1,16 @@
-import DistributoriPage from "@/components/DistributoriPage";
+import DistributoriPage, {getPageParams} from "@/components/DistributoriPage";
 import {getMetadata} from "@/functions/helpers";
 
 // export const revalidate = 43200;
 export const revalidate = 300;
 
 
-export async function generateMetadata({params}) {
-    return getMetadata({params});
+export async function generateMetadata({params, searchParams}) {
+    const record = await getPageParams({params, searchParams});
+    return getMetadata({params: Promise.resolve(record)});
 }
 
-
-export default function ComunePage({params}){
-
-    return <DistributoriPage params={params} />
-
+export default async function ComunePage({params, searchParams}) {
+    const record = await getPageParams({params, searchParams});
+    return <DistributoriPage params={record}/>
 }

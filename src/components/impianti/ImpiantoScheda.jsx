@@ -284,14 +284,18 @@ export default function ImpiantoScheda({impianto, cookie}) {
                 regione={impianto.regione}
                 carburante={cookie.carburante}
                 provincia={impianto.provincia}
-                comune={comune()}
+                comune={impianto.impiantoComune}
                 impianto={impianto}
             />
 
             <div className={'row'}>
                 <div className={'col-lg-7 mb-4'}>
                     <div className="d-flex align-items-center gap-3 mb-3">
-                        <Image src={URI_IMAGE + impianto.image} alt={impianto.bandiera} width={96} height={96}/>
+                        <Image
+
+                            unoptimized
+
+                            src={URI_IMAGE + impianto.image} alt={impianto.bandiera} width={96} height={96}/>
                         <div>
                             <h1 className="mb-0">{impianto.nome_impianto}</h1>
                             <small className="text-muted">{impianto.gestore}</small>

@@ -3,7 +3,7 @@ import {notFound} from "next/navigation";
 import slugify from 'slugify';
 
 
-export function getRouteLink(regione, carburante, marchio, provincia, comune) {
+export function getRouteLink(regione, carburante, marchio, provincia, comune, servizio) {
     const path = [];
     // const title
     const scope = comune
@@ -58,6 +58,14 @@ export function getRouteLink(regione, carburante, marchio, provincia, comune) {
             path.push(`/marchio/${slugify(marchio.toLowerCase())}`);
         } else {
             path.push('-' + slugify(marchio.toLowerCase()));
+        }
+    }
+
+    if (servizio) {
+        if (comune && comune.link !== '') {
+            path.push('-' + servizio.slug);
+        } else {
+            path.push('?servizio=' + servizio.slug);
         }
     }
 

@@ -1,6 +1,6 @@
 'use client'
 import React, {useState} from 'react';
-import {getRouteLink} from "@/functions/helpers";
+import {getRouteLink, ucwords} from "@/functions/helpers";
 import Button from "react-bootstrap/esm/Button";
 import useCarburante from "@/hooks/useCarburante";
 import Modal from "react-bootstrap/esm/Modal";
@@ -75,7 +75,7 @@ export default function FiltroCarburante({selezionato, params}) {
     // console.log(params);
 
     return <section className="mb-4">
-        <label className="form-label text-uppercase fw-bold">Carburante</label>
+        <label className="form-label text-uppercase mb-1 small ">Carburante</label>
         <div className="d-flex">
             {carburanti.map((tipo) => {
 
@@ -83,9 +83,7 @@ export default function FiltroCarburante({selezionato, params}) {
 
                 const link = getRouteLink(params.regione, tipo.tipo, params.marchio?.id, params.provincia, params.comune);
 
-                return (
-
-                    <span key={tipo.id}>
+                return <span key={tipo.id}>
                     <input
                         name={'carburante'}
                         type={'radio'}
@@ -100,13 +98,10 @@ export default function FiltroCarburante({selezionato, params}) {
                         htmlFor={'id_' + tipo}>
                         <a href={link.link}
                            className={` ${isChecked ? 'text-dark' : 'text-secondary'} link-underline link-underline-opacity-0 small`}>
-                        {tipo.icon} {tipo.tipo}
+                        {tipo.icon} {ucwords(tipo.tipo)}
                         </a>
                     </label>
-
                 </span>
-
-                )
             })}
         </div>
     </section>;

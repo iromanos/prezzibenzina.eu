@@ -4,6 +4,7 @@ import {getRouteLink} from "@/functions/helpers";
 import Image from "next/image";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/esm/Modal";
+import CloseIcon from "@mui/icons-material/Close";
 
 
 export function LinkMarchio({marchi, params}){
@@ -82,14 +83,46 @@ export function LinkMarchio({marchi, params}){
 }
 
 
+export function FiltroServizi({servizi, params}) {
+
+
+    console.log(params);
+
+    return <section className={'mb-4'}>
+        <label className="form-label text-uppercase small mb-1">
+            Servizi
+        </label>
+        <div className="d-flex flex-wrap column-gap-1 row-gap-2">
+            {servizi.map((s) => {
+
+                const isChecked = params.servizio?.id === s.id;
+
+                const link = getRouteLink(params.regione, params.carburante, params.marchio?.id, params.provincia, params.comune, isChecked ? null : s);
+
+                return <span key={s.id}>
+                    <label
+                        className={`align-items-center d-inline-flex me-1 border rounded px-1 py-1 small text-secondary  ${isChecked ? 'bg-success-subtle border-success-subtle' : ''} `}
+                        htmlFor={`servizio_${s.id}`}>
+                        <a className={'link-underline link-underline-opacity-0 text-secondary'} href={link.link}>
+                        <i className={s.icona}></i>{s.description}{isChecked && <CloseIcon fontSize={'small'}/>}</a>
+                    </label>
+                </span>
+            })}
+        </div>
+
+
+    </section>;
+
+}
+
 export function FiltroMarchio({marchi, selezionato, params}) {
 
     // console.log(params);
 
     return (
         <section className="mb-4">
-            <label className="form-label text-uppercase fw-bold">
-                Filtra per marchio
+            <label className="form-label text-uppercase small mb-1">
+                marchio
             </label>
             <div className="d-flex flex-wrap column-gap-1 row-gap-2">
                 {marchi.map((marchio) => {

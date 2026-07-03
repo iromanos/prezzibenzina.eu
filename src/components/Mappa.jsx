@@ -26,7 +26,7 @@ export default function Mappa({
     // console.log(params);
 
     return <section className={"mb-4"}>
-        {title ? <h2 className="h6 mb-3 text-uppercase">{titolo}</h2> : null}
+        {title ? <h2 className="h6 mb-2 text-uppercase">{titolo}</h2> : null}
         <div ref={containerRef} className={'border rounded position-relative mb-4 vh-60'}>
             {active ? <><MappaRisultati
                 // maxBounds={maxBounds}
