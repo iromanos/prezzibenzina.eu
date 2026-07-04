@@ -86,14 +86,16 @@ export function LinkMarchio({marchi, params}){
 export function FiltroServizi({servizi, params}) {
 
 
-    console.log(params);
+    // console.log(params);
+
+    if (!servizi) return <></>;
 
     return <section className={'mb-4'}>
         <label className="form-label text-uppercase small mb-1">
             Servizi
         </label>
         <div className="d-flex flex-wrap column-gap-1 row-gap-2">
-            {servizi.map((s) => {
+            {servizi?.map((s) => {
 
                 const isChecked = params.servizio?.id === s.id;
 
@@ -118,6 +120,7 @@ export function FiltroServizi({servizi, params}) {
 export function FiltroMarchio({marchi, selezionato, params}) {
 
     // console.log(params);
+    if (!marchi) return <></>;
 
     return (
         <section className="mb-4">
@@ -125,7 +128,7 @@ export function FiltroMarchio({marchi, selezionato, params}) {
                 marchio
             </label>
             <div className="d-flex flex-wrap column-gap-1 row-gap-2">
-                {marchi.map((marchio) => {
+                {marchi?.map((marchio) => {
                     // Controlla se questo specifico marchio è quello attualmente selezionato
                     const isChecked = (selezionato && selezionato.id === marchio.key) || (marchio.key === null && selezionato === undefined);
 

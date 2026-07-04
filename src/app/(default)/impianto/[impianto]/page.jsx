@@ -64,7 +64,7 @@ export default async function Page({params}) {
 
     const cookie = await getCookie();
 
-    console.log(impianto);
+    // console.log(impianto);
 
     return <><Header/>
         <ImpiantoScheda impianto={impianto} cookie={cookie}/></>;

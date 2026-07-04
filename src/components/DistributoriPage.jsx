@@ -26,15 +26,20 @@ export async function getPageParams({params, searchParams}) {
     const [resParams, resSearch] = await Promise.all([
         params, searchParams
     ]);
+    try {
+        const serviziValidi = await getServizi();
+        const servizio = serviziValidi.find(s => s.slug === resSearch.servizio);
 
-    const serviziValidi = await getServizi();
-    const servizio = serviziValidi.find(s => s.slug === resSearch.servizio);
 
-    const record = {
-        ...resParams, ...{servizio: servizio}
-    };
+        const record = {
+            ...resParams, ...{servizio: servizio}
+        };
 
-    return record;
+        return record;
+    } catch (e) {
+        console.log("!!!ERROR", e.toString());
+    }
+    return resParams;
 }
 
 export default async function DistributoriPage({params}) {
@@ -154,9 +159,6 @@ export default async function DistributoriPage({params}) {
     riepilogo.request.marchio = riepilogo.marchio;
 
     const elencoServizi = await resServizi;
-
-
-    console.log(riepilogo);
 
     function DistributoreMigliore() {
         if (distributori.length !== 0) {
