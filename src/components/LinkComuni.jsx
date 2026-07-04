@@ -13,7 +13,7 @@ export function LinkProvincie({provincie, riepilogo}) {
         <label className="form-label text-uppercase mb-1 small ">Provincie in {request.regione}</label>
         <div className="d-flex flex-wrap gap-2">
 
-            {provincie.map((p) => {
+            {provincie?.map((p) => {
                 const link = getRouteLink(request.regione, request.carburante.toLowerCase(), request.marchio?.id, p.id.toLowerCase());
 
                 return <Link
@@ -41,7 +41,7 @@ export default function LinkComuni({comuni, riepilogo}) {
             <label className="form-label text-uppercase mb-1 small ">Città principali in provincia
                 di {request.provincia_descrizione}</label>
             <div className="d-flex flex-wrap gap-2">
-                {comuni.map((comune) => {
+                {comuni?.map((comune) => {
                     const link = getRouteLink(request.regione, request.carburante.toLowerCase(), marchio, request.provincia, comune);
 
                     return <Link
