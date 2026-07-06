@@ -9,6 +9,9 @@ import FilterBar from "../../../../../components/distributori/FilterBar";
 import {generateDistributorSeoText} from "../../../../../functions/seo";
 import {BsInfoCircle} from "react-icons/bs";
 
+//TODO: inserire i tag seo, opengraph, dati strutturati e faq
+
+
 /**
  * Genera i metadati SEO dinamici per la pagina.
  * @returns {Promise<import('next').Metadata>}
