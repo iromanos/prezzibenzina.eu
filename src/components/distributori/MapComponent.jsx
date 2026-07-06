@@ -187,8 +187,8 @@ export default function MapComponent({distributori, comuneData}) {
     }, [validDistributori, isMapLoaded]);
 
     return (
-        <div className="rounded shadow-sm overflow-hidden border"
-             style={{height: '100%', width: '100%', position: 'relative'}}>
+        <div className="rounded shadow-sm overflow-hidden border pb-map-canvas-wrapper"
+             style={{width: '100%', position: 'relative'}}>
             <Map
                 attributionControl={false}
                 ref={mapRef}
@@ -227,6 +227,17 @@ export default function MapComponent({distributori, comuneData}) {
                     );
                 })}
             </Map>
+            <style jsx>{`
+                .pb-map-canvas-wrapper {
+                    height: 560px;
+                }
+
+                @media (max-width: 767px) {
+                    :global(.pb-map-mode) .pb-map-canvas-wrapper {
+                        height: 100vh !important;
+                    }
+                }
+            `}</style>
         </div>
     );
 }

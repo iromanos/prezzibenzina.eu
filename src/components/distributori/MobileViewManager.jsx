@@ -64,7 +64,7 @@ export default function MobileViewManager({
 
                         {/* Testo SEO: solo sotto la lista */}
                         <section
-                            className="mt-5 p-4 bg-white border-start border-4 border-primary rounded shadow-sm lh-lg d-none d-md-block"
+                            className="mt-5 p-4 bg-white border-start border-4 border-primary rounded shadow-sm lh-lg"
                             style={{color: '#4a4a4a'}}>
                             <h2 className="h4 fw-bold text-dark mb-4 d-flex align-items-center">
                                 <BsInfoCircle className="me-3 text-primary"/>
@@ -184,6 +184,9 @@ export default function MobileViewManager({
             </div>
 
             <style jsx>{`
+                .pb-map-container {
+                    height: 560px;
+                }
                 @media (max-width: 767px) {
                     .pb-map-mode {
                         overflow: hidden;
