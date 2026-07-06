@@ -1,7 +1,6 @@
 import axios from "axios";
 import {NextResponse} from "next/server";
 import {logDebug} from "@/functions/helpers";
-import {deprecatedPropType} from "@mui/material";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import PropaneIcon from "@mui/icons-material/Propane";
 import BubbleChartIcon from "@mui/icons-material/BubbleChart";
@@ -13,7 +12,6 @@ export const URI = process.env.NEXT_PUBLIC_API_ENDPOINT + '/pb/';
 
 export const INTERNAL_URI = process.env.INTERNAL_API_URL + '/pb/';
 
-@deprecatedPropType()
 const Carburanti = {
     'benzina': '1-x',
     'diesel': '2-x',
@@ -147,6 +145,10 @@ export async function getServizi() {
     return cacheFetch(INTERNAL_URI + 'servizi');
 }
 
+export async function getComune(slug) {
+    return cacheFetch(INTERNAL_URI + 'comuni/' + slug);
+}
+
 export async function getMarchi() {
     return cacheFetch(URI + 'marchi');
 }
@@ -234,13 +236,9 @@ const cacheFetch = cache(async (url) => {
     return res.json();
 });
 
-export async function getDistributoriRegione(regione, carburante, marchio, provincia, comune, servizio) {
+export async function getDistributoriRegione(regione, carburante, marchio, provincia, comune, servizio, limit = 10) {
 
-    let fuel = '';
-    if (carburante === 'benzina') fuel = '1-x';
-    if (carburante === 'diesel') fuel = '2-x';
-    if (carburante === 'metano') fuel = '3-x';
-    if (carburante === 'gpl') fuel = '4-x';
+    const fuel = Carburanti[carburante] || '1-x';
 
     let request = INTERNAL_URI + "prezzi/r/" + regione + "/" + fuel;
 
@@ -252,14 +250,14 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
         request = INTERNAL_URI + "prezzi/c/" + comune + "/" + fuel;
     }
 
+    request += "?limit=" + limit;
+
     if (marchio) {
-        request += "?marchio=" + marchio;
+        request += "&marchio=" + marchio;
     }
 
     if (servizio) {
-        if (marchio) {
-            request += "&servizio=" + servizio;
-        } else request += "?servizio=" + servizio;
+        request += "&servizio=" + servizio;
     }
 
 
@@ -267,11 +265,7 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
 }
 
 export async function getSeoRegioneEstera(stato, regione, carburante) {
-    let fuel = null;
-    if (carburante === 'benzina') fuel = '1-x';
-    if (carburante === 'diesel') fuel = '2-x';
-    if (carburante === 'metano') fuel = '3-x';
-    if (carburante === 'gpl') fuel = '4-x';
+    const fuel = Carburanti[carburante] || null;
 
     const request = URI + `seo/estero`;
 
@@ -298,12 +292,7 @@ export async function getSeoRegioneEstera(stato, regione, carburante) {
 
 export async function getSeoRegione(regione, carburante, marchio, provincia, comune) {
 
-    let fuel = null;
-    if (carburante === 'benzina') fuel = '1-x';
-    if (carburante === 'diesel') fuel = '2-x';
-    if (carburante === 'metano') fuel = '3-x';
-    if (carburante === 'gpl') fuel = '4-x';
-
+    const fuel = Carburanti[carburante] || null;
 
     let request = INTERNAL_URI + `seo/regione/${regione}?`;
 
