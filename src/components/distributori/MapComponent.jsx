@@ -142,6 +142,27 @@ export default function MapComponent({distributori, comuneData}) {
         });
     }, [supercluster]);
 
+    // 1.8 Ascolta l'evento dal carosello per centrare la mappa su un distributore specifico
+    useEffect(() => {
+        const handleCenterOnStation = (e) => {
+            const stationId = e.detail?.id;
+            const station = validDistributori.find(s => s.id_impianto === stationId);
+
+            if (station && mapRef.current && isMapLoaded) {
+                mapRef.current.flyTo({
+                    center: [station.longitudine, station.latitudine],
+                    zoom: 13, // Livello di zoom ravvicinato per vedere bene l'impianto
+                    essential: true,
+                    duration: 1000 // Animazione fluida di un secondo
+                });
+            }
+        };
+
+        window.addEventListener('pb-scroll-to-impianto', handleCenterOnStation);
+        return () => window.removeEventListener('pb-scroll-to-impianto', handleCenterOnStation);
+    }, [validDistributori, isMapLoaded]);
+
+
     // 2. Ogni volta che cambiano i distributori, adattiamo la visuale (fitBounds)
     useEffect(() => {
         if (isMapLoaded && mapRef.current && validDistributori.length > 0) {
@@ -167,7 +188,7 @@ export default function MapComponent({distributori, comuneData}) {
 
     return (
         <div className="rounded shadow-sm overflow-hidden border"
-             style={{height: '500px', width: '100%', position: 'relative'}}>
+             style={{height: '100%', width: '100%', position: 'relative'}}>
             <Map
                 attributionControl={false}
                 ref={mapRef}

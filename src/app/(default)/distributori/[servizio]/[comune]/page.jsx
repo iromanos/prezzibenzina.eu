@@ -1,16 +1,16 @@
 import {notFound} from 'next/navigation';
-import {getComuneBySlug, getServiceBySlug} from "../../../../../functions/data";
+import {getComuneBySlug, getServiceBySlug} from "@/functions/data";
 import Header from "../../../../../components/Header";
-import {getDistributoriRegione, getElencoCarburanti, getMarchi, getServizi} from "../../../../../functions/api";
+import {getDistributoriRegione, getElencoCarburanti, getMarchi, getServizi} from "@/functions/api";
 import React from "react";
 import MapComponent from "../../../../../components/distributori/MapComponent";
 import DistributoriList from "../../../../../components/distributori/DistributoriList";
 import FilterBar from "../../../../../components/distributori/FilterBar";
-import {generateDistributorSeoText} from "../../../../../functions/seo";
-import {BsInfoCircle} from "react-icons/bs";
+import MobileViewManager from "../../../../../components/distributori/MobileViewManager";
+import {generateDistributorSeoText} from "@/functions/seo";
 
-//TODO: inserire i tag seo, opengraph, dati strutturati e faq
-
+//TODO: inserire i metadati strutturati e faq
+const DOMAIN = process.env.NEXT_PUBLIC_BASE_URL;
 
 /**
  * Genera i metadati SEO dinamici per la pagina.
@@ -29,8 +29,33 @@ export async function generateMetadata({params}) {
     }
 
     return {
-        title: `Distributori con ${service.description} a ${comuneData.description}`,
+        title: `Distributori con ${service.description} a ${comuneData.description} | PrezziBenzina.eu`,
         description: `Elenco e mappa dei distributori con ${service.description} a ${comuneData.description}. Orari, prezzi e servizi aggiornati.`,
+        alternates: {
+            canonical: `${DOMAIN}/distributori/${servizio}/${comune}`,
+        },
+        openGraph: {
+            title: `Distributori con ${service.description} a ${comuneData.description} | PrezziBenzina.eu`,
+            description: `Trova i migliori distributori con ${service.description} a ${comuneData.description}. Visualizza mappa, orari e prezzi aggiornati.`,
+            url: `${DOMAIN}/distributori/${servizio}/${comune}`,
+            siteName: `${DOMAIN}`,
+            locale: 'it_IT',
+            type: 'website',
+            images: [
+                {
+                    url: `${DOMAIN}/images/logo_og.png`,
+                    width: 1200,
+                    height: 630,
+                    alt: `Prezzi Benzina a ${comuneData.description}`,
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `Distributori con ${service.description} a ${comuneData.description}`,
+            description: `Mappa e prezzi dei distributori con ${service.description} a ${comuneData.description}.`,
+            images: [`${DOMAIN}/images/logo_og.png`],
+        },
     };
 }
 
@@ -75,68 +100,89 @@ export default async function PaginaDistributoreServizioComune({params, searchPa
         marchi
     });
 
+    // JSON-LD per i Distributori (ItemList di GasStation)
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": `Distributori con ${service.description} a ${comuneData.description}`,
+        "description": `Elenco dei distributori di carburante che offrono il servizio di ${service.description} nel comune di ${comuneData.description}`,
+        "itemListElement": (distributori || []).slice(0, 20).map((d, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "item": {
+                "@type": "GasStation",
+                "name": `${d.bandiera} - ${d.nome_impianto}`,
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": d.indirizzo,
+                    "addressLocality": d.comune,
+                    "addressRegion": d.provincia,
+                    "addressCountry": "IT"
+                },
+                "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": d.latitudine,
+                    "longitude": d.longitudine
+                },
+                "url": `${DOMAIN}/impianto/${d.link}`,
+                "image": d.image ? `${URI_IMAGE}${d.image}` : undefined,
+                "amenityFeature": d.impianto_servizi?.services?.map(s => ({
+                    "@type": "LocationFeatureSpecification",
+                    "name": s.description,
+                    "value": true
+                }))
+            }
+        }))
+    };
+
+    // JSON-LD per il Breadcrumb
+    const breadcrumbLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": DOMAIN},
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": `Distributori ${service.description} ${comuneData.description}`,
+                "item": `${DOMAIN}/distributori/${servizioSlug}/${comuneSlug}`
+            }
+        ]
+    };
+
     return (
-        <><Header/>
-            <main className="container py-5">
-                <h1 className="h2 fw-bold mb-2">
-                    Distributori con {service.description} a {comuneData.description}
-            </h1>
-                <p className="lead text-muted mb-4">
-                    Abbiamo trovato <strong>{distributori?.length || 0}</strong> distributori che offrono questo
-                    servizio a {comuneData.description}.
-            </p>
+        <div className="pb-page-wrapper">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{__html: JSON.stringify(breadcrumbLd)}}
+            />
 
-                <FilterBar
-                    servizi={servizi}
-                    marchi={marchi}
-                    URI_IMAGE={URI_IMAGE}
-                    carburanti={elencoCarburanti}
-                    currentServiceSlug={servizioSlug}
-                    currentComuneSlug={comuneSlug}
-                />
-
-                <div className="row">
-                    <div className="col-lg-5 order-2 order-lg-1">
-                        {distributori && distributori.length > 0 ? (
-                            <DistributoriList distributori={distributori} URI_IMAGE={URI_IMAGE}/>
-                        ) : (
-                            <div className="col-12">
-                                <div className="p-5 border rounded bg-light text-center">
-                                    <p className="text-muted mb-0">Nessun distributore trovato con questo servizio in
-                                        questa zona.</p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Colonna Mappa */}
-                    <div className="col-lg-7 order-1 order-lg-2 mb-4 mb-lg-0">
-                        <div className="sticky-top" style={{top: 'calc(80px + 1rem)', zIndex: 10}}>
-                            <MapComponent distributori={distributori} comuneData={comuneData}/>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Testo SEO Approfondito - Posizionato Full Width a fondo pagina per miglior leggibilità */}
-                <div className="row mt-5">
-                    <div className="col-12">
-                        <section
-                            className="p-4 p-md-5 bg-white border-start border-4 border-primary rounded shadow-sm lh-lg"
-                            style={{color: '#4a4a4a'}}>
-                            <h2 className="h3 fw-bold text-dark mb-4 d-flex align-items-center">
-                                <BsInfoCircle className="me-3 text-primary"/>
-                                Tutto quello che devi sapere su {service.description} a {comuneData.description}
-                            </h2>
-                            {seoParagraphs.map((text, idx) => (
-                                <p key={idx} className={`${idx === 0 ? "lead fw-normal text-dark mb-4" : "mb-3"}`}>
-                                    {text.split('**').map((part, i) => i % 2 === 1 ?
-                                        <strong key={i}>{part}</strong> : part)}
-                                </p>
-                            ))}
-                        </section>
-                    </div>
-                </div>
-            </main>
-        </>
+            <MobileViewManager
+                header={<Header/>}
+                filterBar={
+                    <FilterBar
+                        servizi={servizi}
+                        marchi={marchi}
+                        URI_IMAGE={URI_IMAGE}
+                        carburanti={elencoCarburanti}
+                        currentServiceSlug={servizioSlug}
+                        currentComuneSlug={comuneSlug}
+                    />
+                }
+                title={`Distributori con ${service.description} a ${comuneData.description}`}
+                count={distributori?.length || 0}
+                comuneName={comuneData.description}
+                listComponent={<DistributoriList distributori={distributori} URI_IMAGE={URI_IMAGE}/>}
+                mapComponent={<MapComponent distributori={distributori} comuneData={comuneData}/>}
+                seoParagraphs={seoParagraphs}
+                serviceDescription={service.description}
+                distributori={distributori}
+                URI_IMAGE={URI_IMAGE}
+            />
+        </div>
     );
 }

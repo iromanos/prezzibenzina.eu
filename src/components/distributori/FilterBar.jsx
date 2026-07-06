@@ -1,6 +1,5 @@
 'use client';
-
-import React from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useRouter, useSearchParams} from 'next/navigation';
 import {BsCreditCard, BsCupHot, BsDroplet, BsPCircle, BsPersonWheelchair, BsTools, BsWater} from 'react-icons/bs';
 import {FaBaby, FaCarSide, FaChargingStation, FaWifi} from 'react-icons/fa6';
@@ -24,113 +23,180 @@ export default function FilterBar({servizi, marchi, carburanti, currentServiceSl
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const handleServiceChange = (slug) => {
-        router.push(`/distributori/${slug}/${currentComuneSlug}`);
-    };
-
-    const handleMarchioSelect = (id) => {
-        const params = new URLSearchParams(searchParams.toString());
-        if (id) {
-            params.set('marchio', id.toString());
-        } else {
-            params.delete('marchio');
-        }
-        router.push(`?${params.toString()}`);
-    };
-
-    const handleFuelChange = (fuel) => {
-        const params = new URLSearchParams(searchParams.toString());
-        if (fuel) {
-            params.set('fuel', fuel);
-        } else {
-            params.delete('fuel');
-        }
-        router.push(`?${params.toString()}`);
-    };
-
+    const [showShield, setShowShield] = useState(false);
     const currentFuel = searchParams.get('fuel') || 'benzina';
+    const currentMarchio = searchParams.get('marchio') || '';
 
-    // Ordiniamo i servizi in ordine alfabetico per descrizione
-    const sortedServizi = servizi
-        ? [...servizi].sort((a, b) => a.description.localeCompare(b.description))
-        : [];
+    useEffect(() => {
+        const handleOpen = () => setShowShield(true);
+        window.addEventListener('pb-open-filters', handleOpen);
+        return () => window.removeEventListener('pb-open-filters', handleOpen);
+    }, []);
 
-    // Ordiniamo i marchi in ordine alfabetico per nome
-    const sortedMarchi = marchi
-        ? [...marchi].sort((a, b) => a.nome.localeCompare(b.nome))
-        : [];
+    // Funzione helper per gestire la navigazione e chiudere il menu mobile
+    const navigate = (url, isQuery = true) => {
+        if (isQuery) {
+            router.push(url);
+        } else {
+            router.push(url);
+        }
+        setShowShield(false);
+    };
+
+    const onServiceSelect = (slug) => {
+        const params = searchParams.toString();
+        const url = `/distributori/${slug}/${currentComuneSlug}${params ? `?${params}` : ''}`;
+        router.push(url);
+        setShowShield(false);
+    };
+
+    const onMarchioSelect = (id) => {
+        const params = new URLSearchParams(searchParams.toString());
+        id ? params.set('marchio', id.toString()) : params.delete('marchio');
+        navigate(`?${params.toString()}`);
+    };
+
+    const onFuelSelect = (fuel) => {
+        const params = new URLSearchParams(searchParams.toString());
+        fuel ? params.set('fuel', fuel) : params.delete('fuel');
+        navigate(`?${params.toString()}`);
+    };
+
+    const sortedServizi = useMemo(() =>
+            servizi ? [...servizi].sort((a, b) => a.description.localeCompare(b.description)) : [],
+        [servizi]);
+
+    const sortedMarchi = useMemo(() =>
+            marchi ? [...marchi].sort((a, b) => a.nome.localeCompare(b.nome)) : [],
+        [marchi]);
+
+    // --- Sotto-componenti di rendering per evitare ripetizioni ---
+
+    const renderFuelSelector = (isFullWidth = false) => (
+        <div className={`btn-group ${isFullWidth ? 'w-100' : ''} bg-white shadow-sm p-1 rounded-pill`} role="group">
+            {carburanti?.map(c => (
+                <button
+                    key={c.id}
+                    type="button"
+                    className={`btn pb-filter-chip rounded-pill px-3 py-1 border-0 ${currentFuel === c.tipo ? 'btn-primary shadow-sm' : 'btn-light text-muted'}`}
+                    onClick={() => onFuelSelect(c.tipo)}
+                    style={{fontSize: '0.85rem'}}
+                >
+                    {c.tipo.charAt(0).toUpperCase() + c.tipo.slice(1)}
+                </button>
+            ))}
+        </div>
+    );
+
+    const renderServiceChips = () => (
+        <div className="d-flex flex-wrap gap-2">
+            {sortedServizi.map(s => {
+                const IconComponent = ICON_COMPONENTS[s.icona];
+                const isActive = currentServiceSlug === s.slug;
+                return (
+                    <button
+                        key={s.id}
+                        onClick={() => onServiceSelect(s.slug)}
+                        className={`btn pb-filter-chip btn-sm rounded-pill d-flex align-items-center border ${isActive ? 'btn-primary border-primary shadow-sm' : 'btn-white bg-white text-secondary'}`}
+                    >
+                        {IconComponent && <IconComponent className="me-2"/>}
+                        {s.description}
+                    </button>
+                );
+            })}
+        </div>
+    );
+
+    const renderMarchioChips = () => (
+        <div className="d-flex flex-wrap gap-2">
+            <button
+                onClick={() => onMarchioSelect('')}
+                className={`btn pb-filter-chip btn-sm rounded-pill border ${!currentMarchio ? 'btn-primary border-primary shadow-sm' : 'btn-white bg-white text-secondary'}`}
+            >
+                Tutti i marchi
+            </button>
+            {sortedMarchi.map(m => {
+                const isActive = currentMarchio === m.id.toString();
+                return (
+                    <button
+                        key={m.id}
+                        onClick={() => onMarchioSelect(m.id)}
+                        className={`btn pb-filter-chip btn-sm rounded-pill d-flex align-items-center border ${isActive ? 'btn-primary border-primary shadow-sm' : 'btn-white bg-white text-secondary'}`}
+                    >
+                        {m.logo && (
+                            <img
+                                src={`${URI_IMAGE}${m.logo}`}
+                                alt={m.nome}
+                                className="me-2"
+                                style={{height: '18px', width: 'auto', objectFit: 'contain'}}
+                            />
+                        )}
+                        <span className="text-nowrap">{m.nome}</span>
+                    </button>
+                );
+            })}
+        </div>
+    );
 
     return (
-        <div className="mb-4">
-            {/* Filtro Carburante: Segmented Control */}
+        <div className="mb-4 pb-filter-bar">
+            {/* --- Desktop/Main View --- */}
             <div className="d-flex justify-content-center mb-3">
-                <div className="btn-group bg-white shadow-sm p-1 rounded-pill" role="group">
-                    {carburanti?.map(c => (
-                        <button
-                            key={c.id}
-                            type="button"
-                            className={`btn pb-filter-chip rounded-pill px-3 py-1 border-0 ${currentFuel === c.tipo ? 'btn-primary shadow-sm' : 'btn-light text-muted'}`}
-                            onClick={() => handleFuelChange(c.tipo)}
-                            style={{fontSize: '0.85rem'}}
-                        >
-                            {c.tipo.charAt(0).toUpperCase() + c.tipo.slice(1)}
-                        </button>
-                    ))}
-                </div>
+                {renderFuelSelector()}
             </div>
 
             <div className="row g-3">
-                {/* Filtro Servizi: Chips avvolgenti con icone */}
                 <div className="col-12">
                     <label className="form-label small fw-bold text-muted text-uppercase mb-2 d-block">Servizio
                         ricercato</label>
-                    <div className="d-flex flex-wrap gap-2">
-                        {sortedServizi.map(s => {
-                            const IconComponent = ICON_COMPONENTS[s.icona];
-                            return (
-                                <button
-                                    key={s.id}
-                                    onClick={() => handleServiceChange(s.slug)}
-                                    className={`btn pb-filter-chip btn-sm rounded-pill d-flex align-items-center border ${currentServiceSlug === s.slug ? 'btn-primary border-primary shadow-sm' : 'btn-white bg-white text-secondary'}`}
-                                >
-                                    {IconComponent && <IconComponent className="me-2"/>}
-                                    {s.description}
-                                </button>
-                            );
-                        })}
-                    </div>
+                    {renderServiceChips()}
                 </div>
-
-                {/* Filtro Marchi: Chips avvolgenti */}
                 <div className="col-12">
                     <label className="form-label small fw-bold text-muted text-uppercase mb-2 d-block">Marchio</label>
-                    <div className="d-flex flex-wrap gap-2">
-                        <button
-                            onClick={() => handleMarchioSelect('')}
-                            className={`btn pb-filter-chip btn-sm rounded-pill border ${!searchParams.get('marchio') ? 'btn-primary border-primary shadow-sm' : 'btn-white bg-white text-secondary'}`}
-                        >
-                            Tutti i marchi
-                        </button>
-                        {sortedMarchi.map(m => (
-                            <button
-                                key={m.id}
-                                onClick={() => handleMarchioSelect(m.id)}
-                                className={`btn pb-filter-chip btn-sm rounded-pill d-flex align-items-center border ${searchParams.get('marchio') === m.id.toString() ? 'btn-primary border-primary shadow-sm' : 'btn-white bg-white text-secondary'}`}
-                            >
-                                {m.logo && (
-                                    <img
-                                        src={`${URI_IMAGE}${m.logo}`}
-                                        alt={m.nome}
-                                        className="me-2"
-                                        style={{height: '18px', width: 'auto', objectFit: 'contain'}}
-                                    />
-                                )}
-                                <span className="text-nowrap">{m.nome}</span>
-                            </button>
-                        ))}
-                    </div>
+                    {renderMarchioChips()}
                 </div>
             </div>
+
+            {/* --- Mobile Bottom Shield --- */}
+            <div
+                className={`offcanvas offcanvas-bottom rounded-top-4 ${showShield ? 'show' : ''}`}
+                tabIndex="-1"
+                style={{
+                    visibility: showShield ? 'visible' : 'hidden',
+                    height: '80vh',
+                    zIndex: 2000 /* Valore molto alto per stare sopra la mappa fixed */
+                }}
+            >
+                <div className="offcanvas-header border-bottom">
+                    <h5 className="offcanvas-title fw-bold">Filtra Distributori</h5>
+                    <button type="button" className="btn-close shadow-none"
+                            onClick={() => setShowShield(false)}></button>
+                </div>
+                <div className="offcanvas-body">
+                    <div className="mb-4">
+                        <label className="form-label small fw-bold text-muted text-uppercase">Carburante</label>
+                        {renderFuelSelector(true)}
+                    </div>
+                    <div className="mb-4">
+                        <label className="form-label small fw-bold text-muted text-uppercase mb-2">Servizi</label>
+                        {renderServiceChips()}
+                    </div>
+                    <div className="mb-4">
+                        <label className="form-label small fw-bold text-muted text-uppercase mb-2">Marchio</label>
+                        {renderMarchioChips()}
+                    </div>
+                </div>
+                <div className="p-3 border-top bg-light">
+                    <button className="btn btn-dark w-100 py-3 fw-bold rounded-pill"
+                            onClick={() => setShowShield(false)}>
+                        Mostra Risultati
+                    </button>
+                </div>
+            </div>
+
+            {/* Overlay Background */}
+            {showShield && <div className="offcanvas-backdrop fade show" style={{zIndex: 1900}}
+                                onClick={() => setShowShield(false)}></div>}
 
             <style jsx>{`
                 .pb-filter-chip {
