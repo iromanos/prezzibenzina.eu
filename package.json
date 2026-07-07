@@ -32,12 +32,14 @@
     "react-bootstrap": "^2.10.10",
     "react-device-detect": "^2.2.3",
     "react-dom": "19.1.0",
+    "react-icons": "^5.7.0",
     "react-map-gl": "^8.1.0",
     "react-responsive": "^10.0.1",
     "recharts": "^3.9.0",
     "sass": "1.33",
     "sass-loader": "^10.1.1",
-    "slugify": "^1.6.9"
+    "slugify": "^1.6.9",
+    "use-supercluster": "^1.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
