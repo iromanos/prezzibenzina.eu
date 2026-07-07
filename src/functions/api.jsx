@@ -159,28 +159,28 @@ export function getElencoCarburanti() {
     r.push({
         id: '1-x',
         tipo: 'benzina',
-        icon: <LocalGasStationIcon/>,
+        icon: <LocalGasStationIcon fontSize={'small'}/>,
         fuel_id: 1
     });
 
     r.push({
         id: '2-x',
         tipo: 'diesel',
-        icon: <EvStationIcon/>,
+        icon: <EvStationIcon fontSize={'small'}/>,
         fuel_id: 2
     });
 
     r.push({
         id: '3-x',
         tipo: 'metano',
-        icon: <BubbleChartIcon/>,
+        icon: <BubbleChartIcon fontSize={'small'}/>,
         fuel_id: 3
     });
 
     r.push({
         id: '4-x',
         tipo: 'gpl',
-        icon: <PropaneIcon/>,
+        icon: <PropaneIcon fontSize={'small'}/>,
         fuel_id: 4
     });
 

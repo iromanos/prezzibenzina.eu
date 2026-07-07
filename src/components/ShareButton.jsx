@@ -17,7 +17,7 @@ export default function ShareButton({impianto}) {
 
     return (
         <Button variant={'light'} size={'sm'} onClick={handleShare}>
-            <ShareIcon/> Condividi
+            <ShareIcon fontSize={'small'}/>
         </Button>
     );
 }

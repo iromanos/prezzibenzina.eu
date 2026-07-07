@@ -15,7 +15,7 @@ export default function Display5745053645() {
     }, []);
 
     return <>
-        <ins className="adsbygoogle mb-3"
+        <ins className="adsbygoogle mb-3 w-100"
              style={{display: 'block'}}
              data-ad-client="ca-pub-7775238513283854"
              data-ad-slot="5745053645"

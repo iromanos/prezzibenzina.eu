@@ -3,6 +3,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {useRouter, useSearchParams} from 'next/navigation';
 import {BsCreditCard, BsCupHot, BsDroplet, BsPCircle, BsPersonWheelchair, BsTools, BsWater} from 'react-icons/bs';
 import {FaBaby, FaCarSide, FaChargingStation, FaWifi} from 'react-icons/fa6';
+import {ucwords} from "@/functions/helpers";
 
 // Mappatura delle classi CSS provenienti dall'API ai componenti react-icons
 const ICON_COMPONENTS = {
@@ -73,18 +74,23 @@ export default function FilterBar({servizi, marchi, carburanti, currentServiceSl
     // --- Sotto-componenti di rendering per evitare ripetizioni ---
 
     const renderFuelSelector = (isFullWidth = false) => (
-        <div className={`btn-group ${isFullWidth ? 'w-100' : ''} bg-white shadow-sm p-1 rounded-pill`} role="group">
-            {carburanti?.map(c => (
-                <button
-                    key={c.id}
-                    type="button"
-                    className={`btn pb-filter-chip rounded-pill px-3 py-1 border-0 ${currentFuel === c.tipo ? 'btn-primary shadow-sm' : 'btn-light text-muted'}`}
-                    onClick={() => onFuelSelect(c.tipo)}
-                    style={{fontSize: '0.85rem'}}
-                >
-                    {c.tipo.charAt(0).toUpperCase() + c.tipo.slice(1)}
-                </button>
-            ))}
+        <div className={`d-flex flex-wrap gap-2`}>
+            {carburanti?.map(c => {
+                // const IconComponent = c.icon;
+                return (
+                    <button
+                        key={c.id}
+                        type="button"
+                        className={`btn pb-filter-chip btn-sm rounded-pill d-flex align-items-center border ${currentFuel === c.tipo ? 'btn-primary border-primary shadow-sm' : 'btn-white bg-white text-secondary'}`}
+
+                        onClick={() => onFuelSelect(c.tipo)}
+                        style={{fontSize: '0.85rem'}}
+                    >
+                        <span className={'me-2'}>{c.icon}</span>
+                        {ucwords(c.tipo)}
+                    </button>
+                );
+            })}
         </div>
     );
 
@@ -141,11 +147,13 @@ export default function FilterBar({servizi, marchi, carburanti, currentServiceSl
     return (
         <div className="mb-4 pb-filter-bar">
             {/* --- Desktop/Main View --- */}
-            <div className="d-flex justify-content-center mb-3">
-                {renderFuelSelector()}
-            </div>
 
             <div className="row g-3">
+                <div className="col-12">
+                    <label
+                        className="form-label small fw-bold text-muted text-uppercase d-block mb-2">Carburante</label>
+                    {renderFuelSelector()}
+                </div>
                 <div className="col-12">
                     <label className="form-label small fw-bold text-muted text-uppercase mb-2 d-block">Servizio
                         ricercato</label>

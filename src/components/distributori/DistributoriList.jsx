@@ -3,8 +3,9 @@
 import React, {useEffect, useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {BsExclamationTriangle, BsGeoAlt, BsGeoFill} from "react-icons/bs";
+import {BsGeoAlt, BsGeoFill} from "react-icons/bs";
 import ShareButton from "../ShareButton";
+import {FiAlertTriangle} from "react-icons/fi";
 
 export default function DistributoriList({distributori, URI_IMAGE}) {
     const ITEMS_PER_PAGE = 5;
@@ -118,12 +119,11 @@ export default function DistributoriList({distributori, URI_IMAGE}) {
                                     Dettagli
                                 </Link>
                             </div>
-                            <div className="d-flex gap-2">
+                            <div className="d-flex">
                                 <Link href={`/impianto/${distributore.link}/segnala`}
                                       className="btn btn-sm btn-light text-decoration-none text-muted"
                                       title="Segnala errore">
-                                    <BsExclamationTriangle className="me-1"/>
-                                    <span className="d-none d-sm-inline">Segnala</span>
+                                    <FiAlertTriangle className={'fs-5'}/>
                                 </Link>
                                 <ShareButton
                                     impianto={distributore}

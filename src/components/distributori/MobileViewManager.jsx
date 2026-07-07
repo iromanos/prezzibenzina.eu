@@ -4,6 +4,9 @@ import React from 'react';
 import {BsGeoFill, BsInfoCircle, BsListUl, BsMap, BsSliders} from 'react-icons/bs';
 import {useRouter, useSearchParams} from 'next/navigation';
 import Link from 'next/link';
+import Display6977770298 from "../ads/Display-6977770298";
+import {AdsDesktop} from "../ads/AdsDesktop";
+import Display5745053645 from "../ads/Display-5745053645";
 
 /**
  * Manager unico del layout della pagina distributori.
@@ -40,50 +43,55 @@ export default function MobileViewManager({
     return (
         <div className={`pb-layout-manager ${isMapActive ? 'pb-map-mode' : ''}`}>
 
-            {/* Header e Filtri: Nascosti su mobile solo in modalità mappa */}
-            <div className={`pb-header-section ${isMapActive ? 'd-none d-md-block' : 'd-block'}`}>
+            {/* Header e Titolo: visibili solo se la mappa non è attiva a schermo intero su mobile */}
+            <div className={`pb-header-sticky-wrapper ${isMapActive ? 'd-none d-md-block' : 'sticky-top bg-white'}`}
+                 style={{top: 0, zIndex: 1030}}>
                 {header}
-                <div className="container mt-4">
-                    <h1 className="h2 fw-bold mb-2">{title}</h1>
-                    <p className="lead text-muted mb-4">
-                        Abbiamo trovato <strong>{count}</strong> distributori a {comuneName}.
-                    </p>
-                </div>
+                {!isMapActive && (
+                    <div className="container-fluid mt-3 pb-2 border-bottom">
+                        <div className='container'>
+                            <h1 className="h4 fw-bold mb-1">{title}</h1>
+                            <p className="small text-muted mb-0">
+                                Trovati <strong>{count}</strong> distributori a {comuneName}.
+                            </p>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Filtri: Renderizzati fuori dalla sezione header per permettere all'Offcanvas di funzionare sempre */}
-            <div className="container">
+            <div className={`container ${!isMapActive ? 'mt-3' : ''}`}>
                 {filterBar}
             </div>
+
+            {/* Pubblicità Top: Visibile solo se la mappa non è attiva a schermo intero su mobile */}
+            {!isMapActive && (
+                <div className="container mt-2 mb-4">
+                    <Display6977770298/>
+                </div>
+            )}
 
             <main className="container pb-5">
                 <div className="row">
                     {/* Colonna Lista */}
                     <div className={`col-md-5 order-2 order-md-1 ${isMapActive ? 'd-none d-md-block' : 'd-block'}`}>
                         {listComponent}
-
-                        {/* Testo SEO: solo sotto la lista */}
-                        <section
-                            className="mt-5 p-4 bg-white border-start border-4 border-primary rounded shadow-sm lh-lg"
-                            style={{color: '#4a4a4a'}}>
-                            <h2 className="h4 fw-bold text-dark mb-4 d-flex align-items-center">
-                                <BsInfoCircle className="me-3 text-primary"/>
-                                Tutto quello che devi sapere
-                            </h2>
-                            {seoParagraphs.map((text, idx) => (
-                                <p key={idx} className={`${idx === 0 ? "lead fw-normal text-dark mb-4" : "mb-3"}`}>
-                                    {text.split('**').map((part, i) => i % 2 === 1 ?
-                                        <strong key={i}>{part}</strong> : part)}
-                                </p>
-                            ))}
-                        </section>
                     </div>
 
                     {/* Colonna Mappa */}
                     <div
                         className={`col-md-7 order-1 order-md-2 mb-4 mb-md-0 ${!isMapActive ? 'd-none d-md-block' : 'd-block'}`}>
-                        <div className="pb-map-container sticky-top" style={{top: 'calc(80px + 1rem)'}}>
+                        <div className="pb-map-container sticky-top" style={{top: 'calc(160px + 1rem)'}}>
                             {mapComponent}
+
+                            {/* Pubblicità Sidebar Desktop sotto la mappa */}
+                            {!isMapActive && (
+                                <div className="mt-4 d-none d-lg-block">
+                                    <AdsDesktop>
+                                        <Display5745053645/>
+                                    </AdsDesktop>
+                                </div>
+                            )}
                         </div>
 
                         {/* Carosello Orizzontale Distributori - Solo su Mobile in modalità Mappa */}
@@ -156,6 +164,38 @@ export default function MobileViewManager({
                         )}
                     </div>
                 </div>
+
+                {/* Sezione Pubblicità e SEO a tutta larghezza (Full Width) */}
+                {!isMapActive && (
+                    <div className="row mt-5">
+                        <div className="col-12">
+                            {/* Pubblicità In-Feed */}
+                            <div className="mb-5 text-center">
+                                <Display5745053645/>
+                            </div>
+
+                            {/* Testo SEO Approfondito */}
+                            <section
+                                className="p-4 p-md-5 bg-white border-start border-4 border-primary rounded shadow-sm lh-lg"
+                                style={{color: '#4a4a4a', backgroundColor: '#fafafa'}}>
+                                <h2 className="h4 fw-bold text-dark mb-4 d-flex align-items-center">
+                                    <BsInfoCircle className="me-3 text-primary"/>
+                                    Tutto quello che devi sapere su {title}
+                                </h2>
+                                {seoParagraphs.map((text, idx) => (
+                                    <p key={idx}
+                                       className={`${idx === 0 ? "lead fw-normal mb-4 text-secondary" : "mb-3"}`}>
+                                        {text.split('**').map((part, i) => i % 2 === 1 ? (
+                                            <strong key={i}>{part}</strong>
+                                        ) : (
+                                            <React.Fragment key={i}>{part}</React.Fragment>
+                                        ))}
+                                    </p>
+                                ))}
+                            </section>
+                        </div>
+                    </div>
+                )}
             </main>
 
             {/* Tasto switch mobile */}
@@ -185,7 +225,7 @@ export default function MobileViewManager({
 
             <style jsx>{`
                 .pb-map-container {
-                    height: 560px;
+                    //height: 560px;
                 }
                 @media (max-width: 767px) {
                     .pb-map-mode {

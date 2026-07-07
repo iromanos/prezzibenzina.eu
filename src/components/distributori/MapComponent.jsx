@@ -149,9 +149,12 @@ export default function MapComponent({distributori, comuneData}) {
             const station = validDistributori.find(s => s.id_impianto === stationId);
 
             if (station && mapRef.current && isMapLoaded) {
+                const isMobile = window.innerWidth <= 767;
+
                 mapRef.current.flyTo({
                     center: [station.longitudine, station.latitudine],
-                    zoom: 13, // Livello di zoom ravvicinato per vedere bene l'impianto
+                    zoom: 14, // Zoom leggermente più vicino per mobile
+                    offset: [0, isMobile ? -140 : 0], // Sposta il centro verso l'alto (Y negativo) su mobile
                     essential: true,
                     duration: 1000 // Animazione fluida di un secondo
                 });
@@ -174,14 +177,22 @@ export default function MapComponent({distributori, comuneData}) {
             const minLat = Math.min(...lats);
             const maxLat = Math.max(...lats);
 
+            const isMobile = window.innerWidth <= 767;
+            // Calcoliamo il padding: carosello (bottom 72px) + altezza card + margini. 
+            // 320px è un valore cautelativo che garantisce che i marker siano sempre nella metà superiore.
+            const bottomPadding = isMobile ? 320 : 60;
+
             // Se c'è più di un distributore, inquadriamoli tutti
             if (validDistributori.length > 1) {
                 mapRef.current.fitBounds(
                     [minLon, minLat, maxLon, maxLat],
-                    {padding: 60, duration: 1000}
+                    {
+                        padding: {top: 60, bottom: bottomPadding, left: 60, right: 60},
+                        duration: 1000
+                    }
                 );
             } else {
-                mapRef.current.flyTo({center: [minLon, minLat], zoom: 14});
+                mapRef.current.flyTo({center: [minLon, minLat], zoom: 14, offset: [0, isMobile ? -140 : 0]});
             }
         }
     }, [validDistributori, isMapLoaded]);
