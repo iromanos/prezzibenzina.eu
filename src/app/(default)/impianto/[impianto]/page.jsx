@@ -19,17 +19,33 @@ export async function generateMetadata({params}) {
         notFound();
     }
 
+    console.log("impianto", impianto);
+
     const imageUrl = '/assets/logo-og.png';
 
 
-    let nomeImpianto = impianto.nome_impianto.toLowerCase() + ' - ' + impianto.gestore;
+    const lowerNome = impianto.nome_impianto.toLowerCase();
+    const lowerBandiera = impianto.bandiera.toLowerCase();
+    const lowerComune = impianto.comune.toLowerCase();
 
-    nomeImpianto = nomeImpianto.replace(impianto.comune.toLowerCase(), '');
+    // Puliamo il nome dell'impianto rimuovendo ridondanze con la bandiera e il comune
+    // per evitare nomi come "Esso Esso Roma"
+    let cleanNome = lowerNome.replace(lowerBandiera, '').replace(lowerComune, '').trim();
 
-    nomeImpianto = ucwords(nomeImpianto);
+    // Costruiamo il nome finale anteponendo la bandiera (es. "Eni Corso Sempione")
+    const finalNomeImpianto = ucwords(`${lowerBandiera} ${cleanNome}`.trim());
 
-    const title = `${nomeImpianto} – ${impianto.comune} | PrezziBenzina.eu`;
-    const description = `Prezzi aggiornati per il distributore ${nomeImpianto} a ${impianto.comune}. Consulta mappa, orari, carburanti e confronta con i vicini.`;
+    // Estraiamo i carburanti disponibili per il titolo e la descrizione
+    let fuelsList = impianto.prezzi
+        ?.map(f => f.desc_carburante)
+        .filter((value, index, self) => self.indexOf(value) === index) // Rimuove duplicati
+
+    // Se la lista è troppo lunga per il titolo, prendiamo solo i primi 3 per non tagliare il brand/comune
+    const titleFuels = fuelsList?.length > 3 ? fuelsList.slice(0, 3).join(', ') + '...' : fuelsList?.join(', ');
+    const availableFuels = fuelsList?.join(', ');
+
+    const title = `Prezzo ${titleFuels || 'Carburante'} ${finalNomeImpianto} a ${impianto.comune} | PrezziBenzina.eu`;
+    const description = `Prezzi aggiornati per ${availableFuels || 'Benzina, Diesel, Metano e GPL'} al distributore ${finalNomeImpianto} a ${impianto.comune}. Consulta mappa, orari, servizi e confronta i prezzi oggi.`;
 
     const canonicalUrl = process.env.NEXT_PUBLIC_BASE_URL + '/impianto/' + impianto.link;
 

@@ -25,8 +25,8 @@ import {getCapoluoghi, getServizi} from "@/functions/api";
 
 export async function generateMetadata() {
 
-    const title = 'PrezziBenzina.eu | Risparmia sul Carburante';
-    const description = 'Trova i distributori più convenienti vicino a te. PrezziBenzina.eu ti guida con mappa interattiva e filtri intelligenti.';
+    const title = 'Prezzo Benzina, Diesel, Metano e GPL oggi | PrezziBenzina.eu';
+    const description = 'Scopri il prezzo benzina, diesel (gasolio), metano e GPL aggiornato oggi. Trova il distributore più vicino e risparmia sul carburante con la mappa interattiva.';
     const imageUrl = '/assets/logo-og.png';
     const headerList = await headers();
 
