@@ -194,10 +194,11 @@ export default async function DistributoriPage({params}) {
     }
 
     return <>
+        {microdata !== null &&
         <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{__html: JSON.stringify(microdata)}}
-        />
+        />}
 
         <Header/>
 
