@@ -1,7 +1,7 @@
 import {notFound} from 'next/navigation';
 import {getComuneBySlug, getServiceBySlug} from "@/functions/data";
 import Header from "../../../../../components/Header";
-import {getComuneByCoords, getDistributoriRegione, getElencoCarburanti, getMarchi, getServizi} from "@/functions/api";
+import {getDistributoriRegione, getElencoCarburanti, getMarchi, getServizi} from "@/functions/api";
 import React from "react";
 import MapComponent from "../../../../../components/distributori/MapComponent";
 import DistributoriList from "../../../../../components/distributori/DistributoriList";
@@ -27,8 +27,8 @@ export async function generateMetadata({params, searchParams}) {
         const comuneData = await getComuneBySlug(comuneSlug);
         displayComuneName = comuneData?.description || 'Italia';
     } else if (lat && lon) {
-        const comuneData = await getComuneByCoords(lat, lon);
-        displayComuneName = comuneData?.description ? `vicino a ${comuneData.description}` : 'vicino a te';
+        // const comuneData = await getComuneByCoords(lat, lon);
+        displayComuneName = 'vicino a te';
     }
 
     if (!service) notFound();
@@ -86,8 +86,6 @@ export default async function PaginaDistributoreServizioComune({params, searchPa
     if (comuneSlug === 'vicino-a-me') {
         isNearMe = true;
         if (lat && lon) {
-            //comuneData = await getComuneByCoords(lat, lon);
-            //if (!comuneData)
             comuneData = {id: 0, description: 'vicino a te', provincia_id: ''};
             distributori = await getDistributoriRegione(null, currentFuel, marchioId, null, null, service.id, 50, lat, lon);
         } else {
@@ -175,6 +173,8 @@ export default async function PaginaDistributoreServizioComune({params, searchPa
             }
         ]
     };
+
+    console.log("IMPIANTI", distributori);
 
     return (
         <div className="pb-page-wrapper">
