@@ -6,7 +6,7 @@ import {FaBaby, FaCarSide, FaChargingStation, FaWifi} from 'react-icons/fa6';
 import {ucwords} from "@/functions/helpers";
 
 // Mappatura delle classi CSS provenienti dall'API ai componenti react-icons
-const ICON_COMPONENTS = {
+export const SERVIZI_ICON_COMPONENTS = {
     'bi bi-cup-hot': BsCupHot,
     'bi bi-tools': BsTools,
     'bi bi-p-circle': BsPCircle,
@@ -97,7 +97,7 @@ export default function FilterBar({servizi, marchi, carburanti, currentServiceSl
     const renderServiceChips = () => (
         <div className="d-flex flex-wrap gap-2">
             {sortedServizi.map(s => {
-                const IconComponent = ICON_COMPONENTS[s.icona];
+                const IconComponent = SERVIZI_ICON_COMPONENTS[s.icona];
                 const isActive = currentServiceSlug === s.slug;
                 return (
                     <button
@@ -143,6 +143,8 @@ export default function FilterBar({servizi, marchi, carburanti, currentServiceSl
             })}
         </div>
     );
+
+    console.log(SERVIZI_ICON_COMPONENTS);
 
     return (
         <div className="mb-4 pb-filter-bar">

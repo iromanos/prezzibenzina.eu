@@ -6,13 +6,28 @@ import {getOpenGraph, getTwitter} from "@/functions/server";
 // import {headers} from "next/headers";
 import {notFound, redirect} from "next/navigation";
 import {ucwords} from "@/functions/helpers";
-import {BsArrowRightShort} from "react-icons/bs";
+import {BsCreditCard, BsCupHot, BsDroplet, BsPCircle, BsPersonWheelchair, BsTools, BsWater} from "react-icons/bs";
 import React from "react";
 import Display5745053645 from "@/components/ads/Display-5745053645";
 import Link from "next/link";
 import slugify from "slugify";
+import {FaBaby, FaCarSide, FaChargingStation, FaWifi} from "react-icons/fa6";
 
 export const revalidate = 300;
+
+const SERVIZI_ICON_COMPONENTS = {
+    'bi bi-cup-hot': BsCupHot,
+    'bi bi-tools': BsTools,
+    'bi bi-p-circle': BsPCircle,
+    'bi bi-water': BsWater,
+    'fa-solid fa-baby': FaBaby,
+    'bi bi-credit-card': BsCreditCard,
+    'bi-person-wheelchair': BsPersonWheelchair,
+    'fa-solid fa-wifi': FaWifi,
+    'fa-solid fa-car-side': FaCarSide,
+    'bi bi-droplet': BsDroplet,
+    'fa-solid fa-charging-station': FaChargingStation,
+};
 
 export async function generateMetadata({params}) {
 
@@ -130,6 +145,8 @@ export default async function Page({params}) {
         ]
     };
 
+    console.log("ICONE", SERVIZI_ICON_COMPONENTS);
+
     return (
         <div className="pb-page-wrapper">
             <Header/>
@@ -148,18 +165,25 @@ export default async function Page({params}) {
 
                 <ImpiantoScheda impianto={impianto} cookie={cookie}/>
 
-                <section className="mb-5 p-4 bg-light rounded border border-light-subtle shadow-sm">
+                <section className="mb-5 p-4 bg-light rounded border ">
                     <h3 className="h6 fw-bold text-uppercase text-muted mb-3">Cerca altro a {impianto.comune}</h3>
                     <div className="d-flex flex-wrap gap-2">
-                        {impianto.elencoServizi.map((service) => (
-                            <Link
-                                key={service.id}
-                                href={`/distributori/${service.slug !== '' ? service.slug : slugify(service.description.toLowerCase())}/${impianto.impiantoComune.id}`}
-                                className="btn btn-white bg-white btn-sm border rounded-pill shadow-sm d-flex align-items-center hover-shadow transition-all px-3"
-                            >
-                                {service.description} <BsArrowRightShort className="ms-1"/>
-                            </Link>
-                        ))}
+                        {impianto.elencoServizi.map((service) => {
+
+                            console.log(service.icona);
+
+                            const IconComponent = SERVIZI_ICON_COMPONENTS[service.icona];
+
+                            return (
+                                <Link
+                                    key={service.id}
+                                    href={`/distributori/${service.slug !== '' ? service.slug : slugify(service.description.toLowerCase())}/${impianto.impiantoComune.id}`}
+                                    className="btn btn-white bg-white btn-sm border rounded-pill shadow-sm d-flex align-items-center hover-shadow transition-all px-3"
+                                >
+                                    {IconComponent && <IconComponent className="me-2"/>}{service.description}
+                                </Link>
+                            );
+                        })}
                     </div>
                 </section>
 

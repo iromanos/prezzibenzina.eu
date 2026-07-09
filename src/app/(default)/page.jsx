@@ -14,14 +14,10 @@ import {MapSection} from "@/components/home/MapSection";
 import SavingsIcon from '@mui/icons-material/Savings';
 import PlaceIcon from '@mui/icons-material/Place';
 
-import LocalGasStationIcon from '@mui/icons-material/LocalGasStation'; // Benzina/Metano
-import LocalActivityIcon from '@mui/icons-material/LocalActivity'; // Autolavaggio
-import EvStationIcon from '@mui/icons-material/EvStation'; // Elettrica
-import CoffeeIcon from '@mui/icons-material/Coffee'; // Area Ristoro
-import SettingsIcon from '@mui/icons-material/Settings'; // Officina/Gommista
 import BoxComune from "../../components/home/BoxComune";
 import {AdsDesktop} from "@/components/ads/AdsDesktop";
 import {getCapoluoghi, getServizi} from "@/functions/api";
+import {SERVIZI_ICON_COMPONENTS} from "@/components/distributori/FilterBar";
 
 export async function generateMetadata() {
 
@@ -47,31 +43,14 @@ export async function generateMetadata() {
     };
 }
 
-/**
- * Mappatura icone per i servizi caricati da API
- */
-const SERVICE_ICON_MAP = {
-    'autolavaggio': <LocalActivityIcon/>,
-    'metano': <LocalGasStationIcon/>,
-    'gpl': <LocalGasStationIcon/>,
-    'colonnina-ricarica-elettrica': <EvStationIcon/>,
-    'area-ristoro': <CoffeeIcon/>,
-    'officina': <SettingsIcon/>,
-    'gommista': <SettingsIcon/>,
-};
-
 export default async function Home() {
     // Carichiamo i dati dalle API in parallelo
-    const [serviziRaw, capoluoghi] = await Promise.all([
+    const [serviziInEvidenza, capoluoghi] = await Promise.all([
         getServizi(),
         getCapoluoghi()
     ]);
 
     // Selezioniamo solo i primi 4 servizi che hanno una mappatura icona per la vetrina in Home
-    const serviziInEvidenza = serviziRaw
-        ?.filter(s => SERVICE_ICON_MAP[s.slug])
-        ?.slice(0, 4) || [];
-
     return (
         <>
             <Header/>
@@ -139,23 +118,12 @@ export default async function Home() {
                 </div>
 
                 <div className="row g-3">
-                    {serviziInEvidenza.map((servizio, i) => (
-                        <div className="col-6 col-md-3" key={i}>
-                            <a
-                                href={`/distributori/${servizio.slug}/${(capoluoghi?.[i]?.description || 'Milano').toLowerCase()}`}
-                                className="card h-100 border-0 shadow-sm text-decoration-none pb-service-card transition-all"
-                                style={{backgroundColor: '#f8f9fa'}}
-                            >
-                                <div className="card-body text-center p-3">
-                                    <div className="text-primary mb-2" style={{fontSize: '2rem'}}>
-                                        {SERVICE_ICON_MAP[servizio.slug] || <LocalGasStationIcon/>}
-                                    </div>
-                                    <h4 className="h6 fw-bold text-dark mb-1">{servizio.description}</h4>
-                                    <p className="small text-muted mb-0">a {capoluoghi?.[i]?.description || 'Milano'}</p>
-                                </div>
-                            </a>
-                        </div>
-                    ))}
+                    {serviziInEvidenza.map((servizio, i) => {
+                        const IconComponent = SERVIZI_ICON_COMPONENTS[servizio.icona];
+                        return <a key={i} className={'btn btn-sm rounded-pill px-4 border bg-white'}>
+                            {servizio.description} {IconComponent && <IconComponent/>}
+                        </a>;
+                    })}
                     <div className="col-12 text-center mt-3">
                         <a href="/ricerca" className="btn btn-outline-primary btn-sm rounded-pill px-4">Scopri tutti i
                             servizi</a>
@@ -174,7 +142,7 @@ export default async function Home() {
                 <div className="row text-center">
                     {[
                         {
-                            icon: <LocalGasStationIcon fontSize={'inherit'}/>,
+                            icon: <SearchIcon fontSize={'inherit'}/>, // Using SearchIcon as a placeholder
                             title: 'Scegli il carburante',
                             text: 'Filtra per benzina, diesel, GPL, metano o elettrico.'
                         },
