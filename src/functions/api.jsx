@@ -239,18 +239,27 @@ const cacheFetch = cache(async (url) => {
     return res.json();
 });
 
-export async function getDistributoriRegione(regione, carburante, marchio, provincia, comune, servizio, limit = 10) {
+export async function getDistributoriRegione(regione, carburante, marchio, provincia, comune, servizio, limit = 10, lat = null, lon = null) {
 
     const fuel = Carburanti[carburante] || '1-x';
 
-    let request = INTERNAL_URI + "prezzi/r/" + regione + "/" + fuel;
+    let request = INTERNAL_URI + "prezzi/";
 
-    if (provincia) {
-        request = INTERNAL_URI + "prezzi/p/" + provincia + "/" + fuel;
-    }
-
-    if (comune) {
-        request = INTERNAL_URI + "prezzi/c/" + comune + "/" + fuel;
+    // Prioritize proximity search if lat/lon are provided
+    if (lat !== null && lon !== null) {
+        request += `vicino/${lat}/${lon}/${fuel}`;
+    } else if (comune) {
+        request += `c/${comune}/${fuel}`;
+    } else if (provincia) {
+        request += `p/${provincia}/${fuel}`;
+    } else if (regione) {
+        request += `r/${regione}/${fuel}`;
+    } else {
+        // Fallback or error if no location context is provided
+        // This might need further refinement based on API capabilities
+        // For now, let's assume 'all' is a valid fallback if no specific location is given
+        // However, the page logic ensures either comune or lat/lon are always present.
+        request += `all/${fuel}`; 
     }
 
     request += "?limit=" + limit;
@@ -265,6 +274,11 @@ export async function getDistributoriRegione(regione, carburante, marchio, provi
 
 
     return cacheFetch(request);
+}
+
+export async function getComuneByCoords(lat, lon) {
+    // Assuming an API endpoint for reverse geocoding
+    return cacheFetch(INTERNAL_URI + `geocoding/reverse?lat=${lat}&lon=${lon}`);
 }
 
 export async function getSeoRegioneEstera(stato, regione, carburante) {

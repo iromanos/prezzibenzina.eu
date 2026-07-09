@@ -17,7 +17,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import BoxComune from "../../components/home/BoxComune";
 import {AdsDesktop} from "@/components/ads/AdsDesktop";
 import {getCapoluoghi, getServizi} from "@/functions/api";
-import {SERVIZI_ICON_COMPONENTS} from "@/components/distributori/FilterBar";
+import ElencoServizi from "@/components/ElencoServizi";
 
 export async function generateMetadata() {
 
@@ -79,6 +79,9 @@ export default async function Home() {
             <AdsDesktop className={'container mb-4'}>
                 <Display6977770298/>
             </AdsDesktop>
+
+            <ElencoServizi serviziInEvidenza={serviziInEvidenza}/>
+
             <div id='mappa' className={'container mb-4'}>
                 <MapSection/>
             </div>
@@ -109,28 +112,6 @@ export default async function Home() {
                     ))}
                 </div>
             </div>
-
-            {/* Nuova Sezione: Servizi nei Capoluoghi */}
-            <div className="container my-5">
-                <div className="text-center mb-4">
-                    <h3 className="fw-bold text-uppercase h5">Servizi per il tuo viaggio</h3>
-                    <p className="text-muted">Trova distributori attrezzati nelle principali città</p>
-                </div>
-
-                <div className="row g-3">
-                    {serviziInEvidenza.map((servizio, i) => {
-                        const IconComponent = SERVIZI_ICON_COMPONENTS[servizio.icona];
-                        return <a key={i} className={'btn btn-sm rounded-pill px-4 border bg-white'}>
-                            {servizio.description} {IconComponent && <IconComponent/>}
-                        </a>;
-                    })}
-                    <div className="col-12 text-center mt-3">
-                        <a href="/ricerca" className="btn btn-outline-primary btn-sm rounded-pill px-4">Scopri tutti i
-                            servizi</a>
-                    </div>
-                </div>
-            </div>
-
 
             <div className={'container mb-4'}>
                 <Display6977770298/>

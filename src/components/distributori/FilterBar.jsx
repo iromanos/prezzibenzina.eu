@@ -1,24 +1,11 @@
 'use client';
 import React, {useEffect, useMemo, useState} from 'react';
 import {useRouter, useSearchParams} from 'next/navigation';
-import {BsCreditCard, BsCupHot, BsDroplet, BsPCircle, BsPersonWheelchair, BsTools, BsWater} from 'react-icons/bs';
-import {FaBaby, FaCarSide, FaChargingStation, FaWifi} from 'react-icons/fa6';
 import {ucwords} from "@/functions/helpers";
+import {SERVIZI_ICON_COMPONENTS} from "@/constants";
 
 // Mappatura delle classi CSS provenienti dall'API ai componenti react-icons
-export const SERVIZI_ICON_COMPONENTS = {
-    'bi bi-cup-hot': BsCupHot,
-    'bi bi-tools': BsTools,
-    'bi bi-p-circle': BsPCircle,
-    'bi bi-water': BsWater,
-    'fa-solid fa-baby': FaBaby,
-    'bi bi-credit-card': BsCreditCard,
-    'bi-person-wheelchair': BsPersonWheelchair,
-    'fa-solid fa-wifi': FaWifi,
-    'fa-solid fa-car-side': FaCarSide,
-    'bi bi-droplet': BsDroplet,
-    'fa-solid fa-charging-station': FaChargingStation,
-};
+
 
 export default function FilterBar({servizi, marchi, carburanti, currentServiceSlug, currentComuneSlug, URI_IMAGE}) {
     const router = useRouter();
@@ -143,8 +130,6 @@ export default function FilterBar({servizi, marchi, carburanti, currentServiceSl
             })}
         </div>
     );
-
-    console.log(SERVIZI_ICON_COMPONENTS);
 
     return (
         <div className="mb-4 pb-filter-bar">

@@ -1,43 +1,48 @@
 import {notFound} from 'next/navigation';
 import {getComuneBySlug, getServiceBySlug} from "@/functions/data";
 import Header from "../../../../../components/Header";
-import {getDistributoriRegione, getElencoCarburanti, getMarchi, getServizi} from "@/functions/api";
+import {getComuneByCoords, getDistributoriRegione, getElencoCarburanti, getMarchi, getServizi} from "@/functions/api";
 import React from "react";
 import MapComponent from "../../../../../components/distributori/MapComponent";
 import DistributoriList from "../../../../../components/distributori/DistributoriList";
 import FilterBar from "../../../../../components/distributori/FilterBar";
 import MobileViewManager from "../../../../../components/distributori/MobileViewManager";
 import {generateDistributorSeoText} from "@/functions/seo";
+import GeolocationHandler from "../../../../../components/distributori/GeolocationHandler";
 
-//TODO: inserire i metadati strutturati e faq
 const DOMAIN = process.env.NEXT_PUBLIC_BASE_URL;
 
 /**
  * Genera i metadati SEO dinamici per la pagina.
  * @returns {Promise<import('next').Metadata>}
  */
-export async function generateMetadata({params}) {
-    const {servizio, comune} = await params;
+export async function generateMetadata({params, searchParams}) {
+    const {servizio: servizioSlug, comune: comuneSlug} = await params;
+    const {lat, lon} = await searchParams;
 
-    const [service, comuneData] = await Promise.all([
-        getServiceBySlug(servizio),
-        getComuneBySlug(comune)
-    ]);
+    const service = await getServiceBySlug(servizioSlug);
+    let displayComuneName = 'vicino a te';
 
-    if (!service || !comuneData) {
-        notFound();
+    if (comuneSlug !== 'vicino-a-me') {
+        const comuneData = await getComuneBySlug(comuneSlug);
+        displayComuneName = comuneData?.description || 'Italia';
+    } else if (lat && lon) {
+        const comuneData = await getComuneByCoords(lat, lon);
+        displayComuneName = comuneData?.description ? `vicino a ${comuneData.description}` : 'vicino a te';
     }
 
+    if (!service) notFound();
+
     return {
-        title: `Distributori con ${service.description} a ${comuneData.description} | PrezziBenzina.eu`,
-        description: `Elenco e mappa dei distributori con ${service.description} a ${comuneData.description}. Orari, prezzi e servizi aggiornati.`,
+        title: `Distributori con ${service.description} ${displayComuneName.startsWith('vicino') ? displayComuneName : `a ${displayComuneName}`} | PrezziBenzina.eu`,
+        description: `Elenco e mappa dei distributori con ${service.description} ${displayComuneName.startsWith('vicino') ? displayComuneName : `a ${displayComuneName}`}. Orari, prezzi e servizi aggiornati.`,
         alternates: {
-            canonical: `${DOMAIN}/distributori/${servizio}/${comune}`,
+            canonical: `${DOMAIN}/distributori/${servizioSlug}/${comuneSlug}`,
         },
         openGraph: {
-            title: `Distributori con ${service.description} a ${comuneData.description} | PrezziBenzina.eu`,
-            description: `Trova i migliori distributori con ${service.description} a ${comuneData.description}. Visualizza mappa, orari e prezzi aggiornati.`,
-            url: `${DOMAIN}/distributori/${servizio}/${comune}`,
+            title: `Distributori con ${service.description} ${displayComuneName.startsWith('vicino') ? displayComuneName : `a ${displayComuneName}`} | PrezziBenzina.eu`,
+            description: `Trova i migliori distributori con ${service.description} ${displayComuneName.startsWith('vicino') ? displayComuneName : `a ${displayComuneName}`}. Visualizza mappa, orari e prezzi aggiornati.`,
+            url: `${DOMAIN}/distributori/${servizioSlug}/${comuneSlug}`,
             siteName: `${DOMAIN}`,
             locale: 'it_IT',
             type: 'website',
@@ -46,14 +51,14 @@ export async function generateMetadata({params}) {
                     url: `${DOMAIN}/images/logo_og.png`,
                     width: 1200,
                     height: 630,
-                    alt: `Prezzi Benzina a ${comuneData.description}`,
+                    alt: `Prezzi Benzina ${displayComuneName}`,
                 },
             ],
         },
         twitter: {
             card: 'summary_large_image',
-            title: `Distributori con ${service.description} a ${comuneData.description}`,
-            description: `Mappa e prezzi dei distributori con ${service.description} a ${comuneData.description}.`,
+            title: `Distributori con ${service.description} ${displayComuneName}`,
+            description: `Mappa e prezzi dei distributori con ${service.description} ${displayComuneName}.`,
             images: [`${DOMAIN}/images/logo_og.png`],
         },
     };
@@ -67,28 +72,46 @@ export default async function PaginaDistributoreServizioComune({params, searchPa
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
 
     const {servizio: servizioSlug, comune: comuneSlug} = await params;
-    const {marchio: marchioId, fuel: fuelParam} = await searchParams;
+    const {marchio: marchioId, fuel: fuelParam, lat, lon} = await searchParams;
 
     const currentFuel = fuelParam || 'benzina';
 
-    const [service, comuneData] = await Promise.all([
-        getServiceBySlug(servizioSlug),
-        getComuneBySlug(comuneSlug)
-    ]);
+    const service = await getServiceBySlug(servizioSlug);
+    if (!service) notFound();
 
-    // Recuperiamo l'elenco completo di servizi, marchi e carburanti per i filtri
+    let comuneData = null;
+    let distributori = [];
+    let isNearMe = false;
+
+    if (comuneSlug === 'vicino-a-me') {
+        isNearMe = true;
+        if (lat && lon) {
+            //comuneData = await getComuneByCoords(lat, lon);
+            //if (!comuneData)
+            comuneData = {id: 0, description: 'vicino a te', provincia_id: ''};
+            distributori = await getDistributoriRegione(null, currentFuel, marchioId, null, null, service.id, 50, lat, lon);
+        } else {
+            return (
+                <div className="pb-page-wrapper">
+                    <Header/>
+                    <GeolocationHandler serviceSlug={servizioSlug}/>
+                </div>
+            );
+        }
+    } else {
+        comuneData = await getComuneBySlug(comuneSlug);
+        if (!comuneData) notFound();
+        distributori = await getDistributoriRegione(null, currentFuel, marchioId, null, comuneData.id, service.id, 50);
+    }
+
     const [servizi, marchi, elencoCarburanti] = await Promise.all([
         getServizi(),
         getMarchi(),
         getElencoCarburanti()
     ]);
 
-    if (!service || !comuneData) {
-        notFound();
-    }
-
-    // Recuperiamo i distributori filtrati per comune e servizio.
-    const distributori = await getDistributoriRegione(null, currentFuel, marchioId, null, comuneData.id, service.id, 50);
+    const displayComuneName = isNearMe ? 'vicino a te' : comuneData.description;
+    const displayComuneNameWithPreposition = isNearMe ? 'vicino a te' : `a ${comuneData.description}`;
 
     // Generiamo il testo SEO unico e approfondito (200+ parole)
     const seoParagraphs = generateDistributorSeoText({
@@ -97,7 +120,10 @@ export default async function PaginaDistributoreServizioComune({params, searchPa
         distributori,
         marchioId,
         currentFuel,
-        marchi
+        marchi,
+        isNearMe,
+        displayComuneName,
+        displayComuneNameWithPreposition
     });
 
     // JSON-LD per i Distributori (ItemList di GasStation)
@@ -173,9 +199,9 @@ export default async function PaginaDistributoreServizioComune({params, searchPa
                         currentComuneSlug={comuneSlug}
                     />
                 }
-                title={`Distributori con ${service.description} a ${comuneData.description}`}
+                title={`Distributori con ${service.description} ${displayComuneNameWithPreposition}`}
                 count={distributori?.length || 0}
-                comuneName={comuneData.description}
+                comuneName={displayComuneName}
                 listComponent={<DistributoriList distributori={distributori} URI_IMAGE={URI_IMAGE}/>}
                 mapComponent={<MapComponent distributori={distributori} comuneData={comuneData}/>}
                 seoParagraphs={seoParagraphs}
