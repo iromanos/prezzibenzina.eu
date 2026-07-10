@@ -27,6 +27,7 @@
     "maplibre-gl": "^5.7.1",
     "maplibre-react-components": "^0.2.6",
     "motion": "^12.40.0",
+    "mysql2": "^3.10.0",
     "next": "^16.2.6",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",
