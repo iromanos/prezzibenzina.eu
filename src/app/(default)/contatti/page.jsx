@@ -49,15 +49,9 @@ export default async function Page() {
                         <EmailIcon className="me-2 text-primary" fontSize="small"/> Email
                     </h2>
                     <p>
-                        Per richieste generiche o supporto tecnico:{' '}
-                        <a href="mailto:support@prezzibenzina.eu" className="link-primary">
-                            support@prezzibenzina.eu
-                        </a>
-                    </p>
-                    <p>
-                        Per questioni legate alla privacy:{' '}
-                        <a href="mailto:privacy@prezzibenzina.eu" className="link-primary">
-                            privacy@prezzibenzina.eu
+                        Per richieste generiche, supporto tecnico o questioni legate alla privacy:{' '}
+                        <a href="mailto:info@prezzibenzina.eu" className="link-primary">
+                            info@prezzibenzina.eu
                         </a>
                     </p>
                 </section>

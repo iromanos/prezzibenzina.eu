@@ -77,7 +77,7 @@ export default async function Page() {
                     </h2>
                     <p>
                         I dati sui prezzi provengono da fonti pubbliche e contributi degli utenti. Non raccogliamo dati
-                        personali dai gestori.
+                        personali dai gestori e non abbiamo alcun tipo di rapporto con essi.
                     </p>
                 </section>
 
@@ -108,8 +108,8 @@ export default async function Page() {
                     </h2>
                     <p>
                         Per domande o richieste relative alla privacy, scrivici a:{' '}
-                        <a href="mailto:privacy@prezzibenzina.eu" className="link-primary">
-                            privacy@prezzibenzina.eu
+                        <a href="mailto:info@prezzibenzina.eu" className="link-primary">
+                            info@prezzibenzina.eu
                         </a>
                     </p>
                 </section>

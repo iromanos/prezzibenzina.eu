@@ -164,8 +164,8 @@ export default async function Page({params}) {
             <main className="container">
 
                 <ImpiantoScheda impianto={impianto} cookie={cookie}/>
-
-                <section className="mb-5 p-4 bg-light rounded border ">
+                {impianto.elencoServizi &&
+                    <section className="mb-5 p-4 bg-light rounded border ">
                     <h3 className="h6 fw-bold text-uppercase text-muted mb-3">Cerca altro a {impianto.comune}</h3>
                     <div className="d-flex flex-wrap gap-2">
                         {impianto.elencoServizi.map((service) => {
@@ -186,7 +186,7 @@ export default async function Page({params}) {
                         })}
                     </div>
                 </section>
-
+                }
 
                 {/* Sezione Pubblicità e SEO a tutta larghezza */}
                 <div className="row mt-5">

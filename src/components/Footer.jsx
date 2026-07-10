@@ -45,7 +45,8 @@ export default function Footer() {
 
                 <hr className="border-light" />
                 <div className="text-center small">
-                    © {new Date().getFullYear()} PrezziBenzina.eu — Tutti i diritti riservati
+                    © {new Date().getFullYear()} PrezziBenzina.eu — Tutti i diritti riservati <br/>
+                    Alessandro Romano - Codice Fiscale: RNNLSN73R10F205Z
                 </div>
             </div>
         </footer>
