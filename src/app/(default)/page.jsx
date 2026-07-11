@@ -19,6 +19,14 @@ import {AdsDesktop} from "@/components/ads/AdsDesktop";
 import {getCapoluoghi, getServizi} from "@/functions/api";
 import ElencoServizi from "@/components/ElencoServizi";
 
+export async function generateStaticParams() {
+    if (process.env.NODE_ENV === 'production') {
+        return []; // Per ora, lasciamolo vuoto anche in produzione per sicurezza.
+    }
+    return [];
+}
+
+
 export async function generateMetadata() {
 
     const title = 'Prezzo Benzina, Diesel, Metano e GPL oggi | PrezziBenzina.eu';

@@ -3,27 +3,17 @@
 import {NextResponse} from 'next/server';
 import mysql from 'mysql2/promise';
 
-/**
- * API Endpoint per recuperare i dati storici dei prezzi.
- *
- * Query Params supportati:
- * - livello_geo: 'nazionale', 'regionale', 'provinciale', 'distributore' (obbligatorio)
- * - codice_geo: 'IT', 'Lombardia', 'MI', '101' (obbligatorio)
- * - id_carburante: ID numerico del carburante (obbligatorio)
- * - startDate: Data di inizio (opzionale, formato YYYY-MM-DD)
- * - endDate: Data di fine (opzionale, formato YYYY-MM-DD)
- */
 export async function GET(request) {
     const {searchParams} = new URL(request.url);
 
     const livello_geo = searchParams.get('livello_geo');
     const codice_geo = searchParams.get('codice_geo');
-    const id_carburante = searchParams.get('id_carburante');
-    const startDate = searchParams.get('startDate');
+    const desc_carburante = searchParams.get('desc_carburante');
+    const startDate = search_params.get('startDate');
     const endDate = searchParams.get('endDate');
 
-    if (!livello_geo || !codice_geo || !id_carburante) {
-        return NextResponse.json({error: 'Parametri mancanti: livello_geo, codice_geo e id_carburante sono obbligatori.'}, {status: 400});
+    if (!livello_geo || !codice_geo || !desc_carburante) {
+        return NextResponse.json({error: 'Parametri mancanti: livello_geo, codice_geo e desc_carburante sono obbligatori.'}, {status: 400});
     }
 
     let connection;
@@ -36,16 +26,15 @@ export async function GET(request) {
             database: process.env.DB_DATABASE,
         });
 
-        // Costruzione dinamica e sicura della query
-        let query = 'SELECT data, prezzo_medio, prezzo_min, prezzo_max FROM prezzi_storici WHERE ';
+        let query = 'SELECT data, prezzo_medio, prezzo_min, prezzo_max FROM prezzi_storici WHERE';
         const params = [];
 
         const conditions = [
             'livello_geo = ?',
             'codice_geo = ?',
-            'id_carburante = ?'
+            'desc_carburante = ?'
         ];
-        params.push(livello_geo, codice_geo, id_carburante);
+        params.push(livello_geo, codice_geo, desc_carburante);
 
         if (startDate) {
             conditions.push('data >= ?');
@@ -57,7 +46,7 @@ export async function GET(request) {
         }
 
         query += ' ' + conditions.join(' AND ');
-        query += ' ORDER BY data ASC'; // Ordina i risultati per data, essenziale per i grafici
+        query += ' ORDER BY data ASC';
 
         const [rows] = await connection.execute(query, params);
 

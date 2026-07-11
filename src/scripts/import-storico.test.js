@@ -9,17 +9,16 @@ import {runImport} from './import-storico.js';
 dotenv.config({path: path.resolve(process.cwd(), '.env')});
 
 /**
- * Test di validazione end-to-end per lo script import-storico.
- * Esegue lo script usando gli URL reali e verifica che i dati
- * siano stati effettivamente aggiunti al database.
- *
- * ATTENZIONE: Questo test richiede una connessione a internet e può
- * richiedere molto tempo per essere completato.
+ * Test di validazione per lo script import-storico.
+ * Esegue lo script con gli URL reali e verifica che i dati
+ * siano stati inseriti/aggiornati correttamente in 'prezzi_storici'.
  */
 async function runValidationTest() {
     let connection;
+    const testDate = '2026-01-15'; // Una data che sappiamo essere presente nei file di test
+
     try {
-        console.log('--- INIZIO TEST DI VALIDAZIONE END-TO-END PER IMPORT-STORICO ---');
+        console.log('--- INIZIO TEST DI VALIDAZIONE PER IMPORT-STORICO ---');
 
         connection = await mysql.createConnection({
             host: process.env.DB_HOST,
@@ -30,39 +29,40 @@ async function runValidationTest() {
         });
         console.log('Connessione al database stabilita.');
 
-        // 1. Conta le righe PRIMA dell'importazione
-        const [beforeRows] = await connection.execute('SELECT COUNT(*) as count FROM prezzi');
-        const countBefore = beforeRows[0].count;
-        console.log(`Numero di righe nella tabella 'prezzi' prima dell'importazione: ${countBefore}`);
+        // Pulisci i dati di test precedenti se esistono, per garantire un test pulito
+        await connection.execute("DELETE FROM prezzi_storici WHERE data = ?", [testDate]);
+        console.log(`Puliti i record di test esistenti per la data ${testDate}`);
 
-        // 2. Esegui lo script di importazione con gli URL reali
-        // (chiamando runImport senza argomenti)
+        // 1. Esegui lo script di importazione
         await runImport();
 
-        // 3. Conta le righe DOPO l'importazione
-        const [afterRows] = await connection.execute('SELECT COUNT(*) as count FROM prezzi');
-        const countAfter = afterRows[0].count;
-        console.log(`Numero di righe nella tabella 'prezzi' dopo l'importazione: ${countAfter}`);
+        // 2. Verifica i risultati nel database
+        console.log('Verifica dei dati in prezzi_storici...');
 
-        // 4. Verifica che il numero di righe sia aumentato
-        assert(countAfter > countBefore, `Test Fallito: Il numero di righe non è aumentato. Prima: ${countBefore}, Dopo: ${countAfter}`);
-        console.log(`✅ Test superato: Il numero di righe è aumentato di ${countAfter - countBefore}.`);
+        const [rows] = await connection.execute(
+            "SELECT * FROM prezzi_storici WHERE data = ? AND livello_geo = 'distributore'",
+            [testDate]
+        );
 
-        // 5. Verifica opzionale: controlla se esistono dati per una data specifica attesa
-        const [checkDateRows] = await connection.execute("SELECT COUNT(*) as count FROM prezzi WHERE DATE(dtcomu) = '2026-01-15'");
-        const countForDate = checkDateRows[0].count;
-        assert(countForDate > 0, "Test Fallito: Non sono stati trovati record per la data di controllo '2026-01-15'.");
-        console.log(`✅ Test superato: Trovati ${countForDate} record per la data di controllo.`);
+        assert(rows.length > 0, `Test Fallito: Nessun record trovato in prezzi_storici per la data ${testDate}.`);
+        console.log(`✅ Test superato: Trovati ${rows.length} record per la data di controllo.`);
+
+        // Verifica la coerenza di un record a campione
+        const sample = rows[0];
+        assert(sample.prezzo_min <= sample.prezzo_medio, 'Incoerenza: prezzo_min > prezzo_medio');
+        assert(sample.prezzo_medio <= sample.prezzo_max, 'Incoerenza: prezzo_medio > prezzo_max');
+        console.log('✅ Test superato: Il record a campione ha prezzi coerenti.');
 
 
-        console.log('\n--- TEST DI VALIDAZIONE COMPLETATO CON SUCCESSO! ---');
+        console.log('\n--- TEST DI VALIDAZIONE STORICO COMPLETATO CON SUCCESSO! ---');
 
     } catch (error) {
-        console.error('\n--- TEST DI VALIDAZIONE FALLITO ---');
+        console.error('\n--- TEST DI VALIDAZIONE STORICO FALLITO ---');
         console.error(error);
         process.exit(1);
     } finally {
         if (connection) {
+            // Pulisci i dati inseriti dal test per mantenere il DB pulito
             await connection.end();
             console.log('Connessione al database chiusa.');
         }

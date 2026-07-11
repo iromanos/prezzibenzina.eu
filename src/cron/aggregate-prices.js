@@ -4,13 +4,17 @@ import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import path from 'path';
 
-// Carica le variabili d'ambiente dal file .env nella root del progetto
 dotenv.config({path: path.resolve(process.cwd(), '.env')});
 
-/**
- * Questo script aggrega i prezzi dei carburanti su base giornaliera.
- * È esportato per poter essere utilizzato anche in script di test.
- */
+function getCanonicalFuelName(desc) {
+    const lowerDesc = String(desc).toLowerCase();
+    if (lowerDesc.includes('benzina')) return 'Benzina';
+    if (lowerDesc.includes('gasolio')) return 'Gasolio';
+    if (lowerDesc.includes('gpl')) return 'GPL';
+    if (lowerDesc.includes('metano')) return 'Metano';
+    return null;
+}
+
 export async function aggregatePrices() {
     let connection;
     try {
@@ -26,17 +30,19 @@ export async function aggregatePrices() {
         console.log('Connessione al database stabilita.');
 
         const [rows] = await connection.execute(`
-            SELECT p.id_impianto,
-                   p.fuel_id,
-                   p.prezzo,
-                   i.provincia,
-                   prov.regione
+            SELECT
+                p.id_impianto,
+                p.desc_carburante,
+                p.prezzo,
+                i.provincia,
+                prov.regione
             FROM prezzi p
-                     JOIN impianti i ON p.id_impianto = i.id_impianto
-                     JOIN provincie prov ON i.provincia = prov.id
-            WHERE p.dtcomu >= NOW() - INTERVAL 48 HOUR
-              AND p.is_self = 1
-              AND p.prezzo > 0.5
+            JOIN impianti i ON p.id_impianto = i.id_impianto
+            JOIN provincie prov ON i.provincia = prov.id
+            WHERE
+                p.dtcomu >= NOW() - INTERVAL 48 HOUR
+                AND p.is_self = 1
+                AND p.prezzo > 0.5
         `);
 
         if (rows.length === 0) {
@@ -50,10 +56,12 @@ export async function aggregatePrices() {
         const recordsToInsert = [];
 
         for (const row of rows) {
-            if (!row.fuel_id || !row.id_impianto) continue;
+            const fuelName = getCanonicalFuelName(row.desc_carburante);
+            if (!fuelName || !row.id_impianto) continue;
+
             recordsToInsert.push([
                 today,
-                row.fuel_id,
+                fuelName,
                 'distributore',
                 row.id_impianto.toString(),
                 row.prezzo,
@@ -69,7 +77,7 @@ export async function aggregatePrices() {
 
             for (const [level, code] of Object.entries(geoLevels)) {
                 if (!code) continue;
-                const key = `${level}_${code}_${row.fuel_id}`;
+                const key = `${level}_${code}_${fuelName}`;
                 if (!aggregations[key]) {
                     aggregations[key] = {sum: 0, count: 0, min: Infinity, max: -Infinity};
                 }
@@ -82,11 +90,11 @@ export async function aggregatePrices() {
         }
 
         for (const key in aggregations) {
-            const [level, code, fuelId] = key.split('_');
+            const [level, code, fuelName] = key.split('_');
             const stats = aggregations[key];
             recordsToInsert.push([
                 today,
-                parseInt(fuelId, 10),
+                fuelName,
                 level,
                 code,
                 stats.sum / stats.count,
@@ -101,36 +109,24 @@ export async function aggregatePrices() {
             await connection.beginTransaction();
             try {
                 await connection.execute('DELETE FROM prezzi_storici WHERE data = ?', [today]);
-                console.log(`Cancellati i record esistenti per la data ${today}.`);
 
-                const sql = `
-                    INSERT INTO prezzi_storici (data, id_carburante, livello_geo, codice_geo, prezzo_medio, prezzo_min, prezzo_max)
-                    VALUES ?
-                `;
+                const sql = 'INSERT INTO prezzi_storici (data, desc_carburante, livello_geo, codice_geo, prezzo_medio, prezzo_min, prezzo_max) VALUES ? ON DUPLICATE KEY UPDATE prezzo_medio=VALUES(prezzo_medio), prezzo_min=VALUES(prezzo_min), prezzo_max=VALUES(prezzo_max)';
                 await connection.query(sql, [recordsToInsert]);
 
                 await connection.commit();
                 console.log(`Inseriti con successo ${recordsToInsert.length} record.`);
             } catch (err) {
                 await connection.rollback();
-                console.error('Errore durante la transazione, rollback eseguito.', err);
                 throw err;
             }
         }
-
-        console.log('Aggregazione completata con successo.');
     } catch (error) {
         console.error("Errore fatale durante l'aggregazione:", error);
     } finally {
-        if (connection) {
-            await connection.end();
-            console.log('Connessione al database chiusa.');
-        }
+        if (connection) await connection.end();
     }
 }
 
-// Se lo script è eseguito direttamente (node aggregate-prices.js), esegui la funzione.
-// Altrimenti, se è importato, esporta solo la funzione senza eseguirla.
 if (process.argv[1] && process.argv[1].includes('aggregate-prices.js')) {
     aggregatePrices();
 }

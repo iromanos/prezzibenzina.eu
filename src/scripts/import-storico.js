@@ -22,8 +22,6 @@ const DEFAULT_URLS = [
     'https://opendatacarburanti.mise.gov.it/categorized/prezzo_alle_8/2026/2026_2_tr.tar.gz'
 ];
 
-const BATCH_SIZE = 1000;
-
 function formatDateTimeForMySQL(dateTimeString) {
     if (!dateTimeString || dateTimeString.length < 19) return null;
     const [datePart, timePart] = dateTimeString.split(' ');
@@ -31,6 +29,15 @@ function formatDateTimeForMySQL(dateTimeString) {
     const [day, month, year] = datePart.split('/');
     if (!day || !month || !year) return null;
     return `${year}-${month}-${day} ${timePart}`;
+}
+
+function getCanonicalFuelName(desc) {
+    const lowerDesc = String(desc).toLowerCase();
+    if (lowerDesc.includes('benzina')) return 'Benzina';
+    if (lowerDesc.includes('gasolio')) return 'Gasolio';
+    if (lowerDesc.includes('gpl')) return 'GPL';
+    if (lowerDesc.includes('metano')) return 'Metano';
+    return null;
 }
 
 async function processUrl(url, connection) {
@@ -44,76 +51,84 @@ async function processUrl(url, connection) {
 
         await new Promise((resolve, reject) => {
             client.get(url, (res) => {
-                if (res.statusCode !== 200) {
-                    return reject(new Error(`Download fallito con codice di stato: ${res.statusCode}`));
-                }
-                const fileStream = createWriteStream(archivePath);
-                res.pipe(fileStream);
-                fileStream.on('finish', resolve);
-                fileStream.on('error', reject);
+                if (res.statusCode !== 200) return reject(new Error(`Download fallito: ${res.statusCode}`));
+                res.pipe(createWriteStream(archivePath)).on('finish', resolve).on('error', reject);
             }).on('error', reject);
         });
-        console.log(`  - Download completato: ${archivePath}`);
+        console.log(`  - Download completato.`);
 
-        // Correzione: Aggiunto 'strip: 1' per rimuovere la directory di primo livello dall'archivio
-        await tar.x({file: archivePath, cwd: tempDir, strip: 1});
+        // Estrai l'archivio
+        await tar.x({file: archivePath, cwd: tempDir});
 
-        const files = await fs.readdir(tempDir);
+        // Trova la sottocartella creata dall'estrazione
+        const tempDirContents = await fs.readdir(tempDir);
+        const subDirName = tempDirContents.find(item => item !== 'archive.tar.gz');
+        if (!subDirName) throw new Error('Nessuna sottocartella trovata dopo l\'estrazione.');
 
-        console.log(files);
+        const subDirPath = path.join(tempDir, subDirName);
+        const dataFiles = (await fs.readdir(subDirPath)).filter(f => f.endsWith('.csv') || f.endsWith('.txt'));
 
-        const csvFile = files.find(f => f.endsWith('.csv') || f.endsWith('.txt'));
-        if (!csvFile) throw new Error('Nessun file CSV/TXT trovato nell\'archivio.');
-        const csvPath = path.join(tempDir, csvFile);
-        console.log(`  - Estrazione completata: ${csvFile}`);
+        if (dataFiles.length === 0) throw new Error('Nessun file CSV/TXT trovato nella sottocartella dell\'archivio.');
 
-        const parser = parse({delimiter: '|', from_line: 2, relax_column_count: true});
-        const readStream = createReadStream(csvPath);
+        console.log(`  - Trovati ${dataFiles.length} file di dati da importare.`);
 
-        let batch = [];
-        let totalImported = 0;
+        let grandTotalImported = 0;
 
-        const insertBatch = async () => {
-            if (batch.length === 0) return;
-            try {
-                const sql = 'INSERT INTO prezzi (id_impianto, desc_carburante, prezzo, is_self, dtcomu, fuel_id) VALUES ? ON DUPLICATE KEY UPDATE prezzo=VALUES(prezzo), dtcomu=VALUES(dtcomu)';
-                await connection.query(sql, [batch]);
-                totalImported += batch.length;
-                process.stdout.write(`  - Righe importate: ${totalImported}\r`);
-                batch = [];
-            } catch (error) {
-                console.error('\nErrore durante il bulk insert:', error.sqlMessage);
-                batch = [];
+        for (const csvFile of dataFiles) {
+            const csvPath = path.join(subDirPath, csvFile);
+            console.log(`\n  -- Processando file: ${csvFile}`);
+
+            const parser = parse({delimiter: '|', from_line: 2, relax_column_count: true});
+            const readStream = createReadStream(csvPath);
+
+            let batch = [];
+
+            parser.on('readable', () => {
+                let record;
+                while ((record = parser.read()) !== null) {
+                    const [id_impianto, desc_carburante, prezzo, is_self, dtcomu] = record;
+                    const prezzoFloat = parseFloat(String(prezzo).replace(',', '.'));
+                    const mysqlDateTime = formatDateTimeForMySQL(dtcomu);
+                    const fuelName = getCanonicalFuelName(desc_carburante);
+
+                    if (!id_impianto || !fuelName || isNaN(prezzoFloat) || prezzoFloat <= 0 || !mysqlDateTime || String(is_self) !== '1') continue;
+
+                    batch.push({id_impianto, fuelName, prezzo: prezzoFloat, data: mysqlDateTime.split(' ')[0]});
+                }
+            });
+
+            await pipeline(readStream, parser);
+
+            if (batch.length === 0) continue;
+
+            console.log(`     - Letti ${batch.length} record validi dal file. Inizio aggregazione...`);
+
+            const dailyAverages = {};
+            for (const row of batch) {
+                const key = `${row.data}_${row.id_impianto}_${row.fuelName}`;
+                if (!dailyAverages[key]) {
+                    dailyAverages[key] = {sum: 0, count: 0, min: Infinity, max: -Infinity};
+                }
+                const stats = dailyAverages[key];
+                stats.sum += row.prezzo;
+                stats.count++;
+                if (row.prezzo < stats.min) stats.min = row.prezzo;
+                if (row.prezzo > stats.max) stats.max = row.prezzo;
             }
-        };
 
-        parser.on('readable', async () => {
-            let record;
-            while ((record = parser.read()) !== null) {
-                const [id_impianto, desc_carburante, prezzo, is_self, dtcomu] = record;
-                const prezzoFloat = parseFloat(String(prezzo).replace(',', '.'));
-                const mysqlDateTime = formatDateTimeForMySQL(dtcomu);
-                if (!id_impianto || isNaN(prezzoFloat) || prezzoFloat <= 0 || !mysqlDateTime) continue;
+            const recordsToInsert = Object.entries(dailyAverages).map(([key, stats]) => {
+                const [data, id_impianto, fuelName] = key.split('_');
+                return [data, fuelName, 'distributore', id_impianto, stats.sum / stats.count, stats.min, stats.max];
+            });
 
-                let fuel_id = null;
-                const desc = String(desc_carburante).toLowerCase();
-                if (desc.includes('benzina')) fuel_id = 1;
-                else if (desc.includes('gasolio')) fuel_id = 2;
-                else if (desc.includes('gpl')) fuel_id = 3;
-                else if (desc.includes('metano')) fuel_id = 4;
-                if (fuel_id === null) fuel_id = 999;
-
-                batch.push([id_impianto, desc_carburante, prezzoFloat, is_self, mysqlDateTime, fuel_id]);
-                if (batch.length >= BATCH_SIZE) await insertBatch();
+            if (recordsToInsert.length > 0) {
+                const sql = 'INSERT INTO prezzi_storici (data, desc_carburante, livello_geo, codice_geo, prezzo_medio, prezzo_min, prezzo_max) VALUES ? ON DUPLICATE KEY UPDATE prezzo_medio=VALUES(prezzo_medio), prezzo_min=VALUES(prezzo_min), prezzo_max=VALUES(prezzo_max)';
+                await connection.query(sql, [recordsToInsert]);
+                grandTotalImported += recordsToInsert.length;
+                console.log(`     - Inserite/Aggiornate ${recordsToInsert.length} righe aggregate in prezzi_storici.`);
             }
-        });
-
-        console.log('  - Inizio parsing e importazione...');
-        await pipeline(readStream, parser);
-        await insertBatch();
-
-        process.stdout.write(`\n`);
-        console.log(`Processamento di ${url} completato. Totale righe importate: ${totalImported}`);
+        }
+        console.log(`\nProcessamento di ${url} completato. Totale righe aggregate: ${grandTotalImported}`);
 
     } finally {
         await fs.rm(tempDir, {recursive: true, force: true});
@@ -124,7 +139,7 @@ async function processUrl(url, connection) {
 export async function runImport(urls = DEFAULT_URLS) {
     let connection;
     try {
-        console.log('--- INIZIO SCRIPT DI IMPORTAZIONE ---');
+        console.log('--- INIZIO SCRIPT DI IMPORTAZIONE STORICO ---');
         connection = await mysql.createConnection({
             host: process.env.DB_HOST,
             port: process.env.DB_PORT,
@@ -138,9 +153,9 @@ export async function runImport(urls = DEFAULT_URLS) {
             await processUrl(url, connection);
         }
 
-        console.log('\n--- IMPORTAZIONE COMPLETATA CON SUCCESSO! ---');
+        console.log('\n--- IMPORTAZIONE STORICO COMPLETATA CON SUCCESSO! ---');
     } catch (error) {
-        console.error('\n--- ERRORE FATALE DURANTE L\'IMPORTAZIONE ---');
+        console.error('\n--- ERRORE FATALE DURANTE L\'IMPORTAZIONE STORICO ---');
         console.error(error);
         throw error;
     } finally {

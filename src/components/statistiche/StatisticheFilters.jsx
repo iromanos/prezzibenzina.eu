@@ -5,7 +5,7 @@ import {useCallback, useEffect, useState} from 'react';
 import StatisticheGeoFilters from './StatisticheGeoFilters';
 
 export default function StatisticheFilters({onFilterChange}) {
-    const [carburante, setCarburante] = useState('1'); // Default a Benzina (ID 1)
+    const [carburante, setCarburante] = useState('Benzina'); // Aggiornato
     const [geoFilters, setGeoFilters] = useState({livello_geo: 'nazionale', codice_geo: 'IT'});
 
     const handleGeoFilterChange = useCallback((newGeoFilters) => {
@@ -15,7 +15,7 @@ export default function StatisticheFilters({onFilterChange}) {
     const handleFilter = () => {
         if (onFilterChange) {
             onFilterChange({
-                id_carburante: carburante,
+                desc_carburante: carburante, // Aggiornato
                 ...geoFilters,
             });
         }
@@ -39,10 +39,10 @@ export default function StatisticheFilters({onFilterChange}) {
                             value={carburante}
                             onChange={(e) => setCarburante(e.target.value)}
                         >
-                            <option value="1">Benzina</option>
-                            <option value="2">Diesel</option>
-                            <option value="3">GPL</option>
-                            <option value="4">Metano</option>
+                            <option value="Benzina">Benzina</option>
+                            <option value="Gasolio">Gasolio</option>
+                            <option value="GPL">GPL</option>
+                            <option value="Metano">Metano</option>
                         </select>
                     </div>
 
