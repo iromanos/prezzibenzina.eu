@@ -21,6 +21,7 @@
     "axios": "^1.16.0",
     "bootstrap": "^5.3.8",
     "critters": "^0.0.23",
+    "dotenv": "^17.4.2",
     "flag-icons": "^7.5.0",
     "k6": "^0.0.0",
     "lucide-react": "^0.577.0",
