@@ -2,6 +2,7 @@
   "name": "prezzibenzina.eu",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
@@ -21,6 +22,7 @@
     "axios": "^1.16.0",
     "bootstrap": "^5.3.8",
     "critters": "^0.0.23",
+    "csv-parse": "^5.5.6",
     "dotenv": "^17.4.2",
     "flag-icons": "^7.5.0",
     "k6": "^0.0.0",
@@ -41,6 +43,8 @@
     "sass": "1.33",
     "sass-loader": "^10.1.1",
     "slugify": "^1.6.9",
+    "tar": "^7.5.19",
+    "tar-stream": "^3.1.7",
     "use-supercluster": "^1.2.0"
   },
   "devDependencies": {
