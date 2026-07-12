@@ -19,7 +19,6 @@ export async function aggregatePrices() {
     let connection;
     try {
         console.log('Inizio aggregazione prezzi...');
-
         connection = await mysql.createConnection({
             host: process.env.DB_HOST,
             port: process.env.DB_PORT,
@@ -29,47 +28,68 @@ export async function aggregatePrices() {
         });
         console.log('Connessione al database stabilita.');
 
-        const [rows] = await connection.execute(`
-            SELECT
-                p.id_impianto,
-                p.desc_carburante,
-                p.prezzo,
-                i.provincia,
-                prov.regione
+        const today = new Date().toISOString().slice(0, 10);
+
+        await connection.beginTransaction();
+        console.log('Transazione avviata.');
+
+        // --- FASE 1: Importa dati a livello 'distributore' ---
+        console.log('Fase 1: Inizio importazione dati a livello distributore...');
+        await connection.execute('DELETE FROM prezzi_storici WHERE data = ?', [today]);
+        console.log(`  - Record esistenti per la data ${today} cancellati.`);
+
+        const [prezziRecenti] = await connection.execute(`
+            SELECT p.id_impianto, p.desc_carburante, p.prezzo
             FROM prezzi p
-            JOIN impianti i ON p.id_impianto = i.id_impianto
-            JOIN provincie prov ON i.provincia = prov.id
-            WHERE
-                p.dtcomu >= NOW() - INTERVAL 48 HOUR
-                AND p.is_self = 1
-                AND p.prezzo > 0.5
+            WHERE p.dtcomu >= NOW() - INTERVAL 48 HOUR
+              AND p.is_self = 1
+              AND p.prezzo > 0.5
         `);
 
-        if (rows.length === 0) {
-            console.log('Nessun prezzo recente da aggregare. Uscita.');
+        if (prezziRecenti.length === 0) {
+            console.log('Nessun prezzo recente trovato. Rollback e uscita.');
+            await connection.rollback();
             return;
         }
-        console.log(`Trovati ${rows.length} prezzi recenti da elaborare.`);
 
-        const today = new Date().toISOString().slice(0, 10);
-        const aggregations = {};
-        const recordsToInsert = [];
-
-        for (const row of rows) {
+        const distributoreRecords = prezziRecenti.map(row => {
             const fuelName = getCanonicalFuelName(row.desc_carburante);
-            if (!fuelName || !row.id_impianto) continue;
+            if (!fuelName) return null;
+            return [today, fuelName, 'distributore', row.id_impianto, row.prezzo, row.prezzo, row.prezzo];
+        }).filter(Boolean);
 
-            recordsToInsert.push([
-                today,
-                fuelName,
-                'distributore',
-                row.id_impianto.toString(),
-                row.prezzo,
-                row.prezzo,
-                row.prezzo,
-            ]);
+        if (distributoreRecords.length > 0) {
+            const sql = 'INSERT INTO prezzi_storici (data, desc_carburante, livello_geo, codice_geo, prezzo_medio, prezzo_min, prezzo_max) VALUES ?';
+            await connection.query(sql, [distributoreRecords]);
+            console.log(`  - Inserite ${distributoreRecords.length} righe a livello distributore.`);
+        }
 
+        // --- FASE 2: Calcola aggregati superiori ---
+        console.log('\nFase 2: Inizio calcolo aggregati superiori...');
+        const [distributoriDiOggi] = await connection.execute(`
+            SELECT ps.desc_carburante,
+                   ps.prezzo_medio,
+                   i.comune,
+                   i.provincia,
+                   prov.regione
+            FROM prezzi_storici ps
+                     JOIN impianti i ON ps.codice_geo = i.id_impianto
+                     JOIN provincie prov ON i.provincia = prov.id
+            WHERE ps.data = ?
+              AND ps.livello_geo = 'distributore'
+        `, [today]);
+
+        if (distributoriDiOggi.length === 0) {
+            console.log('Nessun dato a livello distributore da aggregare. Commit e uscita.');
+            await connection.commit();
+            return;
+        }
+        console.log(`  - Letti ${distributoriDiOggi.length} record per l'aggregazione.`);
+
+        const aggregations = {};
+        for (const row of distributoriDiOggi) {
             const geoLevels = {
+                comune: row.comune,
                 provinciale: row.provincia,
                 regionale: row.regione,
                 nazionale: 'IT',
@@ -77,53 +97,44 @@ export async function aggregatePrices() {
 
             for (const [level, code] of Object.entries(geoLevels)) {
                 if (!code) continue;
-                const key = `${level}_${code}_${fuelName}`;
+                const key = `${level}_${code}_${row.desc_carburante}`;
                 if (!aggregations[key]) {
                     aggregations[key] = {sum: 0, count: 0, min: Infinity, max: -Infinity};
                 }
                 const stats = aggregations[key];
-                stats.sum += row.prezzo;
+                stats.sum += row.prezzo_medio;
                 stats.count++;
-                if (row.prezzo < stats.min) stats.min = row.prezzo;
-                if (row.prezzo > stats.max) stats.max = row.prezzo;
+                if (row.prezzo_medio < stats.min) stats.min = row.prezzo_medio;
+                if (row.prezzo_medio > stats.max) stats.max = row.prezzo_medio;
             }
         }
 
-        for (const key in aggregations) {
+        const aggregatedRecords = Object.entries(aggregations).map(([key, stats]) => {
             const [level, code, fuelName] = key.split('_');
-            const stats = aggregations[key];
-            recordsToInsert.push([
-                today,
-                fuelName,
-                level,
-                code,
-                stats.sum / stats.count,
-                stats.min,
-                stats.max,
-            ]);
+            return [today, fuelName, level, code, stats.sum / stats.count, stats.min, stats.max];
+        });
+
+        if (aggregatedRecords.length > 0) {
+            const sql = 'INSERT INTO prezzi_storici (data, desc_carburante, livello_geo, codice_geo, prezzo_medio, prezzo_min, prezzo_max) VALUES ?';
+            await connection.query(sql, [aggregatedRecords]);
+            console.log(`  - Inserite ${aggregatedRecords.length} righe aggregate.`);
         }
 
-        console.log(`Preparati ${recordsToInsert.length} record da inserire in 'prezzi_storici'.`);
+        await connection.commit();
+        console.log('\nTransazione completata con successo!');
 
-        if (recordsToInsert.length > 0) {
-            await connection.beginTransaction();
-            try {
-                await connection.execute('DELETE FROM prezzi_storici WHERE data = ?', [today]);
-
-                const sql = 'INSERT INTO prezzi_storici (data, desc_carburante, livello_geo, codice_geo, prezzo_medio, prezzo_min, prezzo_max) VALUES ? ON DUPLICATE KEY UPDATE prezzo_medio=VALUES(prezzo_medio), prezzo_min=VALUES(prezzo_min), prezzo_max=VALUES(prezzo_max)';
-                await connection.query(sql, [recordsToInsert]);
-
-                await connection.commit();
-                console.log(`Inseriti con successo ${recordsToInsert.length} record.`);
-            } catch (err) {
-                await connection.rollback();
-                throw err;
-            }
-        }
     } catch (error) {
-        console.error("Errore fatale durante l'aggregazione:", error);
+        console.error("\n--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---");
+        console.error(error);
+        if (connection) {
+            console.log('Rollback della transazione in corso...');
+            await connection.rollback();
+        }
     } finally {
-        if (connection) await connection.end();
+        if (connection) {
+            await connection.end();
+            console.log('Connessione al database chiusa.');
+        }
     }
 }
 

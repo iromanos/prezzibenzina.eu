@@ -2,7 +2,7 @@
 
 import Map, {Layer, Marker, Popup, Source} from 'react-map-gl/maplibre';
 import {forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
-import 'maplibre-gl/dist/maplibre-gl.css';
+// Rimosso: import 'maplibre-gl/dist/maplibre-gl.css';
 import {
     fetchImpiantiByRoute,
     getClustersByBounds,
