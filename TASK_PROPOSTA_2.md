@@ -25,7 +25,8 @@ L'obiettivo di questa fase è preparare l'infrastruttura per raccogliere, aggreg
         * Calcolare il prezzo medio, minimo e massimo per ogni carburante a livello nazionale, regionale e provinciale.
         * Popolare la tabella `prezzi_storici` con i dati aggregati per il giorno corrente.
     * **Automazione:** Configurare un cron job sul server per eseguire questo script una volta al giorno (es. di notte).
-
+        * Inviare una notifica via email alla conclusione del cron
+        * Salvare i log su un file di testo
 3. **Sviluppo API Endpoint:**
     * Creare un nuovo endpoint API, ad esempio `/api/statistiche`.
     * L'endpoint deve accettare i seguenti parametri di query:
