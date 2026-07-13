@@ -5,6 +5,7 @@ import {useCallback, useEffect, useState} from 'react';
 import Header from "@/components/Header";
 import StatisticheFilters from '@/components/statistiche/StatisticheFilters';
 import StatisticheChart from '@/components/statistiche/StatisticheChart';
+import StatisticheKPI from '@/components/statistiche/StatisticheKPI'; // Importa il nuovo componente KPI
 
 export default function StatistichePage() {
     const [filters, setFilters] = useState(null);
@@ -52,12 +53,19 @@ export default function StatistichePage() {
                         <StatisticheFilters onFilterChange={handleFilterChange}/>
                     </div>
                     <div className="col-12 col-lg-9">
-                        <div className="card">
-                            <div className="card-body">
-                                <h5 className="card-title">Andamento Prezzi</h5>
-                                {isLoading ? <p>Caricamento...</p> : <StatisticheChart data={chartData}/>}
-                            </div>
-                        </div>
+                        {isLoading ? (
+                            <p>Caricamento...</p>
+                        ) : (
+                            <>
+                                <StatisticheKPI data={chartData}/> {/* Inserisce il componente KPI */}
+                                <div className="card">
+                                    <div className="card-body">
+                                        <h5 className="card-title">Andamento Prezzi</h5>
+                                        <StatisticheChart data={chartData}/>
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

@@ -70,7 +70,7 @@ export default function StatisticheGeoFilters({onGeoFilterChange}) {
                     <label htmlFor="regione" className="form-label">Regione</label>
                     <select id="regione" className="form-select" value={selectedRegione} onChange={handleRegioneChange}>
                         <option value="">Seleziona una regione</option>
-                        {regioni.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+                        {regioni.map(r => <option key={r.id} value={r.key}>{r.name}</option>)}
                     </select>
                 </div>
             )}
@@ -82,7 +82,7 @@ export default function StatisticheGeoFilters({onGeoFilterChange}) {
                         <select id="regione-prov" className="form-select" value={selectedRegione}
                                 onChange={handleRegioneChange}>
                             <option value="">Seleziona una regione</option>
-                            {regioni.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+                            {regioni.map(r => <option key={r.id} value={r.key}>{r.name}</option>)}
                         </select>
                     </div>
                     {selectedRegione && (

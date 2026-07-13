@@ -9,11 +9,19 @@ export async function GET(request) {
     const livello_geo = searchParams.get('livello_geo');
     const codice_geo = searchParams.get('codice_geo');
     const desc_carburante = searchParams.get('desc_carburante');
-    const startDate = search_params.get('startDate');
+    let startDate = searchParams.get('startDate'); // Usiamo let perché potremmo modificarlo
     const endDate = searchParams.get('endDate');
 
     if (!livello_geo || !codice_geo || !desc_carburante) {
         return NextResponse.json({error: 'Parametri mancanti: livello_geo, codice_geo e desc_carburante sono obbligatori.'}, {status: 400});
+    }
+
+    // Se startDate non è valorizzato, imposta il filtro per gli ultimi 90 giorni
+    if (!startDate) {
+        const today = new Date();
+        const ninetyDaysAgo = new Date(today);
+        ninetyDaysAgo.setDate(today.getDate() - 90);
+        startDate = ninetyDaysAgo.toISOString().split('T')[0]; // Formato YYYY-MM-DD
     }
 
     let connection;
@@ -26,7 +34,7 @@ export async function GET(request) {
             database: process.env.DB_DATABASE,
         });
 
-        let query = 'SELECT data, prezzo_medio, prezzo_min, prezzo_max FROM prezzi_storici WHERE';
+        let query = 'SELECT data, prezzo_medio, prezzo_min, prezzo_max FROM prezzi_storici WHERE ';
         const params = [];
 
         const conditions = [
@@ -36,10 +44,10 @@ export async function GET(request) {
         ];
         params.push(livello_geo, codice_geo, desc_carburante);
 
-        if (startDate) {
-            conditions.push('data >= ?');
-            params.push(startDate);
-        }
+        // startDate è sempre valorizzato a questo punto
+        conditions.push('data >= ?');
+        params.push(startDate);
+        
         if (endDate) {
             conditions.push('data <= ?');
             params.push(endDate);
@@ -47,6 +55,8 @@ export async function GET(request) {
 
         query += ' ' + conditions.join(' AND ');
         query += ' ORDER BY data ASC';
+
+        console.log(query);
 
         const [rows] = await connection.execute(query, params);
 

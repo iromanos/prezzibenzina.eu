@@ -19,7 +19,7 @@ const LOG_FILE_PATH = path.resolve(process.cwd(), 'cron_logs', 'import-daily.log
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
-    secure: process.env.EMAIL_PORT == 465, // true for 465, false for other ports
+    secure: process.env.EMAIL_PORT === 465, // true for 465, false for other ports
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -31,7 +31,7 @@ async function sendEmailNotification(subject, body) {
     try {
         await transporter.sendMail({
             from: process.env.EMAIL_FROM,
-            to: process.env.EMAIL_USER, // Invia all'utente configurato per l'invio
+            to: process.env.EMAIL_SYSTEM, // Invia all'utente configurato per l'invio
             subject: subject,
             text: body,
         });

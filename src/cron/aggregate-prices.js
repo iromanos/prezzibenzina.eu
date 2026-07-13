@@ -38,7 +38,7 @@ async function sendEmailNotification(subject, body) {
     try {
         await transporter.sendMail({
             from: process.env.EMAIL_FROM,
-            to: process.env.EMAIL_USER, // Invia all'utente configurato per l'invio
+            to: process.env.EMAIL_SYSTEM, // Invia all'utente configurato per l'invio
             subject: subject,
             text: body,
         });

@@ -19,7 +19,7 @@ const LOG_FILE_PATH = path.resolve(process.cwd(), 'cron_logs/import-anagrafica.l
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
-    secure: process.env.EMAIL_PORT == 465, // true for 465, false for other ports
+    secure: false, // true for 465, false for other ports
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -43,7 +43,7 @@ async function sendEmailNotification(subject, body) {
     try {
         await transporter.sendMail({
             from: process.env.EMAIL_FROM,
-            to: process.env.EMAIL_USER, // Invia all'utente configurato per l'invio
+            to: process.env.EMAIL_SYSTEM,
             subject: subject,
             text: body,
         });
@@ -75,7 +75,9 @@ export async function runAnagraficaImport() {
                 'id_impianto', 'gestore', 'bandiera', 'tipo_impianto',
                 'nome_impianto', 'indirizzo', 'comune', 'provincia',
                 'latitudine', 'longitudine'
-            ]
+            ],
+            quote: '', // Aggiunto: indica che i campi non sono racchiusi tra virgolette
+            skip_empty_lines: true, // Aggiunto: ignora le righe vuote
         });
 
         let batch = [];
@@ -86,7 +88,7 @@ export async function runAnagraficaImport() {
             try {
                 const sql = `
                     INSERT INTO impianti (id_impianto, gestore, bandiera, tipo_impianto, nome_impianto, indirizzo,
-                                          comune, provincia, latitudine, longitudine)
+                                          comune, provincia, latitudine, longitudine, address, location_ok, stato)
                     VALUES ?
                     ON DUPLICATE KEY UPDATE gestore=VALUES(gestore),
                                             bandiera=VALUES(bandiera),
@@ -96,8 +98,11 @@ export async function runAnagraficaImport() {
                                             comune=VALUES(comune),
                                             provincia=VALUES(provincia),
                                             latitudine=VALUES(latitudine),
-                                            longitudine=VALUES(longitudine)
-                `;
+                                            longitudine=VALUES(longitudine),
+                                            address=VALUES(address),
+                                            location_ok=VALUES(location_ok),
+                                            stato=VALUES(stato)`;
+
                 await connection.query(sql, [batch]);
                 totalProcessed += batch.length;
                 await logToFile(`  - Impianti processati: ${totalProcessed} (ultimo batch di ${batch.length})`);
@@ -123,7 +128,7 @@ export async function runAnagraficaImport() {
                 batch.push([
                     record.id_impianto, record.gestore, record.bandiera, record.tipo_impianto,
                     record.nome_impianto, record.indirizzo, record.comune, record.provincia.toUpperCase(),
-                    lat, lon
+                    lat, lon, '', 0, 'IT'
                 ]);
 
                 if (batch.length >= BATCH_SIZE) {

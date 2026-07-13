@@ -15,7 +15,7 @@ export async function GET() {
         });
 
         // La tabella 'regioni' ha 'id' e 'name'
-        const [rows] = await connection.execute('SELECT id, name FROM regioni ORDER BY name ASC');
+        const [rows] = await connection.execute('SELECT * FROM regioni ORDER BY name ');
 
         return NextResponse.json(rows);
 
