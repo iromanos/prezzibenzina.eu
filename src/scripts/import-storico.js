@@ -18,7 +18,6 @@ const tar = require('tar');
 dotenv.config({path: path.resolve(process.cwd(), '.env')});
 
 const DEFAULT_URLS = [
-    'https://opendatacarburanti.mise.gov.it/categorized/prezzo_alle_8/2026/2026_1_tr.tar.gz',
     'https://opendatacarburanti.mise.gov.it/categorized/prezzo_alle_8/2026/2026_2_tr.tar.gz'
 ];
 

@@ -6,16 +6,58 @@ import {parse} from 'csv-parse';
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs/promises'; // Importa il modulo fs/promises per operazioni asincrone
+import nodemailer from 'nodemailer'; // Importa nodemailer
 
 dotenv.config({path: path.resolve(process.cwd(), '.env')});
 
 const ANAGRAFICA_URL = 'https://www.mimit.gov.it/images/exportCSV/anagrafica_impianti_attivi.csv';
 const BATCH_SIZE = 500; // L'anagrafica ha meno righe, un batch più piccolo va bene
+const LOG_FILE_PATH = path.resolve(process.cwd(), 'cron_logs/import-anagrafica.log');
+
+// Configurazione Nodemailer
+const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: process.env.EMAIL_PORT == 465, // true for 465, false for other ports
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
+
+// Funzione per salvare i log su file
+async function logToFile(message) {
+    const timestamp = new Date().toISOString();
+    const logMessage = `[${timestamp}] ${message}\n`;
+    console.log(logMessage.trim()); // Stampa anche in console per visibilità immediata
+    try {
+        await fs.appendFile(LOG_FILE_PATH, logMessage, 'utf8');
+    } catch (error) {
+        console.error(`Errore durante la scrittura nel file di log: ${error.message}`);
+    }
+}
+
+// Funzione per l'invio di notifiche email
+async function sendEmailNotification(subject, body) {
+    try {
+        await transporter.sendMail({
+            from: process.env.EMAIL_FROM,
+            to: process.env.EMAIL_USER, // Invia all'utente configurato per l'invio
+            subject: subject,
+            text: body,
+        });
+        await logToFile(`[EMAIL] Notifica email inviata: "${subject}"`);
+    } catch (error) {
+        await logToFile(`[EMAIL ERROR] Errore durante l'invio dell'email "${subject}": ${error.message}`);
+        console.error(`[EMAIL ERROR] Errore durante l'invio dell'email "${subject}":`, error);
+    }
+}
 
 export async function runAnagraficaImport() {
     let connection;
     try {
-        console.log('--- INIZIO SCRIPT DI IMPORTAZIONE ANAGRAFICA IMPIANTI ---');
+        await logToFile('--- INIZIO SCRIPT DI IMPORTAZIONE ANAGRAFICA IMPIANTI ---');
         connection = await mysql.createConnection({
             host: process.env.DB_HOST,
             port: process.env.DB_PORT,
@@ -23,11 +65,11 @@ export async function runAnagraficaImport() {
             password: process.env.DB_PASSWORD,
             database: process.env.DB_DATABASE,
         });
-        console.log('Connessione al database stabilita.');
+        await logToFile('Connessione al database stabilita.');
 
         const parser = parse({
-            delimiter: ';',
-            from_line: 2, // Salta l'intestazione
+            delimiter: '|',
+            from_line: 3, // Salta l'intestazione
             relax_column_count: true, // Il file ha molte colonne, alcune potrebbero non interessarci
             columns: [ // Mappiamo le colonne per nome per chiarezza
                 'id_impianto', 'gestore', 'bandiera', 'tipo_impianto',
@@ -58,11 +100,12 @@ export async function runAnagraficaImport() {
                 `;
                 await connection.query(sql, [batch]);
                 totalProcessed += batch.length;
-                process.stdout.write(`  - Impianti processati: ${totalProcessed}\r`);
+                await logToFile(`  - Impianti processati: ${totalProcessed} (ultimo batch di ${batch.length})`);
                 batch = [];
             } catch (error) {
-                console.error('\nErrore durante il bulk insert dell\'anagrafica:', error.sqlMessage);
+                await logToFile(`Errore durante il bulk insert dell'anagrafica: ${error.sqlMessage || error.message}`);
                 batch = [];
+                throw error; // Rilancia l'errore per essere catturato dal blocco catch esterno
             }
         };
 
@@ -73,6 +116,7 @@ export async function runAnagraficaImport() {
                 const lat = parseFloat(record.latitudine);
                 const lon = parseFloat(record.longitudine);
                 if (!record.id_impianto || !record.provincia || isNaN(lat) || isNaN(lon)) {
+                    // await logToFile(`  - Record scartato per dati mancanti/invalidi: ${JSON.stringify(record)}`);
                     continue;
                 }
 
@@ -82,11 +126,13 @@ export async function runAnagraficaImport() {
                     lat, lon
                 ]);
 
-                if (batch.length >= BATCH_SIZE) await insertBatch();
+                if (batch.length >= BATCH_SIZE) {
+                    await insertBatch();
+                }
             }
         });
 
-        console.log(`  - Download e processamento di: ${ANAGRAFICA_URL}`);
+        await logToFile(`  - Download e processamento di: ${ANAGRAFICA_URL}`);
 
         const response = await new Promise((resolve, reject) => https.get(ANAGRAFICA_URL, resolve).on('error', reject));
         if (response.statusCode !== 200) {
@@ -96,21 +142,34 @@ export async function runAnagraficaImport() {
         await pipeline(response, parser);
         await insertBatch(); // Inserisci l'ultimo batch
 
-        process.stdout.write(`\n`);
-        console.log(`\n--- IMPORTAZIONE ANAGRAFICA COMPLETATA. Impianti totali processati: ${totalProcessed} ---`);
+        await logToFile(`\n--- IMPORTAZIONE ANAGRAFICA COMPLETATA. Impianti totali processati: ${totalProcessed} ---`);
+        await sendEmailNotification(
+            'CRON Job Success: Importazione Anagrafica',
+            `L'importazione dell'anagrafica è stata completata con successo. Impianti processati: ${totalProcessed}.`
+        );
 
     } catch (error) {
-        console.error('\n--- ERRORE FATALE DURANTE L\'IMPORTAZIONE ANAGRAFICA ---');
-        console.error(error);
-        throw error;
+        await logToFile('\n--- ERRORE FATALE DURANTE L\'IMPORTAZIONE ANAGRAFICA ---');
+        await logToFile(error.message);
+        if (connection) {
+            // Non c'è una transazione esplicita qui, quindi non serve rollback
+        }
+        await sendEmailNotification(
+            'CRON Job Fallito: Importazione Anagrafica',
+            `L'importazione dell'anagrafica è fallita: ${error.message}`
+        );
     } finally {
         if (connection) {
             await connection.end();
-            console.log('Connessione al database chiusa.');
+            await logToFile('Connessione al database chiusa.');
         }
+        await logToFile('Fine esecuzione script importazione anagrafica.');
     }
 }
 
 if (process.argv[1] && process.argv[1].includes('import-anagrafica.js')) {
-    runAnagraficaImport();
+    // Assicurati che la directory di log esista
+    fs.mkdir(path.dirname(LOG_FILE_PATH), {recursive: true})
+        .then(() => runAnagraficaImport())
+        .catch(error => console.error(`Errore iniziale nella creazione della directory di log o nell'esecuzione: ${error.message}`));
 }

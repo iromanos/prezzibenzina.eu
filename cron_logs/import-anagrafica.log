@@ -1,0 +1,63 @@
+[2026-07-13T07:57:46.223Z] --- INIZIO SCRIPT DI IMPORTAZIONE ANAGRAFICA IMPIANTI ---
+[2026-07-13T07:57:46.271Z] Connessione al database stabilita.
+[2026-07-13T07:57:46.274Z]   - Download e processamento di: https://www.mimit.gov.it/images/exportCSV/anagrafica_impianti_attivi.csv
+[2026-07-13T07:57:46.448Z] 
+--- ERRORE FATALE DURANTE L'IMPORTAZIONE ANAGRAFICA ---
+[2026-07-13T07:57:46.450Z] Invalid Opening Quote: a quote is found on field "id_impianto" at line 38, value is "46593|"
+[2026-07-13T07:57:46.900Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Importazione Anagrafica"
+[2026-07-13T07:57:46.901Z] Connessione al database chiusa.
+[2026-07-13T07:57:46.903Z] Fine esecuzione script importazione anagrafica.
+[2026-07-13T07:59:29.234Z] --- INIZIO SCRIPT DI IMPORTAZIONE ANAGRAFICA IMPIANTI ---
+[2026-07-13T07:59:29.270Z] Connessione al database stabilita.
+[2026-07-13T07:59:29.275Z]   - Download e processamento di: https://www.mimit.gov.it/images/exportCSV/anagrafica_impianti_attivi.csv
+[2026-07-13T07:59:29.424Z] 
+--- ERRORE FATALE DURANTE L'IMPORTAZIONE ANAGRAFICA ---
+[2026-07-13T07:59:29.425Z] Invalid Closing Quote: got "S" at line 71 instead of delimiter, record delimiter, trimable character (if activated) or comment
+[2026-07-13T07:59:29.726Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Importazione Anagrafica"
+[2026-07-13T07:59:29.729Z] Connessione al database chiusa.
+[2026-07-13T07:59:29.731Z] Fine esecuzione script importazione anagrafica.
+[2026-07-13T08:00:43.615Z] --- INIZIO SCRIPT DI IMPORTAZIONE ANAGRAFICA IMPIANTI ---
+[2026-07-13T08:00:43.678Z] Connessione al database stabilita.
+[2026-07-13T08:00:43.690Z]   - Download e processamento di: https://www.mimit.gov.it/images/exportCSV/anagrafica_impianti_attivi.csv
+[2026-07-13T08:00:44.196Z] 
+--- ERRORE FATALE DURANTE L'IMPORTAZIONE ANAGRAFICA ---
+[2026-07-13T08:00:44.198Z] Invalid Closing Quote: got "S" at line 71 instead of delimiter, record delimiter, trimable character (if activated) or comment
+[2026-07-13T08:00:44.469Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Importazione Anagrafica"
+[2026-07-13T08:00:44.470Z] Connessione al database chiusa.
+[2026-07-13T08:00:44.472Z] Fine esecuzione script importazione anagrafica.
+[2026-07-13T08:03:44.053Z] --- INIZIO SCRIPT DI IMPORTAZIONE ANAGRAFICA IMPIANTI ---
+[2026-07-13T08:03:44.073Z] Connessione al database stabilita.
+[2026-07-13T08:03:44.076Z]   - Download e processamento di: https://www.mimit.gov.it/images/exportCSV/anagrafica_impianti_attivi.csv
+[2026-07-13T08:03:44.230Z] 
+--- ERRORE FATALE DURANTE L'IMPORTAZIONE ANAGRAFICA ---
+[2026-07-13T08:03:44.231Z] Invalid Closing Quote: got "S" at line 71 instead of delimiter, record delimiter, trimable character (if activated) or comment
+[2026-07-13T08:03:44.421Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Importazione Anagrafica"
+[2026-07-13T08:03:44.425Z] Connessione al database chiusa.
+[2026-07-13T08:03:44.428Z] Fine esecuzione script importazione anagrafica.
+[2026-07-13T08:05:44.768Z] --- INIZIO SCRIPT DI IMPORTAZIONE ANAGRAFICA IMPIANTI ---
+[2026-07-13T08:05:44.794Z] Connessione al database stabilita.
+[2026-07-13T08:05:44.797Z]   - Download e processamento di: https://www.mimit.gov.it/images/exportCSV/anagrafica_impianti_attivi.csv
+[2026-07-13T08:05:44.934Z] 
+--- ERRORE FATALE DURANTE L'IMPORTAZIONE ANAGRAFICA ---
+[2026-07-13T08:05:44.935Z] Invalid Closing Quote: got "S" at line 71 instead of delimiter, record delimiter, trimable character (if activated) or comment
+[2026-07-13T08:05:45.124Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Importazione Anagrafica"
+[2026-07-13T08:05:45.126Z] Connessione al database chiusa.
+[2026-07-13T08:05:45.127Z] Fine esecuzione script importazione anagrafica.
+[2026-07-13T09:00:46.372Z] --- INIZIO SCRIPT DI IMPORTAZIONE ANAGRAFICA IMPIANTI ---
+[2026-07-13T09:00:46.479Z] Connessione al database stabilita.
+[2026-07-13T09:00:46.482Z]   - Download e processamento di: https://www.mimit.gov.it/images/exportCSV/anagrafica_impianti_attivi.csv
+[2026-07-13T09:00:46.640Z] 
+--- ERRORE FATALE DURANTE L'IMPORTAZIONE ANAGRAFICA ---
+[2026-07-13T09:00:46.641Z] Invalid Closing Quote: got "S" at line 71 instead of delimiter, record delimiter, trimable character (if activated) or comment
+[2026-07-13T09:00:46.934Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Importazione Anagrafica"
+[2026-07-13T09:00:46.937Z] Connessione al database chiusa.
+[2026-07-13T09:00:46.940Z] Fine esecuzione script importazione anagrafica.
+[2026-07-13T09:03:07.845Z] --- INIZIO SCRIPT DI IMPORTAZIONE ANAGRAFICA IMPIANTI ---
+[2026-07-13T09:03:07.888Z] Connessione al database stabilita.
+[2026-07-13T09:03:07.893Z]   - Download e processamento di: https://www.mimit.gov.it/images/exportCSV/anagrafica_impianti_attivi.csv
+[2026-07-13T09:03:08.050Z] 
+--- ERRORE FATALE DURANTE L'IMPORTAZIONE ANAGRAFICA ---
+[2026-07-13T09:03:08.051Z] Invalid Closing Quote: got "S" at line 71 instead of delimiter, record delimiter, trimable character (if activated) or comment
+[2026-07-13T09:03:08.252Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Importazione Anagrafica"
+[2026-07-13T09:03:08.253Z] Connessione al database chiusa.
+[2026-07-13T09:03:08.255Z] Fine esecuzione script importazione anagrafica.

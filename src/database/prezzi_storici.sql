@@ -5,7 +5,7 @@ create table prezzi_storici
     data            date                                                                     not null,
     desc_carburante varchar(32)                                                              not null,
     livello_geo     enum ('nazionale', 'regionale', 'provinciale', 'comune', 'distributore') not null,
-    codice_geo      varchar(32)                                                              not null,
+    codice_geo varchar(96) not null,
     prezzo_medio    decimal(7, 3)                                                            not null,
     prezzo_min      decimal(7, 3)                                                            not null,
     prezzo_max      decimal(7, 3)                                                            not null
