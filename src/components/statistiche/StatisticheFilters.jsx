@@ -79,6 +79,7 @@ export default function StatisticheFilters({onFilterChange, isLoading, initialFi
 
                     {/* Sezione Filtri Geografici */}
                     <StatisticheGeoFilters onGeoFilterChange={handleGeoFilterChange}
+                                           isLoading={isLoading}
                                            initialGeo={{
                                                livello_geo: initialFilters.livello_geo || 'nazionale',
                                                codice_geo: initialFilters.codice_geo || 'IT',

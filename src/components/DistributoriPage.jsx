@@ -18,8 +18,8 @@ import * as turf from '@turf/turf';
 import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile";
 import {GuidaCarburantiAutomobilistaVER3} from "@/components/GuidaCarburantiAutomobilista";
 import FiltroCarburante from "@/components/FiltroCarburante";
-//TODO: visualizzare grafico con la media dei prezzi dell'ultimo mese
 import '../styles/milano.scss';
+import {StatisticheWrapper} from "./statistiche/StatisticheChart.jsx";
 
 
 export async function getPageParams({params, searchParams}) {
@@ -290,6 +290,18 @@ export default async function DistributoriPage({params}) {
                         </div>
 
                     </>}
+
+                    <div className="card mb-4">
+                        <div className="card-body">
+                            <h5 className="card-title">Andamento Prezzi</h5>
+                            <StatisticheWrapper filters={{
+                                desc_carburante: carburante,
+                                livello_geo: 'provinciale',
+                                codice_geo: sigla,
+                            }}/>
+                        </div>
+                    </div>
+
 
                     <Display6977770298 className={'mb-3'}/>
                 </div>

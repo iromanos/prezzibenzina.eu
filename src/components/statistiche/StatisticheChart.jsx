@@ -2,6 +2,46 @@
 'use client';
 
 import {Area, AreaChart, CartesianGrid, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
+import {useEffect, useState} from "react";
+
+
+export function StatisticheWrapper({filters}) {
+
+    const [chartData, setChartData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [hasError, setHasError] = useState(false); // Nuovo stato per la gestione degli errori
+
+
+    useEffect(() => {
+        if (!filters) return;
+
+        async function fetchData() {
+            setIsLoading(true);
+            setHasError(false); // Resetta lo stato di errore ad ogni nuova richiesta
+            const params = new URLSearchParams(filters);
+            try {
+                const response = await fetch(`/api/statistiche?${params.toString()}`);
+                if (!response.ok) {
+                    new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setChartData(data);
+            } catch (error) {
+                console.error("Errore nel caricamento dei dati per il grafico:", error);
+                setChartData([]);
+                setHasError(true); // Imposta lo stato di errore
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        fetchData();
+    }, [filters]);
+
+
+    return <StatisticheChart data={chartData}/>;
+
+}
 
 export default function StatisticheChart({data}) {
     if (!data || data.length === 0) {

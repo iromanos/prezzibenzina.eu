@@ -5,7 +5,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {FaGlobe, FaMapPin} from 'react-icons/fa6';
 import {FaMapMarkerAlt} from "react-icons/fa"; // Importa le icone
 
-export default function StatisticheGeoFilters({onGeoFilterChange, initialGeo = {}}) {
+export default function StatisticheGeoFilters({onGeoFilterChange, initialGeo = {}, isLoading}) {
     const initialLivello = initialGeo.livello_geo || 'nazionale';
     const initialCodice = initialGeo.codice_geo && initialGeo.codice_geo !== 'IT' ? initialGeo.codice_geo : '';
 
@@ -70,8 +70,10 @@ export default function StatisticheGeoFilters({onGeoFilterChange, initialGeo = {
     const handleLivelloChange = (e) => {
         const newLivello = e.target.value;
         setLivelloGeo(newLivello);
-        setSelectedRegione('');
-        setSelectedProvincia('');
+        if (newLivello === 'nazionale') {
+            setSelectedRegione('');
+            setSelectedProvincia('');
+        }
     };
 
     const handleRegioneChange = (e) => {
@@ -95,19 +97,25 @@ export default function StatisticheGeoFilters({onGeoFilterChange, initialGeo = {
                 <label htmlFor="livelloGeo" className="form-label d-flex align-items-center">
                     <FaMapMarkerAlt className="me-2 text-muted"/> Livello Geografico
                 </label>
-                <select id="livelloGeo" className="form-select" value={livelloGeo} onChange={handleLivelloChange}>
+                <select
+                    disabled={isLoading}
+
+                    id="livelloGeo" className="form-select" value={livelloGeo} onChange={handleLivelloChange}>
                     <option value="nazionale">Nazionale</option>
                     <option value="regionale">Regionale</option>
                     <option value="provinciale">Provinciale</option>
                 </select>
             </div>
 
-            {livelloGeo === 'regionale' && (
+            {(livelloGeo === 'regionale' || livelloGeo === 'provinciale') && (
                 <div className="mb-3">
                     <label htmlFor="regione" className="form-label d-flex align-items-center">
                         <FaMapPin className="me-2 text-muted"/> Regione
                     </label>
-                    <select id="regione" className="form-select" value={selectedRegione} onChange={handleRegioneChange}>
+                    <select
+                        disabled={isLoading}
+
+                        id="regione" className="form-select" value={selectedRegione} onChange={handleRegioneChange}>
                         <option value="">Seleziona una regione</option>
                         {regioni.map(r => <option key={r.id} value={r.key}>{r.name}</option>)}
                     </select>
@@ -116,22 +124,24 @@ export default function StatisticheGeoFilters({onGeoFilterChange, initialGeo = {
 
             {livelloGeo === 'provinciale' && (
                 <>
-                    <div className="mb-3">
-                        <label htmlFor="regione-prov" className="form-label d-flex align-items-center">
-                            <FaMapPin className="me-2 text-muted"/> Regione
-                        </label>
-                        <select id="regione-prov" className="form-select" value={selectedRegione}
-                                onChange={handleRegioneChange}>
-                            <option value="">Seleziona una regione</option>
-                            {regioni.map(r => <option key={r.id} value={r.key}>{r.name}</option>)}
-                        </select>
-                    </div>
+                    {/*<div className="mb-3">*/}
+                    {/*    <label htmlFor="regione-prov" className="form-label d-flex align-items-center">*/}
+                    {/*        <FaMapPin className="me-2 text-muted"/> Regione*/}
+                    {/*    </label>*/}
+                    {/*    <select id="regione-prov" className="form-select" value={selectedRegione}*/}
+                    {/*            onChange={handleRegioneChange}>*/}
+                    {/*        <option value="">Seleziona una regione</option>*/}
+                    {/*        {regioni.map(r => <option key={r.id} value={r.key}>{r.name}</option>)}*/}
+                    {/*    </select>*/}
+                    {/*</div>*/}
                     {selectedRegione && (
                         <div className="mb-3">
                             <label htmlFor="provincia" className="form-label d-flex align-items-center">
                                 <FaMapPin className="me-2 text-muted"/> Provincia
                             </label>
                             <select id="provincia" className="form-select" value={selectedProvincia}
+                                    disabled={isLoading}
+
                                     onChange={handleProvinciaChange}>
                                 <option value="">Seleziona una provincia</option>
                                 {province.filter(p => p.regione === selectedRegione).map(p => <option key={p.id}

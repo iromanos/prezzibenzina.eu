@@ -6,7 +6,7 @@ import StatisticheFilters from '@/components/statistiche/StatisticheFilters';
 import StatisticheChart from '@/components/statistiche/StatisticheChart';
 import StatisticheKPI from '@/components/statistiche/StatisticheKPI'; // Importa il nuovo componente KPI
 
-export default function StatisticheClient({initialParams = {}}) {
+export default function StatisticheClient({initialParams = {}, introParagraph}) {
     const [filters, setFilters] = useState(null);
     const [chartData, setChartData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -56,12 +56,7 @@ export default function StatisticheClient({initialParams = {}}) {
                 {/* Paragrafo introduttivo per i contenuti descrittivi */}
                 <div className="mb-4">
                     <p>
-                        Benvenuto nella sezione Statistiche Prezzi Carburanti di PrezziBenzina.eu. Qui puoi esplorare
-                        l'andamento storico dei prezzi di Benzina, Gasolio, GPL e Metano a livello nazionale, regionale
-                        e provinciale. Utilizza i filtri a sinistra per selezionare il tipo di carburante, l'area
-                        geografica e l'intervallo di date che ti interessano. Il grafico mostrerà l'evoluzione del
-                        prezzo medio, minimo e massimo, mentre il riepilogo ti fornirà i dati salienti del periodo
-                        selezionato.
+                        {introParagraph}
                     </p>
                     <p>
                         Questi dati ti aiuteranno a comprendere meglio le fluttuazioni del mercato e a prendere
