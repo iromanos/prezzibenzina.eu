@@ -1,0 +1,64 @@
+[2026-07-14T14:00:27.972Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:00:27.997Z] Connessione al database stabilita.
+[2026-07-14T14:00:28.000Z] Transazione avviata.
+[2026-07-14T14:00:28.001Z] Fase 1: Inizio importazione dati a livello distributore...
+[2026-07-14T14:00:32.709Z]   - Record esistenti per la data 2026-07-14 cancellati.
+[2026-07-14T14:00:33.049Z]   - Inserite 16128 righe a livello distributore.
+[2026-07-14T14:00:33.049Z] 
+Fase 2: Inizio calcolo aggregati superiori...
+[2026-07-14T14:00:35.499Z]   - Letti 16128 record per l'aggregazione.
+[2026-07-14T14:00:35.598Z] 
+--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---
+[2026-07-14T14:00:35.599Z] Unknown column 'NaN' in 'field list'
+[2026-07-14T14:00:35.600Z] Rollback della transazione in corso...
+[2026-07-14T14:00:35.925Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Aggregazione Prezzi"
+[2026-07-14T14:00:35.928Z] Connessione al database chiusa.
+[2026-07-14T14:00:35.935Z] Fine esecuzione script aggregazione prezzi.
+[2026-07-14T14:02:00.007Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:02:00.036Z] Connessione al database stabilita.
+[2026-07-14T14:02:00.040Z] Transazione avviata.
+[2026-07-14T14:02:00.041Z] Fase 1: Inizio importazione dati a livello distributore...
+[2026-07-14T14:02:03.541Z]   - Record esistenti per la data 2026-07-14 cancellati.
+[2026-07-14T14:02:03.917Z]   - Inserite 16124 righe a livello distributore.
+[2026-07-14T14:02:03.918Z] 
+Fase 2: Inizio calcolo aggregati superiori...
+[2026-07-14T14:02:06.485Z]   - Letti 16124 record per l'aggregazione.
+[2026-07-14T14:02:06.697Z] 
+--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---
+[2026-07-14T14:02:06.698Z] Unknown column 'NaN' in 'field list'
+[2026-07-14T14:02:06.699Z] Rollback della transazione in corso...
+[2026-07-14T14:02:07.129Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Aggregazione Prezzi"
+[2026-07-14T14:02:07.132Z] Connessione al database chiusa.
+[2026-07-14T14:02:07.139Z] Fine esecuzione script aggregazione prezzi.
+[2026-07-14T14:03:54.550Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:03:54.572Z] Connessione al database stabilita.
+[2026-07-14T14:03:54.576Z] Transazione avviata.
+[2026-07-14T14:03:54.577Z] Fase 1: Inizio importazione dati a livello distributore...
+[2026-07-14T14:03:57.719Z]   - Record esistenti per la data 2026-07-14 cancellati.
+[2026-07-14T14:03:57.999Z]   - Inserite 16124 righe a livello distributore.
+[2026-07-14T14:03:58.000Z] 
+Fase 2: Inizio calcolo aggregati superiori...
+[2026-07-14T14:04:00.118Z]   - Letti 16124 record per l'aggregazione.
+[2026-07-14T14:04:00.212Z] 
+--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---
+[2026-07-14T14:04:00.213Z] Unknown column 'NaN' in 'field list'
+[2026-07-14T14:04:00.214Z] Rollback della transazione in corso...
+[2026-07-14T14:04:00.557Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Aggregazione Prezzi"
+[2026-07-14T14:04:00.559Z] Connessione al database chiusa.
+[2026-07-14T14:04:00.562Z] Fine esecuzione script aggregazione prezzi.
+[2026-07-14T14:05:23.084Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:05:23.109Z] Connessione al database stabilita.
+[2026-07-14T14:05:23.113Z] Transazione avviata.
+[2026-07-14T14:05:23.115Z] Fase 1: Inizio importazione dati a livello distributore...
+[2026-07-14T14:05:26.434Z]   - Record esistenti per la data 2026-07-14 cancellati.
+[2026-07-14T14:05:26.719Z]   - Inserite 16102 righe a livello distributore.
+[2026-07-14T14:05:26.720Z] 
+Fase 2: Inizio calcolo aggregati superiori...
+[2026-07-14T14:05:28.857Z]   - Letti 16102 record per l'aggregazione.
+[2026-07-14T14:05:28.950Z] 
+--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---
+[2026-07-14T14:05:28.951Z] Unknown column 'NaN' in 'field list'
+[2026-07-14T14:05:28.952Z] Rollback della transazione in corso...
+[2026-07-14T14:05:29.324Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Aggregazione Prezzi"
+[2026-07-14T14:05:29.326Z] Connessione al database chiusa.
+[2026-07-14T14:05:29.331Z] Fine esecuzione script aggregazione prezzi.

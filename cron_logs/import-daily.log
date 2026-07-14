@@ -1,0 +1,14 @@
+[2026-07-14T13:57:43.656Z] --- INIZIO SCRIPT DI IMPORTAZIONE GIORNALIERA ---
+[2026-07-14T13:57:43.700Z] Connessione al database stabilita.
+[2026-07-14T13:57:43.704Z] Download e processamento di: https://www.mimit.gov.it/images/exportCSV/prezzo_alle_8.csv
+[2026-07-14T13:57:46.721Z] --- IMPORTAZIONE GIORNALIERA COMPLETATA. Righe totali processate: 0 ---
+[2026-07-14T13:57:47.134Z] [EMAIL] Notifica email inviata: "CRON Job Success: Importazione Giornaliera Prezzi"
+[2026-07-14T13:57:47.136Z] Connessione al database chiusa.
+[2026-07-14T13:57:47.138Z] Fine esecuzione script importazione giornaliera.
+[2026-07-14T13:59:50.069Z] --- INIZIO SCRIPT DI IMPORTAZIONE GIORNALIERA ---
+[2026-07-14T13:59:50.103Z] Connessione al database stabilita.
+[2026-07-14T13:59:50.107Z] Download e processamento di: https://www.mimit.gov.it/images/exportCSV/prezzo_alle_8.csv
+[2026-07-14T14:00:03.716Z] --- IMPORTAZIONE GIORNALIERA COMPLETATA. Righe totali processate: 93660 ---
+[2026-07-14T14:00:03.977Z] [EMAIL] Notifica email inviata: "CRON Job Success: Importazione Giornaliera Prezzi"
+[2026-07-14T14:00:03.979Z] Connessione al database chiusa.
+[2026-07-14T14:00:03.980Z] Fine esecuzione script importazione giornaliera.
