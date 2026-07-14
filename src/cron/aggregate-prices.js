@@ -142,6 +142,10 @@ export async function aggregatePrices() {
 
         const aggregations = {};
         for (const row of distributoriDiOggi) {
+            // mysql2 restituisce le colonne DECIMAL come stringa: converto a numero
+            const prezzoMedio = Number(row.prezzo_medio);
+            if (!Number.isFinite(prezzoMedio)) continue;
+
             const geoLevels = {
                 comune: row.comune,
                 provinciale: row.provincia,
@@ -156,10 +160,10 @@ export async function aggregatePrices() {
                     aggregations[key] = {sum: 0, count: 0, min: Infinity, max: -Infinity};
                 }
                 const stats = aggregations[key];
-                stats.sum += row.prezzo_medio;
+                stats.sum += prezzoMedio;
                 stats.count++;
-                if (row.prezzo_medio < stats.min) stats.min = row.prezzo_medio;
-                if (row.prezzo_medio > stats.max) stats.max = row.prezzo_medio;
+                if (prezzoMedio < stats.min) stats.min = prezzoMedio;
+                if (prezzoMedio > stats.max) stats.max = prezzoMedio;
             }
         }
 

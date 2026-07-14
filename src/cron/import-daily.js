@@ -77,7 +77,7 @@ export async function runDailyImport() {
         await logToFile('Connessione al database stabilita.');
 
         const parser = parse({
-            delimiter: ';', // I CSV europei usano spesso il punto e virgola
+            delimiter: '|', // I CSV europei usano spesso il punto e virgola
             from_line: 2,
             relax_column_count: true,
         });

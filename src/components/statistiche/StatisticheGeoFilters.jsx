@@ -37,7 +37,7 @@ export default function StatisticheGeoFilters({onGeoFilterChange, initialGeo = {
     // Se il livello iniziale è provinciale, ricava la regione dalla provincia una volta caricati i dati
     useEffect(() => {
         if (initialLivello === 'provinciale' && selectedProvincia && !selectedRegione && province.length > 0) {
-            const prov = province.find(p => p.id === selectedProvincia);
+            const prov = province.find(p => p.id === selectedProvincia.toUpperCase());
             if (prov) {
                 setSelectedRegione(prov.regione);
             }
@@ -139,7 +139,7 @@ export default function StatisticheGeoFilters({onGeoFilterChange, initialGeo = {
                             <label htmlFor="provincia" className="form-label d-flex align-items-center">
                                 <FaMapPin className="me-2 text-muted"/> Provincia
                             </label>
-                            <select id="provincia" className="form-select" value={selectedProvincia}
+                            <select id="provincia" className="form-select" value={selectedProvincia.toUpperCase()}
                                     disabled={isLoading}
 
                                     onChange={handleProvinciaChange}>

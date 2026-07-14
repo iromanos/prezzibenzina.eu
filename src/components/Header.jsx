@@ -44,6 +44,9 @@ export default function Header() {
                                                        className="btn btn-primary">Ricerca</Link></li>
                         <li className="nav-item"><Link title={"Mappa"} href="/mappa"
                                                        className="btn btn-primary">Mappa</Link></li>
+                        <li className="nav-item"><Link title={"Statistiche"} href="/statistiche"
+                                                       className="btn btn-primary">Statistiche</Link></li>
+                        {/* Nuovo link */}
                         <li className="nav-item"><Link title={"Contatti"} href="/contatti"
                                                        className="btn btn-primary">Contatti</Link></li>
                 </ul>
@@ -102,7 +105,12 @@ export default function Header() {
                                     data-bs-dismiss="offcanvas"
                                     onClick={() => handleNavigation("/mappa")}
                                     className="nav-link text-white ">Mappa</Button></li>
-
+                        <li className="nav-item"><Button
+                            variant={'link'}
+                            data-bs-dismiss="offcanvas"
+                            onClick={() => handleNavigation("/statistiche")}
+                            title={"Statistiche"}
+                            className="nav-link text-white ">Statistiche</Button></li>
                         <li className="nav-item"><Button
                             variant={'link'}
                             data-bs-dismiss="offcanvas"

@@ -11,3 +11,8 @@ create table prezzi_storici
     prezzo_max      decimal(7, 3)                                                            not null
 );
 
+-- Indice a supporto delle query di /api/statistiche:
+-- filtro su (livello_geo, codice_geo, desc_carburante) + range/ordinamento su data.
+create index idx_statistiche
+    on prezzi_storici (livello_geo, codice_geo, desc_carburante, data);
+
