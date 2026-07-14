@@ -5,12 +5,15 @@ import {useCallback, useEffect, useState} from 'react';
 import {FaGlobe, FaMapPin} from 'react-icons/fa6';
 import {FaMapMarkerAlt} from "react-icons/fa"; // Importa le icone
 
-export default function StatisticheGeoFilters({onGeoFilterChange}) {
+export default function StatisticheGeoFilters({onGeoFilterChange, initialGeo = {}}) {
+    const initialLivello = initialGeo.livello_geo || 'nazionale';
+    const initialCodice = initialGeo.codice_geo && initialGeo.codice_geo !== 'IT' ? initialGeo.codice_geo : '';
+
     const [regioni, setRegioni] = useState([]);
     const [province, setProvince] = useState([]);
-    const [livelloGeo, setLivelloGeo] = useState('nazionale');
-    const [selectedRegione, setSelectedRegione] = useState('');
-    const [selectedProvincia, setSelectedProvincia] = useState('');
+    const [livelloGeo, setLivelloGeo] = useState(initialLivello);
+    const [selectedRegione, setSelectedRegione] = useState(initialLivello === 'regionale' ? initialCodice : '');
+    const [selectedProvincia, setSelectedProvincia] = useState(initialLivello === 'provinciale' ? initialCodice : '');
 
     // Carica dati geografici all'avvio
     useEffect(() => {
@@ -30,6 +33,16 @@ export default function StatisticheGeoFilters({onGeoFilterChange}) {
         }
         fetchData();
     }, []);
+
+    // Se il livello iniziale è provinciale, ricava la regione dalla provincia una volta caricati i dati
+    useEffect(() => {
+        if (initialLivello === 'provinciale' && selectedProvincia && !selectedRegione && province.length > 0) {
+            const prov = province.find(p => p.id === selectedProvincia);
+            if (prov) {
+                setSelectedRegione(prov.regione);
+            }
+        }
+    }, [province, initialLivello, selectedProvincia, selectedRegione]);
 
     // Funzione per emettere il filtro geografico al componente padre
     const emitGeoFilter = useCallback(() => {
@@ -122,7 +135,7 @@ export default function StatisticheGeoFilters({onGeoFilterChange}) {
                                     onChange={handleProvinciaChange}>
                                 <option value="">Seleziona una provincia</option>
                                 {province.filter(p => p.regione === selectedRegione).map(p => <option key={p.id}
-                                                                                                      value={p.key}>{p.name}</option>)}
+                                                                                                      value={p.id}>{p.name}</option>)}
                             </select>
                         </div>
                     )}

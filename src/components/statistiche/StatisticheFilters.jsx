@@ -6,9 +6,12 @@ import StatisticheGeoFilters from './StatisticheGeoFilters';
 import {FaGasPump} from 'react-icons/fa6';
 import {FaCalendarAlt} from "react-icons/fa"; // Importa le icone
 
-export default function StatisticheFilters({onFilterChange, isLoading}) { // Riceve isLoading
-    const [carburante, setCarburante] = useState('Benzina');
-    const [geoFilters, setGeoFilters] = useState({livello_geo: 'nazionale', codice_geo: 'IT'});
+export default function StatisticheFilters({onFilterChange, isLoading, initialFilters = {}}) { // Riceve isLoading e i parametri iniziali dall'URL
+    const [carburante, setCarburante] = useState(initialFilters.desc_carburante || 'Benzina');
+    const [geoFilters, setGeoFilters] = useState({
+        livello_geo: initialFilters.livello_geo || 'nazionale',
+        codice_geo: initialFilters.codice_geo || 'IT',
+    });
 
     // Calcola la data di oggi e 90 giorni fa per i valori predefiniti
     const getInitialDates = () => {
@@ -22,8 +25,8 @@ export default function StatisticheFilters({onFilterChange, isLoading}) { // Ric
     };
 
     const initialDates = getInitialDates();
-    const [startDate, setStartDate] = useState(initialDates.startDate);
-    const [endDate, setEndDate] = useState(initialDates.endDate);
+    const [startDate, setStartDate] = useState(initialFilters.startDate || initialDates.startDate);
+    const [endDate, setEndDate] = useState(initialFilters.endDate || initialDates.endDate);
 
 
     const handleGeoFilterChange = useCallback((newGeoFilters) => {
@@ -75,7 +78,11 @@ export default function StatisticheFilters({onFilterChange, isLoading}) { // Ric
                     </div>
 
                     {/* Sezione Filtri Geografici */}
-                    <StatisticheGeoFilters onGeoFilterChange={handleGeoFilterChange}/>
+                    <StatisticheGeoFilters onGeoFilterChange={handleGeoFilterChange}
+                                           initialGeo={{
+                                               livello_geo: initialFilters.livello_geo || 'nazionale',
+                                               codice_geo: initialFilters.codice_geo || 'IT',
+                                           }}/>
 
                     {/* Sezione Intervallo di Date */}
                     <div className="mb-4"> {/* Rimosso p-3 border rounded bg-light */}

@@ -1,89 +1,53 @@
 // src/app/(default)/statistiche/page.jsx
-'use client';
+import {getCanonicalUrl, getOpenGraph, getTwitter} from "@/functions/server";
+import {headers} from "next/headers";
+import StatisticheClient from './StatisticheClient';
 
-import {useCallback, useEffect, useState} from 'react';
-import Header from "@/components/Header";
-import StatisticheFilters from '@/components/statistiche/StatisticheFilters';
-import StatisticheChart from '@/components/statistiche/StatisticheChart';
-import StatisticheKPI from '@/components/statistiche/StatisticheKPI'; // Importa il nuovo componente KPI
+// Mappatura semplificata per i nomi geografici (da espandere se necessario)
+const GEO_NAMES = {
+    'IT': 'Italia',
+    'LOM': 'Lombardia',
+    'MI': 'Milano',
+    // Aggiungere altre mappature se i codici non sono auto-esplicativi
+};
 
-export default function StatistichePage() {
-    const [filters, setFilters] = useState(null);
-    const [chartData, setChartData] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [hasError, setHasError] = useState(false); // Nuovo stato per la gestione degli errori
+export async function generateMetadata({searchParams}) {
 
-    const handleFilterChange = useCallback((newFilters) => {
-        setFilters(newFilters);
-    }, []);
+    const queryParams = (await searchParams) || {};
 
-    useEffect(() => {
-        if (!filters) return;
+    const carburante = queryParams.desc_carburante || 'Benzina';
+    const codiceGeo = queryParams.codice_geo || 'IT';
+    const startDate = queryParams.startDate;
+    const endDate = queryParams.endDate;
 
-        async function fetchData() {
-            setIsLoading(true);
-            setHasError(false); // Resetta lo stato di errore ad ogni nuova richiesta
-            const params = new URLSearchParams(filters);
-            try {
-                const response = await fetch(`/api/statistiche?${params.toString()}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                setChartData(data);
-            } catch (error) {
-                console.error("Errore nel caricamento dei dati per il grafico:", error);
-                setChartData([]);
-                setHasError(true); // Imposta lo stato di errore
-            } finally {
-                setIsLoading(false);
-            }
-        }
+    const geoName = GEO_NAMES[codiceGeo] || codiceGeo; // Usa il nome mappato o il codice
 
-        fetchData();
-    }, [filters]);
+    let title = `Andamento Prezzo ${carburante} in ${geoName} - Statistiche Storiche | PrezziBenzina.eu`;
+    let description = `Scopri l'andamento storico del prezzo della ${carburante} in ${geoName}. Grafici e dati aggiornati per aiutarti a risparmiare.`;
 
-    return (
-        <>
-            <Header/>
-            <div className="container my-4">
-                <div className="text-center mb-4">
-                    <h1 className="display-5 fw-bold">Statistiche Prezzi Carburanti</h1>
-                    <p className="lead">
-                        Analizza l'andamento storico dei prezzi e scopri le tendenze del mercato.
-                    </p>
-                </div>
+    if (startDate && endDate) {
+        description += ` Dati dal ${new Date(startDate).toLocaleDateString('it-IT')} al ${new Date(endDate).toLocaleDateString('it-IT')}.`;
+    }
 
-                <div className="row">
-                    <div className="col-12 col-lg-3">
-                        <StatisticheFilters onFilterChange={handleFilterChange}
-                                            isLoading={isLoading}/> {/* Passa isLoading */}
-                    </div>
-                    <div className="col-12 col-lg-9">
-                        {isLoading ? (
-                            <div className="d-flex justify-content-center align-items-center" style={{height: '300px'}}>
-                                <div className="spinner-border text-primary" role="status">
-                                    <span className="visually-hidden">Caricamento...</span>
-                                </div>
-                            </div>
-                        ) : hasError ? (
-                            <div className="alert alert-danger" role="alert">
-                                Si è verificato un errore durante il caricamento dei dati. Riprova più tardi.
-                            </div>
-                        ) : (
-                            <>
-                                <StatisticheKPI data={chartData}/>
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h5 className="card-title">Andamento Prezzi</h5>
-                                        <StatisticheChart data={chartData}/>
-                                    </div>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+    const headerList = await headers();
+    const canonicalUrl = getCanonicalUrl(headerList) + '/statistiche';
+
+    return {
+        title: title,
+        description: description,
+        alternates: {
+            canonical: canonicalUrl,
+            languages: {
+                'it': canonicalUrl,
+                'x-default': canonicalUrl,
+            },
+        },
+        openGraph: getOpenGraph(canonicalUrl, title, description, '/assets/logo-og.png'),
+        twitter: getTwitter(title, description, '/assets/logo-og.png'),
+    };
+}
+
+export default async function StatistichePage({searchParams}) {
+    const queryParams = (await searchParams) || {};
+    return <StatisticheClient initialParams={queryParams}/>;
 }
