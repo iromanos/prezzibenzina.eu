@@ -2,11 +2,11 @@
 
 import {NextResponse} from 'next/server';
 import mysql from 'mysql2/promise';
-import {getServerSession} from "next-auth/next"; // Corretto
-import {authOptions} from "@/app/api/auth/[...nextauth]/route"; // Corretto
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
-export async function GET(req, res) { // Aggiunti req e res per compatibilità
-    const session = await getServerSession(req, res, authOptions); // Modo corretto per ottenere la sessione in v4
+export async function GET(request) {
+    const session = await getServerSession(authOptions);
 
     if (!session || !session.user || !session.user.id) {
         return NextResponse.json({error: 'Non autorizzato'}, {status: 401});

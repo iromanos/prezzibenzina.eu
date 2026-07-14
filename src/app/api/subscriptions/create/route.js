@@ -5,8 +5,8 @@ import mysql from 'mysql2/promise';
 import {getServerSession} from "next-auth/next";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
-export async function POST(req, res) {
-    const session = await getServerSession(req, res, authOptions);
+export async function POST(request) {
+    const session = await getServerSession(authOptions);
 
     if (!session || !session.user || !session.user.id) {
         return NextResponse.json({error: 'Non autorizzato'}, {status: 401});
@@ -16,7 +16,7 @@ export async function POST(req, res) {
     let connection;
 
     try {
-        const body = await req.json();
+        const body = await request.json();
         const {fuel_type, geo_level, geo_code, threshold_type, threshold_value} = body;
 
         if (!fuel_type || !geo_level || !geo_code || !threshold_type) {

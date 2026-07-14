@@ -32,8 +32,8 @@ async function connectAndVerifyOwner(subscriptionId, userId) {
     return {connection, error: null, status: 200};
 }
 
-export async function PUT(req, {params}) {
-    const session = await getServerSession(req, null, authOptions); // res è null in App Router
+export async function PUT(request, {params}) {
+    const session = await getServerSession(authOptions);
     const subscriptionId = params.id;
 
     if (!session || !session.user || !session.user.id) {
@@ -50,7 +50,7 @@ export async function PUT(req, {params}) {
         }
         connection = verification.connection;
 
-        const body = await req.json();
+        const body = await request.json();
         const {status} = body;
 
         if (!status || !['active', 'paused'].includes(status)) {
@@ -72,8 +72,8 @@ export async function PUT(req, {params}) {
     }
 }
 
-export async function DELETE(req, {params}) {
-    const session = await getServerSession(req, null, authOptions);
+export async function DELETE(request, {params}) {
+    const session = await getServerSession(authOptions);
     const subscriptionId = params.id;
 
     if (!session || !session.user || !session.user.id) {
