@@ -8,9 +8,9 @@
 CREATE TABLE IF NOT EXISTS price_subscriptions
 (
     id               INT AUTO_INCREMENT PRIMARY KEY,
-    user_id          INT                                                      NOT NULL,
+    user_id   BIGINT unsigned                                                          NOT NULL,
     fuel_type        VARCHAR(50)                                              NOT NULL,
-    geo_level        ENUM ('nazionale', 'regionale', 'provinciale', 'comune') NOT NULL,
+    geo_level ENUM ('nazionale', 'regionale', 'provinciale', 'comune', 'distributore') NOT NULL,
     geo_code         VARCHAR(255)                                             NOT NULL,
     threshold_type   ENUM ('cheapest_in_area', 'below_price')                 NOT NULL,
     threshold_value  DECIMAL(5, 3)                                            NULL,
