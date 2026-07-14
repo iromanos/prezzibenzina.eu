@@ -11,6 +11,7 @@ export default function StatistichePage() {
     const [filters, setFilters] = useState(null);
     const [chartData, setChartData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [hasError, setHasError] = useState(false); // Nuovo stato per la gestione degli errori
 
     const handleFilterChange = useCallback((newFilters) => {
         setFilters(newFilters);
@@ -21,14 +22,19 @@ export default function StatistichePage() {
 
         async function fetchData() {
             setIsLoading(true);
+            setHasError(false); // Resetta lo stato di errore ad ogni nuova richiesta
             const params = new URLSearchParams(filters);
             try {
                 const response = await fetch(`/api/statistiche?${params.toString()}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const data = await response.json();
                 setChartData(data);
             } catch (error) {
                 console.error("Errore nel caricamento dei dati per il grafico:", error);
                 setChartData([]);
+                setHasError(true); // Imposta lo stato di errore
             } finally {
                 setIsLoading(false);
             }
@@ -50,14 +56,23 @@ export default function StatistichePage() {
 
                 <div className="row">
                     <div className="col-12 col-lg-3">
-                        <StatisticheFilters onFilterChange={handleFilterChange}/>
+                        <StatisticheFilters onFilterChange={handleFilterChange}
+                                            isLoading={isLoading}/> {/* Passa isLoading */}
                     </div>
                     <div className="col-12 col-lg-9">
                         {isLoading ? (
-                            <p>Caricamento...</p>
+                            <div className="d-flex justify-content-center align-items-center" style={{height: '300px'}}>
+                                <div className="spinner-border text-primary" role="status">
+                                    <span className="visually-hidden">Caricamento...</span>
+                                </div>
+                            </div>
+                        ) : hasError ? (
+                            <div className="alert alert-danger" role="alert">
+                                Si è verificato un errore durante il caricamento dei dati. Riprova più tardi.
+                            </div>
                         ) : (
                             <>
-                                <StatisticheKPI data={chartData}/> {/* Inserisce il componente KPI */}
+                                <StatisticheKPI data={chartData}/>
                                 <div className="card">
                                     <div className="card-body">
                                         <h5 className="card-title">Andamento Prezzi</h5>

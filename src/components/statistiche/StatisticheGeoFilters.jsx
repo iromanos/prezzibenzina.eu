@@ -1,7 +1,9 @@
 // src/components/statistiche/StatisticheGeoFilters.jsx
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
+import {FaGlobe, FaMapPin} from 'react-icons/fa6';
+import {FaMapMarkerAlt} from "react-icons/fa"; // Importa le icone
 
 export default function StatisticheGeoFilters({onGeoFilterChange}) {
     const [regioni, setRegioni] = useState([]);
@@ -10,6 +12,7 @@ export default function StatisticheGeoFilters({onGeoFilterChange}) {
     const [selectedRegione, setSelectedRegione] = useState('');
     const [selectedProvincia, setSelectedProvincia] = useState('');
 
+    // Carica dati geografici all'avvio
     useEffect(() => {
         async function fetchData() {
             try {
@@ -25,39 +28,60 @@ export default function StatisticheGeoFilters({onGeoFilterChange}) {
                 console.error("Errore nel caricamento dei dati geografici:", error);
             }
         }
-
         fetchData();
     }, []);
+
+    // Funzione per emettere il filtro geografico al componente padre
+    const emitGeoFilter = useCallback(() => {
+        let geoFilter = {livello_geo: 'nazionale', codice_geo: 'IT'}; // Default
+
+        if (livelloGeo === 'regionale' && selectedRegione) {
+            geoFilter = {livello_geo: 'regionale', codice_geo: selectedRegione};
+        } else if (livelloGeo === 'provinciale' && selectedProvincia) {
+            geoFilter = {livello_geo: 'provinciale', codice_geo: selectedProvincia};
+        } else if (livelloGeo === 'provinciale' && selectedRegione && !selectedProvincia) {
+            // Se è selezionato il livello provinciale ma solo la regione, non inviare un filtro incompleto
+            // o potremmo decidere di inviare il filtro regionale come fallback
+            geoFilter = {livello_geo: 'regionale', codice_geo: selectedRegione};
+        }
+
+        onGeoFilterChange(geoFilter);
+    }, [livelloGeo, selectedRegione, selectedProvincia, onGeoFilterChange]);
+
+    // Emetti il filtro ogni volta che i parametri geografici cambiano
+    useEffect(() => {
+        emitGeoFilter();
+    }, [emitGeoFilter]);
+
 
     const handleLivelloChange = (e) => {
         const newLivello = e.target.value;
         setLivelloGeo(newLivello);
         setSelectedRegione('');
         setSelectedProvincia('');
-        if (newLivello === 'nazionale') {
-            onGeoFilterChange({livello_geo: 'nazionale', codice_geo: 'IT'});
-        }
     };
 
     const handleRegioneChange = (e) => {
         const newRegione = e.target.value;
         setSelectedRegione(newRegione);
         setSelectedProvincia('');
-        if (livelloGeo === 'regionale') {
-            onGeoFilterChange({livello_geo: 'regionale', codice_geo: newRegione});
-        }
     };
 
     const handleProvinciaChange = (e) => {
         const newProvincia = e.target.value;
         setSelectedProvincia(newProvincia);
-        onGeoFilterChange({livello_geo: 'provinciale', codice_geo: newProvincia});
     };
 
     return (
-        <>
+        <div className="mb-4 bg-light"> {/* Contenitore estetico */}
+            <h6 className="mb-3 d-flex align-items-center text-primary">
+                <FaGlobe className="me-2"/> Area Geografica
+            </h6>
+
             <div className="mb-3">
-                <label htmlFor="livelloGeo" className="form-label">Livello Geografico</label>
+                <label htmlFor="livelloGeo" className="form-label d-flex align-items-center">
+                    <FaMapMarkerAlt className="me-2 text-muted"/> Livello Geografico
+                </label>
                 <select id="livelloGeo" className="form-select" value={livelloGeo} onChange={handleLivelloChange}>
                     <option value="nazionale">Nazionale</option>
                     <option value="regionale">Regionale</option>
@@ -67,7 +91,9 @@ export default function StatisticheGeoFilters({onGeoFilterChange}) {
 
             {livelloGeo === 'regionale' && (
                 <div className="mb-3">
-                    <label htmlFor="regione" className="form-label">Regione</label>
+                    <label htmlFor="regione" className="form-label d-flex align-items-center">
+                        <FaMapPin className="me-2 text-muted"/> Regione
+                    </label>
                     <select id="regione" className="form-select" value={selectedRegione} onChange={handleRegioneChange}>
                         <option value="">Seleziona una regione</option>
                         {regioni.map(r => <option key={r.id} value={r.key}>{r.name}</option>)}
@@ -78,7 +104,9 @@ export default function StatisticheGeoFilters({onGeoFilterChange}) {
             {livelloGeo === 'provinciale' && (
                 <>
                     <div className="mb-3">
-                        <label htmlFor="regione-prov" className="form-label">Regione</label>
+                        <label htmlFor="regione-prov" className="form-label d-flex align-items-center">
+                            <FaMapPin className="me-2 text-muted"/> Regione
+                        </label>
                         <select id="regione-prov" className="form-select" value={selectedRegione}
                                 onChange={handleRegioneChange}>
                             <option value="">Seleziona una regione</option>
@@ -87,17 +115,19 @@ export default function StatisticheGeoFilters({onGeoFilterChange}) {
                     </div>
                     {selectedRegione && (
                         <div className="mb-3">
-                            <label htmlFor="provincia" className="form-label">Provincia</label>
+                            <label htmlFor="provincia" className="form-label d-flex align-items-center">
+                                <FaMapPin className="me-2 text-muted"/> Provincia
+                            </label>
                             <select id="provincia" className="form-select" value={selectedProvincia}
                                     onChange={handleProvinciaChange}>
                                 <option value="">Seleziona una provincia</option>
                                 {province.filter(p => p.regione === selectedRegione).map(p => <option key={p.id}
-                                                                                                      value={p.id}>{p.name}</option>)}
+                                                                                                      value={p.key}>{p.name}</option>)}
                             </select>
                         </div>
                     )}
                 </>
             )}
-        </>
+        </div>
     );
 }
