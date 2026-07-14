@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/src/app/api/geo/regioni/route.js" value="0e502044-06b8-4cfe-b503-680ae30100b7" />
+    <file url="file://$PROJECT_DIR$/src/app/api/statistiche/route.js" value="0e502044-06b8-4cfe-b503-680ae30100b7" />
+    <file url="file://$PROJECT_DIR$/src/cron/aggregate-prices.js" value="0e502044-06b8-4cfe-b503-680ae30100b7" />
+    <file url="file://$PROJECT_DIR$/src/cron/import-anagrafica.js" value="0e502044-06b8-4cfe-b503-680ae30100b7" />
+    <file url="file://$PROJECT_DIR$/src/database/prezzi_storici.sql" value="0e502044-06b8-4cfe-b503-680ae30100b7" />
+  </component>
+</project>

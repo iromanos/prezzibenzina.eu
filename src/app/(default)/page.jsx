@@ -18,13 +18,24 @@ import BoxComune from "../../components/home/BoxComune";
 import {AdsDesktop} from "@/components/ads/AdsDesktop";
 import {getCapoluoghi, getServizi} from "@/functions/api";
 import ElencoServizi from "@/components/ElencoServizi";
+import {StatisticheWrapper} from "@/components/statistiche/StatisticheChart"; // Importa il componente grafico
+import {BsGraphUp} from "react-icons/bs";
+import Link from "next/link"; // Importa il componente KPI
+
+export async function generateStaticParams() {
+    if (process.env.NODE_ENV === 'production') {
+        return []; // Per ora, lasciamolo vuoto anche in produzione per sicurezza.
+    }
+    return [];
+}
+
 
 export async function generateMetadata() {
 
     const title = 'Prezzo Benzina, Diesel, Metano e GPL oggi | PrezziBenzina.eu';
     const description = 'Scopri il prezzo benzina, diesel (gasolio), metano e GPL aggiornato oggi. Trova il distributore più vicino e risparmia sul carburante con la mappa interattiva.';
     const imageUrl = '/assets/logo-og.png';
-    const headerList = await headers();
+    const headerList = await headers(); // Rimosso await, headers() non è una Promise
 
     const canonicalUrl = getCanonicalUrl(headerList);
 
@@ -45,9 +56,16 @@ export async function generateMetadata() {
 
 export default async function Home() {
     // Carichiamo i dati dalle API in parallelo
-    const [serviziInEvidenza, capoluoghi] = await Promise.all([
+    const [serviziInEvidenza, capoluoghi, chartData] = await Promise.all([
         getServizi(),
-        getCapoluoghi()
+        getCapoluoghi(),
+        // Chiamata all'API per i dati del grafico
+        fetch(`/api/statistiche?desc_carburante=benzina&livello_geo=nazionale&codice_geo=IT`)
+            .then(res => res.json())
+            .catch(error => {
+                console.error("Errore nel caricamento dei dati del grafico per la homepage:", error);
+                return [];
+            })
     ]);
 
     // Selezioniamo solo i primi 4 servizi che hanno una mappatura icona per la vetrina in Home
@@ -99,6 +117,40 @@ export default async function Home() {
                     </div>
                 </div>
             </div>
+
+            {/* Nuova sezione per il grafico delle statistiche */}
+            <div className="container my-5">
+                <div className="text-center mb-4">
+                    <h3 className="fw-bold text-uppercase h5">Andamento Nazionale Prezzo Benzina</h3>
+                    <p className="text-muted">Ultimi 90 giorni - Dati nazionali</p>
+                </div>
+                <div className="row">
+                    <div className="col-12">
+                        <div className="card">
+                            <div className="card-body">
+                                <h5 className="card-title">Grafico Andamento</h5>
+                                <div className={'mb-4'}>
+                                    <StatisticheWrapper filters={{
+                                        desc_carburante: 'benzina',
+                                        livello_geo: 'nazionale',
+                                        codice_geo: 'IT'
+                                    }}/>
+                                </div>
+                                <div className={'d-flex align-items-center gap-2 flex-wrap'}>
+                                    <a className={'btn btn-primary'} title={'Dati per regioni e provincie'}
+                                       href={'/statistiche'}>Andamento completo<BsGraphUp className={'ms-2'}/></a>
+
+                                    <Link
+                                        href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=mi'}>Milano</Link>
+                                    <Link
+                                        href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=rm'}>Roma</Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <div className="container my-5">
                 <div className="text-center mb-4">

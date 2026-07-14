@@ -13,21 +13,17 @@ module.exports = {
                 },
             },
         ],
-        // Attiviamo PurgeCSS SOLO in produzione per non rallentare l'ambiente di sviluppo
         process.env.NODE_ENV === 'production'
             ? [
                 '@fullhuman/postcss-purgecss',
                 {
-                    // Dice a PurgeCSS quali file scansionare per cercare le classi utilizzate
+                    // Configurazione più sicura e specifica
                     content: [
-                        './components/**/*.{js,jsx}',
-                        './app/**/*.{js,jsx}',
-                        './src/**/*.{js,jsx}',
+                        './src/app/**/*.{js,jsx,ts,tsx}',
+                        './src/components/**/*.{js,jsx,ts,tsx}',
                     ],
-                    // Lista di classi da NON toccare mai (es. tag base o classi dinamiche)
                     safelist: {
                         standard: ['html', 'body', 'ul', 'ol', 'li'],
-                        // Riconosce i prefissi classici delle transizioni di Bootstrap o librerie esterne
                         greedy: [/fade/, /show/, /modal/, /dropdown/, /^maplibregl-/]
                     },
                     defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],

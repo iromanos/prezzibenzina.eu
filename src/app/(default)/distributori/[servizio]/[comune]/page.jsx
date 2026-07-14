@@ -12,6 +12,13 @@ import GeolocationHandler from "../../../../../components/distributori/Geolocati
 
 const DOMAIN = process.env.NEXT_PUBLIC_BASE_URL;
 
+
+export async function generateStaticParams() {
+    if (process.env.NODE_ENV === 'production') {
+        return []; // Per ora, lasciamolo vuoto anche in produzione per sicurezza.
+    }
+    return [];
+}
 /**
  * Genera i metadati SEO dinamici per la pagina.
  * @returns {Promise<import('next').Metadata>}

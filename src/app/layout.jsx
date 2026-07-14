@@ -1,4 +1,5 @@
 import '../styles/custom.scss';
+import 'maplibre-gl/dist/maplibre-gl.css'; // Aggiunto
 import {Montserrat} from 'next/font/google';
 import Head from "next/head";
 import {CookieConsentProvider} from "@/components/CookieConsentContext";

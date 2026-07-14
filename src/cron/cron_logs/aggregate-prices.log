@@ -1,0 +1,83 @@
+[2026-07-14T14:04:37.667Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:04:37.693Z] 
+--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---
+[2026-07-14T14:04:37.696Z] connect ECONNREFUSED 127.0.0.1:3306
+[2026-07-14T14:04:37.719Z] [EMAIL ERROR] Errore durante l'invio dell'email "CRON Job Fallito: Aggregazione Prezzi": connect ECONNREFUSED ::1:587
+[2026-07-14T14:04:37.723Z] Fine esecuzione script aggregazione prezzi.
+[2026-07-14T14:13:08.082Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:13:08.125Z] 
+--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---
+[2026-07-14T14:13:08.127Z] getaddrinfo EINVAL localhost DB_PORT=33070 DB_USER=wefuel DB_PASSWORD=wefuel DB_DATABASE=wefuel  EMAIL_HOST=authsmtp.securemail.pro EMAIL_PORT=587 EMAIL_USER=info@prezzibenzina.eu EMAIL_PASS=Ginevr@2610 EMAIL_FROM=info@prezzibenzina.eu EMAIL_SYSTEM=alessandroromano.net@gmail.com
+[2026-07-14T14:13:08.168Z] [EMAIL ERROR] Errore durante l'invio dell'email "CRON Job Fallito: Aggregazione Prezzi": connect ECONNREFUSED ::1:587
+[2026-07-14T14:13:08.176Z] Fine esecuzione script aggregazione prezzi.
+[2026-07-14T14:13:30.684Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:13:30.706Z] 
+--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---
+[2026-07-14T14:13:30.709Z] getaddrinfo EINVAL localhost DB_PORT=33070 DB_USER=wefuel DB_PASSWORD=wefuel DB_DATABASE=wefuel  EMAIL_HOST=authsmtp.securemail.pro EMAIL_PORT=587 EMAIL_USER=info@prezzibenzina.eu EMAIL_PASS=Ginevr@2610 EMAIL_FROM=info@prezzibenzina.eu EMAIL_SYSTEM=alessandroromano.net@gmail.com
+[2026-07-14T14:13:30.727Z] [EMAIL ERROR] Errore durante l'invio dell'email "CRON Job Fallito: Aggregazione Prezzi": connect ECONNREFUSED ::1:587
+[2026-07-14T14:13:30.730Z] Fine esecuzione script aggregazione prezzi.
+[2026-07-14T14:13:57.122Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:14:44.430Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:14:47.098Z] Connessione al database stabilita.
+[2026-07-14T14:14:49.450Z] Transazione avviata.
+[2026-07-14T14:14:50.123Z] Fase 1: Inizio importazione dati a livello distributore...
+[2026-07-14T14:14:55.742Z]   - Record esistenti per la data 2026-07-14 cancellati.
+[2026-07-14T14:16:27.870Z]   - Inserite 16026 righe a livello distributore.
+[2026-07-14T14:19:51.012Z] 
+Fase 2: Inizio calcolo aggregati superiori...
+[2026-07-14T14:20:08.302Z]   - Letti 16026 record per l'aggregazione.
+[2026-07-14T14:21:31.772Z] 
+--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---
+[2026-07-14T14:21:31.775Z] Unknown column 'NaN' in 'field list'
+[2026-07-14T14:21:31.777Z] Rollback della transazione in corso...
+[2026-07-14T14:21:32.758Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Aggregazione Prezzi"
+[2026-07-14T14:21:32.760Z] Connessione al database chiusa.
+[2026-07-14T14:21:32.766Z] Fine esecuzione script aggregazione prezzi.
+[2026-07-14T14:21:41.458Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:21:41.502Z] Connessione al database stabilita.
+[2026-07-14T14:21:41.507Z] Transazione avviata.
+[2026-07-14T14:21:41.509Z] Fase 1: Inizio importazione dati a livello distributore...
+[2026-07-14T14:21:44.954Z]   - Record esistenti per la data 2026-07-14 cancellati.
+[2026-07-14T14:21:45.304Z]   - Inserite 16021 righe a livello distributore.
+[2026-07-14T14:21:45.305Z] 
+Fase 2: Inizio calcolo aggregati superiori...
+[2026-07-14T14:21:47.542Z]   - Letti 16021 record per l'aggregazione.
+[2026-07-14T14:22:44.621Z] 
+--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---
+[2026-07-14T14:22:44.623Z] Unknown column 'NaN' in 'field list'
+[2026-07-14T14:22:44.625Z] Rollback della transazione in corso...
+[2026-07-14T14:22:44.977Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Aggregazione Prezzi"
+[2026-07-14T14:22:44.979Z] Connessione al database chiusa.
+[2026-07-14T14:22:44.981Z] Fine esecuzione script aggregazione prezzi.
+[2026-07-14T14:22:50.168Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:22:50.192Z] Connessione al database stabilita.
+[2026-07-14T14:22:50.198Z] Transazione avviata.
+[2026-07-14T14:22:50.199Z] Fase 1: Inizio importazione dati a livello distributore...
+[2026-07-14T14:22:53.594Z]   - Record esistenti per la data 2026-07-14 cancellati.
+[2026-07-14T14:22:53.965Z]   - Inserite 16021 righe a livello distributore.
+[2026-07-14T14:22:53.966Z] 
+Fase 2: Inizio calcolo aggregati superiori...
+[2026-07-14T14:22:56.198Z]   - Letti 16021 record per l'aggregazione.
+[2026-07-14T14:24:21.245Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:24:21.271Z] Connessione al database stabilita.
+[2026-07-14T14:24:21.276Z] Transazione avviata.
+[2026-07-14T14:24:21.277Z] Fase 1: Inizio importazione dati a livello distributore...
+[2026-07-14T14:24:24.691Z]   - Record esistenti per la data 2026-07-14 cancellati.
+[2026-07-14T14:24:25.000Z]   - Inserite 16020 righe a livello distributore.
+[2026-07-14T14:24:25.001Z] 
+Fase 2: Inizio calcolo aggregati superiori...
+[2026-07-14T14:29:14.132Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-14T14:29:14.154Z] Connessione al database stabilita.
+[2026-07-14T14:29:14.157Z] Transazione avviata.
+[2026-07-14T14:29:14.158Z] Fase 1: Inizio importazione dati a livello distributore...
+[2026-07-14T14:29:17.633Z]   - Record esistenti per la data 2026-07-14 cancellati.
+[2026-07-14T14:29:17.939Z]   - Inserite 16016 righe a livello distributore.
+[2026-07-14T14:29:17.940Z] 
+Fase 2: Inizio calcolo aggregati superiori...
+[2026-07-14T14:29:21.998Z]   - Letti 16016 record per l'aggregazione.
+[2026-07-14T14:29:22.130Z]   - Inserite 6557 righe aggregate.
+[2026-07-14T14:29:22.158Z] 
+Transazione completata con successo!
+[2026-07-14T14:29:22.377Z] [EMAIL] Notifica email inviata: "CRON Job Success: Aggregazione Prezzi"
+[2026-07-14T14:29:22.378Z] Connessione al database chiusa.
+[2026-07-14T14:29:22.380Z] Fine esecuzione script aggregazione prezzi.
