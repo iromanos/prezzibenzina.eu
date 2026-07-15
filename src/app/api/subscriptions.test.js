@@ -5,7 +5,7 @@ import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import path from 'path';
 import bcrypt from 'bcryptjs';
-import {SignJWT} from 'jose'; // Importato per creare il token
+import {encode} from 'next-auth/jwt';
 
 dotenv.config({path: path.resolve(process.cwd(), '.env')});
 
@@ -20,14 +20,18 @@ let testUser = {
 let sessionCookie = null;
 let createdSubscriptionId = null;
 
-// Funzione per creare un token JWT valido per il nostro utente
+// Funzione per creare un token JWT valido per il nostro utente utilizzando next-auth/jwt
 async function createSessionToken(user) {
-    const secret = new TextEncoder().encode(process.env.NEXTAUTH_SECRET);
-    const token = await new SignJWT({sub: String(user.id), name: user.name, email: user.email})
-        .setProtectedHeader({alg: 'HS256'})
-        .setIssuedAt()
-        .setExpirationTime('1h') // Token valido per 1 ora
-        .sign(secret);
+    const token = await encode({
+        token: {
+            sub: String(user.id),
+            name: user.name,
+            email: user.email,
+            id: user.id
+        },
+        secret: process.env.NEXTAUTH_SECRET,
+        maxAge: 3600
+    });
     return `next-auth.session-token=${token}`;
 }
 
@@ -56,7 +60,18 @@ async function setupTestUser() {
 }
 
 async function teardownTestUser() {
-    // ... (la funzione teardown rimane invariata)
+    if (!testUser.id) return;
+    const connection = await mysql.createConnection({
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_DATABASE,
+    });
+
+    await connection.execute('DELETE FROM users WHERE id = ?', [testUser.id]);
+    console.log(`✓ Utente di test con ID: ${testUser.id} eliminato.`);
+    await connection.end();
 }
 
 async function runApiTests() {

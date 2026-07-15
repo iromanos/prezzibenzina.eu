@@ -15,7 +15,7 @@ async function runApiTest() {
 
         // --- Test 1: Chiamata valida con parametri base ---
         console.log('\n1. Esecuzione test: Chiamata valida...');
-        const url1 = `${BASE_URL}/api/statistiche?livello_geo=nazionale&codice_geo=IT&id_carburante=1`;
+        const url1 = `${BASE_URL}/api/statistiche?livello_geo=nazionale&codice_geo=IT&desc_carburante=benzina`;
         const response1 = await fetch(url1);
 
         assert.strictEqual(response1.status, 200, 'Test 1 Fallito: Lo stato della risposta non è 200 OK.');
@@ -44,7 +44,7 @@ async function runApiTest() {
         yesterday.setDate(yesterday.getDate() - 1);
         const startDate = yesterday.toISOString().slice(0, 10);
 
-        const url3 = `${BASE_URL}/api/statistiche?livello_geo=nazionale&codice_geo=IT&id_carburante=1&startDate=${startDate}&endDate=${startDate}`;
+        const url3 = `${BASE_URL}/api/statistiche?livello_geo=nazionale&codice_geo=IT&desc_carburante=benzina&startDate=${startDate}&endDate=${startDate}`;
         const response3 = await fetch(url3);
 
         assert.strictEqual(response3.status, 200, 'Test 3 Fallito: Lo stato della risposta per il filtro data non è 200 OK.');

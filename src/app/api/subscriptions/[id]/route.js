@@ -34,7 +34,7 @@ async function connectAndVerifyOwner(subscriptionId, userId) {
 
 export async function PUT(request, {params}) {
     const session = await getServerSession(authOptions);
-    const subscriptionId = params.id;
+    const {id: subscriptionId} = await params;
 
     if (!session || !session.user || !session.user.id) {
         return NextResponse.json({error: 'Non autorizzato'}, {status: 401});
@@ -74,7 +74,7 @@ export async function PUT(request, {params}) {
 
 export async function DELETE(request, {params}) {
     const session = await getServerSession(authOptions);
-    const subscriptionId = params.id;
+    const {id: subscriptionId} = await params;
 
     if (!session || !session.user || !session.user.id) {
         return NextResponse.json({error: 'Non autorizzato'}, {status: 401});
