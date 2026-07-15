@@ -1,8 +1,23 @@
 // src/app/api/auth/reset-password/route.test.js
 import {POST} from './route';
 import {NextResponse} from 'next/server';
-import {_mockCreateConnection, _mockExecute} from '../../../__mocks__/mysql2';
-import {hash as mockBcryptHash} from '../../../__mocks__/bcrypt';
+
+import mysql from 'mysql2/promise';
+import {hash as mockBcryptHash} from 'bcrypt';
+
+const mockEnd = jest.fn(() => Promise.resolve());
+const mockExecute = jest.fn();
+jest.mock('mysql2/promise', () => {
+    return {
+        createConnection: jest.fn(() => Promise.resolve({
+            execute: mockExecute,
+            end: mockEnd,
+        })),
+    };
+});
+
+jest.mock('bcrypt');
+
 
 jest.mock('next/server', () => ({
     NextResponse: {
@@ -13,8 +28,8 @@ jest.mock('next/server', () => ({
 describe('POST /api/auth/reset-password', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-        _mockCreateConnection.mockClear();
-        _mockExecute.mockClear();
+        mysql.createConnection.mockClear();
+        mockExecute.mockClear();
         NextResponse.json.mockClear();
         mockBcryptHash.mockResolvedValue('new_hashed_password');
         jest.spyOn(global.Date, 'now').mockReturnValue(1678886400000); // Mock current time
@@ -25,8 +40,8 @@ describe('POST /api/auth/reset-password', () => {
     });
 
     it('should reset password successfully', async () => {
-        _mockExecute.mockResolvedValueOnce([[{id: 1}]]); // User found with valid token
-        _mockExecute.mockResolvedValueOnce([{affectedRows: 1}]); // Password updated
+        mockExecute.mockResolvedValueOnce([[{id: 1}]]); // User found with valid token
+        mockExecute.mockResolvedValueOnce([{affectedRows: 1}]); // Password updated
 
         const mockRequest = {
             json: () => Promise.resolve({token: 'valid_token', newPassword: 'newpassword123'}),
@@ -34,13 +49,13 @@ describe('POST /api/auth/reset-password', () => {
 
         await POST(mockRequest);
 
-        expect(_mockCreateConnection).toHaveBeenCalledTimes(1);
-        expect(_mockExecute).toHaveBeenCalledWith(
+        expect(mysql.createConnection).toHaveBeenCalledTimes(1);
+        expect(mockExecute).toHaveBeenCalledWith(
             'SELECT id FROM users WHERE reset_password_token = ? AND reset_password_expires > NOW()',
             ['valid_token']
         );
         expect(mockBcryptHash).toHaveBeenCalledWith('newpassword123', 10);
-        expect(_mockExecute).toHaveBeenCalledWith(
+        expect(mockExecute).toHaveBeenCalledWith(
             'UPDATE users SET password_hash = ?, reset_password_token = NULL, reset_password_expires = NULL WHERE id = ?',
             ['new_hashed_password', 1]
         );
@@ -55,7 +70,7 @@ describe('POST /api/auth/reset-password', () => {
         await POST(mockRequest);
 
         expect(NextResponse.json).toHaveBeenCalledWith({error: 'Token e nuova password sono obbligatori.'}, {status: 400});
-        expect(_mockCreateConnection).not.toHaveBeenCalled();
+        expect(mysql.createConnection).not.toHaveBeenCalled();
     });
 
     it('should return 400 if newPassword is missing', async () => {
@@ -66,7 +81,7 @@ describe('POST /api/auth/reset-password', () => {
         await POST(mockRequest);
 
         expect(NextResponse.json).toHaveBeenCalledWith({error: 'Token e nuova password sono obbligatori.'}, {status: 400});
-        expect(_mockCreateConnection).not.toHaveBeenCalled();
+        expect(mysql.createConnection).not.toHaveBeenCalled();
     });
 
     it('should return 400 if new password is too short', async () => {
@@ -77,11 +92,11 @@ describe('POST /api/auth/reset-password', () => {
         await POST(mockRequest);
 
         expect(NextResponse.json).toHaveBeenCalledWith({error: 'La nuova password deve contenere almeno 6 caratteri.'}, {status: 400});
-        expect(_mockCreateConnection).not.toHaveBeenCalled();
+        expect(mysql.createConnection).not.toHaveBeenCalled();
     });
 
     it('should return 400 if token is invalid or expired', async () => {
-        _mockExecute.mockResolvedValueOnce([[]]); // No user found with token
+        mockExecute.mockResolvedValueOnce([[]]); // No user found with token
 
         const mockRequest = {
             json: () => Promise.resolve({token: 'invalid_token', newPassword: 'newpassword123'}),
@@ -89,7 +104,7 @@ describe('POST /api/auth/reset-password', () => {
 
         await POST(mockRequest);
 
-        expect(_mockExecute).toHaveBeenCalledWith(
+        expect(mockExecute).toHaveBeenCalledWith(
             'SELECT id FROM users WHERE reset_password_token = ? AND reset_password_expires > NOW()',
             ['invalid_token']
         );
@@ -98,7 +113,7 @@ describe('POST /api/auth/reset-password', () => {
     });
 
     it('should return 500 for database errors', async () => {
-        _mockExecute.mockRejectedValueOnce(new Error('DB connection failed'));
+        mockExecute.mockRejectedValueOnce(new Error('DB connection failed'));
 
         const mockRequest = {
             json: () => Promise.resolve({token: 'valid_token', newPassword: 'newpassword123'}),

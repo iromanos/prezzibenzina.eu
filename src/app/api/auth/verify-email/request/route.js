@@ -7,7 +7,7 @@ import crypto from 'crypto';
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
-    secure: process.env.EMAIL_PORT == 465,
+    secure: process.env.EMAIL_PORT === 465,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -32,19 +32,19 @@ export async function POST(request) {
 
         // Trova l'utente
         const [users] = await connection.execute(
-            'SELECT id, is_verified FROM users WHERE email = ?',
+            'SELECT id, email_verified_at FROM users WHERE email = ?',
             [email]
         );
 
         if (users.length === 0) {
-            await connection.end();
+            connection.end();
             return NextResponse.json({error: 'Utente non trovato.'}, {status: 404});
         }
 
         const user = users[0];
 
-        if (user.is_verified) {
-            await connection.end();
+        if (user.email_verified_at !== null) {
+            connection.end();
             return NextResponse.json({message: 'L\'email è già stata verificata.'}, {status: 200});
         }
 

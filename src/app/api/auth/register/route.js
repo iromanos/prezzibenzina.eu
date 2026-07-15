@@ -37,7 +37,7 @@ export async function POST(request) {
         );
 
         if (existingUsers.length > 0) {
-            await connection.end();
+            connection.end();
             return NextResponse.json({error: 'Un utente con questa email esiste già.'}, {status: 409});
         }
 
@@ -47,8 +47,8 @@ export async function POST(request) {
 
         // Inserisci il nuovo utente nel database
         const [result] = await connection.execute(
-            'INSERT INTO users (email, password_hash) VALUES (?, ?)',
-            [email, passwordHash]
+            'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+            [email, email, passwordHash]
         );
 
         await connection.end();

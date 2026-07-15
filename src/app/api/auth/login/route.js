@@ -21,22 +21,22 @@ export async function POST(request) {
 
         // Cerca l'utente per email
         const [users] = await connection.execute(
-            'SELECT id, email, password_hash FROM users WHERE email = ?',
+            'SELECT id, email, password FROM users WHERE email = ?',
             [email]
         );
 
         if (users.length === 0) {
-            await connection.end();
+            connection.end();
             return NextResponse.json({error: 'Credenziali non valide.'}, {status: 401});
         }
 
         const user = users[0];
 
         // Confronta la password fornita con l'hash nel database
-        const passwordMatch = await bcrypt.compare(password, user.password_hash);
+        const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            await connection.end();
+            connection.end();
             return NextResponse.json({error: 'Credenziali non valide.'}, {status: 401});
         }
 
@@ -47,7 +47,7 @@ export async function POST(request) {
             {expiresIn: '1h'} // Il token scade dopo 1 ora
         );
 
-        await connection.end();
+        connection.end();
 
         return NextResponse.json({message: 'Login avvenuto con successo.', token}, {status: 200});
 

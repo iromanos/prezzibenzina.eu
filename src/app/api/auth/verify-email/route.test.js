@@ -1,7 +1,22 @@
 // src/app/api/auth/verify-email/route.test.js
 import {GET} from './route';
 import {NextResponse} from 'next/server';
-import {_mockCreateConnection, _mockExecute} from '../../../__mocks__/mysql2';
+
+import mysql from 'mysql2/promise';
+
+const mockEnd = jest.fn(() => Promise.resolve());
+const mockExecute = jest.fn();
+jest.mock('mysql2/promise', () => {
+    return {
+        createConnection: jest.fn(() => Promise.resolve({
+            execute: mockExecute,
+            end: mockEnd,
+        })),
+    };
+});
+
+jest.mock('bcrypt');
+
 
 jest.mock('next/server', () => ({
     NextResponse: {
@@ -13,15 +28,15 @@ jest.mock('next/server', () => ({
 describe('GET /api/auth/verify-email', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-        _mockCreateConnection.mockClear();
-        _mockExecute.mockClear();
+        mysql.createConnection.mockClear();
+        mockExecute.mockClear();
         NextResponse.json.mockClear();
         NextResponse.redirect.mockClear();
     });
 
     it('should verify email successfully and redirect', async () => {
-        _mockExecute.mockResolvedValueOnce([[{id: 1}]]); // User found with token
-        _mockExecute.mockResolvedValueOnce([{affectedRows: 1}]); // User updated
+        mockExecute.mockResolvedValueOnce([[{id: 1}]]); // User found with token
+        mockExecute.mockResolvedValueOnce([{affectedRows: 1}]); // User updated
 
         const mockRequest = {
             url: 'http://localhost:3000/api/auth/verify-email?token=valid_token',
@@ -29,9 +44,9 @@ describe('GET /api/auth/verify-email', () => {
 
         await GET(mockRequest);
 
-        expect(_mockCreateConnection).toHaveBeenCalledTimes(1);
-        expect(_mockExecute).toHaveBeenCalledWith('SELECT id FROM users WHERE verification_token = ?', ['valid_token']);
-        expect(_mockExecute).toHaveBeenCalledWith('UPDATE users SET is_verified = TRUE, verification_token = NULL WHERE id = ?', [1]);
+        expect(mysql.createConnection).toHaveBeenCalledTimes(1);
+        expect(mockExecute).toHaveBeenCalledWith('SELECT id FROM users WHERE verification_token = ?', ['valid_token']);
+        expect(mockExecute).toHaveBeenCalledWith('UPDATE users SET is_verified = TRUE, verification_token = NULL WHERE id = ?', [1]);
         expect(NextResponse.redirect).toHaveBeenCalledWith(new URL('/auth/verification-success', mockRequest.url));
     });
 
@@ -43,11 +58,11 @@ describe('GET /api/auth/verify-email', () => {
         await GET(mockRequest);
 
         expect(NextResponse.json).toHaveBeenCalledWith({error: 'Token di verifica mancante.'}, {status: 400});
-        expect(_mockCreateConnection).not.toHaveBeenCalled();
+        expect(mysql.createConnection).not.toHaveBeenCalled();
     });
 
     it('should return 400 if token is invalid or expired', async () => {
-        _mockExecute.mockResolvedValueOnce([[]]); // No user found with token
+        mockExecute.mockResolvedValueOnce([[]]); // No user found with token
 
         const mockRequest = {
             url: 'http://localhost:3000/api/auth/verify-email?token=invalid_token',
@@ -55,13 +70,13 @@ describe('GET /api/auth/verify-email', () => {
 
         await GET(mockRequest);
 
-        expect(_mockExecute).toHaveBeenCalledWith('SELECT id FROM users WHERE verification_token = ?', ['invalid_token']);
+        expect(mockExecute).toHaveBeenCalledWith('SELECT id FROM users WHERE verification_token = ?', ['invalid_token']);
         expect(NextResponse.json).toHaveBeenCalledWith({error: 'Token di verifica non valido o scaduto.'}, {status: 400});
-        expect(_mockExecute).not.toHaveBeenCalledWith('UPDATE users SET is_verified = TRUE, verification_token = NULL WHERE id = ?', expect.any(Array));
+        expect(mockExecute).not.toHaveBeenCalledWith('UPDATE users SET is_verified = TRUE, verification_token = NULL WHERE id = ?', expect.any(Array));
     });
 
     it('should return 500 for database errors', async () => {
-        _mockExecute.mockRejectedValueOnce(new Error('DB connection failed'));
+        mockExecute.mockRejectedValueOnce(new Error('DB connection failed'));
 
         const mockRequest = {
             url: 'http://localhost:3000/api/auth/verify-email?token=valid_token',
