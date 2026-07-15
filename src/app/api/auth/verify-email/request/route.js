@@ -57,7 +57,7 @@ export async function POST(request) {
             [verificationToken, user.id]
         );
 
-        await connection.end();
+        connection.end();
 
         // Invia l'email di verifica
         const verificationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/verify-email?token=${verificationToken}`;

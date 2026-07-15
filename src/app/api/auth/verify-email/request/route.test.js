@@ -88,13 +88,13 @@ describe('POST /api/auth/verify-email/request', () => {
 
         await POST(mockRequest);
 
-        expect(mockExecute).toHaveBeenCalledWith('SELECT id, is_verified FROM users WHERE email = ?', ['nonexistent@example.com']);
+        expect(mockExecute).toHaveBeenCalledWith('SELECT id, email_verified_at FROM users WHERE email = ?', ['nonexistent@example.com']);
         expect(NextResponse.json).toHaveBeenCalledWith({error: 'Utente non trovato.'}, {status: 404});
         expect(_mockSendMail).not.toHaveBeenCalled();
     });
 
     it('should return 200 if email is already verified', async () => {
-        mockExecute.mockResolvedValueOnce([[{id: 1, is_verified: 1}]]); // User found, already verified
+        mockExecute.mockResolvedValueOnce([[{id: 1, email_verified_at: 1}]]); // User found, already verified
 
         const mockRequest = {
             json: () => Promise.resolve({email: 'verified@example.com'}),
@@ -102,7 +102,7 @@ describe('POST /api/auth/verify-email/request', () => {
 
         await POST(mockRequest);
 
-        expect(mockExecute).toHaveBeenCalledWith('SELECT id, is_verified FROM users WHERE email = ?', ['verified@example.com']);
+        expect(mockExecute).toHaveBeenCalledWith('SELECT id, email_verified_at FROM users WHERE email = ?', ['verified@example.com']);
         expect(NextResponse.json).toHaveBeenCalledWith({message: 'L\'email è già stata verificata.'}, {status: 200});
         expect(_mockSendMail).not.toHaveBeenCalled();
     });
@@ -121,7 +121,7 @@ describe('POST /api/auth/verify-email/request', () => {
     });
 
     it('should return 500 if email sending fails', async () => {
-        mockExecute.mockResolvedValueOnce([[{id: 1, is_verified: 0}]]);
+        mockExecute.mockResolvedValueOnce([[{id: 1, email_verified_at: null}]]);
         mockExecute.mockResolvedValueOnce([{affectedRows: 1}]);
         _mockSendMail.mockRejectedValueOnce(new Error('Email service down'));
 

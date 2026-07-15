@@ -1,9 +1,29 @@
 // src/app/api/auth/forgot-password/route.test.js
 import {POST} from './route';
 import {NextResponse} from 'next/server';
-import {_mockCreateConnection, _mockExecute} from '../../../__mocks__/mysql2';
-import {_mockSendMail} from '../../../__mocks__/nodemailer';
-import {randomBytes as mockCryptoRandomBytes} from '../../../__mocks__/crypto';
+import {_mockSendMail} from '../__mocks__/nodemailer';
+
+import mysql from 'mysql2/promise';
+import crypto from 'crypto';
+
+const mockEnd = jest.fn(() => Promise.resolve());
+const mockExecute = jest.fn();
+jest.mock('mysql2/promise', () => {
+    return {
+        createConnection: jest.fn(() => Promise.resolve({
+            execute: mockExecute,
+            end: mockEnd,
+        })),
+    };
+});
+
+jest.mock('bcrypt');
+
+jest.mock('crypto', () => {
+    return {
+        randomBytes: jest.fn(),
+    }
+});
 
 jest.mock('next/server', () => ({
     NextResponse: {
@@ -13,11 +33,14 @@ jest.mock('next/server', () => ({
 
 describe('POST /api/auth/forgot-password', () => {
     const MOCKED_RESET_TOKEN = 'mocked_reset_token_hex';
+    const _mockCreateConnection = mysql.createConnection;
+
+    const mockCryptoRandomBytes = crypto.randomBytes;
 
     beforeEach(() => {
         jest.clearAllMocks();
         _mockCreateConnection.mockClear();
-        _mockExecute.mockClear();
+        mockExecute.mockClear();
         NextResponse.json.mockClear();
         _mockSendMail.mockResolvedValue(true); // Email sends successfully by default
         mockCryptoRandomBytes.mockReturnValue({toString: () => MOCKED_RESET_TOKEN});
@@ -29,8 +52,8 @@ describe('POST /api/auth/forgot-password', () => {
     });
 
     it('should send a password reset email successfully', async () => {
-        _mockExecute.mockResolvedValueOnce([[{id: 1}]]); // User found
-        _mockExecute.mockResolvedValueOnce([{affectedRows: 1}]); // Token updated
+        mockExecute.mockResolvedValueOnce([[{id: 1}]]); // User found
+        mockExecute.mockResolvedValueOnce([{affectedRows: 1}]); // Token updated
 
         const mockRequest = {
             json: () => Promise.resolve({email: 'test@example.com'}),
@@ -39,9 +62,10 @@ describe('POST /api/auth/forgot-password', () => {
         await POST(mockRequest);
 
         expect(_mockCreateConnection).toHaveBeenCalledTimes(1);
-        expect(_mockExecute).toHaveBeenCalledWith('SELECT id FROM users WHERE email = ?', ['test@example.com']);
+        expect(mockExecute).toHaveBeenCalledWith('SELECT id FROM users WHERE email = ?', ['test@example.com']);
+
         expect(mockCryptoRandomBytes).toHaveBeenCalledWith(32);
-        expect(_mockExecute).toHaveBeenCalledWith(
+        expect(mockExecute).toHaveBeenCalledWith(
             'UPDATE users SET reset_password_token = ?, reset_password_expires = ? WHERE id = ?',
             [MOCKED_RESET_TOKEN, expect.any(Date), 1]
         );
@@ -68,7 +92,7 @@ describe('POST /api/auth/forgot-password', () => {
     });
 
     it('should return 200 even if user not found (security measure)', async () => {
-        _mockExecute.mockResolvedValueOnce([[]]); // No user found
+        mockExecute.mockResolvedValueOnce([[]]); // No user found
 
         const mockRequest = {
             json: () => Promise.resolve({email: 'nonexistent@example.com'}),
@@ -76,13 +100,13 @@ describe('POST /api/auth/forgot-password', () => {
 
         await POST(mockRequest);
 
-        expect(_mockExecute).toHaveBeenCalledWith('SELECT id FROM users WHERE email = ?', ['nonexistent@example.com']);
+        expect(mockExecute).toHaveBeenCalledWith('SELECT id FROM users WHERE email = ?', ['nonexistent@example.com']);
         expect(NextResponse.json).toHaveBeenCalledWith({message: 'Se l\'email è registrata, riceverai un link per il reset della password.'}, {status: 200});
         expect(_mockSendMail).not.toHaveBeenCalled(); // No email sent
     });
 
     it('should return 500 for database errors', async () => {
-        _mockExecute.mockRejectedValueOnce(new Error('DB connection failed'));
+        mockExecute.mockRejectedValueOnce(new Error('DB connection failed'));
 
         const mockRequest = {
             json: () => Promise.resolve({email: 'test@example.com'}),
@@ -95,8 +119,8 @@ describe('POST /api/auth/forgot-password', () => {
     });
 
     it('should return 500 if email sending fails', async () => {
-        _mockExecute.mockResolvedValueOnce([[{id: 1}]]);
-        _mockExecute.mockResolvedValueOnce([{affectedRows: 1}]);
+        mockExecute.mockResolvedValueOnce([[{id: 1}]]);
+        mockExecute.mockResolvedValueOnce([{affectedRows: 1}]);
         _mockSendMail.mockRejectedValueOnce(new Error('Email service down'));
 
         const mockRequest = {

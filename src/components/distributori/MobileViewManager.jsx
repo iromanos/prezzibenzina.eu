@@ -4,9 +4,9 @@ import React from 'react';
 import {BsGeoFill, BsInfoCircle, BsListUl, BsMap, BsSliders} from 'react-icons/bs';
 import {useRouter, useSearchParams} from 'next/navigation';
 import Link from 'next/link';
-import Display6977770298 from "../ads/Display-6977770298";
+import Display6977770298 from "../ads/Display6977770298";
 import {AdsDesktop} from "../ads/AdsDesktop";
-import Display5745053645 from "../ads/Display-5745053645";
+import Display5745053645 from "../ads/Display5745053645";
 
 /**
  * Manager unico del layout della pagina distributori.
@@ -23,7 +23,8 @@ export default function MobileViewManager({
                                               seoParagraphs,
                                               serviceDescription,
                                               distributori,
-                                              URI_IMAGE
+                                              URI_IMAGE,
+                                              notifyButton // Nuova prop
                                           }) {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -54,6 +55,7 @@ export default function MobileViewManager({
                             <p className="small text-muted mb-0">
                                 Trovati <strong>{count}</strong> distributori a {comuneName}.
                             </p>
+                            {notifyButton} {/* Renderizza il pulsante di notifica qui */}
                         </div>
                     </div>
                 )}

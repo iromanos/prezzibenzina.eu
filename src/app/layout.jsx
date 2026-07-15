@@ -9,6 +9,7 @@ import {headers} from "next/headers";
 import {PreferitiProvider} from "@/context/PreferitiProvider";
 import LoadAdSense from "../components/ads/LoadAdSense";
 import CookieBanner from "@/components/CookieBanner";
+import {AuthProvider} from '@/contexts/AuthContext'; // Importa AuthProvider
 
 //TODO: sito multilingua con controllo della SEO
 
@@ -34,7 +35,7 @@ export const metadata = {
 
 export default async function RootLayout({children}) {
 
-    const headersList = await headers();
+    const headersList = headers(); // Rimosso await, headers() non è una Promise
 
     const referer = headersList.get('X-WEFUEL-REFERER');
 
@@ -61,16 +62,17 @@ export default async function RootLayout({children}) {
         </Head>
 
         <body>
-
-        <AppRouterCacheProvider>
-            <PreferitiProvider>
-                <CookieConsentProvider>
-                    <Analytics trackId={trackId}/>
-                    {children}
-                    {isFuel === false && <CookieBanner/>}
-                </CookieConsentProvider>
-            </PreferitiProvider>
-        </AppRouterCacheProvider>
+        <AuthProvider> {/* Avvolge l'applicazione con AuthProvider */}
+            <AppRouterCacheProvider>
+                <PreferitiProvider>
+                    <CookieConsentProvider>
+                        <Analytics trackId={trackId}/>
+                        {children}
+                        {isFuel === false && <CookieBanner/>}
+                    </CookieConsentProvider>
+                </PreferitiProvider>
+            </AppRouterCacheProvider>
+        </AuthProvider>
         <LoadAdSense/>
         </body>
         </html>

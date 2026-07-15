@@ -1,106 +1,146 @@
-// src/app/api/subscriptions/[id]/route.js
-
 import {NextResponse} from 'next/server';
 import mysql from 'mysql2/promise';
-import {getServerSession} from "next-auth/next";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import jwt from 'jsonwebtoken';
 
-async function connectAndVerifyOwner(subscriptionId, userId) {
-    const connection = await mysql.createConnection({
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-    });
-
-    const [rows] = await connection.execute(
-        "SELECT user_id FROM price_subscriptions WHERE id = ?",
-        [subscriptionId]
-    );
-
-    if (rows.length === 0) {
-        await connection.end();
-        return {connection: null, error: 'Sottoscrizione non trovata.', status: 404};
+// Middleware per verificare il token JWT (riutilizzato)
+async function verifyToken(request) {
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return {error: 'Token di autenticazione mancante o non valido.', status: 401};
     }
 
-    if (rows[0].user_id !== userId) {
-        await connection.end();
-        return {connection: null, error: 'Non autorizzato.', status: 403};
+    const token = authHeader.split(' ')[1];
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        return {userId: decoded.userId};
+    } catch (error) {
+        return {error: 'Token di autenticazione non valido o scaduto.', status: 401};
     }
-
-    return {connection, error: null, status: 200};
 }
 
 export async function PUT(request, {params}) {
-    const session = await getServerSession(authOptions);
-    const {id: subscriptionId} = await params;
-
-    if (!session || !session.user || !session.user.id) {
-        return NextResponse.json({error: 'Non autorizzato'}, {status: 401});
+    const authResult = await verifyToken(request);
+    if (authResult.error) {
+        return NextResponse.json({error: authResult.error}, {status: authResult.status});
     }
-
-    const userId = session.user.id;
-    let connection;
+    const userId = authResult.userId;
+    const subscriptionId = params.id;
 
     try {
-        const verification = await connectAndVerifyOwner(subscriptionId, userId);
-        if (verification.error) {
-            return NextResponse.json({error: verification.error}, {status: verification.status});
-        }
-        connection = verification.connection;
+        const {fuel_type, geo_level, geo_code, threshold_type, threshold_value, status} = await request.json();
 
-        const body = await request.json();
-        const {status} = body;
-
-        if (!status || !['active', 'paused'].includes(status)) {
-            return NextResponse.json({error: 'Valore di stato non valido.'}, {status: 400});
+        // Validazione input
+        if (!fuel_type || !geo_level || !geo_code || !threshold_type || !status) {
+            return NextResponse.json({error: 'Campi obbligatori mancanti.'}, {status: 400});
         }
 
-        await connection.execute(
-            "UPDATE price_subscriptions SET status = ? WHERE id = ?",
-            [status, subscriptionId]
+        const validFuelTypes = ['Benzina', 'Gasolio', 'GPL', 'Metano'];
+        if (!validFuelTypes.includes(fuel_type)) {
+            return NextResponse.json({error: 'Tipo di carburante non valido.'}, {status: 400});
+        }
+
+        const validGeoLevels = ['nazionale', 'regionale', 'provinciale', 'comune'];
+        if (!validGeoLevels.includes(geo_level)) {
+            return NextResponse.json({error: 'Livello geografico non valido.'}, {status: 400});
+        }
+
+        const validThresholdTypes = ['cheapest_in_area', 'below_price'];
+        if (!validThresholdTypes.includes(threshold_type)) {
+            return NextResponse.json({error: 'Tipo di soglia non valido.'}, {status: 400});
+        }
+
+        if (threshold_type === 'below_price' && (typeof threshold_value !== 'number' || threshold_value <= 0)) {
+            return NextResponse.json({error: 'Valore soglia non valido per il tipo "below_price".'}, {status: 400});
+        }
+
+        const validStatus = ['active', 'paused', 'deleted'];
+        if (!validStatus.includes(status)) {
+            return NextResponse.json({error: 'Stato non valido.'}, {status: 400});
+        }
+
+        const connection = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            port: process.env.DB_PORT,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_DATABASE,
+        });
+
+        // Verifica che la sottoscrizione appartenga all'utente
+        const [existingSubs] = await connection.execute(
+            'SELECT id FROM price_subscriptions WHERE id = ? AND user_id = ?',
+            [subscriptionId, userId]
         );
 
-        return NextResponse.json({message: 'Sottoscrizione aggiornata con successo.'});
+        if (existingSubs.length === 0) {
+            await connection.end();
+            return NextResponse.json({error: 'Sottoscrizione non trovata o non autorizzata.'}, {status: 404});
+        }
+
+        // Aggiorna la sottoscrizione
+        const [result] = await connection.execute(
+            'UPDATE price_subscriptions SET fuel_type = ?, geo_level = ?, geo_code = ?, threshold_type = ?, threshold_value = ?, status = ?, updated_at = NOW() WHERE id = ?',
+            [fuel_type, geo_level, geo_code, threshold_type, threshold_value, status, subscriptionId]
+        );
+
+        await connection.end();
+
+        if (result.affectedRows === 1) {
+            return NextResponse.json({message: 'Sottoscrizione aggiornata con successo.'}, {status: 200});
+        } else {
+            return NextResponse.json({error: 'Nessuna modifica apportata o sottoscrizione non trovata.'}, {status: 404});
+        }
 
     } catch (error) {
-        console.error(`Errore API PUT /api/subscriptions/${subscriptionId}:`, error);
+        console.error('Errore durante l\'aggiornamento della sottoscrizione:', error);
         return NextResponse.json({error: 'Errore interno del server.'}, {status: 500});
-    } finally {
-        if (connection) await connection.end();
     }
 }
 
 export async function DELETE(request, {params}) {
-    const session = await getServerSession(authOptions);
-    const {id: subscriptionId} = await params;
-
-    if (!session || !session.user || !session.user.id) {
-        return NextResponse.json({error: 'Non autorizzato'}, {status: 401});
+    const authResult = await verifyToken(request);
+    if (authResult.error) {
+        return NextResponse.json({error: authResult.error}, {status: authResult.status});
     }
-
-    const userId = session.user.id;
-    let connection;
+    const userId = authResult.userId;
+    const subscriptionId = params.id;
 
     try {
-        const verification = await connectAndVerifyOwner(subscriptionId, userId);
-        if (verification.error) {
-            return NextResponse.json({error: verification.error}, {status: verification.status});
-        }
-        connection = verification.connection;
+        const connection = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            port: process.env.DB_PORT,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_DATABASE,
+        });
 
-        await connection.execute(
-            "UPDATE price_subscriptions SET status = 'deleted' WHERE id = ?",
-            [subscriptionId]
+        // Verifica che la sottoscrizione appartenga all'utente
+        const [existingSubs] = await connection.execute(
+            'SELECT id FROM price_subscriptions WHERE id = ? AND user_id = ?',
+            [subscriptionId, userId]
         );
 
-        return NextResponse.json({message: 'Sottoscrizione eliminata con successo.'});
+        if (existingSubs.length === 0) {
+            await connection.end();
+            return NextResponse.json({error: 'Sottoscrizione non trovata o non autorizzata.'}, {status: 404});
+        }
+
+        // Elimina la sottoscrizione
+        const [result] = await connection.execute(
+            'DELETE FROM price_subscriptions WHERE id = ? AND user_id = ?',
+            [subscriptionId, userId]
+        );
+
+        await connection.end();
+
+        if (result.affectedRows === 1) {
+            return NextResponse.json({message: 'Sottoscrizione eliminata con successo.'}, {status: 200});
+        } else {
+            return NextResponse.json({error: 'Sottoscrizione non trovata o non eliminata.'}, {status: 404});
+        }
 
     } catch (error) {
-        console.error(`Errore API DELETE /api/subscriptions/${subscriptionId}:`, error);
+        console.error('Errore durante l\'eliminazione della sottoscrizione:', error);
         return NextResponse.json({error: 'Errore interno del server.'}, {status: 500});
-    } finally {
-        if (connection) await connection.end();
     }
 }
