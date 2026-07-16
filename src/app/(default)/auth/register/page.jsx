@@ -60,7 +60,7 @@ export default function RegisterPage() {
                     <div className="col-md-6 col-lg-5">
                         <div className="card shadow-lg">
                             <div className="card-body p-4">
-                                <h2 className="card-title text-center mb-4">Registrati</h2>
+                                <h1 className="card-title text-center mb-4">Registrati</h1>
                                 {error && <div className="alert alert-danger">{error}</div>}
                                 {success && <div className="alert alert-success">{success}</div>}
                                 <form onSubmit={handleSubmit}>

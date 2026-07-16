@@ -24,20 +24,27 @@ describe('RegisterPage', () => {
     it('should render the registration form', () => {
         render(<RegisterPage/>);
 
-        expect(screen.getByRole('heading', {name: /registrati/i})).toBeInTheDocument();
+        expect(screen.getByRole('heading', {
+            level: 1,
+            name: /registrati/i
+        })).toBeInTheDocument();
+
         expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/conferma password/i)).toBeInTheDocument();
         expect(screen.getByRole('button', {name: /registrati/i})).toBeInTheDocument();
-        expect(screen.getByRole('link', {name: /accedi/i})).toBeInTheDocument();
+        expect(screen.getAllByRole('link', {name: /accedi/i})).toHaveLength(2);
     });
 
     it('should display an error if passwords do not match', async () => {
         render(<RegisterPage/>);
 
-        fireEvent.change(screen.getByLabelText(/email/i), {target: {value: 'test@example.com'}});
-        fireEvent.change(screen.getByLabelText(/password/i), {target: {value: 'password123'}});
-        fireEvent.change(screen.getByLabelText(/conferma password/i), {target: {value: 'differentpassword'}});
+        fireEvent.change(screen.getByRole('textbox', {id: 'email'}), {target: {value: 'test@example.com'}});
+        fireEvent.change(screen.getByRole('password', {id: 'password'}), {target: {value: 'password123'}});
+
+
+        fireEvent.change(screen.getByRole('password', {id: 'confirmPassword'}), {target: {value: 'differentpassword'}});
+
         fireEvent.click(screen.getByRole('button', {name: /registrati/i}));
 
         await waitFor(() => {
