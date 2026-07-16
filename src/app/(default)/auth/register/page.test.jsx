@@ -39,11 +39,10 @@ describe('RegisterPage', () => {
     it('should display an error if passwords do not match', async () => {
         render(<RegisterPage/>);
 
-        fireEvent.change(screen.getByRole('textbox', {id: 'email'}), {target: {value: 'test@example.com'}});
-        fireEvent.change(screen.getByRole('password', {id: 'password'}), {target: {value: 'password123'}});
+        fireEvent.change(screen.getByLabelText(/email/i), {target: {value: 'test@example.com'}});
+        fireEvent.change(screen.getByLabelText(/^password/i), {target: {value: 'password123'}});
 
-
-        fireEvent.change(screen.getByRole('password', {id: 'confirmPassword'}), {target: {value: 'differentpassword'}});
+        fireEvent.change(screen.getByLabelText(/^conferma password/i), {target: {value: 'differentpassword'}});
 
         fireEvent.click(screen.getByRole('button', {name: /registrati/i}));
 
@@ -54,18 +53,26 @@ describe('RegisterPage', () => {
         expect(mockPush).not.toHaveBeenCalled();
     });
 
-    it('should display an error if password is too short', async () => {
-        render(<RegisterPage/>);
+    it('should display a server error if password is too short', async () => {
+        // Mock della risposta del server per password troppo corta
+        fetch.mockResolvedValueOnce({
+            ok: false,
+            json: async () => ({error: 'La password deve contenere almeno 6 caratteri.'}),
+        });
+
+        render(<RegisterPage />);
 
         fireEvent.change(screen.getByLabelText(/email/i), {target: {value: 'test@example.com'}});
-        fireEvent.change(screen.getByLabelText(/password/i), {target: {value: 'short'}});
-        fireEvent.change(screen.getByLabelText(/conferma password/i), {target: {value: 'short'}});
+        fireEvent.change(screen.getByLabelText(/^password/i), {target: {value: 'short'}});
+        fireEvent.change(screen.getByLabelText(/^conferma password/i), {target: {value: 'short'}});
         fireEvent.click(screen.getByRole('button', {name: /registrati/i}));
 
+        // Verifichiamo che l'errore restituito dal server venga mostrato
         await waitFor(() => {
             expect(screen.getByRole('alert')).toHaveTextContent('La password deve contenere almeno 6 caratteri.');
         });
-        expect(fetch).not.toHaveBeenCalled(); // Should not call fetch if client-side validation fails
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(mockPush).not.toHaveBeenCalled();
     });
 
 
@@ -77,9 +84,9 @@ describe('RegisterPage', () => {
 
         render(<RegisterPage/>);
 
-        fireEvent.change(screen.getByLabelText(/email/i), {target: {value: 'newuser@example.com'}});
-        fireEvent.change(screen.getByLabelText(/password/i), {target: {value: 'password123'}});
-        fireEvent.change(screen.getByLabelText(/conferma password/i), {target: {value: 'password123'}});
+        fireEvent.change(screen.getByLabelText(/^email/i), {target: {value: 'newuser@example.com'}});
+        fireEvent.change(screen.getByLabelText(/^password/i), {target: {value: 'password123'}});
+        fireEvent.change(screen.getByLabelText(/^conferma password/i), {target: {value: 'password123'}});
         fireEvent.click(screen.getByRole('button', {name: /registrati/i}));
 
         await waitFor(() => {
@@ -98,10 +105,10 @@ describe('RegisterPage', () => {
 
         render(<RegisterPage/>);
 
-        fireEvent.change(screen.getByLabelText(/email/i), {target: {value: 'existing@example.com'}});
-        fireEvent.change(screen.getByLabelText(/password/i), {target: {value: 'password123'}});
-        fireEvent.change(screen.getByLabelText(/conferma password/i), {target: {value: 'password123'}});
-        fireEvent.click(screen.getByRole('button', {name: /registrati/i}));
+        fireEvent.change(screen.getByLabelText(/^email/i), {target: {value: 'existing@example.com'}});
+        fireEvent.change(screen.getByLabelText(/^password/i), {target: {value: 'password123'}});
+        fireEvent.change(screen.getByLabelText(/^conferma password/i), {target: {value: 'password123'}});
+        fireEvent.click(screen.getByRole('button', {name: /^registrati$/i}));
 
         await waitFor(() => {
             expect(fetch).toHaveBeenCalledTimes(1);
@@ -115,10 +122,10 @@ describe('RegisterPage', () => {
 
         render(<RegisterPage/>);
 
-        fireEvent.change(screen.getByLabelText(/email/i), {target: {value: 'network@example.com'}});
-        fireEvent.change(screen.getByLabelText(/password/i), {target: {value: 'password123'}});
-        fireEvent.change(screen.getByLabelText(/conferma password/i), {target: {value: 'password123'}});
-        fireEvent.click(screen.getByRole('button', {name: /registrati/i}));
+        fireEvent.change(screen.getByLabelText(/^email/i), {target: {value: 'network@example.com'}});
+        fireEvent.change(screen.getByLabelText(/^password/i), {target: {value: 'password123'}});
+        fireEvent.change(screen.getByLabelText(/^conferma password/i), {target: {value: 'password123'}});
+        fireEvent.click(screen.getByRole('button', {name: /^registrati$/i}));
 
         await waitFor(() => {
             expect(fetch).toHaveBeenCalledTimes(1);
@@ -133,14 +140,14 @@ describe('RegisterPage', () => {
 
         render(<RegisterPage/>);
 
-        fireEvent.change(screen.getByLabelText(/email/i), {target: {value: 'loading@example.com'}});
-        fireEvent.change(screen.getByLabelText(/password/i), {target: {value: 'password123'}});
-        fireEvent.change(screen.getByLabelText(/conferma password/i), {target: {value: 'password123'}});
-        fireEvent.click(screen.getByRole('button', {name: /registrati/i}));
+        fireEvent.change(screen.getByLabelText(/^email/i), {target: {value: 'loading@example.com'}});
+        fireEvent.change(screen.getByLabelText(/^password/i), {target: {value: 'password123'}});
+        fireEvent.change(screen.getByLabelText(/^conferma password/i), {target: {value: 'password123'}});
+        fireEvent.click(screen.getByRole('button', {name: /^registrati$/i}));
 
-        expect(screen.getByRole('button', {name: /registrazione in corso.../i})).toBeDisabled();
-        expect(screen.getByLabelText(/email/i)).toBeDisabled();
-        expect(screen.getByLabelText(/password/i)).toBeDisabled();
-        expect(screen.getByLabelText(/conferma password/i)).toBeDisabled();
+        expect(screen.getByRole('button', {name: /^registrazione in corso...$/i})).toBeDisabled();
+        expect(screen.getByLabelText(/^email$/i)).toBeDisabled();
+        expect(screen.getByLabelText(/^password$/i)).toBeDisabled();
+        expect(screen.getByLabelText(/^conferma password$/i)).toBeDisabled();
     });
 });

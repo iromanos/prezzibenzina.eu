@@ -61,8 +61,8 @@ export default function RegisterPage() {
                         <div className="card shadow-lg">
                             <div className="card-body p-4">
                                 <h1 className="card-title text-center mb-4">Registrati</h1>
-                                {error && <div className="alert alert-danger">{error}</div>}
-                                {success && <div className="alert alert-success">{success}</div>}
+                                {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                                {success && <div className="alert alert-success" role="alert">{success}</div>}
                                 <form onSubmit={handleSubmit}>
                                     <div className="mb-3">
                                         <label htmlFor="email" className="form-label">Email</label>
@@ -79,6 +79,7 @@ export default function RegisterPage() {
                                     <div className="mb-3">
                                         <label htmlFor="password" className="form-label">Password</label>
                                         <input
+                                            aria-label="password"
                                             type="password"
                                             className="form-control"
                                             id="password"
@@ -93,6 +94,7 @@ export default function RegisterPage() {
                                         <label htmlFor="confirmPassword" className="form-label">Conferma
                                             Password</label>
                                         <input
+                                            aria-label="conferma password"
                                             type="password"
                                             className="form-control"
                                             id="confirmPassword"

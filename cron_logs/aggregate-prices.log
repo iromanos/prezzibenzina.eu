@@ -31,3 +31,9 @@ Transazione completata con successo!
 [2026-07-16T10:54:23.521Z] Encoding not recognized: 'cesu8' (searched as: 'cesu8')
 [2026-07-16T10:54:23.531Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Aggregazione Prezzi"
 [2026-07-16T10:54:23.546Z] Fine esecuzione script aggregazione prezzi.
+[2026-07-16T12:31:57.850Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-16T12:31:58.796Z] 
+--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---
+[2026-07-16T12:31:58.877Z] connect ECONNREFUSED 127.0.0.1:33070
+[2026-07-16T12:31:58.890Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Aggregazione Prezzi"
+[2026-07-16T12:31:58.902Z] Fine esecuzione script aggregazione prezzi.
