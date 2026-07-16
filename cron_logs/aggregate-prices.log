@@ -13,3 +13,15 @@ Transazione completata con successo!
 [2026-07-15T08:12:52.541Z] [EMAIL] Notifica email inviata: "CRON Job Success: Aggregazione Prezzi"
 [2026-07-15T08:12:52.543Z] Connessione al database chiusa.
 [2026-07-15T08:12:52.545Z] Fine esecuzione script aggregazione prezzi.
+[2026-07-16T07:33:01.346Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-16T07:33:01.498Z] 
+--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---
+[2026-07-16T07:33:01.599Z] connect ECONNREFUSED 127.0.0.1:33070
+[2026-07-16T07:33:01.619Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Aggregazione Prezzi"
+[2026-07-16T07:33:01.631Z] Fine esecuzione script aggregazione prezzi.
+[2026-07-16T07:33:32.863Z] --- INIZIO SCRIPT DI AGGREGAZIONE PREZZI ---
+[2026-07-16T07:33:33.788Z] 
+--- ERRORE FATALE DURANTE L'AGGREGAZIONE ---
+[2026-07-16T07:33:33.901Z] connect ECONNREFUSED 127.0.0.1:33070
+[2026-07-16T07:33:33.916Z] [EMAIL] Notifica email inviata: "CRON Job Fallito: Aggregazione Prezzi"
+[2026-07-16T07:33:33.933Z] Fine esecuzione script aggregazione prezzi.

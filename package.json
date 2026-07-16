@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -20,6 +22,7 @@
     "@plainsheet/react": "^1.0.1",
     "@turf/turf": "^7.3.5",
     "axios": "^1.16.0",
+    "bcrypt": "^6.0.0",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.8",
     "critters": "^0.0.23",
@@ -27,6 +30,7 @@
     "dotenv": "^17.4.2",
     "flag-icons": "^7.5.0",
     "jose": "^5.6.3",
+    "jsonwebtoken": "^9.0.3",
     "jwt-decode": "^4.0.0",
     "k6": "^0.0.0",
     "lucide-react": "^0.577.0",
@@ -52,18 +56,19 @@
     "use-supercluster": "^1.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^8.0.1",
-    "@babel/preset-env": "^8.0.2",
-    "@babel/preset-react": "^8.0.1",
     "@eslint/eslintrc": "^3",
     "@fullhuman/postcss-purgecss": "^7.0.2",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/jest": "^30.0.0",
-    "babel-jest": "^30.4.1",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
     "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
     "postcss-flexbugs-fixes": "^5.0.2",
-    "postcss-preset-env": "^11.3.2"
+    "postcss-preset-env": "^11.3.2",
+    "ts-node": "^10.9.2"
   },
   "overrides": {
     "postcss": "^8.5.10"

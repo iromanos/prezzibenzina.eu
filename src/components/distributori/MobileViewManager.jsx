@@ -4,9 +4,9 @@ import React from 'react';
 import {BsGeoFill, BsInfoCircle, BsListUl, BsMap, BsSliders} from 'react-icons/bs';
 import {useRouter, useSearchParams} from 'next/navigation';
 import Link from 'next/link';
-import Display6977770298 from "../ads/Display6977770298";
 import {AdsDesktop} from "../ads/AdsDesktop";
-import Display5745053645 from "../ads/Display5745053645";
+import Display6977770298 from "@/components/ads/Display-6977770298.jsx";
+import Display5745053645 from "@/components/ads/Display-5745053645.jsx";
 
 /**
  * Manager unico del layout della pagina distributori.

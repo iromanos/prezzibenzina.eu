@@ -22,14 +22,6 @@ import {StatisticheWrapper} from "@/components/statistiche/StatisticheChart"; //
 import {BsGraphUp} from "react-icons/bs";
 import Link from "next/link"; // Importa il componente KPI
 
-export async function generateStaticParams() {
-    if (process.env.NODE_ENV === 'production') {
-        return []; // Per ora, lasciamolo vuoto anche in produzione per sicurezza.
-    }
-    return [];
-}
-
-
 export async function generateMetadata() {
 
     const title = 'Prezzo Benzina, Diesel, Metano e GPL oggi | PrezziBenzina.eu';
@@ -60,12 +52,14 @@ export default async function Home() {
         getServizi(),
         getCapoluoghi(),
         // Chiamata all'API per i dati del grafico
-        fetch(`/api/statistiche?desc_carburante=benzina&livello_geo=nazionale&codice_geo=IT`)
-            .then(res => res.json())
-            .catch(error => {
-                console.error("Errore nel caricamento dei dati del grafico per la homepage:", error);
-                return [];
-            })
+        process.env.INTERNAL_PB_API_URL
+            ? fetch(`${process.env.INTERNAL_PB_API_URL}/api/statistiche?desc_carburante=benzina&livello_geo=nazionale&codice_geo=IT`)
+                .then(res => res.ok ? res.json() : [])
+                .catch(error => {
+                    console.error("Errore nel caricamento dei dati del grafico per la homepage:", error);
+                    return [];
+                })
+            : Promise.resolve([])
     ]);
 
     // Selezioniamo solo i primi 4 servizi che hanno una mappatura icona per la vetrina in Home

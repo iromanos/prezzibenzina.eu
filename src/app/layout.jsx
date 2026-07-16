@@ -35,7 +35,7 @@ export const metadata = {
 
 export default async function RootLayout({children}) {
 
-    const headersList = headers(); // Rimosso await, headers() non è una Promise
+    const headersList = await headers();
 
     const referer = headersList.get('X-WEFUEL-REFERER');
 

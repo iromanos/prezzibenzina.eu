@@ -3,7 +3,6 @@
 import {useEffect, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import Header from '@/components/Header';
-import jwtDecode from 'jwt-decode'; // Assicurati di aver installato jwt-decode
 
 export default function NotifichePage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);

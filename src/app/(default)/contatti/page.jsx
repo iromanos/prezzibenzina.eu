@@ -5,11 +5,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import Header from "@/components/Header";
 
-export const dynamic = 'force-static';
-
 export async function generateMetadata() {
-
-
     const canonicalUrl = process.env.NEXT_PUBLIC_BASE_URL + '/contatti';
 
 
