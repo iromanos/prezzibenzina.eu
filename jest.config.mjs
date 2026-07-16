@@ -11,9 +11,7 @@ const customJestConfig = {
     collectCoverage: true,
     coverageDirectory: "coverage",
     coverageProvider: "v8",
-
-    // Trattandosi di API route (/api/auth/register), 'node' è l'ambiente corretto
-    testEnvironment: 'node',
+    testEnvironment: 'jsdom',
 };
 
 export default createJestConfig(customJestConfig);

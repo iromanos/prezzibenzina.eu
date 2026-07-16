@@ -1,8 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import {useEffect} from "react";
-import SearchIcon from '@mui/icons-material/Search';
+import {useEffect, useState} from "react";
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import CloseIcon from '@mui/icons-material/Close';
 import Button from "react-bootstrap/Button";
@@ -10,15 +9,24 @@ import Image from "next/image";
 import {useRouter} from "next/navigation";
 
 export default function Header() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         import('bootstrap/dist/js/bootstrap.bundle.min');
+        // Controlla lo stato di login all'avvio del componente
+        const token = localStorage.getItem('jwt_token');
+        setIsLoggedIn(!!token); // true se il token esiste, false altrimenti
     }, []);
-
-    const router = useRouter();
 
     const handleNavigation = (href) => {
         router.push(href);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('jwt_token'); // Rimuove il token
+        setIsLoggedIn(false); // Aggiorna lo stato
+        router.push('/auth/login'); // Reindirizza al login
     };
 
     return (
@@ -46,16 +54,25 @@ export default function Header() {
                                                        className="btn btn-primary">Mappa</Link></li>
                         <li className="nav-item"><Link title={"Statistiche"} href="/statistiche"
                                                        className="btn btn-primary">Statistiche</Link></li>
-                        {/* Nuovo link */}
                         <li className="nav-item"><Link title={"Contatti"} href="/contatti"
                                                        className="btn btn-primary">Contatti</Link></li>
+                        {isLoggedIn && (
+                            <li className="nav-item"><Link title={"Le mie Notifiche"} href="/notifiche"
+                                                           className="btn btn-primary">Notifiche</Link></li>
+                        )}
                 </ul>
 
-                {/* CTA desktop */}
-                    <Link title={"Trova distributori"} href="/ricerca"
-                          className="btn btn-primary d-none d-lg-inline-block">
-                    <SearchIcon /> Trova distributori
-                </Link>
+                    {/* CTA desktop / Login-Logout button */}
+                    {isLoggedIn ? (
+                        <Button onClick={handleLogout} className="btn btn-primary d-none d-lg-inline-block">
+                            Logout
+                        </Button>
+                    ) : (
+                        <Link title={"Accedi"} href="/auth/login"
+                              className="btn btn-primary d-none d-lg-inline-block">
+                            Accedi
+                        </Link>
+                    )}
 
                 {/* Hamburger toggle for mobile */}
                     <Button
@@ -117,6 +134,21 @@ export default function Header() {
                             onClick={() => handleNavigation("/contatti")}
                             title={"Contatti"}
                             className="nav-link text-white ">Contatti</Button></li>
+                        {isLoggedIn ? (
+                            <li className="nav-item"><Button
+                                variant={'link'}
+                                data-bs-dismiss="offcanvas"
+                                onClick={handleLogout}
+                                title={"Logout"}
+                                className="nav-link text-white ">Logout</Button></li>
+                        ) : (
+                            <li className="nav-item"><Button
+                                variant={'link'}
+                                data-bs-dismiss="offcanvas"
+                                onClick={() => handleNavigation("/auth/login")}
+                                title={"Accedi"}
+                                className="nav-link text-white ">Accedi</Button></li>
+                        )}
                     </ul>
                     <div className="text-center">
                         <Image width={320} height={320} src="/assets/logo-transparent.png" alt="Logo PrezziBenzina.eu"
