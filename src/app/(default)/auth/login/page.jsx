@@ -1,9 +1,10 @@
 'use client';
 
 import {useState} from 'react';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header'; // Assicurati che il tuo Header sia compatibile con questa pagina
+import {useEffect} from "react";
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -11,6 +12,14 @@ export default function LoginPage() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const errorParam = searchParams.get('error');
+        if (errorParam === 'OAuthAccountNotLinked') {
+            setError('Esiste già un account con questo indirizzo email. Accedi con il metodo che hai usato in origine.');
+        }
+    }, [searchParams]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,6 +49,26 @@ export default function LoginPage() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleGoogleLogin = () => {
+        const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
+        
+        // Assicurati che questo URL corrisponda a quello configurato nella Google Cloud Console
+        const redirectUri = `${window.location.origin}/api/auth/google/callback`;
+
+        const scope = [
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile'
+        ].join(' ');
+
+        const params = new URLSearchParams({
+            response_type: 'code',
+            client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID, // Variabile d'ambiente pubblica
+            redirect_uri: redirectUri,
+            scope: scope,
+        });
+        window.location.href = `${googleAuthUrl}?${params.toString()}`;
     };
 
     return (
@@ -88,6 +117,12 @@ export default function LoginPage() {
                                             'Accedi'
                                         )}
                                     </button>
+                                    <div className="d-grid mb-3">
+                                        <button type="button" className="btn btn-outline-dark" onClick={handleGoogleLogin} disabled={loading}>
+                                            {/* Potresti voler usare un'icona di Google qui */}
+                                            <i className="bi bi-google me-2"></i> Accedi con Google
+                                        </button>
+                                    </div>
                                     <p className="text-center">
                                         Non hai un account? <Link href="/auth/register">Registrati</Link>
                                     </p>
