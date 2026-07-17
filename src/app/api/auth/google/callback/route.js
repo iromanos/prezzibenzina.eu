@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
+import {NextResponse} from 'next/server';
 import jwt from 'jsonwebtoken';
-import { getUserByEmail } from '@/repos/users';
+import {getUserByEmail} from '@/repos/users';
 // Assumendo che tu abbia delle funzioni per interagire con il DB
 // import { findUserByEmail, createUser } from '@/lib/db'; 
 
@@ -38,7 +38,7 @@ export async function GET(request) {
         const tokenData = await tokenResponse.json();
 
         if (!tokenResponse.ok) {
-            throw new Error(tokenData.error_description || 'Errore nello scambio del codice');
+            new Error(tokenData.error_description || 'Errore nello scambio del codice');
         }
 
         // 2. Usa l'access token per ottenere le informazioni dell'utente
