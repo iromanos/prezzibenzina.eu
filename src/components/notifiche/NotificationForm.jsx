@@ -87,18 +87,6 @@ export default function NotificationForm({initialSubscription, subscriptionId, o
                 setModalBody(`Notifica ${subscriptionId ? 'aggiornata' : 'creata'} con successo!`);
                 setModalType('success');
                 setShowModal(true);
-
-                if (onSubscriptionCreated) {
-                    onSubscriptionCreated(data); // Notifica il componente padre con i dati aggiornati/creati
-                }
-                // Se è una creazione, resetta il form
-                if (!subscriptionId) {
-                    setFuelType('Benzina');
-                    setGeoFilters({livello_geo: 'nazionale', codice_geo: 'IT'});
-                    setThresholdType('cheapest_in_area');
-                    setThresholdValue('');
-                    setStatus('active');
-                }
             } else {
                 setModalTitle('Errore!');
                 setModalBody(data.error || `Errore durante la ${subscriptionId ? 'modifica' : 'creazione'} della notifica.`);
@@ -120,7 +108,7 @@ export default function NotificationForm({initialSubscription, subscriptionId, o
         setShowModal(false);
         // Se la notifica è stata creata/modificata con successo, reindirizza
         if (modalType === 'success' && onSubscriptionCreated) {
-            // onSubscriptionCreated dovrebbe già reindirizzare o aggiornare la lista
+            onSubscriptionCreated();// dovrebbe già reindirizzare o aggiornare la lista
         }
     };
 

@@ -81,6 +81,7 @@ export default function NotifichePage() {
         setSubscriptions(prevSubs => prevSubs.filter(sub => sub.id !== id));
     }, []);
 
+    /*
     if (loading) {
         return (
             <div className="d-flex justify-content-center align-items-center vh-100">
@@ -89,10 +90,10 @@ export default function NotifichePage() {
                 </div>
             </div>
         );
-    }
+    }*/
 
     if (!isAuthenticated) {
-        return null; // Reindirizzamento gestito dall'useEffect
+        //return null; // Reindirizzamento gestito dall'useEffect
     }
 
     return (

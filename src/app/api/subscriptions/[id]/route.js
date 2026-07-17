@@ -1,12 +1,13 @@
 import {NextResponse} from 'next/server';
 import mysql from 'mysql2/promise';
-import {authMiddleware} from '../../auth/middleware'; // Importa il middleware
+import {authMiddleware} from '../../auth/middleware';
+import {connectToDatabase} from "@/repos/mysql.jsx"; // Importa il middleware
 
 // Funzione per gestire la modifica di una sottoscrizione (PUT)
 async function updateSubscriptionHandler(request, {params}) {
     try {
-        const subscriptionId = params.id;
-        const userId = request.user.userId; // Ottieni l'ID utente dal middleware
+        const subscriptionId = (await params).id;
+        const userId = request.user.id; // Ottieni l'ID utente dal middleware
         const {fuel_type, geo_level, geo_code, threshold_type, threshold_value, status} = await request.json();
 
         // Validazione input
@@ -69,8 +70,8 @@ async function updateSubscriptionHandler(request, {params}) {
 // Funzione per gestire l'eliminazione di una sottoscrizione (DELETE)
 async function deleteSubscriptionHandler(request, {params}) {
     try {
-        const subscriptionId = params.id;
-        const userId = request.user.userId; // Ottieni l'ID utente dal middleware
+        const subscriptionId = (await params).id;
+        const userId = request.user.id; // Ottieni l'ID utente dal middleware
 
         const connection = await mysql.createConnection({
             host: process.env.DB_HOST,
@@ -111,5 +112,38 @@ async function deleteSubscriptionHandler(request, {params}) {
     }
 }
 
+async function getSubscriptionsHandler(request, {params}) {
+    try {
+
+        const _params = await params;
+
+        const subscriptionId = _params.id;
+
+        console.log(_params);
+
+        const userId = request.user.id; // Ottieni l'ID utente dal middleware
+
+        const connection = await connectToDatabase();
+
+        const [existingSubs] = await connection.execute(
+            'SELECT * FROM price_subscriptions WHERE id = ? AND user_id = ?',
+            [subscriptionId, userId]
+        );
+
+        await connection.end();
+
+        if (existingSubs.length === 0) {
+            return NextResponse.json({error: 'Sottoscrizione non trovata o non autorizzata.'}, {status: 404})
+        }
+
+        return NextResponse.json(existingSubs[0], {status: 200});
+
+    } catch (error) {
+        console.error('Errore durante l\'eliminazione della sottoscrizione:', error);
+        return NextResponse.json({error: 'Errore interno del server.'}, {status: 500});
+    }
+}
+
 export const PUT = authMiddleware(updateSubscriptionHandler);
 export const DELETE = authMiddleware(deleteSubscriptionHandler);
+export const GET = authMiddleware(getSubscriptionsHandler);

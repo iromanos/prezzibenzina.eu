@@ -10,7 +10,7 @@ async function listSubscriptionsHandler(request) {
 
         // Recupera tutte le sottoscrizioni attive per l'utente
         const [subscriptions] = await connection.execute(
-            'SELECT id, fuel_type, geo_level, geo_code, threshold_type, threshold_value, status FROM price_subscriptions WHERE user_id = ? AND status = \'active\'',
+            'SELECT id, fuel_type, geo_level, geo_code, threshold_type, threshold_value, status FROM price_subscriptions WHERE user_id = ?',
             [userId]
         );
 

@@ -69,3 +69,17 @@
 [2026-07-15T08:52:26.444Z] [SUCCESS #21] Notifica registrata nel database.
 [2026-07-15T08:52:26.445Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
 [2026-07-15T08:52:26.447Z] Connessione al database chiusa.
+[2026-07-17T11:58:39.162Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2026-07-17T11:58:39.196Z] Connessione al database stabilita.
+[2026-07-17T11:58:39.207Z] Trovate 5 sottoscrizioni attive idonee per il controllo.
+[2026-07-17T11:58:39.318Z] [ALERT TRIGGERATO #1] Utente testuser_1784100968155@example.com: Prezzo attuale 1.569 soddisfa la soglia (cheapest_in_area / N/A).
+[2026-07-17T11:58:40.977Z] [EMAIL SUCCESS] Email inviata con successo a testuser_1784100968155@example.com per la sottoscrizione #1
+[2026-07-17T11:58:41.017Z] [SUCCESS #1] Notifica registrata nel database.
+[2026-07-17T11:58:41.021Z] [INFO SOTTOSCRIZIONE #10] Nessun prezzo trovato per Benzina a livello distributore con codice 999999.
+[2026-07-17T11:58:41.023Z] [INFO SOTTOSCRIZIONE #24] Nessun prezzo trovato per Benzina a livello provinciale con codice Milano.
+[2026-07-17T11:58:41.026Z] [INFO SOTTOSCRIZIONE #27] Nessun prezzo trovato per Benzina a livello provinciale con codice Monza e della Brianza.
+[2026-07-17T11:58:41.051Z] [ALERT TRIGGERATO #28] Utente alessandroromano.net@gmail.com: Prezzo attuale 1.585 soddisfa la soglia (cheapest_in_area / N/A).
+[2026-07-17T11:58:42.751Z] [EMAIL SUCCESS] Email inviata con successo a alessandroromano.net@gmail.com per la sottoscrizione #28
+[2026-07-17T11:58:42.792Z] [SUCCESS #28] Notifica registrata nel database.
+[2026-07-17T11:58:42.792Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2026-07-17T11:58:42.794Z] Connessione al database chiusa.
