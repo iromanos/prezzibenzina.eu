@@ -1,5 +1,5 @@
 // src/app/api/auth/logout/route.test.js
-import {GET} from './route';
+import {POST} from './route';
 import {NextResponse} from 'next/server';
 
 jest.mock('next/server', () => ({
@@ -8,13 +8,13 @@ jest.mock('next/server', () => ({
     },
 }));
 
-describe('GET /api/auth/logout', () => {
+describe('POST /api/auth/logout', () => {
     beforeEach(() => {
         NextResponse.json.mockClear();
     });
 
     it('should return a success message for logout', async () => {
-        await GET();
+        await POST();
 
         expect(NextResponse.json).toHaveBeenCalledWith(
             {message: 'Logout effettuato con successo (il token JWT deve essere rimosso lato client).'},

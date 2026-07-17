@@ -79,7 +79,7 @@ export default function LoginPage() {
                     <div className="col-md-6 col-lg-5">
                         <div className="card shadow-lg">
                             <div className="card-body p-4">
-                                <h2 className="card-title text-center mb-4">Accedi</h2>
+                                <h1 className="card-title text-center mb-4">Accedi</h1>
                                 {error && <div className="alert alert-danger">{error}</div>}
                                 <form onSubmit={handleSubmit}>
                                     <div className="mb-3">

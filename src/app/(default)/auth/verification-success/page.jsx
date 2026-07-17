@@ -12,7 +12,7 @@ export default function VerificationSuccessPage() {
                     <div className="col-md-6 col-lg-5">
                         <div className="card shadow-lg">
                             <div className="card-body p-4 text-center">
-                                <h2 className="card-title text-center mb-4 text-success">Verifica Completata!</h2>
+                                <h1 className="card-title text-center mb-4 text-success">Verifica Completata!</h1>
                                 <p className="lead">Il tuo indirizzo email è stato verificato con successo.</p>
                                 <p>Ora puoi accedere al tuo account e iniziare a gestire le tue notifiche sui prezzi dei
                                     carburanti.</p>

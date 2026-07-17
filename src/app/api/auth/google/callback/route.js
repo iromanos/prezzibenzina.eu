@@ -59,12 +59,14 @@ export async function GET(request) {
         // 4. Crea il tuo JWT per la sessione utente
         const appToken = jwt.sign(user, process.env.NEXTAUTH_SECRET, {expiresIn: '1h'});
 
-        // 5. Reindirizza l'utente alla pagina delle notifiche, passando il token
-        // Un modo è usare i parametri URL, ma per maggiore sicurezza potresti impostare un cookie httpOnly.
-        const redirectUrl = new URL('/auth/google-success', request.url);
-        redirectUrl.searchParams.set('token', appToken);
-        
-        return NextResponse.redirect(redirectUrl);
+        // 5. Reindirizza l'utente alla home page e imposta il cookie della sessione.
+        const redirectUrl = new URL('/', request.url);
+        const response = NextResponse.redirect(redirectUrl);
+
+        // Imposta il cookie JWT sulla risposta.
+        // httpOnly: true -> Il cookie non è accessibile da JavaScript lato client.
+        response.cookies.set('jwt_token', appToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 60 * 60 }); // maxAge in secondi (1 ora)
+        return response;
 
     } catch (err) {
         console.error('Errore nel callback di Google:', err);

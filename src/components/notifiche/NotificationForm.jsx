@@ -4,6 +4,7 @@ import {useCallback, useEffect, useState} from 'react';
 import NotificationGeoFilters from './NotificationGeoFilters'; // Componente per i filtri geografici
 import {FaBell, FaEuroSign, FaGasPump} from 'react-icons/fa'; // Icone
 import BootstrapModal from '@/components/common/BootstrapModal'; // Importa il componente Modal
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function NotificationForm({initialSubscription, subscriptionId, onSubscriptionCreated}) {
     const [fuelType, setFuelType] = useState('Benzina');
@@ -14,6 +15,8 @@ export default function NotificationForm({initialSubscription, subscriptionId, o
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+
+    const {token} = useAuth(); // Ottieni il token dal contesto di autenticazione   
     // Stati per il modal
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
@@ -23,6 +26,9 @@ export default function NotificationForm({initialSubscription, subscriptionId, o
     // Popola il form se initialSubscription è presente (modalità modifica)
     useEffect(() => {
         if (initialSubscription) {
+
+            console.log('Popolando il form con i dati della notifica esistente:', initialSubscription);
+
             setFuelType(initialSubscription.fuel_type);
             setGeoFilters({
                 livello_geo: initialSubscription.geo_level,
@@ -43,7 +49,6 @@ export default function NotificationForm({initialSubscription, subscriptionId, o
         setLoading(true);
         setError(''); // Pulisce l'errore del form
 
-        const token = localStorage.getItem('jwt_token');
         if (!token) {
             setError('Non autenticato. Effettua il login per creare/modificare notifiche.');
             setLoading(false);

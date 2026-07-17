@@ -40,7 +40,12 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
                 setSelectedRegione(initialGeoCode);
             } else if (initialGeoLevel === 'provinciale' || initialGeoLevel === 'comune') {
                 // Trova la provincia per ottenere la regione
-                const prov = province.find(p => p.key === initialGeoCode);
+
+                console.log('Province disponibili:', province);
+
+                const prov = province.find(p => p.id === initialGeoCode);
+
+                console.log('Provincia trovata per il codice iniziale:', prov);
                 if (prov) {
                     setSelectedRegione(prov.regione);
                     setSelectedProvincia(initialGeoCode);
@@ -132,7 +137,7 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
                             onChange={handleProvinciaChange} disabled={disabled}>
                         <option value="">Seleziona una provincia</option>
                         {province.filter(p => p.regione === selectedRegione).map(p => <option key={p.id}
-                                                                                              value={p.key}>{p.name}</option>)}
+                                                                                              value={p.id}>{p.name}</option>)}
                     </select>
                 </div>
             )}

@@ -83,3 +83,39 @@
 [2026-07-17T11:58:42.792Z] [SUCCESS #28] Notifica registrata nel database.
 [2026-07-17T11:58:42.792Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
 [2026-07-17T11:58:42.794Z] Connessione al database chiusa.
+[2026-07-17T15:14:50.489Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2026-07-17T15:14:50.548Z] Connessione al database stabilita.
+[2026-07-17T15:14:50.561Z] Trovate 3 sottoscrizioni attive idonee per il controllo.
+[2026-07-17T15:14:50.574Z] [INFO SOTTOSCRIZIONE #10] Nessun prezzo trovato per Benzina a livello distributore con codice 999999.
+[2026-07-17T15:14:50.658Z] [ALERT TRIGGERATO #24] Utente alessandroromano.net@gmail.com: Prezzo attuale 1.569 soddisfa la soglia (cheapest_in_area / N/A).
+[2026-07-17T15:14:52.296Z] [EMAIL SUCCESS] Email inviata con successo a alessandroromano.net@gmail.com per la sottoscrizione #24
+[2026-07-17T15:14:52.334Z] [SUCCESS #24] Notifica registrata nel database.
+[2026-07-17T15:14:52.345Z] [ALERT TRIGGERATO #27] Utente alessandroromano.net@gmail.com: Prezzo attuale 0.969 soddisfa la soglia (cheapest_in_area / N/A).
+[2026-07-17T15:14:53.903Z] [EMAIL SUCCESS] Email inviata con successo a alessandroromano.net@gmail.com per la sottoscrizione #27
+[2026-07-17T15:14:53.928Z] [SUCCESS #27] Notifica registrata nel database.
+[2026-07-17T15:14:53.930Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2026-07-17T15:14:53.932Z] Connessione al database chiusa.
+[2026-07-17T15:17:27.537Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2026-07-17T15:17:27.559Z] Connessione al database stabilita.
+[2026-07-17T15:17:27.569Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2026-07-17T15:17:27.573Z] [INFO SOTTOSCRIZIONE #10] Nessun prezzo trovato per Benzina a livello distributore con codice 999999.
+[2026-07-17T15:17:27.573Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2026-07-17T15:17:27.574Z] Connessione al database chiusa.
+[2026-07-17T15:21:05.086Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2026-07-17T15:21:05.109Z] Connessione al database stabilita.
+[2026-07-17T15:21:05.117Z] Trovate 5 sottoscrizioni attive idonee per il controllo.
+[2026-07-17T15:21:05.135Z] [ALERT TRIGGERATO #1] Utente testuser_1784100968155@example.com: Prezzo attuale 1.569 soddisfa la soglia (cheapest_in_area / N/A).
+[2026-07-17T15:21:06.743Z] [EMAIL SUCCESS] Email inviata con successo a testuser_1784100968155@example.com per la sottoscrizione #1
+[2026-07-17T15:21:06.781Z] [SUCCESS #1] Notifica registrata nel database.
+[2026-07-17T15:21:06.784Z] [INFO SOTTOSCRIZIONE #10] Nessun prezzo trovato per Benzina a livello distributore con codice 999999.
+[2026-07-17T15:21:06.791Z] [ALERT TRIGGERATO #24] Utente alessandroromano.net@gmail.com: Prezzo attuale 1.569 soddisfa la soglia (cheapest_in_area / N/A).
+[2026-07-17T15:21:08.379Z] [EMAIL SUCCESS] Email inviata con successo a alessandroromano.net@gmail.com per la sottoscrizione #24
+[2026-07-17T15:21:08.407Z] [SUCCESS #24] Notifica registrata nel database.
+[2026-07-17T15:21:08.410Z] [ALERT TRIGGERATO #27] Utente alessandroromano.net@gmail.com: Prezzo attuale 0.969 soddisfa la soglia (cheapest_in_area / N/A).
+[2026-07-17T15:21:09.913Z] [EMAIL SUCCESS] Email inviata con successo a alessandroromano.net@gmail.com per la sottoscrizione #27
+[2026-07-17T15:21:09.935Z] [SUCCESS #27] Notifica registrata nel database.
+[2026-07-17T15:21:09.962Z] [ALERT TRIGGERATO #28] Utente alessandroromano.net@gmail.com: Prezzo attuale 1.585 soddisfa la soglia (cheapest_in_area / N/A).
+[2026-07-17T15:21:11.585Z] [EMAIL SUCCESS] Email inviata con successo a alessandroromano.net@gmail.com per la sottoscrizione #28
+[2026-07-17T15:21:11.624Z] [SUCCESS #28] Notifica registrata nel database.
+[2026-07-17T15:21:11.625Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2026-07-17T15:21:11.626Z] Connessione al database chiusa.

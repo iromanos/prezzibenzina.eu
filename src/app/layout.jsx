@@ -5,11 +5,12 @@ import Head from "next/head";
 import {CookieConsentProvider} from "@/components/CookieConsentContext";
 import Analytics from "@/components/Analytics";
 import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
-import {headers} from "next/headers";
+import { headers, cookies } from "next/headers";
 import {PreferitiProvider} from "@/context/PreferitiProvider";
 import LoadAdSense from "../components/ads/LoadAdSense";
 import CookieBanner from "@/components/CookieBanner";
 import {AuthProvider} from '@/contexts/AuthContext'; // Importa AuthProvider
+import jwt from 'jsonwebtoken';
 
 //TODO: sito multilingua con controllo della SEO
 
@@ -34,6 +35,21 @@ export const metadata = {
 };
 
 export default async function RootLayout({children}) {
+
+    const cookieStore = await cookies();
+    const token = cookieStore.get('jwt_token')?.value;
+    
+    let user = null;
+
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, process.env.NEXTAUTH_SECRET);
+            user = decoded
+            console.log("Utente autenticato:", decoded);
+        } catch (error) {
+            console.error("Token non valido o scaduto:", error.message);
+        }
+    }
 
     const headersList = await headers();
 
@@ -62,7 +78,7 @@ export default async function RootLayout({children}) {
         </Head>
 
         <body>
-        <AuthProvider> {/* Avvolge l'applicazione con AuthProvider */}
+        <AuthProvider appToken={token} initialUser={user}> {/* Passa l'utente e il token al provider */}
             <AppRouterCacheProvider>
                 <PreferitiProvider>
                     <CookieConsentProvider>

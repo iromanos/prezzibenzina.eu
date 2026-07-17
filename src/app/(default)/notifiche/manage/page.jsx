@@ -6,8 +6,10 @@ import Header from '@/components/Header';
 import NotificationForm from '@/components/notifiche/NotificationForm';
 import {jwtDecode} from 'jwt-decode';
 
+import { useAuth } from '@/contexts/AuthContext';
+
+
 export default function ManageNotificationPage() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loadingAuth, setLoadingAuth] = useState(true);
     const [initialSubscription, setInitialSubscription] = useState(null);
     const [loadingSubscription, setLoadingSubscription] = useState(false);
@@ -17,27 +19,7 @@ export default function ManageNotificationPage() {
     const subscriptionId = searchParams.get('id');
 
     // Logica di autenticazione
-    useEffect(() => {
-        const token = localStorage.getItem('jwt_token');
-        if (token) {
-            try {
-                const decodedToken = jwtDecode(token);
-                if (decodedToken.exp * 1000 > Date.now()) {
-                    setIsAuthenticated(true);
-                } else {
-                    localStorage.removeItem('jwt_token');
-                    router.push('/auth/login');
-                }
-            } catch (err) {
-                console.error("Errore nella decodifica del token:", err);
-                localStorage.removeItem('jwt_token');
-                router.push('/auth/login');
-            }
-        } else {
-            router.push('/auth/login');
-        }
-        setLoadingAuth(false);
-    }, [router]);
+    const {isAuthenticated, token} = useAuth();
 
     // Logica per caricare la sottoscrizione se si tratta di modifica
     useEffect(() => {
@@ -46,7 +28,7 @@ export default function ManageNotificationPage() {
 
             setLoadingSubscription(true);
             setError('');
-            const token = localStorage.getItem('jwt_token');
+            // const token = localStorage.getItem('jwt_token');
 
             try {
                 const response = await fetch(`/api/subscriptions/${subscriptionId}`, {
@@ -75,20 +57,6 @@ export default function ManageNotificationPage() {
             fetchSubscription();
         }
     }, [subscriptionId, isAuthenticated]);
-
-    if (loadingAuth || loadingSubscription) {
-        return (
-            <div className="d-flex justify-content-center align-items-center vh-100">
-                <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Caricamento...</span>
-                </div>
-            </div>
-        );
-    }
-
-    if (!isAuthenticated) {
-        return null; // Reindirizzamento gestito dall'useEffect
-    }
 
     return (
         <>

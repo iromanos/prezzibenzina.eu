@@ -7,16 +7,19 @@ import CloseIcon from '@mui/icons-material/Close';
 import Button from "react-bootstrap/Button";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Header() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    //const [isLoggedIn, setIsLoggedIn] = useState(false);
     const router = useRouter();
+
+    const { isAuthenticated, logout, user } = useAuth();
 
     useEffect(() => {
         import('bootstrap/dist/js/bootstrap.bundle.min');
         // Controlla lo stato di login all'avvio del componente
-        const token = localStorage.getItem('jwt_token');
-        setIsLoggedIn(!!token); // true se il token esiste, false altrimenti
+        // const token = localStorage.getItem('jwt_token');
+        // setIsLoggedIn(!!token); // true se il token esiste, false altrimenti
     }, []);
 
     const handleNavigation = (href) => {
@@ -24,10 +27,10 @@ export default function Header() {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('jwt_token'); // Rimuove il token
-        setIsLoggedIn(false); // Aggiorna lo stato
-        router.push('/auth/login'); // Reindirizza al login
+        logout();
     };
+
+    console.log("User in Header:", user); // Logga l'oggetto user per il debug
 
     return (
         <header className="bg-primary sticky-top">
@@ -46,8 +49,8 @@ export default function Header() {
 
                 {/* Desktop menu */}
                     <ul className="nav d-none d-lg-flex">
-                        <li className="nav-item"><Link title={"Preferiti"} href="/preferiti"
-                                                       className="btn btn-primary">Preferiti</Link></li>
+                        {isAuthenticated &&( <li className="nav-item"><Link title={"Preferiti"} href="/preferiti"
+                                                       className="btn btn-primary">Preferiti</Link></li>)}
                         <li className="nav-item"><Link title={"Ricerca"} href="/ricerca"
                                                        className="btn btn-primary">Ricerca</Link></li>
                         <li className="nav-item"><Link title={"Mappa"} href="/mappa"
@@ -56,14 +59,14 @@ export default function Header() {
                                                        className="btn btn-primary">Statistiche</Link></li>
                         <li className="nav-item"><Link title={"Contatti"} href="/contatti"
                                                        className="btn btn-primary">Contatti</Link></li>
-                        {isLoggedIn && (
+                        {isAuthenticated && (
                             <li className="nav-item"><Link title={"Le mie Notifiche"} href="/notifiche"
                                                            className="btn btn-primary">Notifiche</Link></li>
                         )}
                 </ul>
 
                     {/* CTA desktop / Login-Logout button */}
-                    {isLoggedIn ? (
+                    {isAuthenticated ? (
                         <Button onClick={handleLogout} className="btn btn-primary d-none d-lg-inline-block">
                             Logout
                         </Button>
@@ -101,12 +104,14 @@ export default function Header() {
 
                 <div className="container">
                     <ul className="nav flex-column ">
+
+                        {isAuthenticated && (
                         <li className="nav-item"><Button
                             variant={'link'}
                             data-bs-dismiss="offcanvas"
                             onClick={() => handleNavigation("/preferiti")}
                             title={"Preferiti"}
-                            className="nav-link text-white">Preferiti</Button></li>
+                            className="nav-link text-white">Preferiti</Button></li>)}
                         <li className="nav-item"><Button
 
                             variant={'link'}
@@ -134,7 +139,7 @@ export default function Header() {
                             onClick={() => handleNavigation("/contatti")}
                             title={"Contatti"}
                             className="nav-link text-white ">Contatti</Button></li>
-                        {isLoggedIn ? (
+                        {isAuthenticated ? (
                             <li className="nav-item"><Button
                                 variant={'link'}
                                 data-bs-dismiss="offcanvas"

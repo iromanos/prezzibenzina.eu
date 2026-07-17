@@ -50,7 +50,7 @@ export default function ForgotPasswordPage() {
                     <div className="col-md-6 col-lg-5">
                         <div className="card shadow-lg">
                             <div className="card-body p-4">
-                                <h2 className="card-title text-center mb-4">Password Dimenticata?</h2>
+                                <h1 className="card-title text-center mb-4">Password Dimenticata?</h1>
                                 {error && <div className="alert alert-danger">{error}</div>}
                                 {success && <div className="alert alert-success">{success}</div>}
                                 <p className="text-center text-muted mb-4">Inserisci la tua email e ti invieremo un link
