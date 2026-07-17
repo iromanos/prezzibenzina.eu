@@ -6,7 +6,7 @@ import {FaBell, FaEuroSign, FaGasPump} from 'react-icons/fa'; // Icone
 import BootstrapModal from '@/components/common/BootstrapModal'; // Importa il componente Modal
 import { useAuth } from '@/contexts/AuthContext';
 
-export default function NotificationForm({initialSubscription, subscriptionId, onSubscriptionCreated}) {
+export default function NotificationForm({initialSubscription, subscriptionId, prefillData, onSubscriptionCreated}) {
     const [fuelType, setFuelType] = useState('Benzina');
     const [geoFilters, setGeoFilters] = useState({livello_geo: 'nazionale', codice_geo: 'IT'});
     const [thresholdType, setThresholdType] = useState('cheapest_in_area');
@@ -23,12 +23,13 @@ export default function NotificationForm({initialSubscription, subscriptionId, o
     const [modalBody, setModalBody] = useState('');
     const [modalType, setModalType] = useState('info');
 
-    // Popola il form se initialSubscription è presente (modalità modifica)
+
+    // Popola il form se initialSubscription o prefillData sono presenti
     useEffect(() => {
+
+
         if (initialSubscription) {
-
-            console.log('Popolando il form con i dati della notifica esistente:', initialSubscription);
-
+            // Modalità modifica: popola con i dati della sottoscrizione esistente
             setFuelType(initialSubscription.fuel_type);
             setGeoFilters({
                 livello_geo: initialSubscription.geo_level,
@@ -37,8 +38,20 @@ export default function NotificationForm({initialSubscription, subscriptionId, o
             setThresholdType(initialSubscription.threshold_type);
             setThresholdValue(initialSubscription.threshold_value || '');
             setStatus(initialSubscription.status);
+        } else if (prefillData) {
+            console.log("prefillData", prefillData );
+            // Modalità creazione con pre-riempimento
+            if (prefillData.fuel_type) {
+                setFuelType(prefillData.fuel_type);
+            }
+            if (prefillData.geo_level && prefillData.geo_code) {
+                setGeoFilters({
+                    livello_geo: prefillData.geo_level,
+                    codice_geo: prefillData.geo_code
+                });
+            }
         }
-    }, [initialSubscription]);
+    }, [initialSubscription, prefillData]);
 
     const handleGeoFilterChange = useCallback((newGeoFilters) => {
         setGeoFilters(newGeoFilters);
@@ -140,10 +153,10 @@ export default function NotificationForm({initialSubscription, subscriptionId, o
                                 required
                                 disabled={loading}
                             >
-                                <option value="Benzina">Benzina</option>
-                                <option value="Gasolio">Gasolio</option>
-                                <option value="GPL">GPL</option>
-                                <option value="Metano">Metano</option>
+                                <option value="benzina">Benzina</option>
+                                <option value="diesel">Diesel</option>
+                                <option value="gpl">GPL</option>
+                                <option value="metano">Metano</option>
                             </select>
                         </div>
 

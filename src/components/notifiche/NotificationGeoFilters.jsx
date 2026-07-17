@@ -31,19 +31,25 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
         fetchData();
     }, []);
 
+    //TODO: non inizializza con i valori predefiniti
+
     // Inizializza gli stati locali con i valori iniziali (per la modifica)
     useEffect(() => {
+
+        console.log(initialGeoLevel);
+        console.log(initialGeoCode);
+
         if (initialGeoLevel) setLivelloGeo(initialGeoLevel);
         if (initialGeoCode) {
             // Se il livello è regionale o provinciale, dobbiamo pre-selezionare anche la regione/provincia
-            if (initialGeoLevel === 'regionale') {
+            if (initialGeoLevel === 'regione') {
                 setSelectedRegione(initialGeoCode);
-            } else if (initialGeoLevel === 'provinciale' || initialGeoLevel === 'comune') {
+            } else if (initialGeoLevel === 'provincia' || initialGeoLevel === 'comune') {
                 // Trova la provincia per ottenere la regione
 
                 console.log('Province disponibili:', province);
 
-                const prov = province.find(p => p.id === initialGeoCode);
+                const prov = province.find(p => p.id === initialGeoCode.toUpperCase());
 
                 console.log('Provincia trovata per il codice iniziale:', prov);
                 if (prov) {

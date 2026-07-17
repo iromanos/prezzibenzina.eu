@@ -22,7 +22,7 @@ export function StatisticheWrapper({filters}) {
             try {
                 const response = await fetch(`/api/statistiche?${params.toString()}`);
                 if (!response.ok) {
-                    new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
                 setChartData(data);
@@ -44,6 +44,10 @@ export function StatisticheWrapper({filters}) {
 }
 
 export default function StatisticheChart({data}) {
+
+    console.log("data:", data);
+
+
     if (!data || data.length === 0) {
         return <p>Nessun dato da visualizzare. Prova a modificare i filtri.</p>;
     }

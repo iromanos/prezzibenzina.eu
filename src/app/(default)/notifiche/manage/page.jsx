@@ -18,6 +18,13 @@ export default function ManageNotificationPage() {
     const searchParams = useSearchParams();
     const subscriptionId = searchParams.get('id');
 
+    // Logica per il pre-riempimento del form tramite query params
+    const prefillData = !subscriptionId ? {
+        fuel_type: searchParams.get('fuel_type'),
+        geo_level: searchParams.get('geo_level'),
+        geo_code: searchParams.get('geo_code'),
+    } : null;
+
     // Logica di autenticazione
     const {isAuthenticated, token} = useAuth();
 
@@ -67,6 +74,7 @@ export default function ManageNotificationPage() {
                 <NotificationForm
                     initialSubscription={initialSubscription}
                     subscriptionId={subscriptionId}
+                    prefillData={prefillData}
                     onSubscriptionCreated={() => router.push('/notifiche')} // Reindirizza dopo creazione/modifica
                 />
             </div>
