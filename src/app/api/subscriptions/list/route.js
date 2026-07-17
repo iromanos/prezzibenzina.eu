@@ -1,42 +1,16 @@
 import {NextResponse} from 'next/server';
-import mysql from 'mysql2/promise';
-import jwt from 'jsonwebtoken';
+import {authMiddleware} from '../../auth/middleware';
+import {connectToDatabase} from "@/repos/mysql.jsx"; // Importa il middleware
 
-// Middleware per verificare il token JWT (riutilizzato)
-async function verifyToken(request) {
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return {error: 'Token di autenticazione mancante o non valido.', status: 401};
-    }
-
-    const token = authHeader.split(' ')[1];
+async function listSubscriptionsHandler(request) {
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return {userId: decoded.userId};
-    } catch (error) {
-        return {error: 'Token di autenticazione non valido o scaduto.', status: 401};
-    }
-}
+        const userId = request.user.id; // Ottieni l'ID utente dal middleware
 
-export async function GET(request) {
-    const authResult = await verifyToken(request);
-    if (authResult.error) {
-        return NextResponse.json({error: authResult.error}, {status: authResult.status});
-    }
-    const userId = authResult.userId;
+        const connection = await connectToDatabase();
 
-    try {
-        const connection = await mysql.createConnection({
-            host: process.env.DB_HOST,
-            port: process.env.DB_PORT,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            database: process.env.DB_DATABASE,
-        });
-
-        // Recupera tutte le sottoscrizioni per l'utente autenticato
+        // Recupera tutte le sottoscrizioni attive per l'utente
         const [subscriptions] = await connection.execute(
-            'SELECT id, fuel_type, geo_level, geo_code, threshold_type, threshold_value, status, created_at, updated_at, last_notified_at FROM price_subscriptions WHERE user_id = ? ORDER BY created_at DESC',
+            'SELECT id, fuel_type, geo_level, geo_code, threshold_type, threshold_value, status FROM price_subscriptions WHERE user_id = ? AND status = \'active\'',
             [userId]
         );
 
@@ -49,3 +23,5 @@ export async function GET(request) {
         return NextResponse.json({error: 'Errore interno del server.'}, {status: 500});
     }
 }
+
+export const GET = authMiddleware(listSubscriptionsHandler);

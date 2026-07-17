@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server';
 import jwt from 'jsonwebtoken';
-import {createUser, getUserByEmail} from '@/repos/users';
+import {createUser} from '@/repos/users';
 // Assumendo che tu abbia delle funzioni per interagire con il DB
 // import { findUserByEmail, createUser } from '@/lib/db'; 
 
@@ -54,17 +54,10 @@ export async function GET(request) {
         
         const { email, name, picture } = profileData;
 
-        let user = await getUserByEmail(email);
-        
-        if (!user) {
-            user = await createUser({ email, name, googleId: profileData.id, avatar: picture });
-        }
-        
-        // Per ora, assumiamo che l'utente esista e usiamo l'email come identificativo.
-        const userPayload = { email, name, avatar: picture };
+        const user = await createUser({email, name, googleId: profileData.id, avatar: picture});
 
         // 4. Crea il tuo JWT per la sessione utente
-        const appToken = jwt.sign(userPayload, process.env.NEXTAUTH_SECRET, { expiresIn: '1h' });
+        const appToken = jwt.sign(user, process.env.NEXTAUTH_SECRET, {expiresIn: '1h'});
 
         // 5. Reindirizza l'utente alla pagina delle notifiche, passando il token
         // Un modo è usare i parametri URL, ma per maggiore sicurezza potresti impostare un cookie httpOnly.
