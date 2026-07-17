@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/database/create_sent_notifications_table.sql" value="0e502044-06b8-4cfe-b503-680ae30100b7" />
     <file url="file://$PROJECT_DIR$/src/app/api/auth/forgot-password/route.test.js" value="0e502044-06b8-4cfe-b503-680ae30100b7" />
     <file url="file://$PROJECT_DIR$/src/app/api/auth/verify-email/request/route.js" value="0e502044-06b8-4cfe-b503-680ae30100b7" />
     <file url="file://$PROJECT_DIR$/src/app/api/auth/verify-email/request/route.test.js" value="0e502044-06b8-4cfe-b503-680ae30100b7" />

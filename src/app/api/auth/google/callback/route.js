@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server';
 import jwt from 'jsonwebtoken';
-import {getUserByEmail} from '@/repos/users';
+import {createUser, getUserByEmail} from '@/repos/users';
 // Assumendo che tu abbia delle funzioni per interagire con il DB
 // import { findUserByEmail, createUser } from '@/lib/db'; 
 
@@ -78,5 +78,3 @@ export async function GET(request) {
         return NextResponse.redirect(new URL('/auth/login?error=CallbackFailed', request.url));
     }
 }
-
-
