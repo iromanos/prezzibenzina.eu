@@ -127,7 +127,8 @@ export default async function Page({params}) { // Re-aggiunto async
         ]
     };
 
-    console.log("ICONE", SERVIZI_ICON_COMPONENTS);
+    // console.log("ICONE", SERVIZI_ICON_COMPONENTS);
+    console.log(impianto);
 
     return (
         <div className="pb-page-wrapper">
@@ -147,10 +148,9 @@ export default async function Page({params}) { // Re-aggiunto async
 
                 <ImpiantoScheda impianto={impianto} cookie={cookie}/>
 
-                {/* Pulsante Notifiche - Ora è un Client Component */}
                 <ImpiantoNotifyButton
                     impiantoId={impianto.id_impianto}
-                    defaultFuelType={impianto.prezzi?.[0]?.desc_carburante}
+                    defaultFuelType={cookie.carburante}
                 />
 
                 {impianto.elencoServizi &&

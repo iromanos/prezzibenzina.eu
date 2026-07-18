@@ -2,17 +2,22 @@
 
 import {useCallback, useEffect, useState} from 'react';
 import {FaGlobe, FaMapPin} from 'react-icons/fa6';
-import {FaMapMarkerAlt} from "react-icons/fa"; // Icone
+import {FaMapMarkerAlt} from "react-icons/fa";
+import {getImpianto} from "@/functions/api.jsx"; // Icone
 
 export default function NotificationGeoFilters({onGeoFilterChange, disabled, initialGeoLevel, initialGeoCode}) {
     const [regioni, setRegioni] = useState([]);
     const [province, setProvince] = useState([]);
-    const [livelloGeo, setLivelloGeo] = useState(initialGeoLevel || 'nazionale');
+    const [livelloGeo, setLivelloGeo] = useState(initialGeoLevel);
     const [selectedRegione, setSelectedRegione] = useState('');
     const [selectedProvincia, setSelectedProvincia] = useState('');
 
     // Carica dati geografici all'avvio
     useEffect(() => {
+        if (initialGeoLevel === null) return;
+
+        console.log(initialGeoLevel);
+
         async function fetchData() {
             try {
                 const [regioniRes, provinceRes] = await Promise.all([
@@ -28,16 +33,19 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
             }
         }
 
-        fetchData();
+        if (initialGeoLevel === 'distributore') {
+            getImpianto({impianto: initialGeoCode});
+        } else fetchData();
     }, []);
 
-    //TODO: non inizializza con i valori predefiniti
+    //TODO: non inizializza con i valori predefiniti per il comune
 
     // Inizializza gli stati locali con i valori iniziali (per la modifica)
     useEffect(() => {
 
         console.log(initialGeoLevel);
         console.log(initialGeoCode);
+        if (province.length === 0) return;
 
         if (initialGeoLevel) setLivelloGeo(initialGeoLevel);
         if (initialGeoCode) {
@@ -64,15 +72,15 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
     const emitGeoFilter = useCallback(() => {
         let geoFilter = {livello_geo: 'nazionale', codice_geo: 'IT'}; // Default
 
-        if (livelloGeo === 'regionale' && selectedRegione) {
-            geoFilter = {livello_geo: 'regionale', codice_geo: selectedRegione};
-        } else if (livelloGeo === 'provinciale' && selectedProvincia) {
-            geoFilter = {livello_geo: 'provinciale', codice_geo: selectedProvincia};
+        if (livelloGeo === 'regione' && selectedRegione) {
+            geoFilter = {livello_geo: 'regione', codice_geo: selectedRegione};
+        } else if (livelloGeo === 'provincia' && selectedProvincia) {
+            geoFilter = {livello_geo: 'provincia', codice_geo: selectedProvincia};
         } else if (livelloGeo === 'comune' && selectedProvincia) { // Assumiamo che per comune si selezioni prima la provincia
-            // Per il livello 'comune', avremmo bisogno di un endpoint API per i comuni di una provincia
-            // Per ora, useremo la provincia come codice_geo se il comune non è implementato
-            geoFilter = {livello_geo: 'provinciale', codice_geo: selectedProvincia};
+            geoFilter = {livello_geo: 'provincia', codice_geo: selectedProvincia};
             // TODO: Implementare selezione comune se necessario
+        } else if (livelloGeo === 'distributore') {
+            geoFilter = {livello_geo: 'distributore', codice_geo: 0};
         }
 
         onGeoFilterChange(geoFilter);
@@ -112,16 +120,18 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
                 <label htmlFor="livelloGeoNotif" className="form-label d-flex align-items-center">
                     <FaMapMarkerAlt className="me-2 text-muted"/> Livello Geografico
                 </label>
-                <select id="livelloGeoNotif" className="form-select" value={livelloGeo} onChange={handleLivelloChange}
-                        disabled={disabled}>
+                <select id="livelloGeoNotif" className="form-select"
+                        value={livelloGeo} onChange={handleLivelloChange}
+                        disabled={disabled || livelloGeo === 'distributore'}>
                     <option value="nazionale">Nazionale</option>
-                    <option value="regionale">Regionale</option>
-                    <option value="provinciale">Provinciale</option>
+                    <option value="regione">Regionale</option>
+                    <option value="provincia">Provinciale</option>
+                    <option value="distributore">Distributore</option>
                     {/* <option value="comune">Comune</option> */} {/* Abilitare quando l'API per i comuni è pronta */}
                 </select>
             </div>
 
-            {(livelloGeo === 'regionale' || livelloGeo === 'provinciale' || livelloGeo === 'comune') && (
+            {(livelloGeo === 'regione' || livelloGeo === 'provincia' || livelloGeo === 'comune') && (
                 <div className="mb-3">
                     <label htmlFor="regioneNotif" className="form-label d-flex align-items-center">
                         <FaMapPin className="me-2 text-muted"/> Regione
@@ -134,12 +144,12 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
                 </div>
             )}
 
-            {(livelloGeo === 'provinciale' || livelloGeo === 'comune') && selectedRegione && (
+            {(livelloGeo === 'provincia' || livelloGeo === 'comune') && selectedRegione && (
                 <div className="mb-3">
                     <label htmlFor="provinciaNotif" className="form-label d-flex align-items-center">
                         <FaMapPin className="me-2 text-muted"/> Provincia
                     </label>
-                    <select id="provinciaNotif" className="form-select" value={selectedProvincia}
+                    <select id="provinciaNotif" className="form-select" value={selectedProvincia.toUpperCase()}
                             onChange={handleProvinciaChange} disabled={disabled}>
                         <option value="">Seleziona una provincia</option>
                         {province.filter(p => p.regione === selectedRegione).map(p => <option key={p.id}

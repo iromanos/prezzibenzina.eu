@@ -4,9 +4,8 @@ import {useEffect, useState} from 'react';
 import {useRouter, useSearchParams} from 'next/navigation';
 import Header from '@/components/Header';
 import NotificationForm from '@/components/notifiche/NotificationForm';
-import {jwtDecode} from 'jwt-decode';
 
-import { useAuth } from '@/contexts/AuthContext';
+import {useAuth} from '@/contexts/AuthContext';
 
 
 export default function ManageNotificationPage() {
@@ -47,7 +46,8 @@ export default function ManageNotificationPage() {
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.error || 'Errore nel recupero della sottoscrizione.');
+                    setError(errorData.error || 'Errore nel recupero della sottoscrizione.');
+                    return;
                 }
 
                 const data = await response.json();

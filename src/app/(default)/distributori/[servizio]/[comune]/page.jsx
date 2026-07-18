@@ -9,7 +9,6 @@ import FilterBar from "../../../../../components/distributori/FilterBar";
 import MobileViewManager from "../../../../../components/distributori/MobileViewManager";
 import {generateDistributorSeoText} from "@/functions/seo";
 import GeolocationHandler from "../../../../../components/distributori/GeolocationHandler";
-import DistributoriNotifyButton from '@/components/distributori/DistributoriNotifyButton'; // Importa il nuovo componente
 
 const DOMAIN = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -209,9 +208,6 @@ export default async function PaginaDistributoreServizioComune({params, searchPa
                 serviceDescription={service.description}
                 distributori={distributori}
                 URI_IMAGE={URI_IMAGE}
-                // Passa il pulsante di notifica come prop
-                notifyButton={<DistributoriNotifyButton serviceSlug={servizioSlug} comuneSlug={comuneSlug}
-                                                        currentFuel={currentFuel}/>}
             />
         </div>
     );

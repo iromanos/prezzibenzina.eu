@@ -20,7 +20,7 @@ export default function ImpiantoNotifyButton({impiantoId, defaultFuelType}) {
             geo_level: 'distributore',
             geo_code: impiantoId,
         }).toString();
-        router.push(`/notifiche?${queryParams}`);
+        router.push(`/notifiche/manage?${queryParams}`);
     };
 
     return (

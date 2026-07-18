@@ -4,16 +4,18 @@ import {useCallback, useEffect, useState} from 'react';
 import NotificationGeoFilters from './NotificationGeoFilters'; // Componente per i filtri geografici
 import {FaBell, FaEuroSign, FaGasPump} from 'react-icons/fa'; // Icone
 import BootstrapModal from '@/components/common/BootstrapModal'; // Importa il componente Modal
-import { useAuth } from '@/contexts/AuthContext';
+import {useAuth} from '@/contexts/AuthContext';
 
 export default function NotificationForm({initialSubscription, subscriptionId, prefillData, onSubscriptionCreated}) {
     const [fuelType, setFuelType] = useState('Benzina');
-    const [geoFilters, setGeoFilters] = useState({livello_geo: 'nazionale', codice_geo: 'IT'});
+    const [geoFilters, setGeoFilters] = useState({livello_geo: null, codice_geo: null});
     const [thresholdType, setThresholdType] = useState('cheapest_in_area');
     const [thresholdValue, setThresholdValue] = useState('');
     const [status, setStatus] = useState('active'); // Aggiunto stato per la modifica
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const [impianto, setImpianto] = useState(null);
 
 
     const {token} = useAuth(); // Ottieni il token dal contesto di autenticazione   
@@ -129,6 +131,9 @@ export default function NotificationForm({initialSubscription, subscriptionId, p
             onSubscriptionCreated();// dovrebbe già reindirizzare o aggiornare la lista
         }
     };
+
+    console.log('GeoFilters:', geoFilters);
+
 
     return (
         <>
