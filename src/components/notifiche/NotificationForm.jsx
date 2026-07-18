@@ -5,10 +5,12 @@ import NotificationGeoFilters from './NotificationGeoFilters'; // Componente per
 import {FaBell, FaEuroSign, FaGasPump} from 'react-icons/fa'; // Icone
 import BootstrapModal from '@/components/common/BootstrapModal'; // Importa il componente Modal
 import {useAuth} from '@/contexts/AuthContext';
+import {getImpianto} from "@/functions/api.jsx";
+import ImpiantoCardMobile from "@/components/impianti/ImpiantoCardMobile.jsx";
 
 export default function NotificationForm({initialSubscription, subscriptionId, prefillData, onSubscriptionCreated}) {
     const [fuelType, setFuelType] = useState('Benzina');
-    const [geoFilters, setGeoFilters] = useState({livello_geo: null, codice_geo: null});
+    const [geoFilters, setGeoFilters] = useState({livello_geo: 'nazionale', codice_geo: 'IT'});
     const [thresholdType, setThresholdType] = useState('cheapest_in_area');
     const [thresholdValue, setThresholdValue] = useState('');
     const [status, setStatus] = useState('active'); // Aggiunto stato per la modifica
@@ -54,6 +56,16 @@ export default function NotificationForm({initialSubscription, subscriptionId, p
             }
         }
     }, [initialSubscription, prefillData]);
+
+    useEffect(() => {
+        if (geoFilters.livello_geo === 'distributore') {
+            getImpianto({query: {impianto: geoFilters.codice_geo}}).then(
+                (data) => {
+                    setImpianto(data);
+                }
+            )
+        }
+    }, [geoFilters]);
 
     const handleGeoFilterChange = useCallback((newGeoFilters) => {
         setGeoFilters(newGeoFilters);
@@ -172,6 +184,11 @@ export default function NotificationForm({initialSubscription, subscriptionId, p
                             initialGeoLevel={geoFilters.livello_geo}
                             initialGeoCode={geoFilters.codice_geo}
                         />
+
+                        {impianto &&
+
+                            <div className={'card mb-4 shadow'}>
+                                <ImpiantoCardMobile cardClient={false} impianto={impianto}/></div>}
 
                         {/* Tipo di Soglia */}
                         <div className="mb-3">

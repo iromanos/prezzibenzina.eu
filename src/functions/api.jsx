@@ -149,7 +149,7 @@ export async function getServizi() {
 }
 
 export async function getComune(slug) {
-    return cacheFetch(INTERNAL_URI + 'comuni/' + slug);
+    return cacheFetch(URI + 'comuni/' + slug);
 }
 
 export async function getMarchi() {
@@ -191,6 +191,9 @@ export function getElencoCarburanti() {
 }
 
 export async function getImpianto({query}) {
+
+    console.log(query);
+
     let request = URI + `impianto/${query.impianto}`;
 
     logDebug(request);
