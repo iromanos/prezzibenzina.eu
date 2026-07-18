@@ -30,7 +30,7 @@ export default function Header() {
         logout();
     };
 
-    console.log("User in Header:", user); // Logga l'oggetto user per il debug
+    // console.log("User in Header:", user); // Logga l'oggetto user per il debug
 
     return (
         <header className="bg-primary sticky-top">

@@ -1,0 +1,8 @@
+{
+    "configurations": [
+        {
+            "type": "chrome",
+            "name": "http://localhost:3000/notifiche/manage?fuel_type=benzina&geo_level=comune&geo_code=milano"
+        }
+    ]
+}

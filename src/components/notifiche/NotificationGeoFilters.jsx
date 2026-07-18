@@ -42,8 +42,8 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
     // Inizializza gli stati locali con i valori iniziali (per la modifica)
     useEffect(() => {
 
-        console.log(initialGeoLevel);
-        console.log(initialGeoCode);
+        // console.log(initialGeoLevel);
+        // console.log(initialGeoCode);
         if (province.length === 0) return;
 
         if (initialGeoLevel) setLivelloGeo(initialGeoLevel);
@@ -53,7 +53,7 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
                 setSelectedRegione(initialGeoCode);
             } else if (initialGeoLevel === 'provincia') {
                 // Trova la provincia per ottenere la regione
-                const prov = province.find(p => p.id === initialGeoCode.toUpperCase());
+                const prov = province.find(p => p.id.toUpperCase() === initialGeoCode.toUpperCase());
                 if (prov) {
                     setSelectedRegione(prov.regione);
                     setSelectedProvincia(initialGeoCode);
@@ -62,7 +62,7 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
                 getComune(initialGeoCode).then((data) => {
                     const prov = province.find(p => p.id === data.provincia_id);
                     setSelectedRegione(prov.regione);
-                    setSelectedProvincia(prov.id.toLowerCase());
+                    setSelectedProvincia(data.provincia_id);
                     setSelectedComune(initialGeoCode);
                 })
             }
@@ -129,6 +129,9 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
         setSelectedComune(e.target.value);
     }
 
+    console.log("livelloGeoInit:", initialGeoLevel);
+    console.log("livelloGeo:", livelloGeo);
+
     return (
         <div className="mb-4">
             <h6 className="mb-3 d-flex align-items-center text-primary">
@@ -179,14 +182,16 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
 
             {livelloGeo === 'comune' && selectedProvincia && (
                 <div className={'mb-3'}>
-                    <label className='form-label d-flex align-items-center'>
+                    <label 
+                    htmlFor='selectComune'
+                    className='form-label d-flex align-items-center'>
                         <FaMapPin className="me-2 text-muted"/> Comune
                     </label>
                     <select
                         onChange={handleComuneChange}
                         value={selectedComune}
 
-                        id='comune' className={'form-select'} disabled={disabled}>
+                        id='selectComune' className={'form-select'} disabled={disabled}>
                         <option value="">Seleziona un comune</option>
                         {comuni.map(c => <option value={c.id} key={c.id}>{c.name}</option>)}
                     </select>
