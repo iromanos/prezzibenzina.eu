@@ -3,12 +3,14 @@
 import {useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {FaEdit, FaTrash} from 'react-icons/fa';
-import BootstrapModal from '@/components/common/BootstrapModal'; // Importa il componente Modal
+import BootstrapModal from '@/components/common/BootstrapModal';
+import {useAuth} from "@/contexts/AuthContext.jsx"; // Importa il componente Modal
 
 export default function SubscriptionItem({subscription, onUpdate, onDelete}) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(''); // Errore specifico per l'item
     const router = useRouter();
+    const {token} = useAuth();
 
     // Stati per il modal
     const [showModal, setShowModal] = useState(false);
@@ -36,7 +38,7 @@ export default function SubscriptionItem({subscription, onUpdate, onDelete}) {
         setLoading(true);
         setError('');
 
-        const token = localStorage.getItem('jwt_token');
+        // const token = localStorage.getItem('jwt_token');
         if (!token) {
             setModalTitle('Errore di Autenticazione');
             setModalBody('Non autenticato. Effettua il login.');
