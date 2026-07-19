@@ -7,7 +7,7 @@ import NotificationForm from '@/components/notifiche/NotificationForm';
 
 import {useAuth} from '@/contexts/AuthContext';
 
-
+//TODO: sistemare il layout
 export default function ManageNotificationPage() {
     const [loadingAuth, setLoadingAuth] = useState(true);
     const [initialSubscription, setInitialSubscription] = useState(null);

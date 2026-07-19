@@ -6,6 +6,7 @@ import {FaEdit, FaTrash} from 'react-icons/fa';
 import BootstrapModal from '@/components/common/BootstrapModal';
 import {useAuth} from "@/contexts/AuthContext.jsx"; // Importa il componente Modal
 
+//TODO: sistemare il layout
 export default function SubscriptionItem({subscription, onUpdate, onDelete}) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(''); // Errore specifico per l'item
