@@ -1,7 +1,11 @@
-import { NextResponse } from 'next/server';
-import { jwtDecode } from "jwt-decode";
+import {NextResponse} from 'next/server';
+import {jwtDecode} from "jwt-decode";
 
-const protectedPaths = ['/notifiche', '/preferiti'];
+const protectedPaths = [
+    '/notifiche',
+    '/preferiti',
+    '/profilo'
+];
 
 export function authMiddleware(request) {
     const { pathname, search } = request.nextUrl;

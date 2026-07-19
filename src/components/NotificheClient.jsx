@@ -18,36 +18,39 @@ export default function NotificheClient({ initialSubscriptions }) {
 
     return (
         <div className="container my-4">
-            <h1 className="text-center mb-4">Le mie sottoscrizioni</h1>
-            <p className="text-center lead">
-                Qui potrai gestire le tue sottoscrizioni per ricevere avvisi sui prezzi dei carburanti.
-            </p>
-
-            {/* Pulsante per creare una nuova notifica */}
             <div className="text-center mb-4">
-                <Link href="/notifiche/manage" className="btn btn-primary btn-lg">
+                <h1 className="">Le mie Notifiche</h1>
+                <p className="lead">
+                    Gestisci le tue sottoscrizioni per ricevere avvisi sui prezzi dei carburanti.
+                </p>
+            </div>
+
+            <div className="text-center mb-4">
+                <Link href="/notifiche/manage" className="btn btn-primary btn-lg shadow-sm">
                     <FaPlus className="me-2" /> Crea Nuova Notifica
                 </Link>
             </div>
 
-            {/* Elenco delle notifiche */}
-            <div className="card mb-4">
-                <div className="card-body">
-                    <h5 className="card-title">Le tue sottoscrizioni attive</h5>
-                    {subscriptions.length === 0 ? (
-                        <p>Nessuna notifica attiva. Clicca su "Crea Nuova Notifica" per aggiungerne una.</p>
-                    ) : (
-                        <ul className="list-group">
-                            {subscriptions.map(sub => (
+            <div className="row justify-content-center">
+                <div className="col-lg-8">
+                    <ul className="list-group shadow-sm">
+                        {subscriptions.length === 0 ? (
+                            <li className="list-group-item text-center p-4">
+                                <p className="mb-0">Nessuna notifica attiva.</p>
+                                <p className="text-muted">Clicca su "Crea Nuova Notifica" per aggiungerne una e non
+                                    perdere le migliori offerte.</p>
+                            </li>
+                        ) : (
+                            subscriptions.map(sub => (
                                 <SubscriptionItem
                                     key={sub.id}
                                     subscription={sub}
                                     onUpdate={handleSubscriptionUpdate}
                                     onDelete={handleSubscriptionDelete}
                                 />
-                            ))}
-                        </ul>
-                    )}
+                            ))
+                        )}
+                    </ul>
                 </div>
             </div>
         </div>

@@ -150,19 +150,22 @@ export default function NotificationForm({initialSubscription, subscriptionId, p
 
     return (
         <>
-            <div className="card mb-4">
-                <div className="card-body">
-                    <h5 className="card-title d-flex align-items-center mb-3">
-                        <FaBell
-                            className="me-2 text-primary"/> {subscriptionId ? 'Modifica Notifica' : 'Crea Nuova Notifica'}
-                    </h5>
-                    {error && <div className="alert alert-danger">{error}</div>}
-                    <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="p-lg-2">
+                <h2 className="h3 mb-4 d-flex align-items-center">
+                    <FaBell className="me-2 text-primary"/>
+                    {subscriptionId ? 'Modifica Notifica' : 'Crea Nuova Notifica'}
+                </h2>
+
+                {error && <div className="alert alert-danger">{error}</div>}
+
+                {/* Sezione Carburante */}
+                <div className="card mb-4 shadow-sm">
+                    <div className="card-body">
+                        <h5 className="card-title d-flex align-items-center"><FaGasPump className="me-2 text-muted"/>
+                            Carburante</h5>
                         <div className="mb-3">
-                            <label htmlFor="fuelType" className="form-label d-flex align-items-center">
-                                <FaGasPump className="me-2 text-muted"/> Carburante
-                            </label>
-                            <select id="fuelType" className="form-select" value={fuelType}
+                            <label htmlFor="fuelType" className="form-label">Scegli il tipo di carburante</label>
+                            <select id="fuelType" className="form-select form-select-lg" value={fuelType}
                                     onChange={(e) => setFuelType(e.target.value)} required disabled={loading}>
                                 <option value="Benzina">Benzina</option>
                                 <option value="Diesel">Diesel</option>
@@ -170,64 +173,93 @@ export default function NotificationForm({initialSubscription, subscriptionId, p
                                 <option value="Metano">Metano</option>
                             </select>
                         </div>
+                    </div>
+                </div>
 
+                {/* Sezione Area Geografica */}
+                <div className="card mb-4 shadow-sm">
+                    <div className="card-body">
                         <NotificationGeoFilters
                             onGeoFilterChange={handleGeoFilterChange}
                             geoFilters={geoFilters}
                             disabled={loading}
                         />
-
-                        {impianto && <div className={'card mb-4 shadow'}><ImpiantoCardMobile cardClient={false}
-                                                                                             impianto={impianto}/>
+                        {impianto && <div className={'card mt-3 shadow-sm'}><ImpiantoCardMobile cardClient={false}
+                                                                                                impianto={impianto}/>
                         </div>}
+                    </div>
+                </div>
 
-                        <div className="mb-3">
-                            <label className="form-label d-flex align-items-center">
-                                <FaEuroSign className="me-2 text-muted"/> Condizione di Notifica
+                {/* Sezione Condizione di Notifica */}
+                <div className="card mb-4 shadow-sm">
+                    <div className="card-body">
+                        <h5 className="card-title d-flex align-items-center"><FaEuroSign className="me-2 text-muted"/>
+                            Condizione di Notifica</h5>
+                        <div className="d-grid gap-2">
+                            <input type="radio" className="btn-check" name="thresholdType" id="cheapestInArea"
+                                   value="cheapest_in_area" checked={thresholdType === 'cheapest_in_area'}
+                                   onChange={() => setThresholdType('cheapest_in_area')} disabled={loading}/>
+                            <label className="btn btn-outline-primary" htmlFor="cheapestInArea">
+                                Avvisami quando è il più economico
+                                <small className="d-block text-muted">Ricevi una notifica se il prezzo diventa il più
+                                    basso nell'area scelta.</small>
                             </label>
-                            <div className="form-check">
-                                <input className="form-check-input" type="radio" name="thresholdType"
-                                       id="cheapestInArea" value="cheapest_in_area"
-                                       checked={thresholdType === 'cheapest_in_area'}
-                                       onChange={() => setThresholdType('cheapest_in_area')} disabled={loading}/>
-                                <label className="form-check-label" htmlFor="cheapestInArea">Il prezzo diventa il più
-                                    basso nell'area selezionata</label>
-                            </div>
-                            <div className="form-check">
-                                <input className="form-check-input" type="radio" name="thresholdType" id="belowPrice"
-                                       value="below_price" checked={thresholdType === 'below_price'}
-                                       onChange={() => setThresholdType('below_price')} disabled={loading}/>
-                                <label className="form-check-label" htmlFor="belowPrice">Il prezzo scende sotto un
-                                    valore specifico</label>
-                            </div>
+
+                            <input type="radio" className="btn-check" name="thresholdType" id="belowPrice"
+                                   value="below_price" checked={thresholdType === 'below_price'}
+                                   onChange={() => setThresholdType('below_price')} disabled={loading}/>
+                            <label className="btn btn-outline-primary" htmlFor="belowPrice">
+                                Avvisami sotto una soglia
+                                <small className="d-block text-muted">Imposta un prezzo e ricevi una notifica quando
+                                    scende al di sotto.</small>
+                            </label>
                         </div>
 
                         {thresholdType === 'below_price' && (
-                            <div className="mb-3">
+                            <div className="mt-3">
                                 <label htmlFor="thresholdValue" className="form-label">Valore Soglia (€/L)</label>
-                                <input type="number" step="0.001" className="form-control" id="thresholdValue"
-                                       value={thresholdValue} onChange={(e) => setThresholdValue(e.target.value)}
-                                       required={thresholdType === 'below_price'} disabled={loading}/>
+                                <input type="number" step="0.001" className="form-control form-control-lg"
+                                       id="thresholdValue" value={thresholdValue}
+                                       onChange={(e) => setThresholdValue(e.target.value)}
+                                       required={thresholdType === 'below_price'} disabled={loading}
+                                       placeholder="Es. 1.750"/>
                             </div>
                         )}
-
-                        {subscriptionId && (
-                            <div className="mb-3">
-                                <label htmlFor="status" className="form-label">Stato Notifica</label>
-                                <select id="status" className="form-select" value={status}
-                                        onChange={(e) => setStatus(e.target.value)} disabled={loading}>
-                                    <option value="active">Attiva</option>
-                                    <option value="paused">In Pausa</option>
-                                </select>
-                            </div>
-                        )}
-
-                        <button type="submit" className="btn btn-primary w-100" disabled={loading || isInitializing}>
-                            {loading ? 'Salvataggio...' : (subscriptionId ? 'Salva Modifiche' : 'Crea Notifica')}
-                        </button>
-                    </form>
+                    </div>
                 </div>
-            </div>
+
+                {/* Sezione Stato Notifica (solo in modifica) */}
+                {subscriptionId && (
+                    <div className="card mb-4 shadow-sm">
+                        <div className="card-body">
+                            <div className="form-check form-switch">
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    role="switch"
+                                    id="notificationStatus"
+                                    checked={status === 'active'}
+                                    onChange={(e) => setStatus(e.target.checked ? 'active' : 'paused')}
+                                    disabled={loading}
+                                />
+                                <label className="form-check-label" htmlFor="notificationStatus">
+                                    {status === 'active' ? 'Notifica Attiva' : 'Notifica in Pausa'}
+                                </label>
+                            </div>
+                            <div className="form-text mt-2">
+                                Puoi disattivare temporaneamente la notifica senza cancellarla.
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+
+                <div className="d-grid">
+                    <button type="submit" className="btn btn-primary btn-lg" disabled={loading || isInitializing}>
+                        {loading ? 'Salvataggio...' : (subscriptionId ? 'Salva Modifiche' : 'Crea Notifica')}
+                    </button>
+                </div>
+            </form>
 
             <BootstrapModal show={showModal} handleClose={handleCloseModal} title={modalTitle} body={modalBody}
                             type={modalType}/>

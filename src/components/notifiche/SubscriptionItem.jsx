@@ -2,23 +2,20 @@
 
 import {useState} from 'react';
 import {useRouter} from 'next/navigation';
-import {FaEdit, FaTrash} from 'react-icons/fa';
+import {FaEdit, FaPauseCircle, FaPlayCircle, FaTrash} from 'react-icons/fa';
 import BootstrapModal from '@/components/common/BootstrapModal';
-import {useAuth} from "@/contexts/AuthContext.jsx"; // Importa il componente Modal
+import {useAuth} from "@/contexts/AuthContext.jsx";
 
-//TODO: sistemare il layout
 export default function SubscriptionItem({subscription, onUpdate, onDelete}) {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(''); // Errore specifico per l'item
     const router = useRouter();
     const {token} = useAuth();
 
-    // Stati per il modal
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
     const [modalBody, setModalBody] = useState('');
     const [modalType, setModalType] = useState('info');
-    const [modalOnConfirm, setModalOnConfirm] = useState(null); // Funzione da eseguire alla conferma
+    const [modalOnConfirm, setModalOnConfirm] = useState(null);
 
     const handleEditClick = () => {
         router.push(`/notifiche/manage?id=${subscription.id}`);
@@ -29,7 +26,7 @@ export default function SubscriptionItem({subscription, onUpdate, onDelete}) {
         setModalBody(`Sei sicuro di voler eliminare la notifica per ${subscription.fuel_type} in ${subscription.geo_level} (${subscription.geo_code})?`);
         setModalType('danger');
         setModalOnConfirm(() => async () => {
-            setShowModal(false); // Chiudi il modal prima di procedere
+            setShowModal(false);
             await executeDelete();
         });
         setShowModal(true);
@@ -37,9 +34,7 @@ export default function SubscriptionItem({subscription, onUpdate, onDelete}) {
 
     const executeDelete = async () => {
         setLoading(true);
-        setError('');
 
-        // const token = localStorage.getItem('jwt_token');
         if (!token) {
             setModalTitle('Errore di Autenticazione');
             setModalBody('Non autenticato. Effettua il login.');
@@ -60,22 +55,22 @@ export default function SubscriptionItem({subscription, onUpdate, onDelete}) {
             const data = await response.json();
 
             if (response.ok) {
-                setModalTitle('Successo!');
-                setModalBody('Notifica eliminata con successo!');
+                setModalTitle('Successo');
+                setModalBody('Notifica eliminata con successo.');
                 setModalType('success');
                 setShowModal(true);
                 if (onDelete) {
                     onDelete(subscription.id);
                 }
             } else {
-                setModalTitle('Errore!');
+                setModalTitle('Errore');
                 setModalBody(data.error || 'Errore durante l\'eliminazione della notifica.');
                 setModalType('danger');
                 setShowModal(true);
             }
         } catch (err) {
             console.error('Errore di rete o del server:', err);
-            setModalTitle('Errore di Connessione!');
+            setModalTitle('Errore di Connessione');
             setModalBody('Impossibile connettersi al server. Riprova più tardi.');
             setModalType('danger');
             setShowModal(true);
@@ -86,31 +81,49 @@ export default function SubscriptionItem({subscription, onUpdate, onDelete}) {
 
     const handleCloseModal = () => {
         setShowModal(false);
-        setModalOnConfirm(null); // Resetta la funzione di conferma
+        setModalOnConfirm(null);
+    };
+
+    const StatusIndicator = ({status}) => {
+        if (status === 'active') {
+            return (
+                <span className="d-flex align-items-center text-success">
+                    <FaPlayCircle className="me-1"/> Attiva
+                </span>
+            );
+        }
+        return (
+            <span className="d-flex align-items-center text-muted">
+                <FaPauseCircle className="me-1"/> In Pausa
+            </span>
+        );
     };
 
     return (
         <>
-            <li className="list-group-item mb-3 p-3 shadow-sm rounded">
-                {error && <div className="alert alert-danger mb-3">{error}</div>}
-                <div className="d-flex justify-content-between align-items-center">
-                    <div>
-                        <strong>{subscription.fuel_type}</strong> in {subscription.geo_level} ({subscription.geo_code})
-                        {subscription.threshold_type === 'below_price' && ` sotto ${parseFloat(subscription.threshold_value).toFixed(3)} €/L`}
-                        {subscription.threshold_type === 'cheapest_in_area' && ` (più economico nell'area)`}
-                        <span
-                            className={`badge bg-${subscription.status === 'active' ? 'success' : 'secondary'} ms-2`}>{subscription.status}</span>
+            <li className="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 className="mb-1">
+                        <strong>{subscription.fuel_type}</strong>
+                    </h5>
+                    <div className="mb-2">
+                        <StatusIndicator status={subscription.status}/>
                     </div>
-                    <div>
-                        <button className="btn btn-sm btn-outline-primary me-2" onClick={handleEditClick}
-                                disabled={loading}>
-                            <FaEdit/> Modifica
-                        </button>
-                        <button className="btn btn-sm btn-outline-danger" onClick={handleDeleteConfirm}
-                                disabled={loading}>
-                            <FaTrash/> Elimina
-                        </button>
-                    </div>
+                    <p className="mb-1">
+                        {subscription.geo_level}: <strong>{subscription.geo_code}</strong>
+                    </p>
+                    <small className="text-muted">
+                        {subscription.threshold_type === 'below_price' && `Avvisa se il prezzo è sotto ${parseFloat(subscription.threshold_value).toFixed(3)} €/L`}
+                        {subscription.threshold_type === 'cheapest_in_area' && `Avvisa per il più economico nell'area`}
+                    </small>
+                </div>
+                <div className="d-flex flex-column flex-md-row gap-2">
+                    <button className="btn btn-outline-primary btn-sm" onClick={handleEditClick} disabled={loading}>
+                        <FaEdit/> <span className="d-none d-md-inline">Modifica</span>
+                    </button>
+                    <button className="btn btn-outline-danger btn-sm" onClick={handleDeleteConfirm} disabled={loading}>
+                        <FaTrash/> <span className="d-none d-md-inline">Elimina</span>
+                    </button>
                 </div>
             </li>
 

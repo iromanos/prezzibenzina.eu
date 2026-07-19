@@ -1,6 +1,6 @@
 'use client';
 
-import React, {createContext, useCallback, useContext, useEffect, useState, useMemo} from 'react';
+import React, {createContext, useCallback, useContext, useState} from 'react';
 import {useRouter} from 'next/navigation';
 
 const AuthContext = createContext(null);
@@ -22,7 +22,7 @@ export function AuthProvider({ children, appToken = null, initialUser = null }) 
                 }
                 setToken(null);
                 setUser(null);
-                router.push('/auth/login');
+                router.push('/');
                 router.refresh(); // Assicura che i componenti server vengano ri-renderizzati
             }).catch(error => {
                 console.error("Errore durante il logout:", error);
@@ -32,7 +32,7 @@ export function AuthProvider({ children, appToken = null, initialUser = null }) 
 
     const value = {
         token,
-        user,
+        user: token !== null ? user : null,
         isAuthenticated: !!user,
         logout,
     };

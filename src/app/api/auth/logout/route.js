@@ -1,17 +1,14 @@
-// src/app/api/auth/logout/route.js
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import {cookies} from 'next/headers';
+import {NextResponse} from 'next/server';
 
 export async function POST() {
+    const cookieStore = await cookies();
+
     try {
-        
-        const cookieStore = await cookies()
-        
-        cookieStore.delete('jwt_token', { path: '/' }); // Rimuove il cookie impostando maxAge a 0
-        
+        cookieStore.delete('jwt_token');
+
         return NextResponse.json({ message: 'Logout successful' }, { status: 200 });
     } catch (error) {
-        console.error('Logout error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        return NextResponse.json({error: 'Logout failed'}, {status: 500});
     }
 }
