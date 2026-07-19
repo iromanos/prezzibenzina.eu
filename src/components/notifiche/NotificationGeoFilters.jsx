@@ -37,8 +37,6 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
         fetchData();
     }, []);
 
-    //TODO: non inizializza con i valori predefiniti per il comune
-
     // Inizializza gli stati locali con i valori iniziali (per la modifica)
     useEffect(() => {
 
@@ -61,9 +59,11 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
             } else if (initialGeoLevel === 'comune') {
                 getComune(initialGeoCode).then((data) => {
                     const prov = province.find(p => p.id === data.provincia_id);
-                    setSelectedRegione(prov.regione);
-                    setSelectedProvincia(data.provincia_id);
-                    setSelectedComune(initialGeoCode);
+                    if (prov) {
+                        setSelectedRegione(prov.regione);
+                        setSelectedProvincia(data.provincia_id);
+                        setSelectedComune(initialGeoCode);
+                    }
                 })
             }
         }
@@ -84,11 +84,15 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
         }
 
         onGeoFilterChange(geoFilter);
-    }, [livelloGeo, selectedRegione, selectedProvincia, selectedComune, onGeoFilterChange]);
+    }, [livelloGeo, selectedRegione, selectedProvincia, selectedComune, onGeoFilterChange, initialGeoCode]);
 
 
+    // Carica i comuni quando la provincia cambia
     useEffect(() => {
-        if (!selectedProvincia) return;
+        if (!selectedProvincia) {
+            setComuni([]);
+            return;
+        }
 
         const params = new URLSearchParams({provincia: selectedProvincia});
 
@@ -112,17 +116,20 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
         setLivelloGeo(newLivello);
         setSelectedRegione('');
         setSelectedProvincia('');
+        setSelectedComune('');
     };
 
     const handleRegioneChange = (e) => {
         const newRegione = e.target.value;
         setSelectedRegione(newRegione);
         setSelectedProvincia('');
+        setSelectedComune('');
     };
 
     const handleProvinciaChange = (e) => {
         const newProvincia = e.target.value;
         setSelectedProvincia(newProvincia);
+        setSelectedComune('');
     };
 
     const handleComuneChange = (e) => {
@@ -131,6 +138,7 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
 
     console.log("livelloGeoInit:", initialGeoLevel);
     console.log("livelloGeo:", livelloGeo);
+    console.log("selectedComune:", selectedComune);
 
     return (
         <div className="mb-4">
@@ -171,7 +179,7 @@ export default function NotificationGeoFilters({onGeoFilterChange, disabled, ini
                     <label htmlFor="provinciaNotif" className="form-label d-flex align-items-center">
                         <FaMapPin className="me-2 text-muted"/> Provincia
                     </label>
-                    <select id="provinciaNotif" className="form-select" value={selectedProvincia.toUpperCase()}
+                    <select id="provinciaNotif" className="form-select" value={selectedProvincia}
                             onChange={handleProvinciaChange} disabled={disabled}>
                         <option value="">Seleziona una provincia</option>
                         {province.filter(p => p.regione === selectedRegione).map(p => <option key={p.id}
