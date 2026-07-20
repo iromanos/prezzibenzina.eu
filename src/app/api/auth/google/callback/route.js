@@ -5,6 +5,9 @@ import {createUser} from '@/repos/users';
 // import { findUserByEmail, createUser } from '@/lib/db'; 
 
 export async function GET(request) {
+
+    const url = process.env.NEXT_PUBLIC_BASE_URL;
+
     const { searchParams } = new URL(request.url);
     const code = searchParams.get('code');
     const error = searchParams.get('error');
@@ -12,11 +15,11 @@ export async function GET(request) {
     if (error) {
         console.error('Errore durante l\'autenticazione Google:', error);
         // Reindirizza alla pagina di login con un messaggio di errore
-        return NextResponse.redirect(new URL('/auth/login?error=GoogleAuthFailed', request.url));
+        return NextResponse.redirect(new URL('/auth/login?error=GoogleAuthFailed', url));
     }
 
     if (!code) {
-        return NextResponse.redirect(new URL('/auth/login?error=MissingCode', request.url));
+        return NextResponse.redirect(new URL('/auth/login?error=MissingCode', url));
     }
 
     try {
@@ -30,7 +33,7 @@ export async function GET(request) {
                 code,
                 client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
                 client_secret: process.env.GOOGLE_CLIENT_SECRET, // Variabile d'ambiente privata
-                redirect_uri: `${new URL(request.url).origin}/api/auth/google/callback`,
+                redirect_uri: `${url}/api/auth/google/callback`,
                 grant_type: 'authorization_code',
             }),
         });
@@ -60,7 +63,7 @@ export async function GET(request) {
         const appToken = jwt.sign(user, process.env.NEXTAUTH_SECRET, {expiresIn: '1h'});
 
         // 5. Reindirizza l'utente alla home page e imposta il cookie della sessione.
-        const redirectUrl = new URL('/', request.url);
+        const redirectUrl = url; //new URL('/', request.url);
         const response = NextResponse.redirect(redirectUrl);
 
         // Imposta il cookie JWT sulla risposta.
@@ -70,6 +73,6 @@ export async function GET(request) {
 
     } catch (err) {
         console.error('Errore nel callback di Google:', err);
-        return NextResponse.redirect(new URL('/auth/login?error=CallbackFailed', request.url));
+        return NextResponse.redirect(new URL('/auth/login?error=CallbackFailed', url));
     }
 }

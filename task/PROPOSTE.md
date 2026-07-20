@@ -5,17 +5,6 @@ aumentare il traffico, migliorare l'esperienza utente e posizionare il sito come
 
 ## Nuove Funzionalità
 
-### 1. Sistema di Notifiche Prezzi (User Retention)
-
-**Perché:** Aumentare il coinvolgimento e la fidelizzazione degli utenti, riportandoli sul sito in modo proattivo.
-
-**Come:**
-
-- Gli utenti possono "seguire" un tipo di carburante in una specifica area geografica (comune o provincia).
-- Quando un distributore in quella zona abbassa il prezzo al di sotto di una certa soglia (o diventa il più economico),
-  l'utente riceve una notifica via email o push (se implementata una PWA).
-- Questo richiede un'infrastruttura di backend per tracciare i prezzi e gestire le sottoscrizioni degli utenti.
-
 ### 3. Integrazione Programmi Fedeltà (Unique Selling Proposition)
 
 **Perché:** Offrire una funzionalità unica che differenzi PrezziBenzina.eu dai competitor.
