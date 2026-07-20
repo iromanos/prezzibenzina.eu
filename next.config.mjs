@@ -12,7 +12,12 @@ const nextConfig = {
     },
     images: {
         remotePatterns: [
-            // Configurazione per il server Locale (localhost)
+            {
+                protocol: 'https',
+                hostname: 'lh3.googleusercontent.com',
+                port: '',
+                pathname: '/**',
+            },
             {
                 protocol: 'http',
                 hostname: 'localhost',

@@ -3,7 +3,7 @@ import {getImpianto} from "@/functions/api";
 import Header from "@/components/Header";
 import {getCookie} from "@/functions/cookies";
 import {getOpenGraph, getTwitter} from "@/functions/server";
-// import {headers} from "next/headers";
+import {headers} from "next/headers"; // Re-importa headers per Server Component
 import {notFound, redirect} from "next/navigation";
 import {ucwords} from "@/functions/helpers";
 import {BsCreditCard, BsCupHot, BsDroplet, BsPCircle, BsPersonWheelchair, BsTools, BsWater} from "react-icons/bs";
@@ -12,6 +12,7 @@ import Display5745053645 from "@/components/ads/Display-5745053645";
 import Link from "next/link";
 import slugify from "slugify";
 import {FaBaby, FaCarSide, FaChargingStation, FaWifi} from "react-icons/fa6";
+import ImpiantoNotifyButton from '@/components/impianti/ImpiantoNotifyButton'; // Importa il nuovo componente
 
 export const revalidate = 300;
 
@@ -30,45 +31,27 @@ const SERVIZI_ICON_COMPONENTS = {
 };
 
 export async function generateMetadata({params}) {
-
     const query = await params;
-
     const impianto = await getImpianto({query});
-
     if (impianto === null) {
         notFound();
     }
-
     console.log("impianto", impianto);
-
     const imageUrl = '/assets/logo-og.png';
-
-
     const lowerNome = impianto.nome_impianto.toLowerCase();
     const lowerBandiera = impianto.bandiera.toLowerCase();
     const lowerComune = impianto.comune.toLowerCase();
-
-    // Puliamo il nome dell'impianto rimuovendo ridondanze con la bandiera e il comune
-    // per evitare nomi come "Esso Esso Roma"
     let cleanNome = lowerNome.replace(lowerBandiera, '').replace(lowerComune, '').trim();
-
-    // Costruiamo il nome finale anteponendo la bandiera (es. "Eni Corso Sempione")
     const finalNomeImpianto = ucwords(`${lowerBandiera} ${cleanNome}`.trim());
-
-    // Estraiamo i carburanti disponibili per il titolo e la descrizione
     let fuelsList = impianto.prezzi
         ?.map(f => f.desc_carburante)
         .filter((value, index, self) => self.indexOf(value) === index) // Rimuove duplicati
-
-    // Se la lista è troppo lunga per il titolo, prendiamo solo i primi 3 per non tagliare il brand/comune
     const titleFuels = fuelsList?.length > 3 ? fuelsList.slice(0, 3).join(', ') + '...' : fuelsList?.join(', ');
     const availableFuels = fuelsList?.join(', ');
-
     const title = `Prezzo ${titleFuels || 'Carburante'} ${finalNomeImpianto} a ${impianto.comune} | PrezziBenzina.eu`;
     const description = `Prezzi aggiornati per ${availableFuels || 'Benzina, Diesel, Metano e GPL'} al distributore ${finalNomeImpianto} a ${impianto.comune}. Consulta mappa, orari, servizi e confronta i prezzi oggi.`;
-
     const canonicalUrl = process.env.NEXT_PUBLIC_BASE_URL + '/impianto/' + impianto.link;
-
+    const headerList = headers(); // Chiamata a headers() per getCanonicalUrl
     return {
         title: title,
         description: description,
@@ -81,11 +64,10 @@ export async function generateMetadata({params}) {
         },
         openGraph: getOpenGraph(canonicalUrl, title, description, imageUrl),
         twitter: getTwitter(title, description, imageUrl),
-
     };
 }
 
-export default async function Page({params}) {
+export default async function Page({params}) { // Re-aggiunto async
     const query = await params;
 
     const impianto = await getImpianto({query});
@@ -145,7 +127,8 @@ export default async function Page({params}) {
         ]
     };
 
-    console.log("ICONE", SERVIZI_ICON_COMPONENTS);
+    // console.log("ICONE", SERVIZI_ICON_COMPONENTS);
+    console.log(impianto);
 
     return (
         <div className="pb-page-wrapper">
@@ -164,6 +147,12 @@ export default async function Page({params}) {
             <main className="container">
 
                 <ImpiantoScheda impianto={impianto} cookie={cookie}/>
+
+                <ImpiantoNotifyButton
+                    impiantoId={impianto.id_impianto}
+                    defaultFuelType={cookie.carburante}
+                />
+
                 {impianto.elencoServizi &&
                     <section className="mb-5 p-4 bg-light rounded border ">
                     <h3 className="h6 fw-bold text-uppercase text-muted mb-3">Cerca altro a {impianto.comune}</h3>

@@ -20,6 +20,7 @@ import {GuidaCarburantiAutomobilistaVER3} from "@/components/GuidaCarburantiAuto
 import FiltroCarburante from "@/components/FiltroCarburante";
 import '../styles/milano.scss';
 import {StatisticheWrapper} from "./statistiche/StatisticheChart.jsx";
+import DistributoriNotifyButton from "./distributori/DistributoriNotifyButton";
 
 
 export async function getPageParams({params, searchParams}) {
@@ -193,6 +194,9 @@ export default async function DistributoriPage({params}) {
         return maxBounds;
     }
 
+    console.log(riepilogo.request);
+
+
     return <>
         {microdata !== null &&
         <script
@@ -215,6 +219,14 @@ export default async function DistributoriPage({params}) {
                 provincia={sigla}
                 comune={riepilogo.request.comune}
                 marchio={marchio}/>
+
+            <DistributoriNotifyButton
+                geo_level={scope.livello}
+                geo_code={scope.valore}
+                currentFuel={carburante}
+
+            
+            />        
 
             <div className={'d-flex flex-column flex-md-row align-items-md-start align-items-center gap-4 mb-2'}>
                 {marchio &&

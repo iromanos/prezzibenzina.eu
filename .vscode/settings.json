@@ -1,0 +1,19 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 33070,
+            "driver": "MySQL",
+            "name": "wefuel",
+            "database": "wefuel",
+            "username": "wefuel",
+            "password": "wefuel"
+        }
+    ]
+}
