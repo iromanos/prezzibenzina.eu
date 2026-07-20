@@ -15,6 +15,16 @@ import Image from 'next/image';
 export default function SegnalaClient({distributore}) {
 
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
+
+    const [formData, setFormData] = useState({
+        tipo_segnalazione: '',
+        messaggio: '',
+        email: '',
+    });
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [recaptchaToken, setRecaptchaToken] = useState('');
     const recaptchaRef = useRef(null);
 
@@ -30,11 +40,11 @@ export default function SegnalaClient({distributore}) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         // setLoading(true);
-        // setError('');
-        // setSuccess('');
+        setError('');
+        setSuccess('');
 
         if (!recaptchaToken) {
-            // setError('Verifica reCAPTCHA non completata. Riprova.');
+            setError('Verifica reCAPTCHA non completata. Riprova.');
             // setLoading(false);
             return;
         }
@@ -51,18 +61,18 @@ export default function SegnalaClient({distributore}) {
             const data = await response.json();
 
             if (response.ok) {
-                // setSuccess(data.message || 'Messaggio inviato con successo!');
+                setSuccess(data.message || 'Messaggio inviato con successo!');
                 // setFormData({name: '', email: '', message: ''}); // Resetta il form
                 setRecaptchaToken(''); // Resetta il token reCAPTCHA
                 if (recaptchaRef.current) {
                     recaptchaRef.current.execute(); // Richiedi un nuovo token reCAPTCHA
                 }
             } else {
-                // setError(data.error || 'Errore durante l\'invio del messaggio.');
+                setError(data.error || 'Errore durante l\'invio del messaggio.');
             }
         } catch (err) {
             console.error('Errore di rete o del server:', err);
-            // setError('Impossibile connettersi al server. Riprova più tardi.');
+            setError('Impossibile connettersi al server. Riprova più tardi.');
         } finally {
             // setLoading(false);
         }
@@ -107,6 +117,8 @@ export default function SegnalaClient({distributore}) {
                             </div>
                         </div>
                     </div>
+                    {error && <div className="alert alert-danger">{error}</div>}
+                    {success && <div className="alert alert-success">{success}</div>}
 
                     <div className="card shadow-sm border-0">
                         <div className="card-body p-4">
@@ -116,13 +128,17 @@ export default function SegnalaClient({distributore}) {
                                 questo impianto.
                             </p>
                             <Disclaimer/>
-                            <form>
+                            <form onSubmit={handleSubmit}>
                                 <div className="mb-3">
                                     <label htmlFor="tipo_segnalazione"
                                            className="form-label fw-bold small text-uppercase text-muted">Oggetto
                                         della segnalazione</label>
-                                    <select className="form-select shadow-none" id="tipo_segnalazione" required
-                                            defaultValue="">
+                                    <select
+                                        value={formData.tipo_segnalazione}
+                                        onChange={handleChange}
+                                        name="tipo_segnalazione"
+                                        className="form-select shadow-none" id="tipo_segnalazione"
+                                    >
                                         <option value="" disabled>Seleziona una categoria...</option>
                                         <option value="prezzo">Prezzo non corrispondente</option>
                                         <option value="posizione">Posizione sulla mappa errata</option>
@@ -136,11 +152,15 @@ export default function SegnalaClient({distributore}) {
                                     <label htmlFor="messaggio"
                                            className="form-label fw-bold small text-uppercase text-muted">Dettagli</label>
                                     <textarea
+
+                                        onChange={handleChange}
+                                        name="messaggio"
+                                        
                                         className="form-control shadow-none"
                                         id="messaggio"
                                         rows="5"
                                         placeholder="Spiegaci brevemente l'errore..."
-                                        required
+                                        value={formData.messaggio}
                                     ></textarea>
                                 </div>
 
@@ -149,6 +169,8 @@ export default function SegnalaClient({distributore}) {
                                            className="form-label fw-bold small text-uppercase text-muted">La tua
                                         Email (opzionale)</label>
                                     <input
+                                        onChange={handleChange}
+                                        name="email"
                                         type="email"
                                         className="form-control shadow-none"
                                         id="email"
