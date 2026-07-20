@@ -5,18 +5,7 @@ aumentare il traffico, migliorare l'esperienza utente e posizionare il sito come
 
 ## Nuove Funzionalità
 
-### 3. Integrazione Programmi Fedeltà (Unique Selling Proposition)
-
-**Perché:** Offrire una funzionalità unica che differenzi PrezziBenzina.eu dai competitor.
-
-**Come:**
-
-- Permettere agli utenti di collegare le loro carte fedeltà (es. Eni Club, IP Premia, etc.).
-- Mostrare i punti accumulati e i premi disponibili.
-- Evidenziare i distributori che offrono punti extra o sconti legati al programma fedeltà.
-- Questo richiede partnership o l'uso di API ufficiali dei programmi fedeltà, se disponibili.
-
-### 4. Espansione Europea (Market Growth)
+### 1. Espansione Europea (Market Growth)
 
 **Perché:** Intercettare un pubblico internazionale e diventare un punto di riferimento a livello europeo, aumentando
 esponenzialmente il traffico potenziale.
@@ -29,7 +18,7 @@ esponenzialmente il traffico potenziale.
   `prezzibenzina.eu/de/`).
 - **Adattamento Funzionalità:** Adattare le funzionalità di ricerca e mappa per supportare le nuove aree geografiche.
 
-### 5. Sito Multilingua (International SEO & UX)
+### 2. Sito Multilingua (International SEO & UX)
 
 **Perché:** Migliorare l'accessibilità e l'esperienza utente per un pubblico internazionale, e ottimizzare il sito per i
 motori di ricerca in diverse lingue.
@@ -42,7 +31,7 @@ motori di ricerca in diverse lingue.
 - **SEO Multilingua:** Implementare correttamente i tag `hreflang` per indicare ai motori di ricerca le versioni
   linguistiche di ogni pagina.
 
-### 6. Sezione Dedicata ai Marchi (Content & SEO)
+### 3. Sezione Dedicata ai Marchi (Content & SEO)
 
 **Perché:** Creare pagine di destinazione ottimizzate per le ricerche relative a specifici marchi di distributori (es. "
 prezzi benzina Eni"), catturando traffico qualificato.
