@@ -2,11 +2,23 @@ import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import RegisterPage from './page';
 import {useRouter} from 'next/navigation';
+import React from "react";
 
 // Mock di next/navigation
 jest.mock('next/navigation', () => ({
     useRouter: jest.fn(),
 }));
+
+jest.mock('@/contexts/AuthContext', () => ({
+    useAuth: jest.fn(),
+}));
+
+jest.mock('@/components/Header', () => {
+    return function DummyHeader() {
+        return <header>Header</header>;
+    };
+});
+
 
 // Mock della fetch API
 global.fetch = jest.fn();
@@ -33,7 +45,7 @@ describe('RegisterPage', () => {
         expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/conferma password/i)).toBeInTheDocument();
         expect(screen.getByRole('button', {name: /registrati/i})).toBeInTheDocument();
-        expect(screen.getAllByRole('link', {name: /accedi/i})).toHaveLength(2);
+        expect(screen.getAllByRole('link', {name: /accedi/i})).toHaveLength(1);
     });
 
     it('should display an error if passwords do not match', async () => {

@@ -55,10 +55,10 @@ describe('Users Repository', () => {
 
             const mockCreatedUser = {id: 2, ...userData};
 
-            // Prima chiamata per l'INSERT, seconda per la SELECT di recupero
             mockConnection.execute
-                .mockResolvedValueOnce([{}]) // Risultato INSERT
-                .mockResolvedValueOnce([[mockCreatedUser]]); // Risultato SELECT
+                .mockResolvedValueOnce([{}])
+                .mockResolvedValueOnce([{}])
+                .mockResolvedValueOnce([[mockCreatedUser]]);
 
             const result = await createUser(userData);
 

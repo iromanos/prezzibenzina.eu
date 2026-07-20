@@ -2,7 +2,7 @@
 
 import {useCallback, useEffect, useState} from 'react';
 import NotificationGeoFilters from './NotificationGeoFilters';
-import {FaBell, FaEuroSign, FaGasPump} from 'react-icons/fa';
+import {FaEuroSign, FaGasPump} from 'react-icons/fa';
 import BootstrapModal from '@/components/common/BootstrapModal';
 import {useAuth} from '@/contexts/AuthContext';
 import {getComune, getImpianto} from "@/functions/api.jsx";
@@ -41,7 +41,7 @@ export default function NotificationForm({initialSubscription, subscriptionId, p
                     return;
                 }
 
-                setFuelType(dataToLoad.fuel_type || 'Benzina');
+                setFuelType(dataToLoad.fuel_type || 'benzina');
                 setStatus(dataToLoad.status || 'active');
                 setThresholdType(dataToLoad.threshold_type || 'cheapest_in_area');
                 setThresholdValue(dataToLoad.threshold_value || '');
@@ -63,10 +63,13 @@ export default function NotificationForm({initialSubscription, subscriptionId, p
                     const provinceData = await provinceRes.json();
                     const prov = provinceData.find(p => p.id.toUpperCase() === geo_code.toUpperCase());
                     if (prov) newGeoFilters.regione = prov.regione;
-                    newGeoFilters.provincia = geo_code;
+                    newGeoFilters.provincia = geo_code.toUpperCase();
                 } else if (geo_level === 'regione' && geo_code) {
                     newGeoFilters.regione = geo_code;
                 }
+
+                // console.log(dataToLoad);
+                // console.log(newGeoFilters);
 
                 setGeoFilters(newGeoFilters);
             } finally {
@@ -144,17 +147,9 @@ export default function NotificationForm({initialSubscription, subscriptionId, p
         }
     };
 
-    if (isInitializing) {
-        // return <div data-testid="loading-indicator">Caricamento...</div>;
-    }
-
     return (
         <>
             <form onSubmit={handleSubmit} className="p-lg-2">
-                <h2 className="h3 mb-4 d-flex align-items-center">
-                    <FaBell className="me-2 text-primary"/>
-                    {subscriptionId ? 'Modifica Notifica' : 'Crea Nuova Notifica'}
-                </h2>
 
                 {error && <div className="alert alert-danger">{error}</div>}
 
@@ -167,10 +162,10 @@ export default function NotificationForm({initialSubscription, subscriptionId, p
                             <label htmlFor="fuelType" className="form-label">Scegli il tipo di carburante</label>
                             <select id="fuelType" className="form-select form-select-lg" value={fuelType}
                                     onChange={(e) => setFuelType(e.target.value)} required disabled={loading}>
-                                <option value="Benzina">Benzina</option>
-                                <option value="Diesel">Diesel</option>
-                                <option value="GPL">GPL</option>
-                                <option value="Metano">Metano</option>
+                                <option value="benzina">Benzina</option>
+                                <option value="diesel">Diesel</option>
+                                <option value="gpl">GPL</option>
+                                <option value="metano">Metano</option>
                             </select>
                         </div>
                     </div>

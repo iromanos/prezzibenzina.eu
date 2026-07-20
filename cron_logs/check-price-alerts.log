@@ -119,3 +119,565 @@
 [2026-07-17T15:21:11.624Z] [SUCCESS #28] Notifica registrata nel database.
 [2026-07-17T15:21:11.625Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
 [2026-07-17T15:21:11.626Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] --- ERRORE FATALE SCRIPT CONTROLLO NOTIFICHE: Cannot read properties of undefined (reading 'execute') ---
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] --- ERRORE FATALE SCRIPT CONTROLLO NOTIFICHE: connection.execute is not a function ---
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #2] Utente user@example.com: Prezzo attuale 1.69 soddisfa la soglia (below_price / 1.7).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #2.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #2
+[2023-01-01T12:00:00.000Z] [SUCCESS #2] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 0 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [INFO SOTTOSCRIZIONE #4] Nessun prezzo trovato per Metano a livello nazionale con codice IT.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #5] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #5.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #5
+[2023-01-01T12:00:00.000Z] [SUCCESS #5] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #2] Utente user@example.com: Prezzo attuale 1.69 soddisfa la soglia (below_price / 1.7).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #2.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #2
+[2023-01-01T12:00:00.000Z] [SUCCESS #2] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 0 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [INFO SOTTOSCRIZIONE #4] Nessun prezzo trovato per Metano a livello nazionale con codice IT.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #5] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #5.
+[2023-01-01T12:00:00.000Z] [EMAIL ERROR] Errore durante l'invio dell'email a user@example.com: Email service down
+[2023-01-01T12:00:00.000Z] [FAIL #5] Notifica registrata come fallita.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] --- ERRORE FATALE SCRIPT CONTROLLO NOTIFICHE: DB connection failed ---
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #2] Utente user@example.com: Prezzo attuale 1.69 soddisfa la soglia (below_price / 1.7).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #2.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #2
+[2023-01-01T12:00:00.000Z] [SUCCESS #2] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 0 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [INFO SOTTOSCRIZIONE #4] Nessun prezzo trovato per Metano a livello nazionale con codice IT.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #5] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #5.
+[2023-01-01T12:00:00.000Z] [EMAIL ERROR] Errore durante l'invio dell'email a user@example.com: Email service down
+[2023-01-01T12:00:00.000Z] [FAIL #5] Notifica registrata come fallita.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] --- ERRORE FATALE SCRIPT CONTROLLO NOTIFICHE: DB connection failed ---
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 0 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 0 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #2] Utente user@example.com: Prezzo attuale 1.69 soddisfa la soglia (below_price / 1.7).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #2.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #2
+[2023-01-01T12:00:00.000Z] [SUCCESS #2] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 0 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [INFO SOTTOSCRIZIONE #4] Nessun prezzo trovato per Metano a livello nazionale con codice IT.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #5] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #5.
+[2023-01-01T12:00:00.000Z] [EMAIL ERROR] Errore durante l'invio dell'email a user@example.com: Email service down
+[2023-01-01T12:00:00.000Z] [FAIL #5] Notifica registrata come fallita.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] --- ERRORE FATALE SCRIPT CONTROLLO NOTIFICHE: DB connection failed ---
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [INFO SOTTOSCRIZIONE #4] Nessun prezzo trovato per Metano a livello nazionale con codice IT.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #2] Utente user@example.com: Prezzo attuale 1.69 soddisfa la soglia (below_price / 1.7).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #2.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #2
+[2023-01-01T12:00:00.000Z] [SUCCESS #2] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 0 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [INFO SOTTOSCRIZIONE #4] Nessun prezzo trovato per Metano a livello nazionale con codice IT.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #5] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #5.
+[2023-01-01T12:00:00.000Z] [EMAIL ERROR] Errore durante l'invio dell'email a user@example.com: Email service down
+[2023-01-01T12:00:00.000Z] [FAIL #5] Notifica registrata come fallita.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] --- ERRORE FATALE SCRIPT CONTROLLO NOTIFICHE: DB connection failed ---
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #5] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #5.
+[2023-01-01T12:00:00.000Z] [EMAIL ERROR] Errore durante l'invio dell'email a user@example.com: Email service down
+[2023-01-01T12:00:00.000Z] [FAIL #5] Notifica registrata come fallita.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] --- ERRORE FATALE SCRIPT CONTROLLO NOTIFICHE: DB connection failed ---
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #2] Utente user@example.com: Prezzo attuale 1.69 soddisfa la soglia (below_price / 1.7).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #2.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #2
+[2023-01-01T12:00:00.000Z] [SUCCESS #2] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 0 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [INFO SOTTOSCRIZIONE #4] Nessun prezzo trovato per Metano a livello nazionale con codice IT.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #5] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #5.
+[2023-01-01T12:00:00.000Z] [EMAIL ERROR] Errore durante l'invio dell'email a user@example.com: Email service down
+[2023-01-01T12:00:00.000Z] [FAIL #5] Notifica registrata come fallita.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] --- ERRORE FATALE SCRIPT CONTROLLO NOTIFICHE: DB connection failed ---
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #2] Utente user@example.com: Prezzo attuale 1.69 soddisfa la soglia (below_price / 1.7).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #2.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #2
+[2023-01-01T12:00:00.000Z] [SUCCESS #2] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 0 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [INFO SOTTOSCRIZIONE #4] Nessun prezzo trovato per Metano a livello nazionale con codice IT.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #5] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #5.
+[2023-01-01T12:00:00.000Z] [EMAIL ERROR] Errore durante l'invio dell'email a user@example.com: Email service down
+[2023-01-01T12:00:00.000Z] [FAIL #5] Notifica registrata come fallita.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] --- ERRORE FATALE SCRIPT CONTROLLO NOTIFICHE: DB connection failed ---
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #1] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #1.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #1
+[2023-01-01T12:00:00.000Z] [SUCCESS #1] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #2] Utente user@example.com: Prezzo attuale 1.69 soddisfa la soglia (below_price / 1.7).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #2.
+[2023-01-01T12:00:00.000Z] [EMAIL SUCCESS] Email inviata con successo a user@example.com per la sottoscrizione #2
+[2023-01-01T12:00:00.000Z] [SUCCESS #2] Notifica registrata nel database.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 0 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [INFO SOTTOSCRIZIONE #4] Nessun prezzo trovato per Metano a livello nazionale con codice IT.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database stabilita.
+[2023-01-01T12:00:00.000Z] Trovate 1 sottoscrizioni attive idonee per il controllo.
+[2023-01-01T12:00:00.000Z] [ALERT TRIGGERATO #5] Utente user@example.com: Prezzo attuale 1.85 soddisfa la soglia (cheapest_in_area / N/A).
+[2023-01-01T12:00:00.000Z] [TEST MODE] Email invio email reale a user@example.com per la sottoscrizione #5.
+[2023-01-01T12:00:00.000Z] [EMAIL ERROR] Errore durante l'invio dell'email a user@example.com: Email service down
+[2023-01-01T12:00:00.000Z] [FAIL #5] Notifica registrata come fallita.
+[2023-01-01T12:00:00.000Z] --- COMPLETATO CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] Connessione al database chiusa.
+[2023-01-01T12:00:00.000Z] --- INIZIO SCRIPT DI CONTROLLO PREZZI E NOTIFICHE ---
+[2023-01-01T12:00:00.000Z] --- ERRORE FATALE SCRIPT CONTROLLO NOTIFICHE: DB connection failed ---

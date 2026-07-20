@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import NotificationGeoFilters from './NotificationGeoFilters';
 import * as api from '@/functions/api';
@@ -26,11 +26,35 @@ const mockComuni = [
     { id: 'roma', key: 'roma', name: 'Roma' },
 ];
 
+const INITIAL_GEO_FILTERS = {
+    livello_geo: 'nazionale',
+    codice_geo: 'IT',
+    regione: '',
+    provincia: '',
+};
+
+
 describe('NotificationGeoFilters', () => {
-    let onGeoFilterChangeMock;
+    // Helper function to render and manage geoFilters state
+    const setupNotificationGeoFilters = (initialFilters = INITIAL_GEO_FILTERS, disabled = false) => {
+        let currentGeoFilters = {...initialFilters};
+        const onGeoFilterChangeMock = jest.fn((newFilters) => {
+            // The component sends the full updated geoFilters object, not a partial one.
+            // So, we just replace currentGeoFilters with newFilters.
+            currentGeoFilters = newFilters;
+            rerender(<NotificationGeoFilters onGeoFilterChange={onGeoFilterChangeMock} geoFilters={currentGeoFilters}
+                                             disabled={disabled}/>);
+        });
+
+        const {rerender, ...rest} = render(<NotificationGeoFilters onGeoFilterChange={onGeoFilterChangeMock}
+                                                                   geoFilters={currentGeoFilters}
+                                                                   disabled={disabled}/>);
+
+        return {onGeoFilterChangeMock, currentGeoFilters, rerender, ...rest};
+    };
 
     beforeEach(() => {
-        onGeoFilterChangeMock = jest.fn();
+        jest.clearAllMocks();
 
         global.fetch = jest.fn((url) => {
             if (url.includes('/api/geo/regioni')) {
@@ -63,7 +87,7 @@ describe('NotificationGeoFilters', () => {
     });
 
     it('should render and default to "Nazionale"', async () => {
-        render(<NotificationGeoFilters onGeoFilterChange={onGeoFilterChangeMock} />);
+        const {onGeoFilterChangeMock} = setupNotificationGeoFilters();
 
         // Aspetta che le API siano state chiamate
         await waitFor(() => {
@@ -71,51 +95,60 @@ describe('NotificationGeoFilters', () => {
             expect(fetch).toHaveBeenCalledWith('/api/geo/province');
         });
 
-        expect(screen.getByLabelText('Livello Geografico')).toHaveValue('nazionale');
+        // Cerchiamo il pulsante tramite il suo ruolo e il nome (label)
+        const nationalButton = screen.getByRole('button', {name: /nazionale/i});
 
-        // Verifica la chiamata iniziale
-        await waitFor(() => {
-            expect(onGeoFilterChangeMock).toHaveBeenCalledWith({
-                livello_geo: 'nazionale',
-                codice_geo: 'IT',
-            });
-        });
+        // Verifica che abbia la classe 'active'
+        expect(await nationalButton).toHaveClass('active');
     });
 
     it('should show region select when "Regionale" is selected', async () => {
         const user = userEvent.setup();
-        render(<NotificationGeoFilters onGeoFilterChange={onGeoFilterChangeMock} initialGeoLevel="nazionale" />);
+        const {onGeoFilterChangeMock} = setupNotificationGeoFilters();
  
         // Attendi che i dati geografici siano caricati
         await waitFor(() => {
             expect(fetch).toHaveBeenCalledWith('/api/geo/regioni');
             expect(fetch).toHaveBeenCalledWith('/api/geo/province');
         });
- 
-        await user.selectOptions(screen.getByLabelText('Livello Geografico'), 'regione');
- 
-        expect(screen.getByLabelText('Regione')).toBeInTheDocument();
+
+        const buttonRegione = screen.getByRole('button', {name: /regione/i});
+
+        await user.click(buttonRegione);
+
+        await waitFor(() => {
+            expect(buttonRegione).toHaveClass('active');
+        });
 
         await user.selectOptions(screen.getByLabelText('Regione'), 'lombardia');
         await waitFor(() => {
             expect(onGeoFilterChangeMock).toHaveBeenLastCalledWith({
                 livello_geo: 'regione',
                 codice_geo: 'lombardia',
+                regione: 'lombardia',
+                provincia: '',
             });
         });
     });
 
     it('should show province select and call callback correctly', async () => {
         const user = userEvent.setup();
-        render(<NotificationGeoFilters onGeoFilterChange={onGeoFilterChangeMock} initialGeoLevel="nazionale" />);
+        const {onGeoFilterChangeMock} = setupNotificationGeoFilters();
 
         await waitFor(() => {
             expect(fetch).toHaveBeenCalledWith('/api/geo/regioni');
             expect(fetch).toHaveBeenCalledWith('/api/geo/province');
         });
- 
 
-        await user.selectOptions(screen.getByLabelText('Livello Geografico'), 'provincia');
+        const buttonRegione = screen.getByRole('button', {name: /provincia/i});
+
+        await user.click(buttonRegione);
+
+        await waitFor(() => {
+            expect(buttonRegione).toHaveClass('active');
+        });
+
+
         await user.selectOptions(screen.getByLabelText('Regione'), 'lombardia');
         
         expect(await screen.findByLabelText('Provincia')).toBeInTheDocument();
@@ -124,6 +157,8 @@ describe('NotificationGeoFilters', () => {
         await waitFor(() => {
             expect(onGeoFilterChangeMock).toHaveBeenLastCalledWith({
                 livello_geo: 'provincia',
+                regione: 'lombardia',
+                provincia: 'MI',
                 codice_geo: 'MI',
             });
         });
@@ -131,126 +166,110 @@ describe('NotificationGeoFilters', () => {
 
     it('should show comune select and fetch comuni', async () => {
         const user = userEvent.setup();
-        render(<NotificationGeoFilters onGeoFilterChange={onGeoFilterChangeMock} initialGeoLevel="nazionale" />);
+        const {onGeoFilterChangeMock} = setupNotificationGeoFilters();
 
         await waitFor(() => {
             expect(fetch).toHaveBeenCalledWith('/api/geo/regioni');
             expect(fetch).toHaveBeenCalledWith('/api/geo/province');
         });
 
+        const buttonRegione = screen.getByRole('button', {name: /comune/i});
 
-        await user.selectOptions(screen.getByLabelText('Livello Geografico'), 'comune');
+        await user.click(buttonRegione);
+
+        await waitFor(() => {
+            expect(buttonRegione).toHaveClass('active');
+        });
+
+
         await user.selectOptions(screen.getByLabelText('Regione'), 'lombardia');
         await user.selectOptions(await screen.findByLabelText('Provincia'), 'MI');
-
 
         await waitFor(() => {
             expect(fetch).toHaveBeenCalledWith('/api/geo/comuni?provincia=MI');
         });
-        // Aspetta che i comuni vengano caricati
         expect(await screen.findByLabelText('Comune')).toBeInTheDocument();
-
-
 
         await user.selectOptions(screen.getByLabelText('Comune'), 'milano');
         await waitFor(() => {
             expect(onGeoFilterChangeMock).toHaveBeenLastCalledWith({
                 livello_geo: 'comune',
+                regione: 'lombardia',
+                provincia: 'MI',
                 codice_geo: 'milano',
             });
         });
     });
 
     it('should initialize correctly for "provincia"', async () => {
-        render(
-            <NotificationGeoFilters
-                onGeoFilterChange={onGeoFilterChangeMock}
-                initialGeoLevel="provincia"
-                initialGeoCode="MI"
-            />
-        );
+        const initialGeoFiltersForProvincia = {
+            livello_geo: 'provincia',
+            codice_geo: 'MI',
+            regione: 'lombardia',
+            provincia: 'MI',
+        };
+        setupNotificationGeoFilters(initialGeoFiltersForProvincia);
 
         await waitFor(() => {
-            expect(screen.getByLabelText('Livello Geografico')).toHaveValue('provincia');
+
+            expect(screen.getByRole('button', {name: /provincia/i})).toHaveClass('active');
+
             expect(screen.getByLabelText('Regione')).toHaveValue('lombardia');
             expect(screen.getByLabelText('Provincia')).toHaveValue('MI');
-        });
-
-        await waitFor(() => {
-            expect(onGeoFilterChangeMock).toHaveBeenCalledWith({
-                livello_geo: 'provincia',
-                codice_geo: 'MI',
-            });
         });
     });
 
     it('should initialize correctly for "comune"', async () => {
-        render(
-            <NotificationGeoFilters
-                onGeoFilterChange={onGeoFilterChangeMock}
-                initialGeoLevel="comune"
-                initialGeoCode="milano"
-            />
-        );
+        const initialGeoFiltersForComune = {
+            livello_geo: 'comune',
+            codice_geo: 'milano',
+            regione: 'lombardia',
+            provincia: 'MI',
+        };
+        setupNotificationGeoFilters(initialGeoFiltersForComune);
 
-        await waitFor(() => expect(api.getComune).toHaveBeenCalledWith('milano'));
+        // await waitFor(() => expect(api.getComune).toHaveBeenCalledWith('milano'));
 
         await waitFor(() => {
-            expect(screen.getByLabelText('Livello Geografico')).toHaveValue('comune');
+            expect(screen.getByRole('button', {name: /comune/i})).toHaveClass('active');
             expect(screen.getByLabelText('Regione')).toHaveValue('lombardia');
             expect(screen.getByLabelText('Provincia')).toHaveValue('MI');
         });
 
-        // Aspetta che i comuni vengano caricati e selezionati
         await waitFor(() => {
             expect(screen.getByLabelText('Comune')).toHaveValue('milano');
-        });
-
-        await waitFor(() => {
-            expect(onGeoFilterChangeMock).toHaveBeenCalledWith({
-                livello_geo: 'comune',
-                codice_geo: 'milano',
-            });
         });
     });
 
     it('should be disabled when disabled prop is true', async () => {
-        render(
-            <NotificationGeoFilters
-                onGeoFilterChange={onGeoFilterChangeMock}
-                initialGeoLevel="provincia"
-                initialGeoCode="MI"
-                disabled={true}
-            />
-        );
+        const initialGeoFiltersForProvincia = {
+            livello_geo: 'provincia',
+            codice_geo: 'MI',
+            regione: 'lombardia',
+            provincia: 'MI',
+        };
+        setupNotificationGeoFilters(initialGeoFiltersForProvincia, true);
 
         await waitFor(() => {
-            expect(screen.getByLabelText('Livello Geografico')).toBeDisabled();
             expect(screen.getByLabelText('Regione')).toBeDisabled();
             expect(screen.getByLabelText('Provincia')).toBeDisabled();
         });
     });
 
     it('should handle "distributore" level', async () => {
-        render(
-            <NotificationGeoFilters
-                onGeoFilterChange={onGeoFilterChangeMock}
-                initialGeoLevel="distributore"
-                initialGeoCode="12345"
-                disabled={true}
-            />
-        );
+        const initialGeoFiltersForDistributore = {
+            livello_geo: 'distributore',
+            codice_geo: '12345',
+            regione: '',
+            provincia: '',
+        };
+        setupNotificationGeoFilters(initialGeoFiltersForDistributore, true);
 
         await waitFor(() => {
-            expect(screen.getByLabelText('Livello Geografico')).toHaveValue('distributore');
-            expect(screen.getByLabelText('Livello Geografico')).toBeDisabled();
-        });
-
-        await waitFor(() => {
-            expect(onGeoFilterChangeMock).toHaveBeenCalledWith({
-                livello_geo: 'distributore',
-                codice_geo: '12345',
-            });
+            expect(screen.getByRole('button', {name: /nazionale/i})).toBeDisabled();
+            expect(screen.getByRole('button', {name: /regione/i})).toBeDisabled();
+            expect(screen.getByRole('button', {name: /provincia/i})).toBeDisabled();
+            expect(screen.getByRole('button', {name: /comune/i})).toBeDisabled();
         });
     });
 });

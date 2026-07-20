@@ -1,8 +1,10 @@
 import React from 'react';
-import {render, screen, waitFor} from '@testing-library/react';
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import ManageNotificationPage from './page';
 import {useRouter, useSearchParams} from 'next/navigation';
 import {useAuth} from '@/contexts/AuthContext';
+import * as api from "@/functions/api.jsx";
+import userEvent from "@testing-library/user-event/dist/cjs/index.js";
 
 // Mock dei moduli e componenti esterni
 jest.mock('next/navigation', () => ({
@@ -20,6 +22,12 @@ jest.mock('@/components/Header', () => {
     };
 });
 
+jest.mock('@/functions/api', () => ({
+    getImpianto: jest.fn(),
+    getComune: jest.fn(),
+}));
+
+
 jest.mock('@/components/notifiche/NotificationForm', () => {
     return function DummyNotificationForm({initialSubscription, subscriptionId, prefillData, onSubscriptionCreated}) {
         return (
@@ -34,16 +42,44 @@ jest.mock('@/components/notifiche/NotificationForm', () => {
     };
 });
 
+
+const mockRegioni = [{id: 'LOM', key: 'lombardia', name: 'Lombardia'}];
+const mockProvince = [{id: 'MI', name: 'Milano', regione: 'lombardia'}];
+const mockComuni = [{id: '015146', name: 'Milano2'}];
+
+
 describe('ManageNotificationPage', () => {
     let mockRouter;
 
     beforeEach(() => {
+        jest.clearAllMocks();
+
         mockRouter = {
             push: jest.fn(),
         };
         useRouter.mockReturnValue(mockRouter);
         useAuth.mockReturnValue({isAuthenticated: true, token: 'fake-token'});
-        global.fetch = jest.fn();
+        global.fetch = jest.fn((url) => {
+            const urlStr = url.toString();
+            if (urlStr.includes('/api/geo/regioni')) return Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve(mockRegioni)
+            });
+            if (urlStr.includes('/api/geo/province')) return Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve(mockProvince)
+            });
+            if (urlStr.includes('/api/geo/comuni')) return Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve(mockComuni)
+            });
+            if (urlStr.includes('/api/subscriptions')) return Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({message: 'Success'})
+            });
+            return Promise.resolve({ok: true, json: () => Promise.resolve({})});
+        });
+        api.getComune.mockResolvedValue({id: '015146', provincia_id: 'MI', name: 'Milano2'});
     });
 
     afterEach(() => {
@@ -51,14 +87,22 @@ describe('ManageNotificationPage', () => {
     });
 
     // Test per la modalità CREAZIONE
-    it('should render in create mode when no ID is provided', () => {
+    it('should render in create mode when no ID is provided', async () => {
+
+        const user = userEvent.setup();
+        const onSubscriptionCreated = jest.fn();
+
         useSearchParams.mockReturnValue(new URLSearchParams());
 
         render(<ManageNotificationPage/>);
 
-        expect(screen.getByText('Crea Nuova Notifica')).toBeInTheDocument();
-        expect(screen.getByText('Subscription ID: none')).toBeInTheDocument();
-        expect(screen.getByText(/Prefill Data: {"fuel_type":null,"geo_level":null,"geo_code":null}/)).toBeInTheDocument();
+        // Usiamo waitFor per dare tempo a NotificationGeoFilters di completare eventuali caricamenti iniziali
+        await waitFor(() => {
+            expect(screen.getByText('Crea Nuova Notifica')).toBeInTheDocument();
+        });
+
+        expect(screen.getByText(/Prefill Data: {"fuel_type":"benzina","geo_level":"nazionale","geo_code":"IT"}/)).toBeInTheDocument();
+
     });
 
     // Test per la modalità CREAZIONE con PRE-RIEMPIMENTO
@@ -146,13 +190,17 @@ describe('ManageNotificationPage', () => {
     });
 
     // Test per il reindirizzamento
-    it('should redirect to /notifiche when onSubscriptionCreated is called', () => {
+    it('should redirect to /notifiche when onSubscriptionCreated is called', async () => {
         useSearchParams.mockReturnValue(new URLSearchParams());
         render(<ManageNotificationPage/>);
 
         const redirectButton = screen.getByText('Trigger Redirect');
-        redirectButton.click();
 
-        expect(mockRouter.push).toHaveBeenCalledWith('/notifiche');
+        // Usiamo fireEvent invece di .click() diretto per assicurarci che sia nel ciclo act()
+        fireEvent.click(redirectButton);
+
+        await waitFor(() => {
+            expect(mockRouter.push).toHaveBeenCalledWith('/notifiche');
+        });
     });
 });

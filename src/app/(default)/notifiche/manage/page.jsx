@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import NotificationForm from '@/components/notifiche/NotificationForm';
 
 import {useAuth} from '@/contexts/AuthContext';
+import {FaBell} from "react-icons/fa";
 
 export default function ManageNotificationPage() {
     const [loadingAuth, setLoadingAuth] = useState(true);
@@ -18,9 +19,9 @@ export default function ManageNotificationPage() {
 
     // Logica per il pre-riempimento del form tramite query params
     const prefillData = !subscriptionId ? {
-        fuel_type: searchParams.get('fuel_type'),
-        geo_level: searchParams.get('geo_level'),
-        geo_code: searchParams.get('geo_code'),
+        fuel_type: searchParams.get('fuel_type') || 'benzina',
+        geo_level: searchParams.get('geo_level') || 'nazionale',
+        geo_code: searchParams.get('geo_code') || 'IT',
     } : null;
 
     // Logica di autenticazione
@@ -68,7 +69,8 @@ export default function ManageNotificationPage() {
         <>
             <Header/>
             <div className="container my-4">
-                <h1 className="text-center mb-4">{subscriptionId ? 'Modifica Notifica' : 'Crea Nuova Notifica'}</h1>
+                <h1 className="text-center mb-4"><FaBell className="me-2 text-primary"/>
+                    {subscriptionId ? 'Modifica Notifica' : 'Crea Nuova Notifica'}</h1>
                 {error && <div className="alert alert-danger">{error}</div>}
                 <NotificationForm
                     initialSubscription={initialSubscription}

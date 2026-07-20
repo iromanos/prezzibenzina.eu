@@ -12,16 +12,17 @@ dotenv.config({path: path.resolve(process.cwd(), '.env')});
 const LOG_FILE_PATH = path.resolve(process.cwd(), 'cron_logs/check-price-alerts.log');
 
 // Configurazione Nodemailer
-const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: process.env.EMAIL_PORT === 465,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-});
-
+function getTransporter() {
+    return nodemailer.createTransport({
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        secure: process.env.EMAIL_PORT === 465,
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+    });
+}
 // Funzione per salvare i log su file
 async function logToFile(message) {
     const timestamp = new Date().toISOString();
@@ -252,6 +253,19 @@ export async function checkPriceAlerts() {
     }
 }
 
+
+export async function invioEmail() {
+
+    const transporter = getTransporter();
+
+    await transporter.sendMail({
+        from: `"PrezziBenzina.eu" <${process.env.EMAIL_FROM}>`,
+        to: 'utente@example.com',
+        subject: 'Benvenuto',
+    });
+}
+
+
 // Funzione per l'invio dell'email con template HTML premium
 async function sendAlertEmail({
                                   email,
@@ -266,6 +280,9 @@ async function sendAlertEmail({
                                   stationAddress,
                                   updateTime
                               }) {
+
+    const transporter = getTransporter();
+
     if (process.env.NODE_ENV === 'test') {
         await logToFile(`[TEST MODE] Email invio email reale a ${email} per la sottoscrizione #${subId}.`);
     }

@@ -8,16 +8,26 @@ jest.mock('next/server', () => ({
     },
 }));
 
+const mockDelete = jest.fn();
+
+jest.mock('next/headers', () => ({
+    cookies: () => ({
+        delete: mockDelete,
+    }),
+}));
+
 describe('POST /api/auth/logout', () => {
     beforeEach(() => {
-        NextResponse.json.mockClear();
+        jest.clearAllMocks();
     });
 
     it('should return a success message for logout', async () => {
         await POST();
 
+        expect(mockDelete).toHaveBeenCalled();
+
         expect(NextResponse.json).toHaveBeenCalledWith(
-            {message: 'Logout effettuato con successo (il token JWT deve essere rimosso lato client).'},
+            {message: 'Logout successful'},
             {status: 200}
         );
     });
