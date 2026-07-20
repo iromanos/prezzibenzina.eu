@@ -39,8 +39,8 @@ export default async function Page() {
         <>
             <Header/>
             <main className="container py-5">
-                <h1 className="display-5 mb-4">Informativa sulla Privacy</h1>
-                <p className="text-muted mb-4">Ultimo aggiornamento: 18 settembre 2025</p>
+                <h1 className="mb-4">Informativa sulla Privacy</h1>
+                <p className="text-muted mb-4">Ultimo aggiornamento: 17 luglio 2026</p>
 
                 <section className="mb-5">
                     <p>
@@ -107,9 +107,9 @@ export default async function Page() {
                         <EmailIcon className="me-2" fontSize="small"/> Contatti
                     </h2>
                     <p>
-                        Per domande o richieste relative alla privacy, scrivici a:{' '}
-                        <a href="mailto:info@prezzibenzina.eu" className="link-primary">
-                            info@prezzibenzina.eu
+                        Per domande o richieste relative alla privacy, vai alla pagina dei <a href="/contatti"
+                                                                                              className="link-primary">
+                        contatti
                         </a>
                     </p>
                 </section>
