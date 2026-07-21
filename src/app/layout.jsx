@@ -1,6 +1,6 @@
 import '../styles/custom.scss';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import {Inter, Montserrat} from 'next/font/google';
+import {Inter, Lexend} from 'next/font/google';
 import Head from "next/head";
 import {CookieConsentProvider} from "@/components/CookieConsentContext";
 import Analytics from "@/components/Analytics";
@@ -12,8 +12,8 @@ import CookieBanner from "@/components/CookieBanner";
 import {AuthProvider} from '@/contexts/AuthContext';
 import jwt from 'jsonwebtoken';
 
-const montserrat = Montserrat({
-    weight: "800",
+const lexend = Lexend({
+    weight: ["600", "700", "800"],
     subsets: ['latin'],
     display: 'swap',
     variable: '--font-header',
@@ -58,7 +58,7 @@ export default async function RootLayout({children}) {
     }
 
     return (
-        <html lang="it" className={`${montserrat.variable} ${inter.variable}`}>
+        <html lang="it" className={`${lexend.variable} ${inter.variable}`}>
         <Head>
             <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96"/>
             <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>

@@ -97,6 +97,23 @@ l'engagement utente e fornire una comprensione più immediata delle tendenze dei
       regioni, permettendo un confronto visivo immediato tra le diverse aree geografiche.
     * **Interattività**: Selettore per il tipo di carburante (Benzina, Diesel, GPL, Metano).
 
+2. **Grafico a Barre: Confronto Prezzi Carburanti all'interno di una Regione**
+    * **Descrizione**: Visualizza i prezzi medi di *tutti i tipi di carburante* (Benzina, Diesel, GPL, Metano) per una
+      *singola regione* (selezionabile dall'utente), evidenziando le differenze di costo tra i vari carburanti in
+      quella specifica regione.
+    * **Interattività**: Selettore per la regione.
+
+3. **Grafico a Linee: Andamento Storico Prezzo Carburante per Regione**
+    * **Descrizione**: Mostra l'evoluzione del prezzo medio di un *singolo tipo di carburante* in una *singola
+      regione* (entrambi selezionabili) su un periodo di tempo (es. ultimi 30/90 giorni, ultimo anno). Richiede
+      l'accesso a dati storici più granulari.
+    * **Interattività**: Selettori per tipo di carburante, regione e intervallo di tempo.
+
+4. **(Opzionale/Futuro) Mappa Coropleta: Visualizzazione Prezzo Medio su Mappa Italia**
+    * **Descrizione**: Una mappa interattiva dell'Italia dove ogni regione è colorata in base al prezzo medio di un
+      carburante selezionato, con una legenda che indica le fasce di prezzo.
+    * **Interattività**: Selettore per il tipo di carburante.
+
 ### Dettagli Tecnici e Funzionali
 
 #### Backend (API/Repository)
@@ -124,9 +141,9 @@ l'engagement utente e fornire una comprensione più immediata delle tendenze dei
     * Aggiungere selettori (dropdown, radio button) per permettere agli utenti di scegliere il tipo di carburante, la
       regione o l'intervallo di tempo.
     * Implementare la logica per aggiornare i dati dei grafici in base alle selezioni dell'utente.
-* **Integrazione nella Pagina**: Inserire i nuovi componenti grafici nella pagina `/prezzi-medi-regione`, probabilmente
-  in una sezione dedicata sotto la tabella esistente, o con un meccanismo a schede/toggle per passare dalla tabella ai
-  grafici.
+* **Integrazione nella Pagina**: Inserire i nuovi componenti grafici nella pagina `/prezzi-medi-regione`,
+  probabilmente in una sezione dedicata sotto la tabella esistente, o con un meccanismo a schede/toggle per passare
+  dalla tabella ai grafici.
 * **Gestione Stato**: Utilizzare `useState` e `useEffect` per gestire lo stato dei filtri e i dati caricati
   dinamicamente per i grafici.
 

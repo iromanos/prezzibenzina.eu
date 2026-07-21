@@ -1,8 +1,9 @@
 import {notFound} from 'next/navigation';
-import {getPrezziMediRegioneAggregati} from '@/repos/prezziMediRepo.jsx'; // *** CORRETTO IL PERCORSO DI IMPORTAZIONE ***
+import {getPrezziMediRegioneAggregati} from '@/repos/prezzi-medi.jsx'; // *** CORRETTO IL PERCORSO DI IMPORTAZIONE ***
 import Header from "@/components/Header.jsx";
 import React from "react";
-import RegionFuelBarChart from '@/components/prezzi-medi-regione/RegionFuelBarChart.jsx'; // Importa il nuovo componente grafico
+import RegionFuelBarChart from '@/components/prezzi-medi-regione/RegionFuelBarChart.jsx';
+import Link from "next/link"; // Importa il nuovo componente grafico
 
 // Mappatura dei codici regione (slug) ai nomi completi
 const REGION_NAMES_MAP = {
@@ -167,8 +168,9 @@ export default async function PrezziMediRegionePage() {
                             <tbody>
                             {sortedPrezziAggregati.map((regionData) => (
                                 <tr key={regionData.codice_geo}>
-                                    <td className="py-2 text-nowrap fw-bold">
-                                        {REGION_NAMES_MAP[regionData.codice_geo] || regionData.codice_geo}
+                                  <td className="py-2 text-nowrap ">
+                                    <Link className={''} href={`/prezzi-medi-regione/${regionData.codice_geo}`}>
+                                      {REGION_NAMES_MAP[regionData.codice_geo] || regionData.codice_geo}</Link>
                                     </td>
                                     {FUEL_TYPES_DISPLAY.map((fuelType) => {
                                         const fuelPrice = regionData.carburanti[fuelType];
