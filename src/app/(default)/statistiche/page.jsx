@@ -72,7 +72,7 @@ async function buildIntroParagraph(params) {
     const endText = formatDateIt(params.endDate);
     const dateText = startText && endText ? ` nel periodo dal ${startText} al ${endText}` : '';
 
-    return `Benvenuto nella sezione Statistiche Prezzi Carburanti di PrezziBenzina.eu. In questa pagina puoi analizzare l'andamento storico dei prezzi di ${carburante} ${areaText}${dateText}. Utilizza i filtri a sinistra per cambiare il tipo di carburante, l'area geografica e l'intervallo di date che ti interessano. Il grafico mostra l'evoluzione del prezzo medio, minimo e massimo, mentre il riepilogo ti fornisce i dati salienti del periodo selezionato.`;
+    return `Benvenuto nella sezione statistiche dei prezzi dei carburanti di PrezziBenzina.eu. In questa pagina puoi analizzare l'andamento storico dei prezzi di ${carburante} ${areaText}${dateText}. Utilizza i filtri per cambiare il tipo di carburante, l'area geografica e l'intervallo di date che ti interessano. Il grafico mostra l'evoluzione del prezzo medio, minimo e massimo, mentre il riepilogo ti fornisce i dati salienti del periodo selezionato.`;
 }
 
 export async function generateMetadata({searchParams}) {
@@ -89,7 +89,7 @@ export async function generateMetadata({searchParams}) {
     const resolvedGeoName = await resolveGeoName(livelloGeo, codiceGeo);
     const geoName = resolvedGeoName || GEO_NAMES[codiceGeo] || codiceGeo;
 
-    let title = `Andamento Prezzo ${carburante} in ${geoName} - Statistiche Storiche | PrezziBenzina.eu`;
+    let title = `Andamento del prezzo ${carburante} in ${geoName} - statistiche storiche | PrezziBenzina.eu`;
     let description = `Scopri l'andamento storico del prezzo della ${carburante} in ${geoName}. Grafici e dati aggiornati per aiutarti a risparmiare.`;
 
     if (startDate && endDate) {

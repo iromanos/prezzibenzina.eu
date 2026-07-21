@@ -5,6 +5,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import Header from "@/components/Header";
 import {GoogleReCaptcha, GoogleReCaptchaProvider} from 'react-google-recaptcha-v3';
+import {Disclaimer} from "@/components/Disclaimer.jsx";
 
 export default function ContattiPage() {
     const [formData, setFormData] = useState({
@@ -81,14 +82,7 @@ export default function ContattiPage() {
                         contattare
                         il team di <strong>PrezziBenzina.eu</strong> attraverso il form sottostante.
                     </p>
-                    {/* Disclaimer */}
-                    <div className="alert alert-warning" role="alert">
-                        <strong>Importante:</strong> PrezziBenzina.eu non ha alcun tipo di rapporto commerciale o
-                        contrattuale con i singoli distributori di carburante. Per questioni relative a scontrini,
-                        pagamenti, qualità del carburante o servizi offerti presso un impianto specifico, è necessario
-                        rivolgersi direttamente al gestore o alla compagnia petrolifera di riferimento. Non possiamo
-                        intervenire in queste casistiche.
-                    </div>
+                    <Disclaimer/>
                 </section>
 
                 <section className="mb-5">

@@ -28,10 +28,10 @@ export default function DistributoriNotifyButton({geo_level, geo_code, currentFu
     return (
         <div className="text-center my-4">
             <button
-                className="btn btn-outline-primary d-flex align-items-center justify-content-center mx-auto"
+                className="btn btn-primary d-flex align-items-center justify-content-center mx-auto"
                 onClick={handleNotifyClick}
             >
-                <FaBell className="me-2"/> Ricevi Notifiche Prezzo per questa zona
+                <FaBell className="me-2"/> Attiva le notifiche per questa zona
             </button>
         </div>
     );

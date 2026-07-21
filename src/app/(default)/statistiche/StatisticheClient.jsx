@@ -47,7 +47,7 @@ export default function StatisticheClient({initialParams = {}, introParagraph}) 
             <Header/>
             <div className="container my-4">
                 <div className="text-center mb-4">
-                    <h1 className="display-5 fw-bold">Statistiche Prezzi Carburanti</h1>
+                    <h1 className="display-5 fw-bold">Statistiche dei prezzi dei carburanti</h1>
                     <p className="lead">
                         Analizza l'andamento storico dei prezzi e scopri le tendenze del mercato.
                     </p>
@@ -87,7 +87,7 @@ export default function StatisticheClient({initialParams = {}, introParagraph}) 
                                 <div className="card">
                                     <div className="card-body">
                                         <h5 className="card-title">Andamento Prezzi</h5>
-                                        <StatisticheChart data={chartData}/>
+                                        <StatisticheChart data={chartData} showMax={true} showMin={true}/>
                                     </div>
                                 </div>
                             </>
