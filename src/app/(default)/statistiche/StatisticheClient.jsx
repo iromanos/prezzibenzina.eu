@@ -1,12 +1,11 @@
 'use client';
 
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import Header from "@/components/Header";
 import StatisticheFilters from '@/components/statistiche/StatisticheFilters';
 import StatisticheChart from '@/components/statistiche/StatisticheChart';
 import StatisticheKPI from '@/components/statistiche/StatisticheKPI';
 import Link from 'next/link';
-import { Label } from 'recharts';
 
 export default function StatisticheClient({initialParams = null, introParagraph}) {
     const [filters, setFilters] = useState(null);
@@ -67,7 +66,7 @@ export default function StatisticheClient({initialParams = null, introParagraph}
                 </div>
                 <hr />
                 <label className="form-label small fw-bold">Collegamenti Rapidi</label>
-                <div className="d-flex mb-4 flex-wrap gap-2">
+                <div className="d-flex mb-4 flex-wrap gap-2 align-items-center">
                     <Link
                         href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=mi'}>Milano</Link>
                     <Link
@@ -84,6 +83,11 @@ export default function StatisticheClient({initialParams = null, introParagraph}
                         href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=ba'}>Bari</Link>
                     <Link
                         href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=pa'}>Palermo</Link>
+                    {/* Nuovo link aggiunto qui */}
+                    <Link
+                        href={'/prezzi-medi-regione'}
+                        className="btn btn-sm btn-outline-primary" // Aggiunto stile per renderlo più visibile
+                    >Prezzi Medi per Regione</Link>
                 </div>
 
                 <div className="row">
@@ -109,7 +113,10 @@ export default function StatisticheClient({initialParams = null, introParagraph}
                                 <div className="card">
                                     <div className="card-body">
                                         <h5 className="card-title">Andamento Prezzi</h5>
-                                        <StatisticheChart data={chartData} showMax={true} showMin={true}/>
+                                        <div
+                                            className="ratio ratio-21x9"> {/* Aggiunto per mantenere l'aspetto del grafico */}
+                                            <StatisticheChart data={chartData} showMax={true} showMin={true}/>
+                                        </div>
                                     </div>
                                 </div>
                             </>

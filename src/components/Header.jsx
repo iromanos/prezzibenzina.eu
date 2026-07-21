@@ -76,6 +76,9 @@ export default function Header() {
                                                        className="btn btn-primary">Mappa</Link></li>
                         <li className="nav-item"><Link title={"Statistiche"} href="/statistiche"
                                                        className="btn btn-primary">Statistiche</Link></li>
+                        {/* Nuovo link per Prezzi Medi Regione */}
+                        <li className="nav-item"><Link title={"Prezzi Medi Regione"} href="/prezzi-medi-regione"
+                                                       className="btn btn-primary">Prezzi Medi Regione</Link></li>
                         <li className="nav-item"><Link title={"Contatti"} href="/contatti"
                                                        className="btn btn-primary">Contatti</Link></li>
                         {isAuthenticated && (
@@ -162,6 +165,13 @@ export default function Header() {
                             onClick={() => handleNavigation("/statistiche")}
                             title={"Statistiche"}
                             className="nav-link text-white ">Statistiche</Button></li>
+                        {/* Nuovo link per Prezzi Medi Regione (mobile) */}
+                        <li className="nav-item"><Button
+                            variant={'link'}
+                            data-bs-dismiss="offcanvas"
+                            onClick={() => handleNavigation("/prezzi-medi-regione")}
+                            title={"Prezzi Medi Regione"}
+                            className="nav-link text-white ">Prezzi Medi Regione</Button></li>
                         <li className="nav-item"><Button
                             variant={'link'}
                             data-bs-dismiss="offcanvas"

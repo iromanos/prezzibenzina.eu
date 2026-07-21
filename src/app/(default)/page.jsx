@@ -133,6 +133,9 @@ export default async function Home() {
                                 <div className={'d-flex align-items-center gap-2 flex-wrap'}>
                                     <a className={'btn btn-primary'} title={'Dati per regioni e provincie'}
                                        href={'/statistiche'}>Andamento completo<BsGraphUp className={'ms-2'}/></a>
+                                    {/* Nuovo link aggiunto qui */}
+                                    <Link className={'btn btn-outline-primary'} title={'Prezzi Medi per Regione'}
+                                          href={'/prezzi-medi-regione'}>Prezzi Medi per Regione</Link>
 
                                     <Link
                                         href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=mi'}>Milano</Link>
