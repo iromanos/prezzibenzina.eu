@@ -5,3 +5,4 @@
 - Il target di utenti sono gli automobilisti privati o i gestore di flotte e autonoleggio.
 - E' necessario fare delle modifiche con obiettivo di essere nei primi 10 risultati di ricerca su Google e Bing.
 - L'obiettivo è avere 100.000 utenti giornalieri sul sito.
+- come css viene utlizzato Bootstrap

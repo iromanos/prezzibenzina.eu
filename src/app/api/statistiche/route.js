@@ -8,13 +8,15 @@ export async function GET(request) {
 
     const livello_geo = searchParams.get('livello_geo');
     const codice_geo = searchParams.get('codice_geo');
-    const desc_carburante = searchParams.get('desc_carburante');
+    let desc_carburante = searchParams.get('desc_carburante');
     let startDate = searchParams.get('startDate'); // Usiamo let perché potremmo modificarlo
     const endDate = searchParams.get('endDate');
 
     if (!livello_geo || !codice_geo || !desc_carburante) {
         return NextResponse.json({error: 'Parametri mancanti: livello_geo, codice_geo e desc_carburante sono obbligatori.'}, {status: 400});
     }
+
+    if (desc_carburante === 'Diesel') desc_carburante = 'Gasolio';
 
     // Se startDate non è valorizzato, imposta il filtro per gli ultimi 90 giorni
     if (!startDate) {

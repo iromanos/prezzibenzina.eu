@@ -1,7 +1,7 @@
 // src/components/statistiche/StatisticheFilters.jsx
 'use client';
 
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback} from 'react';
 import StatisticheGeoFilters from './StatisticheGeoFilters';
 import {FaGasPump} from 'react-icons/fa6';
 import {FaCalendarAlt} from "react-icons/fa"; // Importa le icone
@@ -46,7 +46,7 @@ export default function StatisticheFilters({onFilterChange, isLoading, filters})
                                 disabled={isLoading}
                             >
                                 <option value="Benzina">Benzina</option>
-                                <option value="Gasolio">Gasolio</option>
+                                <option value="Diesel">Diesel</option>
                                 <option value="GPL">GPL</option>
                                 <option value="Metano">Metano</option>
                             </select>
