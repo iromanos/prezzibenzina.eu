@@ -4,18 +4,20 @@ import {useCallback, useEffect, useState} from 'react';
 import Header from "@/components/Header";
 import StatisticheFilters from '@/components/statistiche/StatisticheFilters';
 import StatisticheChart from '@/components/statistiche/StatisticheChart';
-import StatisticheKPI from '@/components/statistiche/StatisticheKPI'; // Importa il nuovo componente KPI
+import StatisticheKPI from '@/components/statistiche/StatisticheKPI';
+import Link from 'next/link';
+import { Label } from 'recharts';
 
-export default function StatisticheClient({initialParams = {}, introParagraph}) {
+export default function StatisticheClient({initialParams = null, introParagraph}) {
     const [filters, setFilters] = useState(null);
     const [chartData, setChartData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false); // Nuovo stato per la gestione degli errori
 
-    const handleFilterChange = useCallback((newFilters) => {
-        setFilters(newFilters);
-    }, []);
-
+    // Sincronizza i filtri quando i parametri dell'URL cambiano (es. click su link rapidi)
+    useEffect(() => {
+        setFilters(initialParams && Object.keys(initialParams).length > 0 ? initialParams : { desc_carburante: 'benzina', livello_geo: 'nazionale', codice_geo: 'IT' });
+    }, [initialParams]);
     useEffect(() => {
         if (!filters) return;
 
@@ -63,12 +65,32 @@ export default function StatisticheClient({initialParams = {}, introParagraph}) 
                         decisioni più informate per risparmiare sul rifornimento.
                     </p>
                 </div>
+                <hr />
+                <label className="form-label small fw-bold">Collegamenti Rapidi</label>
+                <div className="d-flex mb-4 flex-wrap gap-2">
+                    <Link
+                        href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=mi'}>Milano</Link>
+                    <Link
+                        href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=rm'}>Roma</Link>
+                    <Link
+                        href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=bo'}>Bologna</Link>
+                    <Link
+                        href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=fi'}>Firenze</Link>
+                    <Link
+                        href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=to'}>Torino</Link>
+                    <Link
+                        href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=na'}>Napoli</Link>
+                    <Link
+                        href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=ba'}>Bari</Link>
+                    <Link
+                        href={'/statistiche?desc_carburante=benzina&livello_geo=provinciale&codice_geo=pa'}>Palermo</Link>
+                </div>
 
                 <div className="row">
                     <div className="col-12 col-lg-3">
-                        <StatisticheFilters onFilterChange={handleFilterChange}
+                        <StatisticheFilters onFilterChange={setFilters}
                                             isLoading={isLoading}
-                                            initialFilters={initialParams}/> {/* Passa isLoading e i parametri iniziali dall'URL */}
+                                            filters={filters}/> {/* Passa i filtri correnti per sincronizzare l'UI */}
                     </div>
                     <div className="col-12 col-lg-9">
                         {isLoading ? (

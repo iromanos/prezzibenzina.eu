@@ -6,32 +6,14 @@ import StatisticheGeoFilters from './StatisticheGeoFilters';
 import {FaGasPump} from 'react-icons/fa6';
 import {FaCalendarAlt} from "react-icons/fa"; // Importa le icone
 
-export default function StatisticheFilters({onFilterChange, isLoading, initialFilters = {}}) { // Riceve isLoading e i parametri iniziali dall'URL
-    const [carburante, setCarburante] = useState(initialFilters.desc_carburante || 'Benzina');
-    const [geoFilters, setGeoFilters] = useState({
-        livello_geo: initialFilters.livello_geo || 'nazionale',
-        codice_geo: initialFilters.codice_geo || 'IT',
-    });
-
-    // Calcola la data di oggi e 90 giorni fa per i valori predefiniti
-    const getInitialDates = () => {
-        const today = new Date();
-        const ninetyDaysAgo = new Date(today);
-        ninetyDaysAgo.setDate(today.getDate() - 90);
-        return {
-            startDate: ninetyDaysAgo.toISOString().split('T')[0],
-            endDate: today.toISOString().split('T')[0],
-        };
-    };
-
-    const initialDates = getInitialDates();
-    const [startDate, setStartDate] = useState(initialFilters.startDate || initialDates.startDate);
-    const [endDate, setEndDate] = useState(initialFilters.endDate || initialDates.endDate);
-
+export default function StatisticheFilters({onFilterChange, isLoading, filters}) {
+    if (!filters) {
+        return null; // o un loader
+    }
 
     const handleGeoFilterChange = useCallback((newGeoFilters) => {
-        setGeoFilters(newGeoFilters);
-    }, []);
+        onFilterChange({...filters, ...newGeoFilters});
+    }, [filters, onFilterChange]);
 
     const handleFilter = () => {
         if (onFilterChange) {
@@ -43,12 +25,6 @@ export default function StatisticheFilters({onFilterChange, isLoading, initialFi
             });
         }
     };
-
-    // Esegui il primo caricamento e ogni volta che le date iniziali cambiano (anche se non dovrebbero)
-    useEffect(() => {
-        handleFilter();
-    }, [carburante, geoFilters, startDate, endDate]); // Dipendenze per rieseguire il filtro quando cambiano
-
 
     return (
         <div className="card">
@@ -65,8 +41,8 @@ export default function StatisticheFilters({onFilterChange, isLoading, initialFi
                             <select
                                 id="carburante"
                                 className="form-select"
-                                value={carburante}
-                                onChange={(e) => setCarburante(e.target.value)}
+                                value={filters.desc_carburante}
+                                onChange={(e) => onFilterChange({...filters, desc_carburante: e.target.value})}
                                 disabled={isLoading}
                             >
                                 <option value="Benzina">Benzina</option>
@@ -80,10 +56,7 @@ export default function StatisticheFilters({onFilterChange, isLoading, initialFi
                     {/* Sezione Filtri Geografici */}
                     <StatisticheGeoFilters onGeoFilterChange={handleGeoFilterChange}
                                            isLoading={isLoading}
-                                           initialGeo={{
-                                               livello_geo: initialFilters.livello_geo || 'nazionale',
-                                               codice_geo: initialFilters.codice_geo || 'IT',
-                                           }}/>
+                                           geoFilters={filters}/>
 
                     {/* Sezione Intervallo di Date */}
                     <div className="mb-4"> {/* Rimosso p-3 border rounded bg-light */}
@@ -96,8 +69,8 @@ export default function StatisticheFilters({onFilterChange, isLoading, initialFi
                                 type="date"
                                 id="startDate"
                                 className="form-control"
-                                value={startDate}
-                                onChange={(e) => setStartDate(e.target.value)}
+                                value={filters.startDate || ''}
+                                onChange={(e) => onFilterChange({...filters, startDate: e.target.value})}
                                 disabled={isLoading}
                             />
                         </div>
@@ -108,8 +81,8 @@ export default function StatisticheFilters({onFilterChange, isLoading, initialFi
                                 type="date"
                                 id="endDate"
                                 className="form-control"
-                                value={endDate}
-                                onChange={(e) => setEndDate(e.target.value)}
+                                value={filters.endDate || ''}
+                                onChange={(e) => onFilterChange({...filters, endDate: e.target.value})}
                                 disabled={isLoading}
                             />
                         </div>
@@ -118,7 +91,7 @@ export default function StatisticheFilters({onFilterChange, isLoading, initialFi
                     <button
                         type="button"
                         className="btn btn-primary w-100 py-2"
-                        onClick={handleFilter}
+                        onClick={() => onFilterChange({...filters})} // Riesegue la fetch con i filtri attuali
                         disabled={isLoading}
                     >
                         {isLoading ? (
