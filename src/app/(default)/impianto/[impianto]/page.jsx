@@ -6,13 +6,23 @@ import {getOpenGraph, getTwitter} from "@/functions/server";
 import {headers} from "next/headers"; // Re-importa headers per Server Component
 import {notFound, redirect} from "next/navigation";
 import {ucwords} from "@/functions/helpers";
-import {BsCreditCard, BsCupHot, BsDroplet, BsPCircle, BsPersonWheelchair, BsTools, BsWater} from "react-icons/bs";
+import {
+    BsCreditCard,
+    BsCupHot,
+    BsDroplet,
+    BsExclamationTriangle,
+    BsPCircle,
+    BsPersonWheelchair,
+    BsTools,
+    BsWater
+} from "react-icons/bs";
 import React from "react";
 import Display5745053645 from "@/components/ads/Display-5745053645";
 import Link from "next/link";
 import slugify from "slugify";
 import {FaBaby, FaCarSide, FaChargingStation, FaWifi} from "react-icons/fa6";
-import ImpiantoNotifyButton from '@/components/impianti/ImpiantoNotifyButton'; // Importa il nuovo componente
+import ImpiantoNotifyButton from '@/components/impianti/ImpiantoNotifyButton';
+import {StatisticheWrapper} from "@/components/statistiche/StatisticheChart.jsx"; // Importa il nuovo componente
 
 export const revalidate = 300;
 
@@ -147,13 +157,34 @@ export default async function Page({params}) { // Re-aggiunto async
             <main className="container">
 
                 <ImpiantoScheda impianto={impianto} cookie={cookie}/>
-
+                <div className={'container'}>
+                    <div className="card mb-4">
+                        <div className="card-body">
+                            <h5 className="card-title">Andamento del prezzo della {cookie.carburante}</h5>
+                            <StatisticheWrapper filters={{
+                                desc_carburante: cookie.carburante,
+                                livello_geo: 'distributore',
+                                codice_geo: impianto.id_impianto,
+                            }}/>
+                        </div>
+                    </div>
+                </div>
                 <ImpiantoNotifyButton
                     impiantoId={impianto.id_impianto}
                     defaultFuelType={cookie.carburante}
                 />
 
+                {/* CTA alla pagina di segnalazione */}
+                <div className="my-4 d-flex justify-content-center">
+                    <Link href={`/impianto/${impianto.link}/segnala`}
+                          className="btn btn-light btn-sm border text-secondary px-4 rounded-pill shadow-sm hover-shadow transition-all">
+                        <BsExclamationTriangle className="me-2 text-danger"/>
+                        Hai trovato un errore? <span className="fw-bold text-dark ms-1">Segnalalo qui</span>
+                    </Link>
+                </div>
+
                 {impianto.elencoServizi &&
+                    <div className={'container'}>
                     <section className="mb-5 p-4 bg-light rounded border ">
                     <h3 className="h6 fw-bold text-uppercase text-muted mb-3">Cerca altro a {impianto.comune}</h3>
                     <div className="d-flex flex-wrap gap-2">
@@ -174,8 +205,10 @@ export default async function Page({params}) { // Re-aggiunto async
                             );
                         })}
                     </div>
-                </section>
+                    </section>
+                    </div>
                 }
+
 
                 {/* Sezione Pubblicità e SEO a tutta larghezza */}
                 <div className="row mt-5">

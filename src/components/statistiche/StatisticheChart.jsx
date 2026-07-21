@@ -43,7 +43,7 @@ export function StatisticheWrapper({filters}) {
 
 }
 
-export default function StatisticheChart({data}) {
+export default function StatisticheChart({data, showMin = false, showMax = false}) {
 
     console.log("data:", data);
 
@@ -80,8 +80,10 @@ export default function StatisticheChart({data}) {
                 <Legend/>
                 <Area type="monotone" dataKey="prezzo_medio" stroke="#8884d8" fill="#8884d8" fillOpacity={0.3}
                       name="Prezzo Medio"/>
-                <Line dot={false} type="basis" dataKey="prezzo_min" stroke="#82ca9d" name="Prezzo Minimo"/>
-                <Line dot={false} type="basis" dataKey="prezzo_max" stroke="#ffc658" name="Prezzo Massimo"/>
+                {showMin &&
+                    <Line dot={false} type="basis" dataKey="prezzo_min" stroke="#82ca9d" name="Prezzo Minimo"/>}
+                {showMax &&
+                    <Line dot={false} type="basis" dataKey="prezzo_max" stroke="#ffc658" name="Prezzo Massimo"/>}
             </AreaChart>
         </ResponsiveContainer>
     );

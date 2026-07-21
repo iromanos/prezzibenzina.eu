@@ -36,7 +36,7 @@ export async function POST(request) {
         // 3. Invio email
         const mailOptions = {
             from: `"Modulo Contatti PrezziBenzina.eu" <${process.env.EMAIL_FROM}>`,
-            to: process.env.CONTACT_FORM_RECIPIENT_EMAIL, // L'email a cui inviare i messaggi
+            to: process.env.EMAIL_FROM, // L'email a cui inviare i messaggi
             subject: `[Contatto Sito] ${subject} da ${name}`,
             html: `
                 <p><strong>Nome:</strong> ${name}</p>

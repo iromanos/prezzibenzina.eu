@@ -9,7 +9,6 @@ import Link from 'next/link';
 import React, {useRef, useState} from "react";
 import Image from 'next/image';
 
-//TODO: form segnalazione errori
 //TODO: widget voto per il distributore
 
 export default function SegnalaClient({distributore}) {
@@ -39,30 +38,41 @@ export default function SegnalaClient({distributore}) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // setLoading(true);
+        setLoading(true);
         setError('');
         setSuccess('');
+        const isLocal = process.env.NODE_ENV === 'development';
 
-        if (!recaptchaToken) {
+        if (!recaptchaToken && !isLocal) {
             setError('Verifica reCAPTCHA non completata. Riprova.');
-            // setLoading(false);
+            setLoading(false);
             return;
         }
 
         try {
-            const response = await fetch('/api/contact', {
+            const response = await fetch('/api/segnala', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({...formData, recaptchaToken}),
+                body: JSON.stringify({
+                    ...formData,
+                    recaptchaToken,
+                    impianto: {
+                        id_impianto: distributore.id_impianto,
+                        nome_impianto: distributore.nome_impianto,
+                        indirizzo: distributore.indirizzo,
+                        comune: distributore.comune,
+                        link: distributore.link
+                    }
+                }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
                 setSuccess(data.message || 'Messaggio inviato con successo!');
-                // setFormData({name: '', email: '', message: ''}); // Resetta il form
+                setFormData({tipo_segnalazione: '', messaggio: '', email: ''}); // Reset
                 setRecaptchaToken(''); // Resetta il token reCAPTCHA
                 if (recaptchaRef.current) {
                     recaptchaRef.current.execute(); // Richiedi un nuovo token reCAPTCHA
@@ -74,7 +84,7 @@ export default function SegnalaClient({distributore}) {
             console.error('Errore di rete o del server:', err);
             setError('Impossibile connettersi al server. Riprova più tardi.');
         } finally {
-            // setLoading(false);
+            setLoading(false);
         }
     };
 
@@ -186,8 +196,9 @@ export default function SegnalaClient({distributore}) {
 
 
                                 <div className="d-grid">
-                                    <button type="submit" className="btn btn-primary fw-bold py-2">
-                                        <BsSend className="me-2"/> Invia la segnalazione
+                                    <button type="submit" className="btn btn-primary fw-bold py-2" disabled={loading}>
+                                        {loading ? 'Invio in corso...' : <><BsSend className="me-2"/> Invia la
+                                            segnalazione</>}
                                     </button>
                                 </div>
                             </form>

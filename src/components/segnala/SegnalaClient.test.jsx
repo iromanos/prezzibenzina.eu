@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SegnalaClient from './SegnalaClient.jsx';
+import {GoogleReCaptcha} from 'react-google-recaptcha-v3';
 
 // Mock delle dipendenze esterne
 jest.mock('next/link', () => {
@@ -18,27 +19,29 @@ jest.mock('@/components/Header', () => {
 
 jest.mock('next/image', () => {
     return ({src, alt}) => {
-        // eslint-disable-next-line @next/next/no-img-element
+        // eslint-disable-next-line @next/next/no-img-alt
         return <img src={src} alt={alt}/>;
     };
 });
 
-// Mock di react-google-recaptcha-v3
+
+// Eseguiamo il mock definito sopra
 jest.mock('react-google-recaptcha-v3', () => ({
     GoogleReCaptchaProvider: ({children}) => <>{children}</>,
-    GoogleReCaptcha: ({onVerify}) => {
-        // Simula la verifica immediata chiamando onVerify con un token fittizio
-        React.useEffect(() => {
-            onVerify('mock-recaptcha-token');
-        }, [onVerify]);
-        return null; // Non renderizza nulla
-    },
+
+    // Fai il mock di GoogleReCaptcha come un vero componente React
+    GoogleReCaptcha: jest.fn(),
 }));
+
 
 // Mock della funzione fetch globale
 global.fetch = jest.fn();
 
 describe('SegnalaClient', () => {
+
+
+    const mockExecuteRecaptcha = jest.fn();
+
     const mockDistributore = {
         link: 'test-distributore',
         image: '/bandiere/test.png',
@@ -92,7 +95,16 @@ describe('SegnalaClient', () => {
             json: () => Promise.resolve({message: 'Messaggio inviato con successo!'}),
         });
 
+        GoogleReCaptcha.mockImplementation(({onVerify}) => {
+            useEffect(() => {
+                onVerify('mock-recaptcha-token');
+            }, [onVerify]);
+
+            return <div data-testid="mock-recaptcha"/>;
+        });
+
         render(<SegnalaClient distributore={mockDistributore}/>);
+
 
         // Compila il form
         fireEvent.change(screen.getByLabelText(/Oggetto della segnalazione/i), {target: {value: 'prezzo'}});
@@ -127,6 +139,7 @@ describe('SegnalaClient', () => {
             json: () => Promise.resolve({error: 'Errore API simulato.'}),
         });
 
+
         render(<SegnalaClient distributore={mockDistributore}/>);
 
         // Invia il form
@@ -139,9 +152,15 @@ describe('SegnalaClient', () => {
         });
     });
 
-    it('dovrebbe mostrare un errore se la verifica reCAPTCHA non è presente (anche se il nostro mock la forza)', async () => {
-        // Sovrascriviamo il mock per questo test specifico per non fornire il token
-        // jest.spyOn(React, 'useEffect').mockImplementationOnce(f => f());
+    it('dovrebbe mostrare un errore se la verifica reCAPTCHA non è presente', async () => {
+
+        GoogleReCaptcha.mockImplementation(({onVerify}) => {
+            useEffect(() => {
+                onVerify('');
+            }, [onVerify]);
+
+            return <div data-testid="mock-recaptcha"/>;
+        });
 
         render(<SegnalaClient distributore={mockDistributore}/>);
 
@@ -153,8 +172,5 @@ describe('SegnalaClient', () => {
         await waitFor(() => {
             expect(screen.getByText('Verifica reCAPTCHA non completata. Riprova.')).toBeInTheDocument();
         });
-
-        // Ripristina il mock
-        jest.spyOn(React, 'useEffect').mockRestore();
     });
 });

@@ -29,7 +29,7 @@ export default function ImpiantoNotifyButton({impiantoId, defaultFuelType}) {
                 className="btn btn-primary btn-lg d-flex align-items-center justify-content-center mx-auto"
                 onClick={handleNotifyClick}
             >
-                <FaBell className="me-2"/> Ricevi Notifiche Prezzo per questo impianto
+                <FaBell className="me-2"/> Ricevi le notifiche per questo impianto
             </button>
         </div>
     );
