@@ -1,5 +1,5 @@
 'use client';
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Map, {Popup} from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -28,6 +28,10 @@ import Image from "next/image";
 import {AdsDesktop} from "../ads/AdsDesktop";
 import Display6977770298 from "@/components/ads/Display-6977770298";
 
+// Importazione dei nuovi componenti per le recensioni
+import RatingDisplay from "@/components/reviews/RatingDisplay";
+import {useAuth} from "@/contexts/AuthContext.jsx";
+
 
 export default function ImpiantoScheda({impianto, cookie}) {
     const [showPopup, setShowPopup] = useState(false);
@@ -35,12 +39,45 @@ export default function ImpiantoScheda({impianto, cookie}) {
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;
     const router = useRouter();
 
+    // Stato per le valutazioni medie e totali
+    const [averageRating, setAverageRating] = useState(0);
+    const [totalReviews, setTotalReviews] = useState(0);
 
+
+    const {user} = useAuth();
+
+    const currentUserId = user?.id;
     const {preferiti, gestisciClickCuore, ModalComponent, ModalResult} = usePreferitiGlobal();
 
     const isPreferito = () => {
         return preferiti.includes(impianto.id_impianto_pb);
     };
+
+    // Funzione per recuperare la media delle valutazioni
+    const fetchAverageRating = useCallback(async () => {
+        if (!impianto.id_impianto) return;
+        try {
+            const response = await fetch(`/api/impianti/${impianto.id_impianto}/average-rating`);
+            const data = await response.json();
+            if (response.ok) {
+                setAverageRating(parseFloat(data.average_rating) || 0);
+                setTotalReviews(data.total_reviews || 0);
+            } else {
+                console.error('Error fetching average rating:', data.message);
+                setAverageRating(0);
+                setTotalReviews(0);
+            }
+        } catch (error) {
+            console.error('Failed to fetch average rating:', error);
+            setAverageRating(0);
+            setTotalReviews(0);
+        }
+    }, [impianto.id_impianto]);
+
+    useEffect(() => {
+        fetchAverageRating();
+    }, [fetchAverageRating]);
+
 
     const confrontaVicini = () => {
         logDebug('compare:open');
@@ -270,6 +307,8 @@ export default function ImpiantoScheda({impianto, cookie}) {
         );
     }
 
+    console.log(impianto);
+
     return (
         <div className="container py-4">
 
@@ -290,13 +329,16 @@ export default function ImpiantoScheda({impianto, cookie}) {
                 <div className={'col-lg-7 mb-4'}>
                     <div className="d-flex align-items-center gap-3 mb-3">
                         <Image
-
                             unoptimized
-
-                            src={URI_IMAGE + impianto.image} alt={impianto.bandiera} width={96} height={96}/>
+                            src={URI_IMAGE + impianto.image}
+                            alt={impianto.bandiera} width={96} height={96}/>
                         <div>
                             <h1 className="mb-0">{impianto.nome_impianto}</h1>
                             <small className="text-muted">{impianto.gestore}</small>
+                            <RatingDisplay
+                                userId={currentUserId}
+                                averageRating={averageRating}
+                                totalReviews={totalReviews}/>
                         </div>
                     </div>
 
@@ -343,6 +385,22 @@ export default function ImpiantoScheda({impianto, cookie}) {
                                 return <li key={s.id}>{s.description}</li>
                             })}</ul>
                     </>}
+
+                    {/* Review Form */}
+                    {/*{currentUserId && ( // Mostra il form solo se l'utente è autenticato*/}
+                    {/*    <ReviewForm*/}
+                    {/*        impiantoId={impianto.id_impianto}*/}
+                    {/*        userId={currentUserId}*/}
+                    {/*        onReviewSubmitted={fetchAverageRating} // Aggiorna la media dopo l'invio*/}
+                    {/*    />*/}
+                    {/*)}*/}
+
+                    {/*/!* Review List *!/*/}
+                    {/*<ReviewList*/}
+                    {/*    impiantoId={impianto.id_impianto}*/}
+                    {/*    currentUserId={currentUserId}*/}
+                    {/*    onReviewChanged={fetchAverageRating} // Aggiorna la media dopo modifiche/eliminazioni*/}
+                    {/*/>*/}
 
                 </div>
                 <div className={'col-lg-5 mb-4'}>

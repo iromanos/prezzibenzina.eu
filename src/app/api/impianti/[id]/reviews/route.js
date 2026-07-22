@@ -4,7 +4,7 @@ import {createPool} from '@/repos/mysql';
 export async function GET(request, {params}) {
     let connection;
     try {
-        const id_impianto = params.id;
+        const id_impianto = (await params).id;
 
         if (!id_impianto) {
             return NextResponse.json({message: 'Missing id_impianto parameter'}, {status: 400});

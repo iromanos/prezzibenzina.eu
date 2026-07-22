@@ -14,7 +14,8 @@ export async function POST(request) {
             return NextResponse.json({message: 'Rating must be between 1 and 5'}, {status: 400});
         }
 
-        connection = await createPool();
+
+        connection = await createPool().getConnection();
 
         // Start a transaction
         await connection.beginTransaction();

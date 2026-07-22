@@ -2,11 +2,15 @@ import {NextResponse} from 'next/server';
 import {createPool} from '@/repos/mysql'; // Switch to a pool for high performance
 
 // Caching: Revalidate this data every 5 minutes to handle high traffic (100k users)
-export const revalidate = 300; 
+// export const revalidate = 300;
 
 export async function GET(request, {params}) {
     try {
-        const {id: id_impianto} = params;
+
+        const _params = await params;
+        console.log(_params);
+
+        const id_impianto = (await params).id;
         if (!id_impianto) {
             return NextResponse.json({message: 'Missing id_impianto parameter'}, {status: 400});
         }

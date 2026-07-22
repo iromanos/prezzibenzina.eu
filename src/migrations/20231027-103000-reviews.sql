@@ -4,7 +4,7 @@
 CREATE TABLE `reviews`
 (
     `id`          BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
-    `id_impianto` BIGINT UNSIGNED  NOT NULL,
+    `id_impianto` INT NOT NULL,
     `user_id`     BIGINT UNSIGNED, -- NULLABLE if anonymous reviews are allowed
     `rating`      TINYINT UNSIGNED NOT NULL CHECK (rating >= 1 AND rating <= 5),
     `comment`     TEXT,
