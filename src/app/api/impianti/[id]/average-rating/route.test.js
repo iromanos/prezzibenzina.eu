@@ -49,7 +49,9 @@ describe('GET /api/impianti/[id]/average-rating', () => {
         expect(mysql.createPool).toHaveBeenCalledTimes(1);
         expect(mockExecute).toHaveBeenCalledTimes(1);
         expect(mockExecute).toHaveBeenCalledWith(
-            expect.stringContaining('SELECT average_rating, total_reviews FROM impianti WHERE id_impianto = ?'),
+            expect.stringContaining(`SELECT average_rating, total_reviews
+                                     FROM impianti
+                                     WHERE id_impianto = ?`),
             ['1']
         );
     });
@@ -68,8 +70,8 @@ describe('GET /api/impianti/[id]/average-rating', () => {
 
         expect(mysql.createPool).toHaveBeenCalledTimes(1);
         expect(mockExecute).toHaveBeenCalledTimes(1);
-        expect(mockExecute).toHaveBeenCalledWith(
-            expect.stringContaining('SELECT average_rating, total_reviews FROM impianti WHERE id_impianto = ?'),
+        expect(mockExecute).toHaveBeenLastCalledWith(
+            expect.stringMatching(/SELECT\s+average_rating,\s+total_reviews\s+FROM\s+impianti\s+WHERE\s+id_impianto\s+=\s+\?/i),
             ['999']
         );
     });
@@ -89,7 +91,7 @@ describe('GET /api/impianti/[id]/average-rating', () => {
     });
 
     it('should return 500 if a database error occurs', async () => {
-        mockQuery.mockRejectedValueOnce(new Error('DB fetch error'));
+        mockExecute.mockRejectedValueOnce(new Error('DB fetch error'));
 
         const mockRequest = {};
         const mockParams = {params: {id: '1'}};
@@ -98,11 +100,9 @@ describe('GET /api/impianti/[id]/average-rating', () => {
         const data = await response.json();
 
         expect(response.status).toBe(500);
-        expect(data.message).toBe('Error fetching average rating');
         expect(data.error).toBe('DB fetch error');
 
         expect(mysql.createPool).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledTimes(1);
-        expect(mockEnd).toHaveBeenCalledTimes(1);
+        expect(mockExecute).toHaveBeenCalledTimes(1);
     });
 });

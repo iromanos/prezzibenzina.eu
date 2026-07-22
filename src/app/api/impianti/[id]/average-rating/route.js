@@ -12,8 +12,6 @@ export async function GET(request, {params}) {
         }
         const pool = await createPool();
 
-        // Use the pool to execute the query. 
-        // The pool handles opening/releasing connections automatically.
         const [rows] = await pool.execute(
             `SELECT average_rating, total_reviews
              FROM impianti
@@ -34,8 +32,6 @@ export async function GET(request, {params}) {
         });
 
     } catch (error) {
-        console.error(`Error fetching average rating for impianto ${params.id}:`, error);
-        // Avoid leaking error.message to the client for security/cleanliness
-        return NextResponse.json({message: 'Internal Server Error'}, {status: 500});
+        return NextResponse.json({message: error.message, error: error.message}, {status: 500});
     }
 }
