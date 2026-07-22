@@ -29,7 +29,6 @@ import {AdsDesktop} from "../ads/AdsDesktop";
 import Display6977770298 from "@/components/ads/Display-6977770298";
 
 // Importazione dei nuovi componenti per le recensioni
-import RatingDisplay from "@/components/reviews/RatingDisplay";
 import {useAuth} from "@/contexts/AuthContext.jsx";
 
 
@@ -335,10 +334,10 @@ export default function ImpiantoScheda({impianto, cookie}) {
                         <div>
                             <h1 className="mb-0">{impianto.nome_impianto}</h1>
                             <small className="text-muted">{impianto.gestore}</small>
-                            <RatingDisplay
-                                userId={currentUserId}
-                                averageRating={averageRating}
-                                totalReviews={totalReviews}/>
+                            {/*<RatingDisplay*/}
+                            {/*    userId={currentUserId}*/}
+                            {/*    averageRating={averageRating}*/}
+                            {/*    totalReviews={totalReviews}/>*/}
                         </div>
                     </div>
 
