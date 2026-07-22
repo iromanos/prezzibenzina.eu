@@ -1,26 +1,32 @@
 import {GET} from './route';
-import {connectToDatabase} from '@/repos/mysql';
+import mysql from 'mysql2/promise';
 
-// Mock the database connection
-jest.mock('@/repos/mysql', () => ({
-    connectToDatabase: jest.fn(),
+const mockExecute = jest.fn();
+// const mockCreatePool = jest.fn(() => ({
+//         execute: mockExecute,
+//     }));
+// Mocking di un Pool invece di una connessione singola
+jest.mock('mysql2/promise', () => {
+    return {
+        createPool: jest.fn(() => ({
+            execute: mockExecute,
+        }))
+    };
+});
+
+jest.mock('next/server', () => ({
+    NextResponse: {
+        json: jest.fn((body, options) => ({
+            status: options?.status || 200,
+            json: async () => body, // Simula il comportamento della Web API Response
+        })),
+    },
 }));
 
 describe('GET /api/impianti/[id]/average-rating', () => {
-    let mockConnection;
-    let mockQuery;
-    let mockEnd;
 
     beforeEach(() => {
-        mockQuery = jest.fn();
-        mockEnd = jest.fn();
-
-        mockConnection = {
-            query: mockQuery,
-            end: mockEnd,
-        };
-
-        connectToDatabase.mockResolvedValue(mockConnection);
+        jest.clearAllMocks();
     });
 
     afterEach(() => {
@@ -29,7 +35,7 @@ describe('GET /api/impianti/[id]/average-rating', () => {
 
     it('should return average rating and total reviews for a given impianto ID', async () => {
         const mockRatingData = {average_rating: '4.50', total_reviews: 10};
-        mockQuery.mockResolvedValueOnce([[mockRatingData]]);
+        mockExecute.mockResolvedValueOnce([[mockRatingData]]);
 
         const mockRequest = {};
         const mockParams = {params: {id: '1'}};
@@ -40,17 +46,16 @@ describe('GET /api/impianti/[id]/average-rating', () => {
         expect(response.status).toBe(200);
         expect(data).toEqual(mockRatingData);
 
-        expect(connectToDatabase).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledWith(
+        expect(mysql.createPool).toHaveBeenCalledTimes(1);
+        expect(mockExecute).toHaveBeenCalledTimes(1);
+        expect(mockExecute).toHaveBeenCalledWith(
             expect.stringContaining('SELECT average_rating, total_reviews FROM impianti WHERE id_impianto = ?'),
             ['1']
         );
-        expect(mockEnd).toHaveBeenCalledTimes(1);
     });
 
     it('should return 404 if impianto is not found', async () => {
-        mockQuery.mockResolvedValueOnce([[]]); // No impianto found
+        mockExecute.mockResolvedValueOnce([[]]); // No impianto found
 
         const mockRequest = {};
         const mockParams = {params: {id: '999'}}; // Non-existent impianto
@@ -61,13 +66,12 @@ describe('GET /api/impianti/[id]/average-rating', () => {
         expect(response.status).toBe(404);
         expect(data.message).toBe('Impianto not found');
 
-        expect(connectToDatabase).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledWith(
+        expect(mysql.createPool).toHaveBeenCalledTimes(1);
+        expect(mockExecute).toHaveBeenCalledTimes(1);
+        expect(mockExecute).toHaveBeenCalledWith(
             expect.stringContaining('SELECT average_rating, total_reviews FROM impianti WHERE id_impianto = ?'),
             ['999']
         );
-        expect(mockEnd).toHaveBeenCalledTimes(1);
     });
 
     it('should return 400 if id_impianto parameter is missing', async () => {
@@ -80,9 +84,8 @@ describe('GET /api/impianti/[id]/average-rating', () => {
         expect(response.status).toBe(400);
         expect(data.message).toBe('Missing id_impianto parameter');
 
-        expect(connectToDatabase).not.toHaveBeenCalled();
-        expect(mockQuery).not.toHaveBeenCalled();
-        expect(mockEnd).not.toHaveBeenCalled();
+        expect(mysql.createPool).not.toHaveBeenCalled();
+        expect(mockExecute).not.toHaveBeenCalled();
     });
 
     it('should return 500 if a database error occurs', async () => {
@@ -98,7 +101,7 @@ describe('GET /api/impianti/[id]/average-rating', () => {
         expect(data.message).toBe('Error fetching average rating');
         expect(data.error).toBe('DB fetch error');
 
-        expect(connectToDatabase).toHaveBeenCalledTimes(1);
+        expect(mysql.createPool).toHaveBeenCalledTimes(1);
         expect(mockQuery).toHaveBeenCalledTimes(1);
         expect(mockEnd).toHaveBeenCalledTimes(1);
     });

@@ -258,6 +258,8 @@ export default async function PrezziMediProvinciaPage({params}) {
                     "@type": "Organization",
                     "name": "PrezziBenzina.eu"
                 },
+                "license": "https://www.formez.it/iodl/2.0/",
+                "isBasedOn": "https://www.mimit.gov.it/",
                 "dateModified": new Date().toISOString().split('T')[0] // Data di oggi come ultima modifica
             }
         }

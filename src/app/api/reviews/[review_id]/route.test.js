@@ -6,6 +6,13 @@ jest.mock('@/repos/mysql', () => ({
     connectToDatabase: jest.fn(),
 }));
 
+jest.mock('next/server', () => ({
+    NextResponse: {
+        json: jest.fn((body, options) => ({body, options})),
+    },
+}));
+
+
 describe('PUT /api/reviews/[review_id]', () => {
     let mockConnection;
     let mockQuery;
