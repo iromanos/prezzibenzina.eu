@@ -1,32 +1,28 @@
 import {GET} from './route';
-import {connectToDatabase} from '@/repos/mysql';
+import mysql from 'mysql2/promise';
 
-// Mock the database connection
-jest.mock('@/repos/mysql', () => ({
-    connectToDatabase: jest.fn(),
-}));
+const mockExecute = jest.fn();
+jest.mock('mysql2/promise', () => {
+    return {
+        createPool: jest.fn(() => ({
+            execute: mockExecute,
+        }))
+    };
+});
 
 jest.mock('next/server', () => ({
     NextResponse: {
-        json: jest.fn((body, options) => ({body, options})),
+        json: jest.fn((body, options) => ({
+            status: options?.status || 200,
+            json: async () => body, // Simula il comportamento della Web API Response
+        })),
     },
 }));
 
 describe('GET /api/impianti/[id]/reviews', () => {
-    let mockConnection;
-    let mockQuery;
-    let mockEnd;
 
     beforeEach(() => {
-        mockQuery = jest.fn();
-        mockEnd = jest.fn();
-
-        mockConnection = {
-            query: mockQuery,
-            end: mockEnd,
-        };
-
-        connectToDatabase.mockResolvedValue(mockConnection);
+        jest.clearAllMocks();
     });
 
     afterEach(() => {
@@ -55,7 +51,7 @@ describe('GET /api/impianti/[id]/reviews', () => {
             },
         ];
 
-        mockQuery.mockResolvedValueOnce([mockReviews]);
+        mockExecute.mockResolvedValueOnce([mockReviews]);
 
         const mockRequest = {}; // GET requests don't typically have a body
         const mockParams = {params: {id: '1'}};
@@ -66,17 +62,16 @@ describe('GET /api/impianti/[id]/reviews', () => {
         expect(response.status).toBe(200);
         expect(data).toEqual(mockReviews);
 
-        expect(connectToDatabase).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledWith(
+        expect(mysql.createPool).toHaveBeenCalledTimes(1);
+        expect(mockExecute).toHaveBeenCalledTimes(1);
+        expect(mockExecute).toHaveBeenCalledWith(
             expect.stringContaining('SELECT r.id, r.id_impianto, r.user_id, u.name as user_name, r.rating, r.comment, r.created_at, r.updated_at'),
             ['1']
         );
-        expect(mockEnd).toHaveBeenCalledTimes(1);
     });
 
     it('should return an empty array if no reviews are found', async () => {
-        mockQuery.mockResolvedValueOnce([[]]); // No reviews found
+        mockExecute.mockResolvedValueOnce([[]]); // No reviews found
 
         const mockRequest = {};
         const mockParams = {params: {id: '999'}}; // Non-existent impianto
@@ -87,13 +82,12 @@ describe('GET /api/impianti/[id]/reviews', () => {
         expect(response.status).toBe(200);
         expect(data).toEqual([]);
 
-        expect(connectToDatabase).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledWith(
+        expect(mysql.createPool).toHaveBeenCalledTimes(1);
+        expect(mockExecute).toHaveBeenCalledTimes(1);
+        expect(mockExecute).toHaveBeenCalledWith(
             expect.stringContaining('SELECT r.id, r.id_impianto, r.user_id, u.name as user_name, r.rating, r.comment, r.created_at, r.updated_at'),
             ['999']
         );
-        expect(mockEnd).toHaveBeenCalledTimes(1);
     });
 
     it('should return 400 if id_impianto parameter is missing', async () => {
@@ -106,13 +100,12 @@ describe('GET /api/impianti/[id]/reviews', () => {
         expect(response.status).toBe(400);
         expect(data.message).toBe('Missing id_impianto parameter');
 
-        expect(connectToDatabase).not.toHaveBeenCalled();
-        expect(mockQuery).not.toHaveBeenCalled();
-        expect(mockEnd).not.toHaveBeenCalled();
+        expect(mysql.createPool).not.toHaveBeenCalled();
+        expect(mockExecute).not.toHaveBeenCalled();
     });
 
     it('should return 500 if a database error occurs', async () => {
-        mockQuery.mockRejectedValueOnce(new Error('DB fetch error'));
+        mockExecute.mockRejectedValueOnce(new Error('DB fetch error'));
 
         const mockRequest = {};
         const mockParams = {params: {id: '1'}};
@@ -124,8 +117,7 @@ describe('GET /api/impianti/[id]/reviews', () => {
         expect(data.message).toBe('Error fetching reviews');
         expect(data.error).toBe('DB fetch error');
 
-        expect(connectToDatabase).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledTimes(1);
-        expect(mockEnd).toHaveBeenCalledTimes(1);
+        expect(mysql.createPool).toHaveBeenCalledTimes(1);
+        expect(mockExecute).toHaveBeenCalledTimes(1);
     });
 });

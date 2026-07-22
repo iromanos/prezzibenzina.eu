@@ -2,10 +2,6 @@ import {GET} from './route';
 import mysql from 'mysql2/promise';
 
 const mockExecute = jest.fn();
-// const mockCreatePool = jest.fn(() => ({
-//         execute: mockExecute,
-//     }));
-// Mocking di un Pool invece di una connessione singola
 jest.mock('mysql2/promise', () => {
     return {
         createPool: jest.fn(() => ({
