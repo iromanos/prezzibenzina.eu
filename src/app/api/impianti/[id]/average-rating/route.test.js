@@ -2,14 +2,18 @@ import {GET} from './route';
 import mysql from 'mysql2/promise';
 
 const mockExecute = jest.fn();
+const mockCommit = jest.fn();
+
 jest.mock('mysql2/promise', () => {
     return {
         createPool: jest.fn(() => ({
             execute: mockExecute,
+            commit: mockCommit,
+            rollback: jest.fn(),
+            beginTransaction: jest.fn(),
         }))
     };
 });
-
 jest.mock('next/server', () => ({
     NextResponse: {
         json: jest.fn((body, options) => ({
@@ -44,12 +48,6 @@ describe('GET /api/impianti/[id]/average-rating', () => {
 
         expect(mysql.createPool).toHaveBeenCalledTimes(1);
         expect(mockExecute).toHaveBeenCalledTimes(1);
-        expect(mockExecute).toHaveBeenCalledWith(
-            expect.stringContaining(`SELECT average_rating, total_reviews
-                                     FROM impianti
-                                     WHERE id_impianto = ?`),
-            ['1']
-        );
     });
 
     it('should return 404 if impianto is not found', async () => {

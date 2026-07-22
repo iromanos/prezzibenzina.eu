@@ -1,42 +1,34 @@
 import {POST} from './route';
-import {connectToDatabase} from '@/repos/mysql';
+import mysql from 'mysql2/promise';
 
-// Mock the database connection
-jest.mock('@/repos/mysql', () => ({
-    connectToDatabase: jest.fn(),
-}));
+const mockCommit = jest.fn();
+const mockExecute = jest.fn();
+const mockBeginTransaction = jest.fn();
+const mockRollback = jest.fn();
+jest.mock('mysql2/promise', () => {
+    return {
+        createPool: jest.fn(() => ({
+            execute: mockExecute,
+            commit: mockCommit,
+            rollback: mockRollback,
+            beginTransaction: mockBeginTransaction,
+        }))
+    };
+});
 
 jest.mock('next/server', () => ({
     NextResponse: {
-        json: jest.fn((body, options) => ({body, options})),
+        json: jest.fn((body, options) => ({
+            status: options?.status || 200,
+            json: async () => body, // Simula il comportamento della Web API Response
+        })),
     },
 }));
 
 
 describe('POST /api/reviews', () => {
-    let mockConnection;
-    let mockQuery;
-    let mockBeginTransaction;
-    let mockCommit;
-    let mockRollback;
-    let mockEnd;
 
     beforeEach(() => {
-        mockQuery = jest.fn();
-        mockBeginTransaction = jest.fn();
-        mockCommit = jest.fn();
-        mockRollback = jest.fn();
-        mockEnd = jest.fn();
-
-        mockConnection = {
-            query: mockQuery,
-            beginTransaction: mockBeginTransaction,
-            commit: mockCommit,
-            rollback: mockRollback,
-            end: mockEnd,
-        };
-
-        connectToDatabase.mockResolvedValue(mockConnection);
     });
 
     afterEach(() => {
@@ -53,7 +45,7 @@ describe('POST /api/reviews', () => {
             }),
         };
 
-        mockQuery
+        mockExecute
             .mockResolvedValueOnce([{insertId: 123}]) // For INSERT INTO reviews
             .mockResolvedValueOnce([[]]); // For UPDATE impianti (result doesn't matter much here)
 
@@ -64,19 +56,18 @@ describe('POST /api/reviews', () => {
         expect(data.message).toBe('Review created successfully');
         expect(data.reviewId).toBe(123);
 
-        expect(connectToDatabase).toHaveBeenCalledTimes(1);
+        expect(mysql.createPool).toHaveBeenCalledTimes(1);
         expect(mockBeginTransaction).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledTimes(2);
-        expect(mockQuery).toHaveBeenCalledWith(
+        expect(mockExecute).toHaveBeenCalledTimes(2);
+        expect(mockExecute).toHaveBeenCalledWith(
             'INSERT INTO reviews (id_impianto, user_id, rating, comment) VALUES (?, ?, ?, ?)',
             [1, 101, 4, 'Great service!']
         );
-        expect(mockQuery).toHaveBeenCalledWith(
+        expect(mockExecute).toHaveBeenCalledWith(
             expect.stringContaining('UPDATE impianti'),
             [1, 1, 1]
         );
         expect(mockCommit).toHaveBeenCalledTimes(1);
-        expect(mockEnd).toHaveBeenCalledTimes(1);
         expect(mockRollback).not.toHaveBeenCalled();
     });
 
@@ -94,7 +85,7 @@ describe('POST /api/reviews', () => {
 
         expect(response.status).toBe(400);
         expect(data.message).toBe('Missing required fields: id_impianto, user_id, rating');
-        expect(connectToDatabase).not.toHaveBeenCalled();
+        expect(mysql.createPool).not.toHaveBeenCalled();
     });
 
     it('should return 400 if rating is out of range', async () => {
@@ -112,7 +103,7 @@ describe('POST /api/reviews', () => {
 
         expect(response.status).toBe(400);
         expect(data.message).toBe('Rating must be between 1 and 5');
-        expect(connectToDatabase).not.toHaveBeenCalled();
+        expect(mysql.createPool).not.toHaveBeenCalled();
     });
 
     it('should rollback and return 500 if a database error occurs during insert', async () => {
@@ -125,7 +116,7 @@ describe('POST /api/reviews', () => {
             }),
         };
 
-        mockQuery.mockRejectedValueOnce(new Error('DB insert error')); // Simulate DB error
+        mockExecute.mockRejectedValueOnce(new Error('DB insert error')); // Simulate DB error
 
         const response = await POST(mockRequest);
         const data = await response.json();
@@ -134,12 +125,11 @@ describe('POST /api/reviews', () => {
         expect(data.message).toBe('Error creating review');
         expect(data.error).toBe('DB insert error');
 
-        expect(connectToDatabase).toHaveBeenCalledTimes(1);
+        expect(mysql.createPool).toHaveBeenCalledTimes(1);
         expect(mockBeginTransaction).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledTimes(1); // Only the first query failed
+        expect(mockExecute).toHaveBeenCalledTimes(1); // Only the first query failed
         expect(mockRollback).toHaveBeenCalledTimes(1);
         expect(mockCommit).not.toHaveBeenCalled();
-        expect(mockEnd).toHaveBeenCalledTimes(1);
     });
 
     it('should rollback and return 500 if a database error occurs during update', async () => {
@@ -152,7 +142,7 @@ describe('POST /api/reviews', () => {
             }),
         };
 
-        mockQuery
+        mockExecute
             .mockResolvedValueOnce([{insertId: 123}]) // Insert succeeds
             .mockRejectedValueOnce(new Error('DB update error')); // Update fails
 
@@ -163,11 +153,10 @@ describe('POST /api/reviews', () => {
         expect(data.message).toBe('Error creating review');
         expect(data.error).toBe('DB update error');
 
-        expect(connectToDatabase).toHaveBeenCalledTimes(1);
+        expect(mysql.createPool).toHaveBeenCalledTimes(1);
         expect(mockBeginTransaction).toHaveBeenCalledTimes(1);
-        expect(mockQuery).toHaveBeenCalledTimes(2);
+        expect(mockExecute).toHaveBeenCalledTimes(2);
         expect(mockRollback).toHaveBeenCalledTimes(1);
         expect(mockCommit).not.toHaveBeenCalled();
-        expect(mockEnd).toHaveBeenCalledTimes(1);
     });
 });

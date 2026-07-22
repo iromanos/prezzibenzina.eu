@@ -1,5 +1,5 @@
 import {NextResponse} from 'next/server';
-import {connectToDatabase} from '@/repos/mysql'; // Assicurati che il percorso sia corretto
+import {createPool} from '@/repos/mysql'; // Assicurati che il percorso sia corretto
 
 export async function POST(request) {
     let connection;
@@ -14,13 +14,13 @@ export async function POST(request) {
             return NextResponse.json({message: 'Rating must be between 1 and 5'}, {status: 400});
         }
 
-        connection = await connectToDatabase();
+        connection = await createPool();
 
         // Start a transaction
         await connection.beginTransaction();
 
         // 1. Insert the new review
-        const [result] = await connection.query(
+        const [result] = await connection.execute(
             'INSERT INTO reviews (id_impianto, user_id, rating, comment) VALUES (?, ?, ?, ?)',
             [id_impianto, user_id, rating, comment]
         );
@@ -30,7 +30,7 @@ export async function POST(request) {
         // 2. Update average_rating and total_reviews in the impianti table
         // This is a simplified approach. In a real-world scenario, you might want to
         // recalculate the average from all reviews or use triggers.
-        await connection.query(
+        await connection.execute(
             `UPDATE impianti
              SET total_reviews  = (SELECT COUNT(*) FROM reviews WHERE id_impianto = ?),
                  average_rating = (SELECT AVG(rating) FROM reviews WHERE id_impianto = ?)
@@ -49,8 +49,5 @@ export async function POST(request) {
         console.error('Error creating review:', error);
         return NextResponse.json({message: 'Error creating review', error: error.message}, {status: 500});
     } finally {
-        if (connection) {
-            await connection.end();
-        }
     }
 }

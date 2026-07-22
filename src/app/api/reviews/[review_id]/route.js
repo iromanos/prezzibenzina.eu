@@ -1,5 +1,5 @@
 import {NextResponse} from 'next/server';
-import {connectToDatabase} from '@/repos/mysql'; // Assicurati che il percorso sia corretto
+import {createPool} from '@/repos/mysql'; // Assicurati che il percorso sia corretto
 
 export async function PUT(request, {params}) {
     let connection;
@@ -10,18 +10,18 @@ export async function PUT(request, {params}) {
         if (!reviewId) {
             return NextResponse.json({message: 'Missing review_id parameter'}, {status: 400});
         }
-        if (!user_id || !rating) {
+        if (!user_id || rating === null) {
             return NextResponse.json({message: 'Missing required fields: user_id, rating'}, {status: 400});
         }
         if (rating < 1 || rating > 5) {
             return NextResponse.json({message: 'Rating must be between 1 and 5'}, {status: 400});
         }
 
-        connection = await connectToDatabase();
+        connection = await createPool();
         await connection.beginTransaction();
 
         // 1. Verify ownership of the review
-        const [existingReview] = await connection.query(
+        const [existingReview] = await connection.execute(
             'SELECT id_impianto, user_id FROM reviews WHERE id = ?',
             [reviewId]
         );
@@ -39,13 +39,13 @@ export async function PUT(request, {params}) {
         const id_impianto = existingReview[0].id_impianto;
 
         // 2. Update the review
-        await connection.query(
+        await connection.execute(
             'UPDATE reviews SET rating = ?, comment = ?, updated_at = NOW() WHERE id = ?',
             [rating, comment, reviewId]
         );
 
         // 3. Recalculate average_rating and total_reviews for the impianto
-        await connection.query(
+        await connection.execute(
             `UPDATE impianti
              SET total_reviews = (SELECT COUNT(*) FROM reviews WHERE id_impianto = ? AND status = 'approved'),
                  average_rating = (SELECT AVG(rating) FROM reviews WHERE id_impianto = ? AND status = 'approved')
@@ -64,9 +64,6 @@ export async function PUT(request, {params}) {
         console.error(`Error updating review ${params.review_id}:`, error);
         return NextResponse.json({message: 'Error updating review', error: error.message}, {status: 500});
     } finally {
-        if (connection) {
-            await connection.end();
-        }
     }
 }
 
@@ -83,11 +80,11 @@ export async function DELETE(request, {params}) {
             return NextResponse.json({message: 'Missing required field: user_id'}, {status: 400});
         }
 
-        connection = await connectToDatabase();
+        connection = await createPool();
         await connection.beginTransaction();
 
         // 1. Verify ownership of the review
-        const [existingReview] = await connection.query(
+        const [existingReview] = await connection.execute(
             'SELECT id_impianto, user_id FROM reviews WHERE id = ?',
             [reviewId]
         );
@@ -105,13 +102,13 @@ export async function DELETE(request, {params}) {
         const id_impianto = existingReview[0].id_impianto;
 
         // 2. Delete the review
-        await connection.query(
+        await connection.execute(
             'DELETE FROM reviews WHERE id = ?',
             [reviewId]
         );
 
         // 3. Recalculate average_rating and total_reviews for the impianto
-        await connection.query(
+        await connection.execute(
             `UPDATE impianti
              SET total_reviews = (SELECT COUNT(*) FROM reviews WHERE id_impianto = ? AND status = 'approved'),
                  average_rating = (SELECT AVG(rating) FROM reviews WHERE id_impianto = ? AND status = 'approved')
@@ -130,8 +127,5 @@ export async function DELETE(request, {params}) {
         console.error(`Error deleting review ${params.review_id}:`, error);
         return NextResponse.json({message: 'Error deleting review', error: error.message}, {status: 500});
     } finally {
-        if (connection) {
-            await connection.end();
-        }
     }
 }
