@@ -1,4 +1,5 @@
-import {connectToDatabase} from '../repos/mysql';
+import 'dotenv/config'
+import {connectToDatabase} from "../repos/mysql.js"
 
 const API_BASE_URL = 'https://carburanti.mise.gov.it/ospzApi/registry/servicearea/';
 
@@ -27,7 +28,12 @@ async function importServiceAreas() {
         // 1. Get all id_impianto from the impianti table
         //    Assuming 'impianti' is the table where id_impianto are stored.
         //    Adjust table/column name if different.
-        const [impianti] = await connection.query('SELECT id_impianto FROM impianti');
+        const [impianti] = await connection.query(`select impianti.id_impianto
+                                                   from impianti
+                                                   where id_impianto not in (SELECT id_impianto
+                                                                             from impianto_servizi
+                                                                             where services = ''
+                                                                               and updated_at IS NULL)`);
 
         console.log(`Found ${impianti.length} impianti to process.`);
 
@@ -68,6 +74,8 @@ async function importServiceAreas() {
                     console.log(`Inserted service data for id_impianto: ${idImpianto}`);
                 }
             }
+
+            break;
         }
 
         console.log('Service area import completed.');

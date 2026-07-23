@@ -138,7 +138,7 @@ export default async function Page({params}) { // Re-aggiunto async
     };
 
     // console.log("ICONE", SERVIZI_ICON_COMPONENTS);
-    console.log(impianto);
+    // console.log(impianto);
 
     return (
         <div className="pb-page-wrapper">

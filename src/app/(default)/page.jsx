@@ -20,7 +20,8 @@ import {getCapoluoghi, getServizi} from "@/functions/api";
 import ElencoServizi from "@/components/ElencoServizi";
 import {StatisticheWrapper} from "@/components/statistiche/StatisticheChart"; // Importa il componente grafico
 import {BsGraphUp} from "react-icons/bs";
-import Link from "next/link"; // Importa il componente KPI
+import Link from "next/link";
+import FacebookPagePlugin from "@/components/social/FacebookPagePlugin.jsx"; // Importa il componente KPI
 
 export async function generateMetadata() {
 
@@ -114,6 +115,11 @@ export default async function Home() {
 
             {/* Nuova sezione per il grafico delle statistiche */}
             <div className="container my-5">
+                <div className={'row'}>
+                    <div className={'col-4'}>
+                        <FacebookPagePlugin/>
+                    </div>
+                    <div className={'col-8'}>
                 <div className="text-center mb-4">
                     <h3 className="fw-bold text-uppercase h5">Andamento Nazionale Prezzo Benzina</h3>
                     <p className="text-muted">Ultimi 90 giorni - Dati nazionali</p>
@@ -144,6 +150,8 @@ export default async function Home() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
                     </div>
                 </div>
             </div>

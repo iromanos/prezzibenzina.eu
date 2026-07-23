@@ -30,6 +30,8 @@ import Display6977770298 from "@/components/ads/Display-6977770298";
 
 // Importazione dei nuovi componenti per le recensioni
 import {useAuth} from "@/contexts/AuthContext.jsx";
+import FacebookPagePlugin from "@/components/social/FacebookPagePlugin.jsx";
+import FacebookShare from "@/components/social/FacebookShare.jsx";
 
 
 export default function ImpiantoScheda({impianto, cookie}) {
@@ -334,10 +336,9 @@ export default function ImpiantoScheda({impianto, cookie}) {
                         <div>
                             <h1 className="mb-0">{impianto.nome_impianto}</h1>
                             <small className="text-muted">{impianto.gestore}</small>
-                            {/*<RatingDisplay*/}
-                            {/*    userId={currentUserId}*/}
-                            {/*    averageRating={averageRating}*/}
-                            {/*    totalReviews={totalReviews}/>*/}
+                            <div>
+                                <FacebookShare url={`/impianto/${impianto.link}`}/>
+                            </div>
                         </div>
                     </div>
 
@@ -405,6 +406,8 @@ export default function ImpiantoScheda({impianto, cookie}) {
                 <div className={'col-lg-5 mb-4'}>
                     {carburante &&
                         <BoxPrezzo className={'d-none d-lg-block'}/>}
+
+                    <FacebookPagePlugin width={null}/>
 
 
                     {/*<StoricoPrezzi impiantoId={impianto.id_impianto}/>*/}

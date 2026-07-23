@@ -11,6 +11,8 @@ import LoadAdSense from "../components/ads/LoadAdSense";
 import CookieBanner from "@/components/CookieBanner";
 import {AuthProvider} from '@/contexts/AuthContext';
 import jwt from 'jsonwebtoken';
+import Script from "next/script";
+import React from "react";
 
 const lexend = Lexend({
     weight: ["600", "700", "800"],
@@ -68,6 +70,14 @@ export default async function RootLayout({children}) {
         </Head>
 
         <body>
+        <div id="fb-root"></div>
+        <Script
+            id="facebook-jssdk"
+            strategy="afterInteractive"
+            crossOrigin="anonymous"
+            src="https://connect.facebook.net/it_IT/sdk.js#xfbml=1&version=v20.0"
+        />
+
         <AuthProvider appToken={token} initialUser={user}>
             <AppRouterCacheProvider>
                 <PreferitiProvider>
