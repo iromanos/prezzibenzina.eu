@@ -1,14 +1,8 @@
-import path from 'path';
-import sharp from 'sharp';
-import {fileURLToPath} from 'url';
+const sharp = require('sharp');
+const path = require('path');
 
-// Ricostruiamo __dirname per l'ambiente ES Module
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Poiché lo script si trova in src/scripts, dobbiamo salire di due livelli per raggiungere la root
-const svgPath = path.resolve(__dirname, '../../public/assets/svg/facebook-cover.svg');
-const outputPath = path.resolve(__dirname, '../../public/assets/facebook-cover.png');
+const svgPath = path.join(__dirname, '../public/assets/svg/facebook-cover.svg');
+const outputPath = path.join(__dirname, '../public/assets/images/facebook-cover.png');
 
 async function generateFacebookCover() {
     try {
