@@ -7,6 +7,7 @@ import Link from 'next/link';
 import {AdsDesktop} from "../ads/AdsDesktop";
 import Display6977770298 from "@/components/ads/Display-6977770298.jsx";
 import Display5745053645 from "@/components/ads/Display-5745053645.jsx";
+import FacebookShare from "@/components/social/FacebookShare.jsx";
 
 /**
  * Manager unico del layout della pagina distributori.
@@ -55,7 +56,10 @@ export default function MobileViewManager({
                             <p className="small text-muted mb-0">
                                 Trovati <strong>{count}</strong> distributori a {comuneName}.
                             </p>
-                            {notifyButton} {/* Renderizza il pulsante di notifica qui */}
+                            <div className={'py-2 d-none d-lg-block'}>
+                                <FacebookShare/>
+                            </div>
+                            {/*{notifyButton} /!* Renderizza il pulsante di notifica qui *!/*/}
                         </div>
                     </div>
                 )}

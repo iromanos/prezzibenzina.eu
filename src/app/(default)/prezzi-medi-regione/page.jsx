@@ -40,11 +40,11 @@ export const metadata = {
     openGraph: {
         title: 'Prezzi medi dei carburanti per regione - Confronta i Costi in Italia',
         description: 'Scopri i prezzi medi aggiornati dei carburanti (benzina, diesel, GPL e metano) per ogni regione d\'Italia. Confronta i costi e trova le regioni più convenienti per fare rifornimento.',
-        url: 'https://prezzibenzina.eu/prezzi-medi-regione',
+        url: 'https://www.prezzibenzina.eu/prezzi-medi-regione',
         siteName: 'PrezziBenzina.eu',
         images: [
             {
-                url: 'https://prezzibenzina.eu/og-image.jpg', // Sostituisci con l'URL di un'immagine Open Graph rilevante
+                url: 'https://www.prezzibenzina.eu/og-image.jpg', // Sostituisci con l'URL di un'immagine Open Graph rilevante
                 width: 1200,
                 height: 630,
                 alt: 'Prezzi medi dei carburanti per regione',
@@ -58,7 +58,7 @@ export const metadata = {
         title: 'Prezzi medi dei carburanti per regione - Confronta i Costi in Italia',
         description: 'Scopri i prezzi medi aggiornati dei carburanti (benzina, diesel, GPL e metano) per ogni regione d\'Italia. Confronta i costi e trova le regioni più convenienti per fare rifornimento.',
         creator: '@YourTwitterHandle', // Sostituisci con il tuo handle Twitter
-        images: ['https://prezzibenzina.eu/og-image.jpg'], // Sostituisci con l'URL di un'immagine Twitter Card rilevante
+        images: ['https://www.prezzibenzina.eu/og-image.jpg'], // Sostituisci con l'URL di un'immagine Twitter Card rilevante
     },
     robots: {
         index: true,
@@ -71,7 +71,7 @@ export const metadata = {
             'max-snippet': -1,
         },
     },
-    canonical: 'https://prezzibenzina.eu/prezzi-medi-regione',
+    canonical: 'https://www.prezzibenzina.eu/prezzi-medi-regione',
 };
 
 
@@ -121,6 +121,8 @@ export default async function PrezziMediRegionePage() {
                     "@type": "Organization",
                     "name": "PrezziBenzina.eu"
                 },
+                "license": "https://www.formez.it/iodl/2.0/",
+                "isBasedOn": "https://www.mimit.gov.it/",
                 "dateModified": new Date().toISOString().split('T')[0] // Data di oggi come ultima modifica
             }
         }

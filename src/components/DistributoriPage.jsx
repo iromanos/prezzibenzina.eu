@@ -21,6 +21,8 @@ import FiltroCarburante from "@/components/FiltroCarburante";
 import '../styles/milano.scss';
 import {StatisticheWrapper} from "./statistiche/StatisticheChart.jsx";
 import DistributoriNotifyButton from "./distributori/DistributoriNotifyButton";
+import FacebookPagePlugin from "@/components/social/FacebookPagePlugin.jsx";
+import FacebookShare from "@/components/social/FacebookShare.jsx";
 
 
 export async function getPageParams({params, searchParams}) {
@@ -194,9 +196,6 @@ export default async function DistributoriPage({params}) {
         return maxBounds;
     }
 
-    console.log(riepilogo.request);
-
-
     return <>
         {microdata !== null &&
         <script
@@ -251,6 +250,7 @@ export default async function DistributoriPage({params}) {
                         <li><CheckBoxIcon className={'text-success'}/> Prezzi ufficiali MIMIT</li>
                         <li><CheckBoxIcon className={'text-success'}/> Rifornimento veloce e sicuro</li>
                     </ul>
+                    <FacebookShare/>
                 </div>
                 <div className={'col d-lg-none mb-4'}>
                     <DistributoreMigliore/>
@@ -320,6 +320,8 @@ export default async function DistributoriPage({params}) {
                 {distributori.length !== 0 &&
                     <div id="distributori" className={'sezione-elenco'}>
                     <ElencoDistributori Regione={regione} distributori={distributori}/>
+                        <FacebookPagePlugin/>
+
                 </div>}
                 {distributori.length !== 0 && <div className={'sezione-descrizione'}>
 

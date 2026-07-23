@@ -3,7 +3,6 @@ import ImpiantoCardClient from "@/components/impianti/ImpiantoCardClient";
 import Bandiera from "@/components/Bandiera";
 import Image from "next/image";
 
-//TODO: indicare se il prezzo è discesa rispetto agli ultimi sette giorni
 import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
 
 export default function ImpiantoCardMobile({impianto, cardClient = true, onClickPreferiti = null, isBest = false}) {

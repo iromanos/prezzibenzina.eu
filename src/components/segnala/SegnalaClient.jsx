@@ -9,8 +9,6 @@ import Link from 'next/link';
 import React, {useRef, useState} from "react";
 import Image from 'next/image';
 
-//TODO: widget voto per il distributore
-
 export default function SegnalaClient({distributore}) {
 
     const URI_IMAGE = process.env.NEXT_PUBLIC_IMAGE_ENDPOINT;

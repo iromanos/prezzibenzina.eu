@@ -138,7 +138,7 @@ export default async function Page({params}) { // Re-aggiunto async
     };
 
     // console.log("ICONE", SERVIZI_ICON_COMPONENTS);
-    console.log(impianto);
+    // console.log(impianto);
 
     return (
         <div className="pb-page-wrapper">
@@ -209,15 +209,8 @@ export default async function Page({params}) { // Re-aggiunto async
                     </div>
                 }
 
-
-                {/* Sezione Pubblicità e SEO a tutta larghezza */}
-                <div className="row mt-5">
-                    <div className="col-12">
-                        <div className="mb-5 text-center">
-                            <Display5745053645/>
-                        </div>
-
-                    </div>
+                <div className={'container'}>
+                    <Display5745053645/>
                 </div>
             </main>
         </div>
