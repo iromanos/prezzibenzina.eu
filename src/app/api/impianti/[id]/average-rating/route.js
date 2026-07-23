@@ -1,5 +1,5 @@
 import {NextResponse} from 'next/server';
-import {createPool} from '@/repos/mysql'; // Switch to a pool for high performance
+import {createPool} from '@/repos/mysql.js'; // Switch to a pool for high performance
 
 // Caching: Revalidate this data every 5 minutes to handle high traffic (100k users)
 // export const revalidate = 300;

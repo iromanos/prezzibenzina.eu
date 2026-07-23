@@ -1,4 +1,4 @@
 # TODO
 
-* [ ] Sistema di valutazione degli impianti con commento
-* [ ] Implementazione Like di Facebook
+* [x] Sistema di valutazione degli impianti con commento
+* [X] Implementazione Like di Facebook

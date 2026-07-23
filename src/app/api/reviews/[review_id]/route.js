@@ -1,5 +1,5 @@
 import {NextResponse} from 'next/server';
-import {createPool} from '@/repos/mysql'; // Assicurati che il percorso sia corretto
+import {createPool} from '@/repos/mysql.js'; // Assicurati che il percorso sia corretto
 
 export async function PUT(request, {params}) {
     let connection;

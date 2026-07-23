@@ -1,5 +1,5 @@
 import {NextResponse} from 'next/server';
-import {createPool} from '@/repos/mysql';
+import {createPool} from '@/repos/mysql.js';
 
 export async function GET(request, {params}) {
     let connection;
