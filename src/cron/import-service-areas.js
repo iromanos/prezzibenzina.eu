@@ -1,7 +1,22 @@
 import 'dotenv/config'
 import {connectToDatabase} from "../repos/mysql.js"
+import path from "path";
+import fs from "fs/promises";
 
 const API_BASE_URL = 'https://carburanti.mise.gov.it/ospzApi/registry/servicearea/';
+const LOG_FILE_PATH = path.resolve(process.cwd(), 'cron_logs', 'import-service-areas.log'); // Modificato per coerenza
+
+async function logToFile(message) {
+    const timestamp = new Date().toISOString();
+    const logMessage = `[${timestamp}] ${message}\n`;
+    console.log(logMessage.trim()); // Log to console as well
+    try {
+        await fs.appendFile(LOG_FILE_PATH, logMessage, 'utf8');
+    } catch (error) {
+        console.error(`Errore durante la scrittura del log su file ${LOG_FILE_PATH}:`, error);
+    }
+}
+
 
 async function fetchServiceArea(idImpianto) {
     try {
@@ -25,21 +40,17 @@ async function importServiceAreas() {
     try {
         connection = await connectToDatabase();
 
-        // 1. Get all id_impianto from the impianti table
-        //    Assuming 'impianti' is the table where id_impianto are stored.
-        //    Adjust table/column name if different.
         const [impianti] = await connection.query(`select impianti.id_impianto
                                                    from impianti
-                                                   where id_impianto not in (SELECT id_impianto
-                                                                             from impianto_servizi
-                                                                             where services = ''
-                                                                               and updated_at IS NULL)`);
+                                                   where impianti.id_impianto not in (SELECT id_impianto
+                                                                                      from impianto_servizi
+                                                                                      where updated_at is not null)`);
 
-        console.log(`Found ${impianti.length} impianti to process.`);
+        await logToFile(`Found ${impianti.length} impianti to process.`);
 
         for (const impianto of impianti) {
             const idImpianto = impianto.id_impianto;
-            console.log(`Processing id_impianto: ${idImpianto}`);
+            await logToFile(`Processing id_impianto: ${idImpianto}`);
 
             const serviceData = await fetchServiceArea(idImpianto);
 
@@ -63,7 +74,7 @@ async function importServiceAreas() {
                          WHERE id_impianto = ?`,
                         [servicesJson, orariAperturaJson, idImpianto]
                     );
-                    console.log(`Updated service data for id_impianto: ${idImpianto}`);
+                    await logToFile(`Updated service data for id_impianto: ${idImpianto}`);
                 } else {
                     // Insert new record
                     await connection.query(
@@ -71,17 +82,17 @@ async function importServiceAreas() {
                          VALUES (?, ?, ?, NOW(), NOW())`,
                         [idImpianto, servicesJson, orariAperturaJson]
                     );
-                    console.log(`Inserted service data for id_impianto: ${idImpianto}`);
+                    await logToFile(`Inserted service data for id_impianto: ${idImpianto}`);
                 }
             }
 
             break;
         }
 
-        console.log('Service area import completed.');
+        await logToFile('Service area import completed.');
 
     } catch (error) {
-        console.error('Error during service area import:', error);
+        await logToFile('Error during service area import:', error);
     } finally {
         if (connection) {
             await connection.end();
