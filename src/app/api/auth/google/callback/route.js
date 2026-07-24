@@ -52,8 +52,8 @@ export async function GET(request) {
         });
 
         const profileData = await profileResponse.json();
-        
-        console.log('Dati del profilo Google:', profileData);
+
+        // console.log('Dati del profilo Google:', profileData);
         
         const { email, name, picture } = profileData;
 

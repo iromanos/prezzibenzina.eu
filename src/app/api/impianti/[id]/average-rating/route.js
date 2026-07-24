@@ -8,7 +8,7 @@ export async function GET(request, {params}) {
     try {
 
         const _params = await params;
-        console.log(_params);
+        // console.log(_params);
 
         const id_impianto = (await params).id;
         if (!id_impianto) {

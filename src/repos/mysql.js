@@ -7,14 +7,14 @@ const poolConfig = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: 5,
     queueLimit: 0,
-    enableKeepAlive: true,
-    keepAliveInitialDelay: 10000,
+    enableKeepAlive: false,
 };
 
 export function createPool() {
     if (!global._mysqlPool) {
+        console.log('⚠️ CREO UN NUOVO POOL MYSQL!');
         global._mysqlPool = mysql.createPool(poolConfig);
     }
     return global._mysqlPool;

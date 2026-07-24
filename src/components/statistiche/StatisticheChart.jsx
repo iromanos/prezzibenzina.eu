@@ -45,7 +45,7 @@ export function StatisticheWrapper({filters}) {
 
 export default function StatisticheChart({data, showMin = false, showMax = false}) {
 
-    console.log("data:", data);
+    // console.log("data:", data);
 
 
     if (!data || data.length === 0) {

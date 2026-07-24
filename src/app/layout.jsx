@@ -44,7 +44,7 @@ export default async function RootLayout({children}) {
         try {
             const decoded = jwt.verify(token, process.env.NEXTAUTH_SECRET);
             user = decoded
-            console.log("Utente autenticato:", decoded);
+            // console.log("Utente autenticato:", decoded);
         } catch (error) {
             console.error("Token non valido o scaduto:", error.message);
         }

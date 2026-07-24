@@ -40,7 +40,7 @@ export async function getPageParams({params, searchParams}) {
 
         return record;
     } catch (e) {
-        console.log("!!!ERROR", e.toString());
+        // console.log("!!!ERROR", e.toString());
     }
     return resParams;
 }

@@ -174,7 +174,7 @@ export default async function PaginaDistributoreServizioComune({params, searchPa
         ]
     };
 
-    console.log("IMPIANTI", distributori);
+    // console.log("IMPIANTI", distributori);
 
     return (
         <div className="pb-page-wrapper">

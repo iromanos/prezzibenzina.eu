@@ -76,7 +76,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
     }, [impianto.id_impianto]);
 
     useEffect(() => {
-        fetchAverageRating();
+        // fetchAverageRating();
     }, [fetchAverageRating]);
 
 
@@ -308,7 +308,7 @@ export default function ImpiantoScheda({impianto, cookie}) {
         );
     }
 
-    console.log(impianto);
+    // console.log(impianto);
 
     return (
         <div className="container py-4">

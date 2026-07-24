@@ -58,7 +58,7 @@ export async function GET(request) {
         query += ' ' + conditions.join(' AND ');
         query += ' ORDER BY data ASC';
 
-        console.log(query);
+        // console.log(query);
 
         const [rows] = await connection.execute(query, params);
 

@@ -27,7 +27,7 @@ function getTransporter() {
 async function logToFile(message) {
     const timestamp = new Date().toISOString();
     const logMessage = `[${timestamp}] ${message}\n`;
-    console.log(logMessage.trim());
+    // console.log(logMessage.trim());
     try {
         await fs.appendFile(LOG_FILE_PATH, logMessage, 'utf8');
     } catch (error) {

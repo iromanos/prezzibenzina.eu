@@ -15,7 +15,7 @@ export async function POST(request) {
         }
 
 
-        connection = await createPool().getConnection();
+        connection = await createPool(); //.getConnection();
 
         // Start a transaction
         await connection.beginTransaction();

@@ -192,7 +192,7 @@ export function getElencoCarburanti() {
 
 export async function getImpianto({query}) {
 
-    console.log(query);
+    // console.log(query);
 
     let request = URI + `impianto/${query.impianto}`;
 

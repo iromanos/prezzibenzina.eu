@@ -11,7 +11,7 @@ const LOG_FILE_PATH = path.resolve(process.cwd(), 'cron_logs', 'import-service-a
 async function logToFile(message) {
     const timestamp = new Date().toISOString();
     const logMessage = `[${timestamp}] ${message}\n`;
-    console.log(logMessage.trim()); // Log to console as well
+    // console.log(logMessage.trim()); // Log to console as well
     try {
         await fs.appendFile(LOG_FILE_PATH, logMessage, 'utf8');
     } catch (error) {

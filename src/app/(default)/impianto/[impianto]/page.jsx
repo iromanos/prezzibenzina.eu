@@ -46,7 +46,7 @@ export async function generateMetadata({params}) {
     if (impianto === null) {
         notFound();
     }
-    console.log("impianto", impianto);
+    // console.log("impianto", impianto);
     const imageUrl = '/assets/logo-og.png';
     const lowerNome = impianto.nome_impianto.toLowerCase();
     const lowerBandiera = impianto.bandiera.toLowerCase();
@@ -190,7 +190,7 @@ export default async function Page({params}) { // Re-aggiunto async
                     <div className="d-flex flex-wrap gap-2">
                         {impianto.elencoServizi.map((service) => {
 
-                            console.log(service.icona);
+                            // console.log(service.icona);
 
                             const IconComponent = SERVIZI_ICON_COMPONENTS[service.icona];
 

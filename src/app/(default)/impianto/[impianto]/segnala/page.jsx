@@ -38,7 +38,7 @@ export default async function PageSegnala({params}) {
 
     const query = await params;
 
-    console.log("IMPIANTO", query);
+    // console.log("IMPIANTO", query);
 
     // Recuperiamo i dati dell'impianto per il riepilogo
     const distributore = await getImpianto({query});

@@ -119,7 +119,7 @@ async function getSubscriptionsHandler(request, {params}) {
 
         const subscriptionId = _params.id;
 
-        console.log(_params);
+        // console.log(_params);
 
         const userId = request.user.id; // Ottieni l'ID utente dal middleware
 

@@ -46,13 +46,13 @@ export async function POST(request) {
         // 3. Elaborazione della segnalazione
         // Qui andrebbe la logica per inviare una email (es. tramite Resend/Nodemailer) 
         // o salvare la segnalazione nel database.
-        console.log('Segnalazione Ricevuta:', {
-            impianto_id: impianto?.id_impianto,
-            impianto_nome: impianto?.nome_impianto,
-            tipo: tipo_segnalazione,
-            testo: messaggio,
-            utente: email || 'Anonimo'
-        });
+        // console.log('Segnalazione Ricevuta:', {
+        //     impianto_id: impianto?.id_impianto,
+        //     impianto_nome: impianto?.nome_impianto,
+        //     tipo: tipo_segnalazione,
+        //     testo: messaggio,
+        //     utente: email || 'Anonimo'
+        // });
 
         // 3. Invio email
         const mailOptions = {

@@ -56,7 +56,7 @@ export default function Header() {
     return (
         <header className="bg-primary sticky-top">
             <div className={'container'}>
-                <nav className="navbar navbar-expand-lg py-3 justify-content-between align-items-center">
+                <nav className="navbar navbar-expand-lg py-3 justify-content-lg-between align-items-center">
                     <Link title={"Home"} href="/" className="text-decoration-none">
                         <Image
                             width={1024}
@@ -93,7 +93,7 @@ export default function Header() {
 
                     {/* CTA desktop / Login-Logout button */}
                     {isAuthenticated && user ? (
-                        <div className="dropdown d-none d-lg-inline-block">
+                        <div className="dropdown d-lg-inline-block">
                             <button
                                 className="btn p-0 border-0 dropdown-toggle text-white"
                                 type="button"
