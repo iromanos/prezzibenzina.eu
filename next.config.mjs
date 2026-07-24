@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     output: 'standalone',
+    outputFileTracingIncludes: {
+        '/*': ['./cron/**/*'], // Include la cartella cron e tutte le sue dipendenze nella build standalone
+    },
     productionBrowserSourceMaps: true,
     logging: {
         fetches: {

@@ -201,7 +201,7 @@ export async function aggregatePrices() {
         );
     } finally {
         if (connection) {
-            // await connection.end();
+            connection.end();
             await logToFile('Connessione al database chiusa.');
         }
         await logToFile('Fine esecuzione script aggregazione prezzi.');

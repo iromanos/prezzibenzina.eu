@@ -114,6 +114,7 @@ export async function checkPriceAlerts() {
                       AND p.fuel_id = ?
                       AND p.is_self = 1
                       AND p.prezzo > 0.5
+                      AND p.dtcomu >= NOW() - INTERVAL 3 DAY
                     ORDER BY p.prezzo
                     LIMIT 1
                 `;
@@ -127,6 +128,7 @@ export async function checkPriceAlerts() {
                       AND p.fuel_id = ?
                       AND p.is_self = 1
                       AND p.prezzo > 0.5
+                      AND p.dtcomu >= NOW() - INTERVAL 3 DAY
                     ORDER BY p.prezzo
                     LIMIT 1
                 `;
@@ -140,6 +142,7 @@ export async function checkPriceAlerts() {
                       AND p.fuel_id = ?
                       AND p.is_self = 1
                       AND p.prezzo > 0.5
+                      AND p.dtcomu >= NOW() - INTERVAL 3 DAY
                     ORDER BY p.prezzo
                     LIMIT 1
                 `;
@@ -154,6 +157,7 @@ export async function checkPriceAlerts() {
                       AND p.fuel_id = ?
                       AND p.is_self = 1
                       AND p.prezzo > 0.5
+                      AND p.dtcomu >= NOW() - INTERVAL 3 DAY
                     ORDER BY p.prezzo
                     LIMIT 1
                 `;
@@ -166,6 +170,7 @@ export async function checkPriceAlerts() {
                     WHERE p.fuel_id = ?
                       AND p.is_self = 1
                       AND p.prezzo > 0.5
+                      AND p.dtcomu >= NOW() - INTERVAL 3 DAY
                     ORDER BY p.prezzo
                     LIMIT 1
                 `;
@@ -247,7 +252,7 @@ export async function checkPriceAlerts() {
         console.error(error);
     } finally {
         if (connection) {
-            // await connection.end();
+            await connection.end();
             await logToFile('Connessione al database chiusa.');
         }
     }

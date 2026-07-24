@@ -165,7 +165,7 @@ export async function runAnagraficaImport() {
         );
     } finally {
         if (connection) {
-            // await connection.end();
+            connection.end();
             await logToFile('Connessione al database chiusa.');
         }
         await logToFile('Fine esecuzione script importazione anagrafica.');

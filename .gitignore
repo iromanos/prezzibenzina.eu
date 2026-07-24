@@ -41,3 +41,4 @@ next-env.d.ts
 .env.local
 /.ai/
 mcp.json
+/.deploy/.env.production

@@ -1,5 +1,6 @@
 import {URI} from "@/functions/api";
 
+export const dynamic = 'force-dynamic';
 export default async function robots() {
 
 
@@ -26,7 +27,7 @@ export default async function robots() {
                 allow: [
                     '/',
                     '/sitemap.xml',
-                    ...allowRules, // Dice SI ai capoluoghi (Milano)
+                    // ...allowRules, // Dice SI ai capoluoghi (Milano)
                 ],
                 deny: [
                     ...uniqueDenyRules, // Dice NO a tutto il resto della provincia (Rho)
@@ -37,6 +38,11 @@ export default async function robots() {
                 ],
             },
         ],
-        sitemap: 'https://www.prezzibenzina.eu/sitemap/capoluoghi',
+        sitemap: [
+            'https://www.prezzibenzina.eu/sitemap/capoluoghi',
+            'https://www.prezzibenzina.eu/sitemap/servizi',
+            'https://www.prezzibenzina.eu/sitemap/europa',
+            'https://www.prezzibenzina.eu/sitemap/regioni'
+        ],
     };
 }

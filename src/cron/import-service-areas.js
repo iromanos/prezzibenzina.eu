@@ -1,7 +1,7 @@
 import 'dotenv/config'
-import {connectToDatabase} from "../repos/mysql.js"
 import path from "path";
 import fs from "fs/promises";
+import mysql from "mysql2/promise";
 
 const API_BASE_URL = 'https://carburanti.mise.gov.it/ospzApi/registry/servicearea/';
 const LOG_FILE_PATH = path.resolve(process.cwd(), 'cron_logs', 'import-service-areas.log'); // Modificato per coerenza
@@ -38,7 +38,13 @@ async function fetchServiceArea(idImpianto) {
 async function importServiceAreas() {
     let connection;
     try {
-        connection = await connectToDatabase();
+        connection = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            port: process.env.DB_PORT,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_DATABASE,
+        });
 
         const [impianti] = await connection.query(`select impianti.id_impianto
                                                    from impianti
@@ -95,7 +101,7 @@ async function importServiceAreas() {
         await logToFile('Error during service area import:', error);
     } finally {
         if (connection) {
-            // await connection.end();
+            connection.end();
         }
     }
 }
