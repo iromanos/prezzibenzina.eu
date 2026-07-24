@@ -62,6 +62,8 @@ mkdir -p "$TMP_DEPLOY_DIR"
 # A. Copia del contenuto standalone (server.js, node_modules minimali, package.json)
 cp -R .next/standalone/. "$TMP_DEPLOY_DIR/"
 
+mv "$TMP_DEPLOY_DIR/.env.production" "$TMP_DEPLOY_DIR/.env"
+
 mkdir "$TMP_DEPLOY_DIR/cron_logs"
 
 # B. Copia della cartella public
