@@ -155,7 +155,7 @@ export async function runDailyImport() {
         );
     } finally {
         if (connection) {
-            await connection.end();
+            // await connection.end();
             await logToFile('Connessione al database chiusa.');
         }
         await logToFile('Fine esecuzione script importazione giornaliera.');

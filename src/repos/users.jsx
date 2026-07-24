@@ -1,11 +1,11 @@
-import {connectToDatabase} from './mysql.jsx';
+import {connectToDatabase} from './mysql';
 
 export async function getUserByEmail(email) {
     const connection = await connectToDatabase();
 
     const [rows] = await connection.execute('SELECT * FROM users WHERE email = ?', [email]);
 
-    await connection.end();
+    // await connection.end();
     
     if (rows.length > 0) {
         return rows[0];
@@ -43,7 +43,7 @@ export async function createUser({email, name, googleId, avatar}) {
         user = newRows[0];
     }
 
-    await connection.end();
+    // await connection.end();
 
     return user;
 }

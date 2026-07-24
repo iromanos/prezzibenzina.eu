@@ -37,14 +37,14 @@ export async function POST(request) {
         );
 
         if (users.length === 0) {
-            connection.end();
+            // connection.end();
             return NextResponse.json({error: 'Utente non trovato.'}, {status: 404});
         }
 
         const user = users[0];
 
         if (user.email_verified_at !== null) {
-            connection.end();
+            // connection.end();
             return NextResponse.json({message: 'L\'email è già stata verificata.'}, {status: 200});
         }
 
@@ -57,7 +57,7 @@ export async function POST(request) {
             [verificationToken, user.id]
         );
 
-        connection.end();
+        // connection.end();
 
         // Invia l'email di verifica
         const verificationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/verify-email?token=${verificationToken}`;

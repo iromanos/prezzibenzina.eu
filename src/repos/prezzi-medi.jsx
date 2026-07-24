@@ -77,7 +77,7 @@ export async function getPrezziMediRegioneAggregati() {
         throw error;
     } finally {
         if (connection) {
-            await connection.end();
+            // await connection.end();
         }
     }
 }
@@ -138,7 +138,7 @@ export async function getPrezziMediProvincialiPerRegione(regionSlug) {
         throw error;
     } finally {
         if (connection) {
-            await connection.end();
+            // await connection.end();
         }
     }
 }

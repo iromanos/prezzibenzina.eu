@@ -25,7 +25,7 @@ export async function GET(request) {
         );
 
         if (users.length === 0) {
-            await connection.end();
+            //await connection.end();
             return NextResponse.json({error: 'Token di verifica non valido o scaduto.'}, {status: 400});
         }
 
@@ -37,7 +37,7 @@ export async function GET(request) {
             [user.id]
         );
 
-        await connection.end();
+        //await connection.end();
 
         // Reindirizza l'utente a una pagina di conferma o alla login
         return NextResponse.redirect(new URL('/auth/verification-success', request.url));

@@ -30,7 +30,7 @@ export async function POST(request) {
         );
 
         if (users.length === 0) {
-            await connection.end();
+            //await connection.end();
             return NextResponse.json({error: 'Token di reset non valido o scaduto.'}, {status: 400});
         }
 
@@ -46,7 +46,7 @@ export async function POST(request) {
             [passwordHash, user.id]
         );
 
-        await connection.end();
+        //await connection.end();
 
         return NextResponse.json({message: 'Password resettata con successo.'}, {status: 200});
 

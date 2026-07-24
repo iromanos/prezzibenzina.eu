@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server';
 import {authMiddleware} from '../../auth/middleware';
-import {connectToDatabase} from "@/repos/mysql.jsx"; // Importa il middleware
+import {connectToDatabase} from "@/repos/mysql"; // Importa il middleware
 
 async function listSubscriptionsHandler(request) {
     try {
@@ -14,7 +14,7 @@ async function listSubscriptionsHandler(request) {
             [userId]
         );
 
-        await connection.end();
+        //await connection.end();
 
         return NextResponse.json(subscriptions, {status: 200});
 

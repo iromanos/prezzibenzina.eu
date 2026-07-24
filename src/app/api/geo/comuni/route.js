@@ -1,5 +1,5 @@
 import {NextResponse} from 'next/server';
-import {connectToDatabase} from "@/repos/mysql.jsx";
+import {connectToDatabase} from "@/repos/mysql";
 
 
 export async function GET(request) {
@@ -27,7 +27,7 @@ export async function GET(request) {
         return NextResponse.json({error: 'Errore interno del server.'}, {status: 500});
     } finally {
         if (connection) {
-            await connection.end();
+            //await connection.end();
         }
     }
 }

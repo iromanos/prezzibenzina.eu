@@ -37,7 +37,7 @@ export async function POST(request) {
         );
 
         if (existingUsers.length > 0) {
-            connection.end();
+            // connection.end();
             return NextResponse.json({error: 'Un utente con questa email esiste già.'}, {status: 409});
         }
 
@@ -51,7 +51,7 @@ export async function POST(request) {
             [email, email, passwordHash]
         );
 
-        await connection.end();
+        //await connection.end();
 
         if (result.affectedRows === 1) {
             return NextResponse.json({message: 'Registrazione avvenuta con successo.'}, {status: 201});

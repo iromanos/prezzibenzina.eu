@@ -119,7 +119,7 @@ async function recalculateAggregates() {
         console.error(error);
     } finally {
         if (connection) {
-            await connection.end();
+            // await connection.end();
             console.log('Connessione al database chiusa.');
         }
     }

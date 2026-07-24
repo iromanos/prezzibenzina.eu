@@ -26,7 +26,7 @@ export async function POST(request) {
         );
 
         if (users.length === 0) {
-            connection.end();
+            // connection.end();
             return NextResponse.json({error: 'Credenziali non valide.'}, {status: 401});
         }
 
@@ -36,7 +36,7 @@ export async function POST(request) {
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            connection.end();
+            // connection.end();
             return NextResponse.json({error: 'Credenziali non valide.'}, {status: 401});
         }
 
@@ -47,7 +47,7 @@ export async function POST(request) {
             {expiresIn: '1h'} // Il token scade dopo 1 ora
         );
 
-        connection.end();
+        // connection.end();
 
         return NextResponse.json({message: 'Login avvenuto con successo.', token}, {status: 200});
 

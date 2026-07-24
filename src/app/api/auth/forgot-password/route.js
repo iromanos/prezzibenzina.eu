@@ -37,7 +37,7 @@ export async function POST(request) {
         );
 
         if (users.length === 0) {
-            connection.end();
+            // connection.end();
             // Non rivelare se l'utente esiste per motivi di sicurezza
             return NextResponse.json({message: 'Se l\'email è registrata, riceverai un link per il reset della password.'}, {status: 200});
         }
@@ -54,7 +54,7 @@ export async function POST(request) {
             [resetToken, resetExpires, user.id]
         );
 
-        connection.end();
+        // connection.end();
 
         // Invia l'email con il link di reset
         const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/reset-password?token=${resetToken}`; // Pagina frontend per il reset

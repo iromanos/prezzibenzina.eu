@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server';
 import {authMiddleware} from '../../auth/middleware';
-import {connectToDatabase} from "@/repos/mysql.jsx"; // Importa il middleware
+import {connectToDatabase} from "@/repos/mysql"; // Importa il middleware
 
 async function createSubscriptionHandler(request) {
     try {
@@ -25,7 +25,7 @@ async function createSubscriptionHandler(request) {
             [userId, fuel_type, geo_level, geo_code, threshold_type, threshold_value]
         );
 
-        await connection.end();
+        //await connection.end();
 
         if (result.affectedRows === 1) {
             return NextResponse.json({

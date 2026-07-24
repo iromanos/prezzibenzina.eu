@@ -247,7 +247,7 @@ export async function checkPriceAlerts() {
         console.error(error);
     } finally {
         if (connection) {
-            await connection.end();
+            // await connection.end();
             await logToFile('Connessione al database chiusa.');
         }
     }

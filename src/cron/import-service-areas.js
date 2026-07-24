@@ -95,7 +95,7 @@ async function importServiceAreas() {
         await logToFile('Error during service area import:', error);
     } finally {
         if (connection) {
-            await connection.end();
+            // await connection.end();
         }
     }
 }

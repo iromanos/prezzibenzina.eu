@@ -48,7 +48,7 @@ const resolveGeoName = cache(async function resolveGeoName(livello_geo, codice_g
         return null;
     } finally {
         if (connection) {
-            await connection.end();
+            // await connection.end();
         }
     }
 });

@@ -1,4 +1,4 @@
-import {connectToDatabase} from "@/repos/mysql.jsx";
+import {connectToDatabase} from "@/repos/mysql";
 
 
 export async function getRegioni() {
@@ -6,7 +6,7 @@ export async function getRegioni() {
 
     const [rows] = await connection.execute('SELECT * FROM regioni order by name');
 
-    await connection.end();
+    // await connection.end();
 
     return rows;
 }
@@ -16,7 +16,7 @@ export async function getProvincieByRegion(region) {
 
     const [rows] = await connection.execute('SELECT * FROM provincie where regione = ? order by description', [region]);
 
-    await connection.end();
+    // await connection.end();
 
     return rows;
 }

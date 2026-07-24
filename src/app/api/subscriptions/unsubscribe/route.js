@@ -82,7 +82,7 @@ export async function GET(request) {
         });
     } finally {
         if (connection) {
-            await connection.end();
+            //await connection.end();
         }
     }
 }

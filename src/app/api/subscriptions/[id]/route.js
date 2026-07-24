@@ -1,7 +1,7 @@
 import {NextResponse} from 'next/server';
 import mysql from 'mysql2/promise';
 import {authMiddleware} from '../../auth/middleware';
-import {connectToDatabase} from "@/repos/mysql.jsx"; // Importa il middleware
+import {connectToDatabase} from "@/repos/mysql"; // Importa il middleware
 
 // Funzione per gestire la modifica di una sottoscrizione (PUT)
 async function updateSubscriptionHandler(request, {params}) {
@@ -34,7 +34,7 @@ async function updateSubscriptionHandler(request, {params}) {
         );
 
         if (existingSubs.length === 0) {
-            await connection.end();
+            //await connection.end();
             return NextResponse.json({error: 'Sottoscrizione non trovata o non autorizzata.'}, {status: 404});
         }
 
@@ -53,7 +53,7 @@ async function updateSubscriptionHandler(request, {params}) {
             [fuel_type, geo_level, geo_code, threshold_type, threshold_value, status, subscriptionId, userId]
         );
 
-        await connection.end();
+        //await connection.end();
 
         if (result.affectedRows === 1) {
             return NextResponse.json({message: 'Sottoscrizione aggiornata con successo.'}, {status: 200});
@@ -88,7 +88,7 @@ async function deleteSubscriptionHandler(request, {params}) {
         );
 
         if (existingSubs.length === 0) {
-            await connection.end();
+            //await connection.end();
             return NextResponse.json({error: 'Sottoscrizione non trovata o non autorizzata.'}, {status: 404});
         }
 
@@ -98,7 +98,7 @@ async function deleteSubscriptionHandler(request, {params}) {
             [subscriptionId, userId]
         );
 
-        await connection.end();
+        //await connection.end();
 
         if (result.affectedRows === 1) {
             return NextResponse.json({message: 'Sottoscrizione eliminata con successo.'}, {status: 200});
@@ -130,7 +130,7 @@ async function getSubscriptionsHandler(request, {params}) {
             [subscriptionId, userId]
         );
 
-        await connection.end();
+        //await connection.end();
 
         if (existingSubs.length === 0) {
             return NextResponse.json({error: 'Sottoscrizione non trovata o non autorizzata.'}, {status: 404})

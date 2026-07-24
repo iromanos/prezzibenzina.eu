@@ -69,7 +69,7 @@ export async function GET(request) {
         return NextResponse.json({error: 'Errore interno del server.'}, {status: 500});
     } finally {
         if (connection) {
-            await connection.end();
+            //await connection.end();
         }
     }
 }
