@@ -1,7 +1,9 @@
-import 'dotenv/config'
 import path from "path";
 import fs from "fs/promises";
 import mysql from "mysql2/promise";
+import dotenv from "dotenv";
+
+dotenv.config({path: path.resolve(process.cwd(), '.env')});
 
 const API_BASE_URL = 'https://carburanti.mise.gov.it/ospzApi/registry/servicearea/';
 const LOG_FILE_PATH = path.resolve(process.cwd(), 'cron_logs', 'import-service-areas.log'); // Modificato per coerenza
